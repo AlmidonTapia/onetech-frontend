@@ -1,0 +1,24 @@
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { InventoryMovement, CreateInventoryMovementRequest } from '../models/inventory.model';
+import { PageResponse } from '../models/page-response.model';
+
+@Injectable({ providedIn: 'root' })
+export class InventoryService {
+  private http = inject(HttpClient);
+  private url = `${environment.apiUrl}/inventory/movements`;
+
+  getAll(page = 0, size = 10) {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<PageResponse<InventoryMovement>>(this.url, { params });
+  }
+
+  getById(id: string) {
+    return this.http.get<InventoryMovement>(`${this.url}/${id}`);
+  }
+
+  register(data: CreateInventoryMovementRequest) {
+    return this.http.post<InventoryMovement>(this.url, data);
+  }
+}
