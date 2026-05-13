@@ -1,1 +1,20 @@
-/* Spinner styles */
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.spinner-fullpage {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,.75);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+}
+
+.spinner-label {
+  font-size: 14px;
+  color: var(--ot-gray-500);
+}

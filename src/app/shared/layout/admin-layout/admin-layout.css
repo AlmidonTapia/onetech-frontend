@@ -1,1 +1,26 @@
-/* AdminLayout styles */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--ot-gray-50);
+}
+
+.admin-content {
+  flex: 1;
+  margin-left: var(--ot-sidebar-width);
+  padding: 28px 32px;
+  min-height: 100vh;
+  transition: margin-left .25s ease;
+  animation: fadeIn .2s ease both;
+}
+
+/* Cuando el sidebar está colapsado (68px) */
+:host-context(.sidebar-collapsed) .admin-content {
+  margin-left: 68px;
+}
+
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+}

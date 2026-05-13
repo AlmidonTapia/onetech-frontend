@@ -1,1 +1,12 @@
-<p>navbar-cart works!</p>
+<a routerLink="/cart" class="cart-btn" aria-label="Ver carrito">
+    <div class="cart-icon-wrapper">
+        <i class="pi pi-shopping-cart"></i>
+        @if (itemCount() > 0) {
+        <span class="cart-badge">{{ itemCount() }}</span>
+        }
+    </div>
+    <div class="cart-text">
+        <span class="cart-label">Carrito</span>
+        <span class="cart-total">{{ totalAmount() | currencyPen }}</span>
+    </div>
+</a>

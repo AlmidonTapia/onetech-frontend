@@ -1,1 +1,18 @@
-/* Card styles */
+.ot-card {
+  background: var(--ot-white);
+  border-radius: var(--ot-radius-lg);
+  border: 1px solid var(--ot-gray-200);
+  box-shadow: var(--ot-shadow-sm);
+  transition: box-shadow var(--ot-transition), transform var(--ot-transition);
+  overflow: hidden;
+}
+
+.card-hover:hover {
+  box-shadow: var(--ot-shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-p-none { padding: 0; }
+.card-p-sm   { padding: 12px; }
+.card-p-md   { padding: 20px; }
+.card-p-lg   { padding: 32px; }

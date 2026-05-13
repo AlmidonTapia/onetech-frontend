@@ -1,1 +1,15 @@
-/* StarRating styles */
+.ot-star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-count {
+  font-size: 13px;
+  color: var(--ot-gray-500);
+}
+
+:host ::ng-deep .p-rating .p-rating-icon {
+  color: var(--ot-orange);
+  font-size: 16px;
+}

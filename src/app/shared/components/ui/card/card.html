@@ -1,1 +1,5 @@
-<p>card works!</p>
+<div class="ot-card" [ngClass]="['card-p-' + padding, hoverable ? 'card-hover' : '']">
+    <ng-content select="[card-header]" />
+    <ng-content />
+    <ng-content select="[card-footer]" />
+</div>

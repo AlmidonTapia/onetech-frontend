@@ -1,1 +1,118 @@
-/* Navbar styles */
+.navbar-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+/* ── Topbar ─────────────────────────────────── */
+.navbar-topbar {
+  background: var(--ot-dark);
+  height: var(--ot-nav-top-height);
+  display: flex;
+  align-items: center;
+}
+
+.topbar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,.8);
+}
+
+/* ── Main bar ───────────────────────────────── */
+.navbar-main {
+  background: var(--ot-white);
+  height: var(--ot-nav-main-height);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--ot-gray-200);
+}
+
+.main-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Logo */
+.navbar-logo {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.logo-one  { color: var(--ot-gray-900); }
+.logo-tech { color: var(--ot-orange); }
+
+/* Search */
+.navbar-search {
+  flex: 1;
+  max-width: 600px;
+}
+
+/* Actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.action-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: var(--ot-radius-md);
+  color: var(--ot-gray-700);
+  transition: background var(--ot-transition);
+}
+.action-link:hover {
+  background: var(--ot-gray-100);
+}
+.action-link .pi {
+  font-size: 20px;
+  color: var(--ot-gray-500);
+}
+.action-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.action-label {
+  font-size: 11px;
+  color: var(--ot-gray-400);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.action-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ot-gray-800);
+}
+
+/* ── Category nav ───────────────────────────── */
+.navbar-categories {
+  background: var(--ot-blue);
+  height: var(--ot-nav-cat-height);
+  display: flex;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-search { display: none; }
+  .action-text { display: none; }
+  .navbar-logo { font-size: 20px; }
+  .topbar-right { display: none; }
+}

@@ -1,1 +1,7 @@
-<p>navbar-search works!</p>
+<form class="search-form" (ngSubmit)="search()">
+    <input type="text" class="search-input" [(ngModel)]="query" name="query"
+        placeholder="Buscar laptops, celulares, componentes..." autocomplete="off" aria-label="Buscar productos" />
+    <button type="submit" class="search-btn" aria-label="Buscar">
+        <i class="pi pi-search"></i>
+    </button>
+</form>

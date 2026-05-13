@@ -1,2 +1,98 @@
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
+
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  --ot-blue:         #0047cc;
+  --ot-blue-dark:    #003399;
+  --ot-blue-light:   #4d88ff;
+  --ot-blue-50:      #e8f0fe;
+  --ot-orange:       #ff6600;
+  --ot-orange-dark:  #e65c00;
+  --ot-orange-light: #fff3e8;
+  --ot-dark:         #1a1a2e;
+
+  --ot-white:    #ffffff;
+  --ot-gray-50:  #f8fafc;
+  --ot-gray-100: #f1f5f9;
+  --ot-gray-200: #e2e8f0;
+  --ot-gray-300: #cbd5e1;
+  --ot-gray-400: #94a3b8;
+  --ot-gray-500: #64748b;
+  --ot-gray-600: #475569;
+  --ot-gray-700: #334155;
+  --ot-gray-800: #1e293b;
+  --ot-gray-900: #0f172a;
+
+  --ot-success:    #16a34a; --ot-success-bg: #dcfce7;
+  --ot-error:      #dc2626; --ot-error-bg:   #fee2e2;
+  --ot-warning:    #d97706; --ot-warning-bg: #fef3c7;
+  --ot-info:       #0284c7; --ot-info-bg:    #e0f2fe;
+
+  --ot-nav-top-height:  36px;
+  --ot-nav-main-height: 72px;
+  --ot-nav-cat-height:  44px;
+  --ot-nav-total:       152px;
+  --ot-sidebar-width:   240px;
+  --ot-container-max:   1280px;
+  --ot-container-px:    clamp(16px, 4vw, 48px);
+
+  --ot-radius-sm:   4px;
+  --ot-radius-md:   8px;
+  --ot-radius-lg:   12px;
+  --ot-radius-xl:   16px;
+  --ot-radius-full: 9999px;
+  --ot-shadow-sm:   0 1px 3px rgba(0,0,0,.08);
+  --ot-shadow-md:   0 4px 12px rgba(0,0,0,.10);
+  --ot-shadow-lg:   0 8px 24px rgba(0,0,0,.14);
+  --ot-transition:  180ms ease;
+
+  --p-primary-color:          var(--ot-blue);
+  --p-primary-contrast-color: #fff;
+  --p-primary-hover-color:    var(--ot-blue-dark);
+}
+
+/* ── Base Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ot-gray-800);
+  background: var(--ot-gray-50);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+
+/* ── Container ──────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--ot-container-max);
+  margin-inline: auto;
+  padding-inline: var(--ot-container-px);
+}
+
+/* ── PrimeNG Overrides ──────────────────────────────────── */
+.p-toast { z-index: 9999 !important; }
+.p-toast-top-right { top: calc(var(--ot-nav-total) + 8px) !important; }
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-fade-in { animation: fadeIn .25s ease both; }
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--ot-gray-100); }
+::-webkit-scrollbar-thumb { background: var(--ot-gray-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ot-gray-400); }
