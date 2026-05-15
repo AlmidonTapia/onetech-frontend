@@ -1,11 +1,11 @@
 export interface InventoryMovement {
-  id: string;
-  productId: string;
-  productName: string;
+  idInventoryMovement: string;
+  idProduct: string;
+  productName?: string;
   movementType: 'IN' | 'OUT';
   quantity: number;
   reason: string;
-  createdAt: string;
+  movementDate: string;
 }
 
 export interface CreateInventoryMovementRequest {

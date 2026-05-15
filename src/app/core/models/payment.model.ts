@@ -1,15 +1,15 @@
 export interface Payment {
-  id: string;
-  orderId: string;
-  paymentMethodId: string;
-  paymentMethodName: string;
+  idPayment: string;
+  idOrder: string;
+  idPaymentMethod: string;
+  paymentMethodName?: string;
   transactionId: string;
   amountPaid: number;
-  createdAt: string;
+  paymentDate: string;
 }
 
 export interface PaymentMethod {
-  id: string;
+  idPaymentMethod: string;
   methodName: string;
 }
 

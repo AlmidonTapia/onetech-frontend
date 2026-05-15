@@ -19,9 +19,8 @@ export class DashboardRecentOrdersComponent {
   readonly statusConfig: Record<OrderStatus, { label: string; severity: SeverityType }> = {
     PENDIENTE: { label: 'Pendiente', severity: 'warn' },
     PAGADO: { label: 'Pagado', severity: 'info' },
-    EN_PROCESO: { label: 'En proceso', severity: 'info' },
     ENVIADO: { label: 'Enviado', severity: 'secondary' },
-    ENTREGADO: { label: 'Entregado', severity: 'success' },
+    COMPLETADO: { label: 'Completado', severity: 'success' },
     CANCELADO: { label: 'Cancelado', severity: 'danger' },
   };
 

@@ -2,11 +2,11 @@
     [draggable]="false" [style]="{ width: '620px' }" (onHide)="close()">
 
     <div class="images-grid">
-        @for (img of images(); track img.id) {
+        @for (img of images(); track img.idProductImage) {
         <div class="img-item" [class.img-item--main]="img.isPrincipal">
             <img [src]="img.imageUrl" [alt]="'Imagen'" />
             @if (img.isPrincipal) { <span class="main-badge">Principal</span> }
-            <button class="img-del" (click)="deleteImage(img.id)">
+            <button class="img-del" (click)="deleteImage(img.idProductImage)">
                 <i class="pi pi-times"></i>
             </button>
         </div>

@@ -38,7 +38,7 @@ export class OrdersComponent implements OnInit {
   onStatusSave(newStatus: OrderStatus) {
     if (!this.editingOrder()) return;
     this.saving.set(true);
-    this.orderService.updateStatus(this.editingOrder()!.id, newStatus).subscribe({
+    this.orderService.updateStatus(this.editingOrder()!.idOrder, newStatus).subscribe({
       next: () => {
         this.alertService.success('Estado actualizado correctamente');
         this.statusVisible.set(false); this.saving.set(false); this.loadOrders();

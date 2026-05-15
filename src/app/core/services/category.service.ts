@@ -1,5 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Category, CreateCategoryRequest } from '../models/category.model';
 import { PageResponse } from '../models/page-response.model';
@@ -20,5 +22,16 @@ export class CategoryService {
 
   create(data: CreateCategoryRequest) {
     return this.http.post<Category>(this.url, data);
+  }
+
+  getTree(): Observable<any[]> {
+    const cached = sessionStorage.getItem('category_tree');
+    if (cached) {
+      return of(JSON.parse(cached));
+    }
+
+    return this.http.get<any[]>(`${this.url}/tree`).pipe(
+      tap(res => sessionStorage.setItem('category_tree', JSON.stringify(res)))
+    );
   }
 }

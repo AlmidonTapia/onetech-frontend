@@ -4,34 +4,96 @@
   gap: 2px;
   list-style: none;
   padding: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
+  margin: 0;
 }
-.nav-menu::-webkit-scrollbar { display: none; }
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
 .nav-link {
-  display: block;
-  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
   height: var(--ot-nav-cat-height);
-  line-height: var(--ot-nav-cat-height);
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255,255,255,.88);
+  color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
+  transition: all var(--ot-transition);
+  text-decoration: none;
   border-bottom: 2px solid transparent;
-  transition: color var(--ot-transition),
-              border-color var(--ot-transition),
-              background var(--ot-transition);
 }
 
 .nav-link:hover {
   color: #fff;
-  background: rgba(255,255,255,.10);
-  border-bottom-color: rgba(255,255,255,.5);
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
 .nav-link--accent {
-  color: #ffcc00;
+  color: #ffcc00; /* Keeping the yellow for offers */
   font-weight: 700;
 }
-.nav-link--accent:hover { color: #ffe566; }
+
+.submenu-icon {
+  font-size: 10px;
+  opacity: 0.7;
+  transition: transform var(--ot-transition);
+}
+
+.nav-item:hover .submenu-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Submenu ────────────────────────────────── */
+.submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background: var(--ot-dark); /* Using design token #1a1a2e */
+  list-style: none;
+  padding: 10px 0;
+  margin: 0;
+  box-shadow: var(--ot-shadow-lg);
+  border-radius: 0 0 var(--ot-radius-md) var(--ot-radius-md);
+  z-index: 1000;
+  
+  /* Initial state for animation */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all var(--ot-transition);
+  border-top: 2px solid var(--ot-blue-light); /* Added a blue accent on top */
+}
+
+.nav-item:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.submenu-link {
+  display: block;
+  padding: 10px 24px;
+  font-size: 13px;
+  color: var(--ot-gray-300);
+  text-decoration: none;
+  transition: all 200ms ease;
+  white-space: nowrap;
+}
+
+.submenu-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  padding-left: 28px;
+}
+
+/* PrimeNG / Tailwind Concordance */
+.has-submenu {
+    cursor: pointer;
+}

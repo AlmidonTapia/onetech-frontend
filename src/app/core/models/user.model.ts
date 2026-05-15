@@ -1,5 +1,5 @@
 export interface User {
-  id: string;
+  idUser: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -8,7 +8,9 @@ export interface User {
   documentNumber?: string;
   phone?: string;
   createdAt?: string;
+  status?: string;
 }
+
 export interface UpdateProfileRequest {
   documentType: string;
   documentNumber: string;

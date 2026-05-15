@@ -63,7 +63,7 @@ export class ProductsComponent implements OnInit {
   onSave(data: CreateProductRequest) {
     this.saving.set(true);
     const op = this.editingProduct()
-      ? this.productService.update(this.editingProduct()!.id, data)
+      ? this.productService.update(this.editingProduct()!.idProduct, data)
       : this.productService.create(data);
     op.subscribe({
       next: () => {
@@ -79,7 +79,7 @@ export class ProductsComponent implements OnInit {
       title: '¿Eliminar producto?',
       message: `"${p.productName}" será eliminado permanentemente.`,
       severity: 'danger', confirmLabel: 'Sí, eliminar',
-      onConfirm: () => this.productService.delete(p.id).subscribe({
+      onConfirm: () => this.productService.delete(p.idProduct).subscribe({
         next: () => { this.alertService.success('Producto eliminado'); this.loadProducts(); },
         error: () => this.alertService.error('Error al eliminar'),
       }),

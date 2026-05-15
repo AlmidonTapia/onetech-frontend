@@ -75,7 +75,7 @@ export class InventoryComponent implements OnInit {
   ngOnInit() {
     this.loadMovements();
     this.productService.getAll({ page: 0, size: 200 }).subscribe(res => {
-      this.productOptions.set(res.content.map(p => ({ label: p.productName, value: p.id })));
+      this.productOptions.set(res.content.map(p => ({ label: p.productName, value: p.idProduct })));
     });
   }
 
