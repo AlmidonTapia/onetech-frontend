@@ -1,1 +1,9 @@
-/* CategoriesTable styles */
+.cat-name { font-weight: 500; color: var(--ot-gray-900); }
+.no-parent { font-size: 12px; color: var(--ot-gray-400); font-style: italic; }
+.row-actions { display: flex; gap: 4px; }
+.act-btn { width:30px;height:30px;border-radius:var(--ot-radius-sm);display:flex;
+  align-items:center;justify-content:center;color:var(--ot-gray-500);
+  transition:background var(--ot-transition),color var(--ot-transition); }
+.act-btn:hover{background:var(--ot-blue-50);color:var(--ot-blue);}
+.act-btn--danger:hover{background:var(--ot-error-bg);color:var(--ot-error);}
+.empty-cell{text-align:center;padding:48px;color:var(--ot-gray-400);}

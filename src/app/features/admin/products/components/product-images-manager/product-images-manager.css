@@ -1,1 +1,23 @@
-/* ProductImagesManager styles */
+.images-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 10px; margin-bottom: 20px; min-height: 80px;
+}
+.img-item {
+  position: relative; border-radius: var(--ot-radius-md);
+  overflow: hidden; border: 2px solid var(--ot-gray-200); aspect-ratio: 1;
+}
+.img-item img { width: 100%; height: 100%; object-fit: cover; }
+.img-item--main { border-color: var(--ot-blue); }
+.main-badge {
+  position: absolute; bottom: 4px; left: 4px;
+  background: var(--ot-blue); color: #fff;
+  font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 3px;
+}
+.img-del {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px; background: rgba(0,0,0,.6); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; opacity: 0; transition: opacity .15s;
+}
+.img-item:hover .img-del { opacity: 1; }
+.no-img { grid-column: 1/-1; text-align: center; color: var(--ot-gray-400); padding: 24px 0; }

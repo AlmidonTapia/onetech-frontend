@@ -1,1 +1,24 @@
-<p>breadcrumb works!</p>
+<nav class="ot-breadcrumb" aria-label="Navegación de ruta">
+    <ol>
+        <li>
+            <a routerLink="/" class="bc-link bc-home" aria-label="Inicio">
+                <i class="pi pi-home"></i>
+            </a>
+        </li>
+
+        @for (item of items; track item.label; let last = $last) {
+        <li class="bc-sep" aria-hidden="true">
+            <i class="pi pi-angle-right"></i>
+        </li>
+        <li>
+            @if (item.route && !last) {
+            <a [routerLink]="item.route" class="bc-link">{{ item.label }}</a>
+            } @else {
+            <span class="bc-current" [attr.aria-current]="last ? 'page' : null">
+                {{ item.label }}
+            </span>
+            }
+        </li>
+        }
+    </ol>
+</nav>

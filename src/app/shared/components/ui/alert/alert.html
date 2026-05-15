@@ -1,1 +1,16 @@
-<p>alert works!</p>
+@if (!dismissed) {
+<div class="ot-alert animate-fade-in" [ngClass]="'alert-' + type" role="alert">
+    <i class="pi alert-icon" [ngClass]="icon" aria-hidden="true"></i>
+
+    <div class="alert-body">
+        @if (title) { <strong class="alert-title">{{ title }}</strong> }
+        <div class="alert-content"><ng-content /></div>
+    </div>
+
+    @if (closeable) {
+    <button class="alert-close" (click)="dismiss()" aria-label="Cerrar">
+        <i class="pi pi-times"></i>
+    </button>
+    }
+</div>
+}

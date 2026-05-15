@@ -1,1 +1,89 @@
-<p>inventory works!</p>
+<div class="admin-page">
+
+    <div class="page-header">
+        <div class="page-title">
+            <h1>Inventario</h1>
+            <p class="page-subtitle">Historial de movimientos de stock</p>
+        </div>
+        <app-button label="Registrar movimiento" icon="pi-plus" (clicked)="openRegister()" />
+    </div>
+
+    <div class="table-card">
+        <p-table [value]="movements()" [loading]="loading()" [lazy]="true" [paginator]="true" [rows]="10"
+            [totalRecords]="totalRecords()" (onLazyLoad)="loadMovements($event)" styleClass="p-datatable-sm"
+            [tableStyle]="{'min-width':'700px'}">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                    <th>Motivo</th>
+                    <th>Fecha</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-mov>
+                <tr>
+                    <td>
+                        <span class="product-name">{{ mov.productName }}</span>
+                    </td>
+                    <td>
+                        <span class="mov-type" [ngClass]="'mov-type--' + mov.movementType.toLowerCase()">
+                            <i class="pi" [ngClass]="mov.movementType === 'IN' ? 'pi-arrow-down' : 'pi-arrow-up'"></i>
+                            {{ mov.movementType === 'IN' ? 'Entrada' : 'Salida' }}
+                        </span>
+                    </td>
+                    <td>
+                        <strong [ngClass]="mov.movementType === 'IN' ? 'qty-in' : 'qty-out'">
+                            {{ mov.movementType === 'IN' ? '+' : '-' }}{{ mov.quantity }}
+                        </strong>
+                    </td>
+                    <td class="reason-cell">{{ mov.reason }}</td>
+                    <td class="date-cell">{{ mov.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="empty-msg">Sin movimientos registrados.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+</div>
+
+<!-- Dialog: Register movement -->
+<p-dialog [visible]="dialogVisible()" header="Registrar Movimiento" [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{'width':'500px'}" (onHide)="dialogVisible.set(false)">
+
+    <form class="simple-form" [formGroup]="form">
+        @for (row of formConfig; track $index) {
+          <div class="form-row">
+            @for (field of row; track field.name) {
+              <div class="form-group" [style.flex]="field.flex || '1'">
+                  <label>{{ field.label }}</label>
+                  @if (field.type === 'select') {
+                      <p-select [formControlName]="field.name" [options]="getOptions(field.optionsKey)" [optionLabel]="field.optionLabel" [optionValue]="field.optionValue" [placeholder]="field.placeholder" [filter]="field.filter" filterPlaceholder="Buscar..." [style]="{'width':'100%'}" [appendTo]="'body'" />
+                  } @else if (field.type === 'number') {
+                      <p-inputNumber [formControlName]="field.name" [min]="field.min" [style]="{'width':'100%'}" />
+                  } @else if (field.type === 'text') {
+                      <input type="text" pInputText [formControlName]="field.name" [placeholder]="field.placeholder" />
+                  }
+                  @if (isInvalid(field.name)) { 
+                      <span class="field-error">Requerido</span> 
+                  }
+              </div>
+            }
+          </div>
+        }
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <app-button variant="ghost" label="Cancelar" (clicked)="dialogVisible.set(false)" />
+            <app-button label="Registrar" icon="pi-check" [loading]="saving()" (clicked)="onSave()" />
+        </div>
+    </ng-template>
+</p-dialog>

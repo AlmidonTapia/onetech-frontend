@@ -1,1 +1,36 @@
-<p>order-status-form works!</p>
+<p-dialog [visible]="visible" header="Cambiar estado de orden" [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{ width: '440px' }" (onHide)="onCancel()">
+
+    @if (order) {
+    <div class="order-summary">
+        <div class="summary-row">
+            <span class="summary-label">Orden:</span>
+            <code>#{{ order.id.substring(0, 8) }}</code>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">Cliente:</span>
+            <span>{{ order.userFullName }}</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">Total:</span>
+            <strong>{{ order.totalAmount | currencyPen }}</strong>
+        </div>
+    </div>
+    }
+
+    <form [formGroup]="form" class="simple-form">
+        <div class="form-field">
+            <label>Nuevo estado *</label>
+            <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value"
+                placeholder="Seleccionar estado" [style]="{'width':'100%'}" />
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <app-button variant="ghost" label="Cancelar" (clicked)="onCancel()" />
+            <app-button variant="primary" label="Actualizar estado" icon="pi-check" [loading]="saving"
+                (clicked)="onSave()" />
+        </div>
+    </ng-template>
+</p-dialog>

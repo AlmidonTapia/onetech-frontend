@@ -1,1 +1,42 @@
-<p>login works!</p>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Iniciar Sesión</h2>
+      <p>Bienvenido de vuelta a OneTech</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @for (field of fields; track field.name) {
+        <div class="form-field">
+          <label [for]="field.name">{{ field.label }}</label>
+          <input 
+            pInputText 
+            [id]="field.name" 
+            [type]="field.type" 
+            [formControlName]="field.name" 
+            [placeholder]="field.placeholder"
+            [class.ng-invalid]="isInvalid(field.name)"
+            [class.ng-dirty]="isInvalid(field.name)"
+          />
+          @if (isInvalid(field.name)) {
+            <small class="field-error">Campo requerido</small>
+          }
+        </div>
+      }
+
+      <div class="form-actions">
+        <app-button 
+          type="submit" 
+          variant="primary" 
+          label="Ingresar" 
+          class="w-full"
+          [loading]="loading()" 
+        />
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      <p>¿No tienes una cuenta? <a routerLink="/auth/register">Regístrate aquí</a></p>
+    </div>
+  </div>
+</div>

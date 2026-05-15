@@ -1,11 +1,22 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar-search',
   standalone: true,
-  imports: [CommonModule],
+  imports: [FormsModule],
   templateUrl: './navbar-search.html',
   styleUrl: './navbar-search.css'
 })
-export class NavbarSearchComponent {}
+export class NavbarSearchComponent {
+  private router = inject(Router);
+  query = '';
+
+  search() {
+    const q = this.query.trim();
+    if (q) {
+      this.router.navigate(['/catalog'], { queryParams: { search: q } });
+    }
+  }
+}

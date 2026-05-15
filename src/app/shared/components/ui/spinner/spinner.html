@@ -1,1 +1,7 @@
-<p>spinner works!</p>
+<div class="spinner-wrapper" [class.spinner-fullpage]="fullPage">
+    <p-progressSpinner [style]="{ width: sizeMap[size], height: sizeMap[size] }" strokeWidth="3"
+        animationDuration=".75s" />
+    @if (label) {
+    <span class="spinner-label">{{ label }}</span>
+    }
+</div>

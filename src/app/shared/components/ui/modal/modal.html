@@ -1,1 +1,14 @@
-<p>modal works!</p>
+<p-dialog [visible]="modalService.visible()" [header]="modalService.config()?.title ?? ''" [modal]="true"
+    [closable]="true" [draggable]="false" [resizable]="false" styleClass="ot-dialog" (onHide)="modalService.close()">
+
+    <p class="modal-message">{{ modalService.config()?.message }}</p>
+
+    <ng-template pTemplate="footer">
+        <div class="modal-footer">
+            <app-button variant="ghost" [label]="modalService.config()?.cancelLabel ?? 'Cancelar'"
+                (clicked)="modalService.close()" />
+            <app-button [variant]="modalService.config()?.severity === 'danger' ? 'danger' : 'primary'"
+                [label]="modalService.config()?.confirmLabel ?? 'Confirmar'" (clicked)="modalService.confirm()" />
+        </div>
+    </ng-template>
+</p-dialog>

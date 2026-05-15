@@ -1,1 +1,35 @@
-<p>shipments-table works!</p>
+<p-table [value]="shipments" [loading]="loading" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [lazy]="true"
+    (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>ID Pedido</th>
+            <th>Método</th>
+            <th>Tracking</th>
+            <th>Costo</th>
+            <th>Llegada Estimada</th>
+            <th>Estado</th>
+            <th style="width:80px">Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-s>
+        <tr>
+            <td><span class="order-id">{{ s.orderId | slice:0:8 }}</span></td>
+            <td>{{ s.shipmentMethodName }}</td>
+            <td>{{ s.trackingNumber }}</td>
+            <td>{{ s.shippingCost | currency:'PEN' }}</td>
+            <td>{{ s.estimatedArrival | date:'mediumDate' }}</td>
+            <td><span class="status-badge" [class]="s.status | lowercase">{{ s.status | titlecase }}</span></td>
+            <td>
+                <div class="row-actions">
+                    <button class="act-btn" pTooltip="Cambiar Estado" (click)="editItem.emit(s)"><i
+                            class="pi pi-pencil"></i></button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="7" class="empty-cell">No hay envíos registrados.</td>
+        </tr>
+    </ng-template>
+</p-table>

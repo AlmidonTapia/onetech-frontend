@@ -1,11 +1,26 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-star-rating',
   standalone: true,
-  imports: [CommonModule],
+  imports: [FormsModule, RatingModule],
   templateUrl: './star-rating.html',
   styleUrl: './star-rating.css'
 })
-export class StarRatingComponent {}
+export class StarRatingComponent implements OnChanges {
+  @Input() value = 0;
+  @Input() readonly = true;
+  @Input() count?: number;
+  @Input() showCount = true;
+  @Output() ratingChange = new EventEmitter<number>();
+
+  rating = 0;
+
+  ngOnChanges() { this.rating = this.value; }
+
+  onRate(val: number) {
+    if (!this.readonly) this.ratingChange.emit(val);
+  }
+}

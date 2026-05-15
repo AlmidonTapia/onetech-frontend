@@ -1,1 +1,15 @@
-<p>shipments works!</p>
+<div class="admin-page">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Envíos</h1>
+      <p class="page-subtitle">{{ totalRecords() }} envíos registrados</p>
+    </div>
+    <app-button label="Nuevo envío" icon="pi-plus" (clicked)="openCreate()" />
+  </div>
+  <app-card padding="none">
+    <app-shipments-table [shipments]="shipments()" [totalRecords]="totalRecords()" [loading]="loading()"
+      (lazyLoad)="loadShipments($event)" (editItem)="openEdit($event)" />
+  </app-card>
+</div>
+<app-shipment-form [(visible)]="formVisible" [shipment]="editingShipment()" [saving]="saving()"
+  (save)="onCreate($event)" (updateStatus)="onUpdateStatus($event)" (cancel)="formVisible.set(false)" />

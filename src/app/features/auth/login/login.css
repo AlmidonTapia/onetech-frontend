@@ -1,1 +1,89 @@
-/* Login styles */
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 140px);
+  padding: 24px;
+}
+
+.auth-card {
+  background: white;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.auth-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ot-gray-900);
+  margin-bottom: 8px;
+}
+
+.auth-header p {
+  color: var(--ot-gray-500);
+  font-size: 14px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ot-gray-700);
+}
+
+.form-field input {
+  width: 100%;
+}
+
+.field-error {
+  color: var(--ot-danger-500);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.form-actions {
+  margin-top: 8px;
+}
+
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ot-gray-600);
+}
+
+.auth-footer a {
+  color: var(--ot-primary-600);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.auth-footer a:hover {
+  color: var(--ot-primary-700);
+  text-decoration: underline;
+}
+
+:host ::ng-deep .w-full button {
+  width: 100%;
+  justify-content: center;
+}

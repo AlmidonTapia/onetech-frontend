@@ -1,1 +1,21 @@
-<p>dashboard works!</p>
+<div class="admin-page">
+
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Dashboard</h1>
+      <p class="page-subtitle">Resumen general del negocio</p>
+    </div>
+  </div>
+
+  @if (loading()) {
+  <app-spinner size="lg" label="Cargando datos..." />
+  } @else {
+  <app-dashboard-stats [stats]="stats()" />
+
+  <div class="dashboard-grid">
+    <app-dashboard-chart [data]="chartData()" />
+    <app-dashboard-recent-orders [orders]="recentOrders()" />
+  </div>
+  }
+
+</div>

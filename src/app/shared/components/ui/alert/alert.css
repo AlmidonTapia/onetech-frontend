@@ -1,1 +1,45 @@
-/* Alert styles */
+.ot-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--ot-radius-md);
+  border: 1px solid transparent;
+  font-size: 14px;
+}
+
+.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+.alert-body { flex: 1; }
+.alert-title { display: block; font-weight: 600; margin-bottom: 2px; }
+.alert-content { line-height: 1.5; }
+
+.alert-close {
+  background: none; border: none; cursor: pointer;
+  padding: 2px; opacity: .6; flex-shrink: 0;
+  border-radius: var(--ot-radius-sm);
+  transition: opacity var(--ot-transition);
+  color: inherit;
+}
+.alert-close:hover { opacity: 1; }
+
+.alert-success {
+  background: var(--ot-success-bg);
+  color: #14532d;
+  border-color: #86efac;
+}
+.alert-error {
+  background: var(--ot-error-bg);
+  color: #7f1d1d;
+  border-color: #fca5a5;
+}
+.alert-warning {
+  background: var(--ot-warning-bg);
+  color: #78350f;
+  border-color: #fcd34d;
+}
+.alert-info {
+  background: var(--ot-info-bg);
+  color: #0c4a6e;
+  border-color: #7dd3fc;
+}

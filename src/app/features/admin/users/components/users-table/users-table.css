@@ -1,1 +1,4 @@
-/* UsersTable styles */
+.user-name { font-weight: 500; color: var(--ot-gray-900); }
+.role-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background-color: var(--ot-gray-100); color: var(--ot-gray-700); }
+.role-badge.admin { background-color: var(--ot-primary-50); color: var(--ot-primary-600); }
+.empty-cell { text-align: center; padding: 32px !important; color: var(--ot-gray-500); }

@@ -1,1 +1,27 @@
-/* Breadcrumb styles */
+.ot-breadcrumb ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  list-style: none;
+  padding: 0;
+}
+
+.bc-sep { color: var(--ot-gray-400); font-size: 12px; }
+
+.bc-link {
+  font-size: 13px;
+  color: var(--ot-blue);
+  padding: 4px 6px;
+  border-radius: var(--ot-radius-sm);
+  transition: background var(--ot-transition);
+}
+.bc-link:hover { background: var(--ot-blue-50); }
+.bc-home { color: var(--ot-gray-500); }
+.bc-home:hover { color: var(--ot-blue); }
+
+.bc-current {
+  font-size: 13px;
+  color: var(--ot-gray-500);
+  padding: 4px 6px;
+}

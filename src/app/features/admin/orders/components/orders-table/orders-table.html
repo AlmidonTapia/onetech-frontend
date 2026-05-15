@@ -1,1 +1,43 @@
-<p>orders-table works!</p>
+<p-table [value]="orders" [loading]="loading" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [lazy]="true"
+    (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" styleClass="p-datatable-sm"
+    [tableStyle]="{'min-width':'820px'}">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:130px">ID Orden</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th style="width:120px">Total</th>
+            <th style="width:130px">Estado</th>
+            <th style="width:110px">Acciones</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-order>
+        <tr>
+            <td><code class="order-id">#{{ order.id.substring(0, 8) }}</code></td>
+            <td>{{ order.userFullName }}</td>
+            <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="price">{{ order.totalAmount | currencyPen }}</td>
+            <td>
+                <p-tag [value]="getStatusLabel(order.status)" [severity]="getStatusSeverity(order.status)" />
+            </td>
+            <td>
+                <div class="row-actions">
+                    <button class="act-btn" pTooltip="Ver detalle" (click)="viewDetail.emit(order)">
+                        <i class="pi pi-eye"></i>
+                    </button>
+                    <button class="act-btn" pTooltip="Cambiar estado" (click)="changeStatus.emit(order)">
+                        <i class="pi pi-sync"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="6" class="empty-cell">No hay órdenes registradas.</td>
+        </tr>
+    </ng-template>
+</p-table>

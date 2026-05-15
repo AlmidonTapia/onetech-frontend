@@ -1,1 +1,26 @@
-<p>product-images-manager works!</p>
+<p-dialog [visible]="visible" [header]="'Imágenes — ' + (product?.productName ?? '')" [modal]="true" [closable]="true"
+    [draggable]="false" [style]="{ width: '620px' }" (onHide)="close()">
+
+    <div class="images-grid">
+        @for (img of images(); track img.id) {
+        <div class="img-item" [class.img-item--main]="img.isPrincipal">
+            <img [src]="img.imageUrl" [alt]="'Imagen'" />
+            @if (img.isPrincipal) { <span class="main-badge">Principal</span> }
+            <button class="img-del" (click)="deleteImage(img.id)">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
+        }
+        @if (images().length === 0) {
+        <p class="no-img">Sin imágenes. Sube la primera imagen abajo.</p>
+        }
+    </div>
+
+    <p-fileUpload mode="advanced" [multiple]="true" accept="image/*" chooseLabel="Elegir imágenes" uploadLabel="Subir"
+        cancelLabel="Limpiar" [auto]="false" [customUpload]="true" (uploadHandler)="onUpload($event)"
+        [maxFileSize]="5000000" styleClass="upload-area" />
+
+    <ng-template pTemplate="footer">
+        <app-button variant="ghost" label="Cerrar" (clicked)="close()" />
+    </ng-template>
+</p-dialog>
