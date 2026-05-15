@@ -30,12 +30,12 @@ export class ProductImagesManagerComponent implements OnChanges {
 
   loadImages() {
     if (!this.product) return;
-    this.productService.getImages(this.product.id).subscribe(imgs => this.images.set(imgs));
+    this.productService.getImages(this.product.idProduct).subscribe(imgs => this.images.set(imgs));
   }
 
   onUpload(event: any) {
     if (!this.product) return;
-    this.productService.uploadImages(this.product.id, event.files, 0).subscribe({
+    this.productService.uploadImages(this.product.idProduct, event.files, 0).subscribe({
       next: () => { this.alertService.success('Imágenes subidas'); this.loadImages(); this.updated.emit(); },
       error: () => this.alertService.error('Error al subir imágenes'),
     });
@@ -43,7 +43,7 @@ export class ProductImagesManagerComponent implements OnChanges {
 
   deleteImage(imageId: string) {
     if (!this.product) return;
-    this.productService.deleteImage(this.product.id, imageId).subscribe({
+    this.productService.deleteImage(this.product.idProduct, imageId).subscribe({
       next: () => { this.alertService.success('Imagen eliminada'); this.loadImages(); },
       error: () => this.alertService.error('Error al eliminar'),
     });

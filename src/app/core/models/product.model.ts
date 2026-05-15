@@ -1,23 +1,24 @@
 export interface Product {
-  id: string;
+  idProduct: string;
   productName: string;
   sku: string;
   description: string;
   price: number;
   stockQuantity: number;
-  specifications?: Record<string, string>;
-  categoryId: string;
-  categoryName: string;
-  brandId: string;
-  brandName: string;
+  specifications?: Record<string, any>;
+  idCategory: string;
+  categoryName?: string;
+  idBrand: string;
+  brandName?: string;
   images?: ProductImage[];
   averageRating?: number;
   totalReviews?: number;
   createdAt?: string;
+  status?: string;
 }
 
 export interface ProductImage {
-  id: string;
+  idProductImage: string;
   imageUrl: string;
   isPrincipal: boolean;
 }
@@ -30,14 +31,14 @@ export interface CreateProductRequest {
   description: string;
   price: number;
   stockQuantity: number;
-  specifications?: Record<string, string>;
+  specifications?: Record<string, any>;
 }
 
 export interface ProductFilters {
   page?: number;
   size?: number;
-  categoryId?: string;
-  brandId?: string;
+  idCategory?: string;
+  idBrand?: string;
   minPrice?: number;
   maxPrice?: number;
   search?: string;

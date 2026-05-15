@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { CategoryService } from '../../../../../core/services/category.service';
 
 interface NavCategory {
   label: string;
   route: string;
   queryParams: Record<string, string>;
   accent?: boolean;
+  subcategories?: NavCategory[];
 }
 
 @Component({
@@ -16,16 +18,33 @@ interface NavCategory {
   templateUrl: './navbar-menu.html',
   styleUrl: './navbar-menu.css'
 })
-export class NavbarMenuComponent {
-  categories: NavCategory[] = [
-    { label: 'Laptops & PCs', route: '/catalog', queryParams: { category: 'laptops' } },
-    { label: 'Componentes', route: '/catalog', queryParams: { category: 'componentes' } },
-    { label: 'Gaming', route: '/catalog', queryParams: { category: 'gaming' } },
-    { label: 'Monitores', route: '/catalog', queryParams: { category: 'monitores' } },
-    { label: 'Celulares', route: '/catalog', queryParams: { category: 'celulares' } },
-    { label: 'Tablets', route: '/catalog', queryParams: { category: 'tablets' } },
-    { label: 'Periféricos', route: '/catalog', queryParams: { category: 'perifericos' } },
-    { label: 'Accesorios', route: '/catalog', queryParams: { category: 'accesorios' } },
-    { label: '⚡ Ofertas', route: '/catalog', queryParams: { category: 'ofertas' }, accent: true },
-  ];
+export class NavbarMenuComponent implements OnInit {
+  private categoryService = inject(CategoryService);
+  
+  categories = signal<NavCategory[]>([]);
+
+  ngOnInit() {
+    this.categoryService.getTree().subscribe({
+      next: (res) => {
+        const mapped: NavCategory[] = res.map(cat => this.mapCategory(cat));
+        
+        // Add "All" at the beginning
+        mapped.unshift({ label: 'Todas las categorías', route: '/catalog', queryParams: {} });
+
+        // Add a static "Offers" item at the end if desired
+        mapped.push({ label: '⚡ Ofertas', route: '/catalog', queryParams: { search: 'oferta' }, accent: true });
+        
+        this.categories.set(mapped);
+      }
+    });
+  }
+
+  private mapCategory(cat: any): NavCategory {
+    return {
+      label: cat.categoryName,
+      route: '/catalog',
+      queryParams: { idCategory: cat.idCategory },
+      subcategories: cat.subcategories?.map((sub: any) => this.mapCategory(sub))
+    };
+  }
 }

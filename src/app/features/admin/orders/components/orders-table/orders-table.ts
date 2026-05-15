@@ -26,9 +26,8 @@ export class OrdersTableComponent {
   readonly statusConfig: Record<OrderStatus, { label: string; severity: SeverityType }> = {
     PENDIENTE: { label: 'Pendiente', severity: 'warn' },
     PAGADO: { label: 'Pagado', severity: 'info' },
-    EN_PROCESO: { label: 'En proceso', severity: 'secondary' },
-    ENVIADO: { label: 'Enviado', severity: 'contrast' },
-    ENTREGADO: { label: 'Entregado', severity: 'success' },
+    ENVIADO: { label: 'Enviado', severity: 'secondary' },
+    COMPLETADO: { label: 'Completado', severity: 'success' },
     CANCELADO: { label: 'Cancelado', severity: 'danger' },
   };
 

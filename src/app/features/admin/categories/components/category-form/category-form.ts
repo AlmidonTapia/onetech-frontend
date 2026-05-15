@@ -25,7 +25,7 @@ export class CategoryFormComponent implements OnChanges {
 
   formConfig: any[] = [
     [{ name: 'categoryName', label: 'Nombre *', type: 'text', placeholder: 'Ej: Laptops & PCs' }],
-    [{ name: 'parentIdCategory', label: 'Categoría padre', type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'id', placeholder: 'Sin categoría padre', optional: true }]
+    [{ name: 'parentIdCategory', label: 'Categoría padre', type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Sin categoría padre', optional: true }]
   ];
 
   form = this.fb.group({
@@ -34,7 +34,7 @@ export class CategoryFormComponent implements OnChanges {
   });
 
   get title() { return this.category ? 'Editar Categoría' : 'Nueva Categoría'; }
-  get parentOptions() { return this.categories.filter(c => c.id !== this.category?.id); }
+  get parentOptions() { return this.categories.filter(c => c.idCategory !== this.category?.idCategory); }
 
   getOptions(key: string) {
     if (key === 'parentOptions') return this.parentOptions;

@@ -39,8 +39,8 @@ export class ProductFormComponent implements OnChanges {
       { name: 'description', label: 'Descripción *', type: 'textarea', placeholder: 'Descripción del producto...' }
     ],
     [
-      { name: 'idCategory', label: 'Categoría *', type: 'select', optionsKey: 'categories', optionLabel: 'categoryName', optionValue: 'id', placeholder: 'Seleccionar' },
-      { name: 'idBrand', label: 'Marca *', type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'id', placeholder: 'Seleccionar' }
+      { name: 'idCategory', label: 'Categoría *', type: 'select', optionsKey: 'categories', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Seleccionar' },
+      { name: 'idBrand', label: 'Marca *', type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'idBrand', placeholder: 'Seleccionar' }
     ],
     [
       { name: 'price', label: 'Precio (S/) *', type: 'number', min: 0, minFractionDigits: 2, mode: 'decimal' },
@@ -78,7 +78,7 @@ export class ProductFormComponent implements OnChanges {
         productName: this.product.productName, sku: this.product.sku,
         description: this.product.description, price: this.product.price,
         stockQuantity: this.product.stockQuantity,
-        idCategory: this.product.categoryId, idBrand: this.product.brandId,
+        idCategory: this.product.idCategory, idBrand: this.product.idBrand,
       });
     } else {
       this.form.reset({ price: 0, stockQuantity: 0 });

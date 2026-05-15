@@ -29,14 +29,15 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   methods = signal<ShipmentMethod[]>([]);
   statuses = [
-    { label: 'Preparando', value: 'PREPARANDO' },
+    { label: 'En Preparación', value: 'EN_PREPARACION' },
     { label: 'En Camino', value: 'EN_CAMINO' },
-    { label: 'Entregado', value: 'ENTREGADO' }
+    { label: 'Entregado', value: 'ENTREGADO' },
+    { label: 'Devuelto', value: 'DEVUELTO' }
   ];
 
   formConfig: any[] = [
     [{ name: 'idOrder', label: 'ID del Pedido *', type: 'text', placeholder: 'Ej: ord_123' }],
-    [{ name: 'idShipmentMethod', label: 'Método de Envío *', type: 'select', optionsKey: 'methods', optionLabel: 'methodName', optionValue: 'id', placeholder: 'Seleccione un método' }],
+    [{ name: 'idShipmentMethod', label: 'Método de Envío *', type: 'select', optionsKey: 'methods', optionLabel: 'methodName', optionValue: 'idShipmentMethod', placeholder: 'Seleccione un método' }],
     [{ name: 'trackingNumber', label: 'Tracking Number *', type: 'text', placeholder: 'Ej: TRK-987' }],
     [
       { name: 'shippingCost', label: 'Costo (S/.) *', type: 'number', placeholder: '0.00', min: 0, minFractionDigits: 2 },
@@ -89,7 +90,7 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   onSave() {
     if (this.shipment) {
       if (this.statusForm.invalid) { this.statusForm.markAllAsTouched(); return; }
-      this.updateStatus.emit({ id: this.shipment.id, status: this.statusForm.value.status as ShipmentStatus });
+      this.updateStatus.emit({ id: this.shipment.idShipment, status: this.statusForm.value.status as ShipmentStatus });
     } else {
       if (this.form.invalid) { this.form.markAllAsTouched(); return; }
       const payload: CreateShipmentRequest = {

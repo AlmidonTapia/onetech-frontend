@@ -1,11 +1,11 @@
 export interface Qualification {
-  id: string;
+  idQualification: string;
   idProduct: string;
-  userId: string;
-  userFullName: string;
+  idUser: string;
+  userFullName?: string;
   rating: number;
   commentText: string;
-  createdAt: string;
+  qualificationDate: string;
 }
 
 export interface CreateQualificationRequest {

@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
       users: this.userService.getAllUsers(0, 1),
     }).subscribe({
       next: ({ products, orders, users }) => {
-        const pending = orders.content.filter(o => o.status === 'PENDIENTE').length;
+        const pending = orders.content.filter(o => o.orderStatus === 'PENDIENTE').length;
 
         this.stats.set([
           { label: 'Productos', value: products.totalElements, icon: 'pi-box', color: 'blue', suffix: 'registrados' },
@@ -57,16 +57,16 @@ export class DashboardComponent implements OnInit {
 
   private buildChartData(orders: Order[]) {
     const count: Record<string, number> = {
-      PENDIENTE: 0, PAGADO: 0, EN_PROCESO: 0,
-      ENVIADO: 0, ENTREGADO: 0, CANCELADO: 0
+      PENDIENTE: 0, PAGADO: 0, ENVIADO: 0, 
+      COMPLETADO: 0, CANCELADO: 0
     };
-    orders.forEach(o => { if (count[o.status] !== undefined) count[o.status]++; });
+    orders.forEach(o => { if (count[o.orderStatus] !== undefined) count[o.orderStatus]++; });
 
     this.chartData.set({
-      labels: ['Pendiente', 'Pagado', 'En proceso', 'Enviado', 'Entregado', 'Cancelado'],
+      labels: ['Pendiente', 'Pagado', 'Enviado', 'Completado', 'Cancelado'],
       datasets: [{
         data: Object.values(count),
-        backgroundColor: ['#d97706', '#0284c7', '#4d88ff', '#0047cc', '#16a34a', '#dc2626'],
+        backgroundColor: ['#d97706', '#0284c7', '#0047cc', '#16a34a', '#dc2626'],
         borderWidth: 0,
       }]
     });

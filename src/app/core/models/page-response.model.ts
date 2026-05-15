@@ -1,9 +1,8 @@
 export interface PageResponse<T> {
   content: T[];
+  pageNumber: number;
+  pageSize: number;
   totalElements: number;
   totalPages: number;
-  size: number;
-  number: number;
-  first: boolean;
   last: boolean;
 }

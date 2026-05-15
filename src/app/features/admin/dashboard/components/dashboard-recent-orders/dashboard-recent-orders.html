@@ -8,15 +8,15 @@
     @if (orders.length === 0) {
     <p class="recent-empty">No hay órdenes recientes.</p>
     } @else {
-    @for (order of orders; track order.id) {
+    @for (order of orders; track order.idOrder) {
     <div class="order-row">
       <div class="order-info">
-        <span class="order-id">#{{ order.id.substring(0, 8) }}</span>
+        <span class="order-id">#{{ order.idOrder.substring(0, 8) }}</span>
         <span class="order-user">{{ order.userFullName }}</span>
       </div>
       <div class="order-meta">
         <span class="order-total">{{ order.totalAmount | currencyPen }}</span>
-        <p-tag [value]="getStatusLabel(order.status)" [severity]="getStatusSeverity(order.status)" />
+        <p-tag [value]="getStatusLabel(order.orderStatus)" [severity]="getStatusSeverity(order.orderStatus)" />
       </div>
     </div>
     }

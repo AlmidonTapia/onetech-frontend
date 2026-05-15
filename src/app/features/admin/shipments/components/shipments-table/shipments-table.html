@@ -13,7 +13,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-s>
         <tr>
-            <td><span class="order-id">{{ s.orderId | slice:0:8 }}</span></td>
+            <td><span class="order-id">{{ s.idOrder | slice:0:8 }}</span></td>
             <td>{{ s.shipmentMethodName }}</td>
             <td>{{ s.trackingNumber }}</td>
             <td>{{ s.shippingCost | currency:'PEN' }}</td>

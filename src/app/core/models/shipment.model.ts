@@ -1,10 +1,10 @@
-export type ShipmentStatus = 'PREPARANDO' | 'EN_CAMINO' | 'ENTREGADO';
+export type ShipmentStatus = 'EN_PREPARACION' | 'EN_CAMINO' | 'ENTREGADO' | 'DEVUELTO';
 
 export interface Shipment {
-  id: string;
-  orderId: string;
-  shipmentMethodId: string;
-  shipmentMethodName: string;
+  idShipment: string;
+  idOrder: string;
+  idShipmentMethod: string;
+  shipmentMethodName?: string;
   trackingNumber: string;
   shippingCost: number;
   estimatedArrival: string;
@@ -12,7 +12,7 @@ export interface Shipment {
 }
 
 export interface ShipmentMethod {
-  id: string;
+  idShipmentMethod: string;
   methodName: string;
   basePrice: number;
 }

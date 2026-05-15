@@ -28,14 +28,13 @@ export class OrderStatusFormComponent implements OnChanges {
   readonly statusOptions: { label: string; value: OrderStatus }[] = [
     { label: 'Pendiente', value: 'PENDIENTE' },
     { label: 'Pagado', value: 'PAGADO' },
-    { label: 'En proceso', value: 'EN_PROCESO' },
     { label: 'Enviado', value: 'ENVIADO' },
-    { label: 'Entregado', value: 'ENTREGADO' },
+    { label: 'Completado', value: 'COMPLETADO' },
     { label: 'Cancelado', value: 'CANCELADO' },
   ];
 
   ngOnChanges() {
-    if (this.order) this.form.patchValue({ status: this.order.status });
+    if (this.order) this.form.patchValue({ status: this.order.orderStatus });
   }
 
   onSave() {

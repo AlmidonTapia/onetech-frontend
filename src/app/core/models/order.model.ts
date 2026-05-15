@@ -1,21 +1,21 @@
-export type OrderStatus = 'PENDIENTE' | 'PAGADO' | 'EN_PROCESO' | 'ENVIADO' | 'ENTREGADO' | 'CANCELADO';
+export type OrderStatus = 'PENDIENTE' | 'PAGADO' | 'ENVIADO' | 'COMPLETADO' | 'CANCELADO';
 
 export interface Order {
-  id: string;
-  userId: string;
-  userFullName: string;
-  items: OrderItem[];
+  idOrder: string;
+  idUser: string;
+  userFullName?: string;
+  details: OrderItem[];
   totalAmount: number;
-  status: OrderStatus;
-  addressId: string;
+  orderStatus: OrderStatus;
+  idAddress: string;
   createdAt: string;
   updatedAt?: string;
 }
 
 export interface OrderItem {
-  id: string;
-  productId: string;
-  productName: string;
+  idOrderDetail: string;
+  idProduct: string;
+  productName?: string;
   unitPrice: number;
   quantity: number;
   subtotal: number;
@@ -23,5 +23,7 @@ export interface OrderItem {
 
 export interface CreateOrderRequest {
   idAddress: string;
-  items: { idProduct: string; quantity: number }[];
+  idShipmentMethod: string;
+  idCoupon?: string;
+  items: { idProduct: string; quantity: number; unitPrice: number }[];
 }
