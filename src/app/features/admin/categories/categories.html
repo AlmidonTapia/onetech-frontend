@@ -1,1 +1,15 @@
-<p>categories works!</p>
+<div class="admin-page">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Categorías</h1>
+      <p class="page-subtitle">{{ totalRecords() }} categorías registradas</p>
+    </div>
+    <app-button label="Nueva categoría" icon="pi-plus" (clicked)="openCreate()" />
+  </div>
+  <app-card padding="none">
+    <app-categories-table [categories]="categories()" [totalRecords]="totalRecords()" [loading]="loading()"
+      (lazyLoad)="loadCategories($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)" />
+  </app-card>
+</div>
+<app-category-form [(visible)]="formVisible" [category]="editingCat()" [categories]="categories()" [saving]="saving()"
+  (save)="onSave($event)" (cancel)="formVisible.set(false)" />

@@ -1,1 +1,12 @@
-<p>users works!</p>
+<div class="admin-page">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Usuarios</h1>
+      <p class="page-subtitle">{{ totalRecords() }} usuarios registrados</p>
+    </div>
+  </div>
+  <app-card padding="none">
+    <app-users-table [users]="users()" [totalRecords]="totalRecords()" [loading]="loading()"
+      (lazyLoad)="loadUsers($event)" />
+  </app-card>
+</div>

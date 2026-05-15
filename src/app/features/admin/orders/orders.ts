@@ -1,11 +1,49 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { OrdersTableComponent } from './components/orders-table/orders-table';
+import { OrderStatusFormComponent } from './components/order-status-form/order-status-form';
+import { CardComponent } from '../../../shared/components/ui/card/card';
+import { AlertService } from '../../../shared/services/alert.service';
+import { OrderService } from '../../../core/services/order.service';
+import { Order, OrderStatus } from '../../../core/models/order.model';
 
 @Component({
-  selector: 'app-orders',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './orders.html',
-  styleUrl: './orders.css'
+  selector: 'app-orders', standalone: true,
+  imports: [OrdersTableComponent, OrderStatusFormComponent, CardComponent],
+  templateUrl: './orders.html', styleUrl: './orders.css'
 })
-export class OrdersComponent {}
+export class OrdersComponent implements OnInit {
+  private orderService = inject(OrderService);
+  private alertService = inject(AlertService);
+
+  orders = signal<Order[]>([]);
+  totalRecords = signal(0);
+  loading = signal(false);
+  saving = signal(false);
+  statusVisible = signal(false);
+  editingOrder = signal<Order | null>(null);
+
+  ngOnInit() { this.loadOrders(); }
+
+  loadOrders(event?: any) {
+    const page = event ? Math.floor(event.first / event.rows) : 0;
+    this.loading.set(true);
+    this.orderService.getAll(page, 10).subscribe({
+      next: r => { this.orders.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
+      error: () => this.loading.set(false),
+    });
+  }
+
+  openStatus(o: Order) { this.editingOrder.set(o); this.statusVisible.set(true); }
+
+  onStatusSave(newStatus: OrderStatus) {
+    if (!this.editingOrder()) return;
+    this.saving.set(true);
+    this.orderService.updateStatus(this.editingOrder()!.id, newStatus).subscribe({
+      next: () => {
+        this.alertService.success('Estado actualizado correctamente');
+        this.statusVisible.set(false); this.saving.set(false); this.loadOrders();
+      },
+      error: () => { this.alertService.error('Error al actualizar estado'); this.saving.set(false); }
+    });
+  }
+}

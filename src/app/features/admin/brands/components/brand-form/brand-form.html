@@ -1,1 +1,26 @@
-<p>brand-form works!</p>
+<p-dialog [visible]="visible" [header]="title" [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{ width: '400px' }" (onHide)="onCancel()">
+    <form [formGroup]="form" class="simple-form">
+        @for (row of formConfig; track $index) {
+          <div class="form-row">
+            @for (field of row; track field.name) {
+              <div class="form-field" [style.flex]="field.flex || '1'">
+                  <label>{{ field.label }}</label>
+                  @if (field.type === 'text') {
+                    <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder" />
+                  }
+                  @if (isInvalid(field.name)) {
+                    <span class="field-error">Campo requerido</span>
+                  }
+              </div>
+            }
+          </div>
+        }
+    </form>
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <app-button variant="ghost" label="Cancelar" (clicked)="onCancel()" />
+            <app-button variant="primary" label="Guardar" icon="pi-check" [loading]="saving" (clicked)="onSave()" />
+        </div>
+    </ng-template>
+</p-dialog>

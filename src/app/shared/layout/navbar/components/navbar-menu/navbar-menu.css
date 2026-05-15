@@ -1,1 +1,37 @@
-/* NavbarMenu styles */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-menu::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  display: block;
+  padding: 0 14px;
+  height: var(--ot-nav-cat-height);
+  line-height: var(--ot-nav-cat-height);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,.88);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color var(--ot-transition),
+              border-color var(--ot-transition),
+              background var(--ot-transition);
+}
+
+.nav-link:hover {
+  color: #fff;
+  background: rgba(255,255,255,.10);
+  border-bottom-color: rgba(255,255,255,.5);
+}
+
+.nav-link--accent {
+  color: #ffcc00;
+  font-weight: 700;
+}
+.nav-link--accent:hover { color: #ffe566; }

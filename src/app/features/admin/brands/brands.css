@@ -1,1 +1,4 @@
-/* Brands styles */
+.admin-page{display:flex;flex-direction:column;gap:24px;}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.page-title h1{font-size:24px;font-weight:700;color:var(--ot-gray-900);}
+.page-subtitle{font-size:14px;color:var(--ot-gray-500);margin-top:4px;}

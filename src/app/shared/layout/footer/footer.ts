@@ -35,5 +35,12 @@ export class FooterComponent {
     { icon: 'pi-youtube', href: 'https://youtube.com', label: 'YouTube' },
   ];
 
+  readonly contactInfo = [
+    { icon: 'pi-map-marker', text: 'Av. Javier Prado 1234, San Isidro, Lima' },
+    { icon: 'pi-phone', text: '+51 (01) 234-5678', link: 'tel:+5101234567' },
+    { icon: 'pi-envelope', text: 'soporte@onetech.pe', link: 'mailto:soporte@onetech.pe' },
+    { icon: 'pi-clock', text: 'Lun–Sab 9:00am – 6:00pm' }
+  ];
+
   readonly payments = ['Visa', 'Mastercard', 'Yape', 'Plin', 'BCP', 'Interbank'];
 }

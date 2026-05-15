@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 
 interface NavCategory {
@@ -12,7 +12,7 @@ interface NavCategory {
 @Component({
   selector: 'app-navbar-menu',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgClass],
+  imports: [RouterLink, NgClass],
   templateUrl: './navbar-menu.html',
   styleUrl: './navbar-menu.css'
 })
@@ -26,6 +26,6 @@ export class NavbarMenuComponent {
     { label: 'Tablets', route: '/catalog', queryParams: { category: 'tablets' } },
     { label: 'Periféricos', route: '/catalog', queryParams: { category: 'perifericos' } },
     { label: 'Accesorios', route: '/catalog', queryParams: { category: 'accesorios' } },
-    { label: 'Ofertas', route: '/catalog', queryParams: { category: 'ofertas' }, accent: true },
+    { label: '⚡ Ofertas', route: '/catalog', queryParams: { category: 'ofertas' }, accent: true },
   ];
 }

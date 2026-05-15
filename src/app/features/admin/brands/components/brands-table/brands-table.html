@@ -1,1 +1,27 @@
-<p>brands-table works!</p>
+<p-table [value]="brands" [loading]="loading" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [lazy]="true"
+    (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Marca</th>
+            <th style="width:100px">Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-brand>
+        <tr>
+            <td><span class="brand-name">{{ brand.brandName }}</span></td>
+            <td>
+                <div class="row-actions">
+                    <button class="act-btn" pTooltip="Editar" (click)="editItem.emit(brand)"><i
+                            class="pi pi-pencil"></i></button>
+                    <button class="act-btn act-btn--danger" pTooltip="Eliminar" (click)="deleteItem.emit(brand)"><i
+                            class="pi pi-trash"></i></button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="2" class="empty-cell">No hay marcas registradas.</td>
+        </tr>
+    </ng-template>
+</p-table>

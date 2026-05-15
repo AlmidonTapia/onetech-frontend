@@ -1,11 +1,57 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, OnChanges, inject } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
+import { Category, CreateCategoryRequest } from '../../../../../core/models/category.model';
 
 @Component({
   selector: 'app-category-form',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent],
   templateUrl: './category-form.html',
   styleUrl: './category-form.css'
 })
-export class CategoryFormComponent {}
+export class CategoryFormComponent implements OnChanges {
+  private fb = inject(FormBuilder);
+  @Input() visible: boolean = false;
+  @Input() category: Category | null = null;
+  @Input() categories: Category[] = [];
+  @Input() saving = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
+  @Output() save = new EventEmitter<CreateCategoryRequest>();
+  @Output() cancel = new EventEmitter<void>();
+
+  formConfig: any[] = [
+    [{ name: 'categoryName', label: 'Nombre *', type: 'text', placeholder: 'Ej: Laptops & PCs' }],
+    [{ name: 'parentIdCategory', label: 'Categoría padre', type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'id', placeholder: 'Sin categoría padre', optional: true }]
+  ];
+
+  form = this.fb.group({
+    categoryName: ['', [Validators.required, Validators.minLength(2)]],
+    parentIdCategory: [null as string | null],
+  });
+
+  get title() { return this.category ? 'Editar Categoría' : 'Nueva Categoría'; }
+  get parentOptions() { return this.categories.filter(c => c.id !== this.category?.id); }
+
+  getOptions(key: string) {
+    if (key === 'parentOptions') return this.parentOptions;
+    return [];
+  }
+
+  isInvalid(field: string) {
+    const control = this.form.get(field);
+    return control?.invalid && control?.touched;
+  }
+
+  ngOnChanges() {
+    this.category
+      ? this.form.patchValue({ categoryName: this.category.categoryName, parentIdCategory: this.category.parentIdCategory ?? null })
+      : this.form.reset();
+  }
+
+  onSave() { if (this.form.invalid) { this.form.markAllAsTouched(); return; } this.save.emit(this.form.value as CreateCategoryRequest); }
+  onCancel() { this.form.reset(); this.cancel.emit(); this.visibleChange.emit(false); }
+}

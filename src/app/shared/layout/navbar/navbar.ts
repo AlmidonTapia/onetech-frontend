@@ -14,4 +14,12 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class NavbarComponent {
   authService = inject(AuthService);
+
+  topbarInfo = {
+    left: { icon: 'pi-truck', text: 'Envío gratis desde S/ 199 · Lima' },
+    right: [
+      { icon: 'pi-phone', text: '+51 (01) 234-5678' },
+      { icon: 'pi-clock', text: 'Lun–Sab 9am–6pm' }
+    ]
+  };
 }

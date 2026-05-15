@@ -51,22 +51,16 @@
         <div class="footer-col">
             <h3 class="footer-heading">Contacto</h3>
             <ul class="footer-contact">
+                @for(item of contactInfo; track item.text) {
                 <li>
-                    <i class="pi pi-map-marker"></i>
-                    <span>Av. Javier Prado 1234, San Isidro, Lima</span>
+                    <i class="pi" [class]="item.icon"></i>
+                    @if (item.link) {
+                        <a [href]="item.link">{{ item.text }}</a>
+                    } @else {
+                        <span>{{ item.text }}</span>
+                    }
                 </li>
-                <li>
-                    <i class="pi pi-phone"></i>
-                    <a href="tel:+5101234567">+51 (01) 234-5678</a>
-                </li>
-                <li>
-                    <i class="pi pi-envelope"></i>
-                    <a href="mailto:soporte@onetech.pe">soporte@onetech.pe</a>
-                </li>
-                <li>
-                    <i class="pi pi-clock"></i>
-                    <span>Lun–Sab 9:00am – 6:00pm</span>
-                </li>
+                }
             </ul>
         </div>
 

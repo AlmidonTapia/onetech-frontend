@@ -1,1 +1,26 @@
-<p>users-table works!</p>
+<p-table [value]="users" [loading]="loading" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [lazy]="true"
+    (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Nombre Completo</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Teléfono</th>
+            <th>Fecha Registro</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+        <tr>
+            <td><span class="user-name">{{ user.firstName }} {{ user.lastName }}</span></td>
+            <td>{{ user.email }}</td>
+            <td><span class="role-badge" [class.admin]="user.role === 'ADMIN'">{{ user.role | titlecase }}</span></td>
+            <td>{{ user.phone || 'No registrado' }}</td>
+            <td>{{ user.createdAt | date:'mediumDate' }}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5" class="empty-cell">No hay usuarios registrados.</td>
+        </tr>
+    </ng-template>
+</p-table>

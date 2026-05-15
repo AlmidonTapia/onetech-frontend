@@ -1,1 +1,42 @@
-<p>register works!</p>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Crear Cuenta</h2>
+      <p>Únete a OneTech hoy mismo</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @for (field of fields; track field.name) {
+        <div class="form-field">
+          <label [for]="field.name">{{ field.label }}</label>
+          <input 
+            pInputText 
+            [id]="field.name" 
+            [type]="field.type" 
+            [formControlName]="field.name" 
+            [placeholder]="field.placeholder"
+            [class.ng-invalid]="isInvalid(field.name)"
+            [class.ng-dirty]="isInvalid(field.name)"
+          />
+          @if (isInvalid(field.name)) {
+            <small class="field-error">Campo inválido o requerido</small>
+          }
+        </div>
+      }
+
+      <div class="form-actions">
+        <app-button 
+          type="submit" 
+          variant="primary" 
+          label="Registrarse" 
+          class="w-full"
+          [loading]="loading()" 
+        />
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      <p>¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a></p>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,28 @@
-<p>products works!</p>
+<div class="admin-page">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Productos</h1>
+      <p class="page-subtitle">{{ totalRecords() }} productos registrados</p>
+    </div>
+    <app-button label="Nuevo producto" icon="pi-plus" (clicked)="openCreate()" />
+  </div>
+
+  <app-card padding="none">
+    <div card-header class="table-toolbar">
+      <div class="search-box">
+        <i class="pi pi-search"></i>
+        <input pInputText [(ngModel)]="search" (keyup.enter)="loadProducts()"
+          placeholder="Buscar por nombre o SKU..." />
+      </div>
+      <app-button variant="ghost" icon="pi-refresh" label="Actualizar" (clicked)="loadProducts()" />
+    </div>
+    <app-products-table [products]="products()" [totalRecords]="totalRecords()" [loading]="loading()"
+      (lazyLoad)="loadProducts($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)"
+      (manageImages)="openImages($event)" />
+  </app-card>
+</div>
+
+<app-product-form [(visible)]="formVisible" [product]="editingProduct()" [categories]="categories()" [brands]="brands()"
+  [saving]="saving()" (save)="onSave($event)" (cancel)="formVisible.set(false)" />
+
+<app-product-images-manager [(visible)]="imagesVisible" [product]="editingProduct()" (updated)="loadProducts()" />

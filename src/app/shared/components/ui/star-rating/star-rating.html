@@ -1,5 +1,5 @@
 <div class="ot-star-rating">
-    <p-rating [(ngModel)]="rating" [readonly]="readonly" [cancel]="false" (ngModelChange)="onRate($event)" />
+    <p-rating [(ngModel)]="rating" [readonly]="readonly" (ngModelChange)="onRate($event)" />
 
     @if (showCount && count !== undefined) {
     <span class="rating-count">({{ count }} reseñas)</span>

@@ -1,1 +1,9 @@
-/* ShipmentsTable styles */
+.order-id { font-weight: 600; font-family: monospace; color: var(--ot-gray-900); }
+.status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; }
+.status-badge.preparando { background-color: var(--ot-gray-100); color: var(--ot-gray-700); }
+.status-badge.en_camino { background-color: var(--ot-warning-50); color: var(--ot-warning-700); }
+.status-badge.entregado { background-color: var(--ot-success-50); color: var(--ot-success-700); }
+.empty-cell { text-align: center; padding: 32px !important; color: var(--ot-gray-500); }
+.row-actions { display: flex; gap: 8px; justify-content: center; }
+.act-btn { width: 32px; height: 32px; border-radius: 6px; border: none; background: transparent; color: var(--ot-gray-500); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.act-btn:hover { background: var(--ot-gray-100); color: var(--ot-primary-600); }
