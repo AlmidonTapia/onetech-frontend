@@ -1,5 +1,5 @@
 .modal-message {
-  color: var(--ot-gray-600);
+  color: var(--ot-text-muted);
   font-size: 15px;
   line-height: 1.6;
   padding-bottom: 4px;
@@ -13,12 +13,12 @@
 
 :host ::ng-deep .ot-dialog .p-dialog-header {
   padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--ot-gray-200);
+  border-bottom: 1px solid var(--ot-border-color);
 }
 :host ::ng-deep .ot-dialog .p-dialog-content {
   padding: 20px 24px;
 }
 :host ::ng-deep .ot-dialog .p-dialog-footer {
   padding: 16px 24px 20px;
-  border-top: 1px solid var(--ot-gray-200);
+  border-top: 1px solid var(--ot-border-color);
 }

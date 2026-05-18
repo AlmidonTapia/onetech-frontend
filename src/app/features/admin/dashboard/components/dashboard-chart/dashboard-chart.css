@@ -1,14 +1,15 @@
 .chart-card {
-  background: var(--ot-white);
+  background: var(--ot-bg-surface);
   border-radius: var(--ot-radius-lg);
-  border: 1px solid var(--ot-gray-200);
+  border: 1px solid var(--ot-border-color);
   padding: 20px;
   height: 100%;
-  box-shadow: var(--ot-shadow-sm);
+  box-shadow: var(--ot-shadow-theme);
+  transition: var(--ot-transition);
 }
 .chart-header { margin-bottom: 16px; }
-.chart-title  { font-size: 15px; font-weight: 600; color: var(--ot-gray-900); }
-.chart-subtitle { font-size: 12px; color: var(--ot-gray-400); }
+.chart-title  { font-size: 15px; font-weight: 600; color: var(--ot-text-main); }
+.chart-subtitle { font-size: 12px; color: var(--ot-text-muted); }
 .chart-body   { display: flex; justify-content: center; }
 .chart-empty  { display: flex; align-items: center; justify-content: center;
-                height: 200px; color: var(--ot-gray-400); font-size: 14px; }
+                height: 200px; color: var(--ot-text-muted); font-size: 14px; }

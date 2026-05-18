@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Payment, PaymentMethod, CreatePaymentRequest } from '../models/payment.model';
+import { Payment, PaymentMethod, CreatePaymentRequest, CreatePaymentMethodRequest } from '../models/payment.model';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -19,5 +19,9 @@ export class PaymentService {
 
   register(data: CreatePaymentRequest) {
     return this.http.post<Payment>(this.url, data);
+  }
+
+  createMethod(data: CreatePaymentMethodRequest) {
+    return this.http.post<PaymentMethod>(this.methodsUrl, data);
   }
 }

@@ -6,7 +6,7 @@
 
 .rating-count {
   font-size: 13px;
-  color: var(--ot-gray-500);
+  color: var(--ot-text-muted);
 }
 
 :host ::ng-deep .p-rating {
@@ -14,7 +14,7 @@
   align-items: center;
   --p-rating-gap: 2px;
   --p-rating-icon-size: 16px;
-  --p-rating-icon-color: var(--ot-gray-300);
+  --p-rating-icon-color: var(--ot-border-color);
   --p-rating-icon-active-color: var(--ot-orange);
 }
 

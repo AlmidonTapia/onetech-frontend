@@ -13,10 +13,23 @@ export class NavbarSearchComponent {
   private router = inject(Router);
   query = '';
 
+  content = {
+    catalogRoute: '/catalog',
+    searchParamKey: 'search',
+    placeholderText: 'Buscar laptops, celulares, componentes...',
+    ariaLabels: {
+      input: 'Buscar productos',
+      button: 'Buscar'
+    },
+    searchIcon: 'pi pi-search'
+  };
+
   search() {
     const q = this.query.trim();
     if (q) {
-      this.router.navigate(['/catalog'], { queryParams: { search: q } });
+      this.router.navigate([this.content.catalogRoute], {
+        queryParams: { [this.content.searchParamKey]: q }
+      });
     }
   }
 }

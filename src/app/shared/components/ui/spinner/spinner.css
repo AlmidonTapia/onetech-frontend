@@ -9,12 +9,16 @@
 .spinner-fullpage {
   position: fixed;
   inset: 0;
-  background: rgba(255,255,255,.75);
+  background: rgba(255, 255, 255, .75);
   backdrop-filter: blur(2px);
   z-index: 9998;
 }
 
+.dark-mode .spinner-fullpage {
+  background: rgba(15, 23, 42, .75);
+}
+
 .spinner-label {
   font-size: 14px;
-  color: var(--ot-gray-500);
+  color: var(--ot-text-muted);
 }

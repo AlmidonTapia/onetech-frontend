@@ -7,21 +7,33 @@
   padding: 0;
 }
 
-.bc-sep { color: var(--ot-gray-400); font-size: 12px; }
+.bc-sep { 
+  color: var(--ot-text-muted); 
+  font-size: 12px; 
+}
 
 .bc-link {
   font-size: 13px;
-  color: var(--ot-blue);
+  color: var(--p-primary-color);
   padding: 4px 6px;
   border-radius: var(--ot-radius-sm);
-  transition: background var(--ot-transition);
+  transition: var(--ot-transition);
 }
-.bc-link:hover { background: var(--ot-blue-50); }
-.bc-home { color: var(--ot-gray-500); }
-.bc-home:hover { color: var(--ot-blue); }
+
+.bc-link:hover { 
+  background: var(--ot-border-color); 
+}
+
+.bc-home { 
+  color: var(--ot-text-muted); 
+}
+
+.bc-home:hover { 
+  color: var(--p-primary-color); 
+}
 
 .bc-current {
   font-size: 13px;
-  color: var(--ot-gray-500);
+  color: var(--ot-text-muted);
   padding: 4px 6px;
 }

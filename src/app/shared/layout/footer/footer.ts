@@ -11,6 +11,19 @@ import { RouterLink } from '@angular/router';
 export class FooterComponent {
   readonly year = new Date().getFullYear();
 
+  content = {
+    brandRoute: '/',
+    ariaLabelLogo: 'OneTech',
+    tagline: 'Tu tienda de tecnología de confianza en Lima, Perú. Los mejores precios en laptops, celulares y componentes.',
+    headings: {
+      categories: 'Categorías',
+      help: 'Ayuda',
+      contact: 'Contacto'
+    },
+    copyPre: '© ',
+    copyPost: ' OneTech. Todos los derechos reservados.'
+  };
+
   readonly categories = [
     { label: 'Laptops & PCs', route: '/catalog', queryParams: { category: 'laptops' } },
     { label: 'Componentes', route: '/catalog', queryParams: { category: 'componentes' } },

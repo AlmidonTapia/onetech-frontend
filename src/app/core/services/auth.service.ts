@@ -10,7 +10,7 @@ import { CartService } from './cart.service';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private injector = inject(Injector); // Use Injector to avoid circular dependency
+  private injector = inject(Injector); 
   
   private readonly TOKEN_KEY = 'onetech_token';
   private readonly USER_KEY  = 'onetech_user';
@@ -37,7 +37,6 @@ export class AuthService {
         localStorage.setItem(this.USER_KEY, JSON.stringify(authData));
         this.currentUser.set(authData);
         
-        // Use Injector to get CartService dynamically
         const cartService = this.injector.get(CartService);
         cartService.syncGuestCart();
       })
@@ -52,7 +51,6 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this.currentUser.set(null);
-    this.router.navigate(['/auth/login']);
   }
 
   getToken(): string | null {

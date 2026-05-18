@@ -1,11 +1,88 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { KeyValuePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { TabsModule } from 'primeng/tabs';
+import { ProductImagesComponent } from './components/product-images/product-images';
+import { ProductInfoComponent } from './components/product-info/product-info';
+import { ProductReviewsComponent } from './components/product-reviews/product-reviews';
+import { RelatedProductsComponent } from './components/related-products/related-products';
+import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    TabsModule,
+    KeyValuePipe,
+    ProductImagesComponent,
+    ProductInfoComponent,
+    ProductReviewsComponent,
+    RelatedProductsComponent,
+    SpinnerComponent,
+    BreadcrumbComponent
+  ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })
-export class ProductDetailComponent {}
+export class ProductDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private productService = inject(ProductService);
+
+  product = signal<Product | null>(null);
+  related = signal<Product[]>([]);
+  loading = signal(true);
+  breadcrumb = signal<BreadcrumbItem[]>([]);
+
+  apiConfig = {
+    relatedPage: 0,
+    relatedSize: 5
+  };
+
+  content = {
+    loadingLabel: 'Cargando producto...',
+    catalogLabel: 'Catálogo',
+    catalogRoute: '/catalog',
+    noCategoryLabel: 'Sin categoría',
+    tabs: {
+      descriptionLabel: 'Descripción',
+      specsLabel: 'Especificaciones',
+      reviewsLabel: 'Reseñas',
+      noSpecsMsg: 'Este producto no cuenta con especificaciones técnicas detalladas.'
+    }
+  };
+
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id')!;
+      this.loadProduct(id);
+    });
+  }
+
+  loadProduct(id: string) {
+    this.loading.set(true);
+    this.productService.getById(id).subscribe({
+      next: p => {
+        this.product.set(p);
+        this.loading.set(false);
+
+        this.breadcrumb.set([
+          { label: this.content.catalogLabel, route: this.content.catalogRoute },
+          { label: p.categoryName ?? this.content.noCategoryLabel, route: this.content.catalogRoute },
+          { label: p.productName },
+        ]);
+
+        this.productService.getAll({
+          page: this.apiConfig.relatedPage,
+          size: this.apiConfig.relatedSize,
+          idCategory: p.idCategory
+        }).subscribe(r => {
+          this.related.set(r.content.filter(rp => rp.idProduct !== id));
+        });
+      },
+      error: () => this.loading.set(false),
+    });
+  }
+}

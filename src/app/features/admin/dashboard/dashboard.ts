@@ -27,27 +27,55 @@ export class DashboardComponent implements OnInit {
   recentOrders = signal<Order[]>([]);
   chartData = signal<any>(null);
 
-  ngOnInit() { this.loadDashboard(); }
+  apiConfig = {
+    firstPage: 0,
+    minSize: 1,
+    ordersFetchSize: 10,
+    recentOrdersLimit: 5
+  };
+
+  content = {
+    title: 'Dashboard',
+    subtitle: 'Resumen general del negocio',
+    loadingLabel: 'Cargando datos...',
+
+    statsLabels: {
+      products: { title: 'Productos', icon: 'pi-box', color: 'blue' as const, suffix: 'registrados' },
+      orders: { title: 'Órdenes', icon: 'pi-receipt', color: 'orange' as const, suffix: 'en total' },
+      users: { title: 'Usuarios', icon: 'pi-users', color: 'green' as const, suffix: 'registrados' },
+      pending: { title: 'Pendientes', icon: 'pi-clock', color: 'purple' as const, suffix: 'por procesar' }
+    },
+
+    chart: {
+      labels: ['Pendiente', 'Pagado', 'Enviado', 'Completado', 'Cancelado'],
+      colors: ['#d97706', '#0284c7', '#0047cc', '#16a34a', '#dc2626'],
+      borderWidth: 0
+    }
+  } as const;
+
+  ngOnInit() {
+    this.loadDashboard();
+  }
 
   loadDashboard() {
     this.loading.set(true);
 
     forkJoin({
-      products: this.productService.getAll({ page: 0, size: 1 }),
-      orders: this.orderService.getAll(0, 10),
-      users: this.userService.getAllUsers(0, 1),
+      products: this.productService.getAll({ page: this.apiConfig.firstPage, size: this.apiConfig.minSize }),
+      orders: this.orderService.getAll(this.apiConfig.firstPage, this.apiConfig.ordersFetchSize),
+      users: this.userService.getAllUsers(this.apiConfig.firstPage, this.apiConfig.minSize),
     }).subscribe({
       next: ({ products, orders, users }) => {
         const pending = orders.content.filter(o => o.orderStatus === 'PENDIENTE').length;
 
         this.stats.set([
-          { label: 'Productos', value: products.totalElements, icon: 'pi-box', color: 'blue', suffix: 'registrados' },
-          { label: 'Órdenes', value: orders.totalElements, icon: 'pi-receipt', color: 'orange', suffix: 'en total' },
-          { label: 'Usuarios', value: users.totalElements, icon: 'pi-users', color: 'green', suffix: 'registrados' },
-          { label: 'Pendientes', value: pending, icon: 'pi-clock', color: 'purple', suffix: 'por procesar' },
+          { label: this.content.statsLabels.products.title, value: products.totalElements, icon: this.content.statsLabels.products.icon, color: this.content.statsLabels.products.color, suffix: this.content.statsLabels.products.suffix },
+          { label: this.content.statsLabels.orders.title, value: orders.totalElements, icon: this.content.statsLabels.orders.icon, color: this.content.statsLabels.orders.color, suffix: this.content.statsLabels.orders.suffix },
+          { label: this.content.statsLabels.users.title, value: users.totalElements, icon: this.content.statsLabels.users.icon, color: this.content.statsLabels.users.color, suffix: this.content.statsLabels.users.suffix },
+          { label: this.content.statsLabels.pending.title, value: pending, icon: this.content.statsLabels.pending.icon, color: this.content.statsLabels.pending.color, suffix: this.content.statsLabels.pending.suffix },
         ]);
 
-        this.recentOrders.set(orders.content.slice(0, 5));
+        this.recentOrders.set(orders.content.slice(0, this.apiConfig.recentOrdersLimit));
         this.buildChartData(orders.content);
         this.loading.set(false);
       },
@@ -57,17 +85,17 @@ export class DashboardComponent implements OnInit {
 
   private buildChartData(orders: Order[]) {
     const count: Record<string, number> = {
-      PENDIENTE: 0, PAGADO: 0, ENVIADO: 0, 
+      PENDIENTE: 0, PAGADO: 0, ENVIADO: 0,
       COMPLETADO: 0, CANCELADO: 0
     };
     orders.forEach(o => { if (count[o.orderStatus] !== undefined) count[o.orderStatus]++; });
 
     this.chartData.set({
-      labels: ['Pendiente', 'Pagado', 'Enviado', 'Completado', 'Cancelado'],
+      labels: this.content.chart.labels,
       datasets: [{
         data: Object.values(count),
-        backgroundColor: ['#d97706', '#0284c7', '#0047cc', '#16a34a', '#dc2626'],
-        borderWidth: 0,
+        backgroundColor: this.content.chart.colors,
+        borderWidth: this.content.chart.borderWidth,
       }]
     });
   }

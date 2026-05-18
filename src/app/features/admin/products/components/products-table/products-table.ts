@@ -21,4 +21,36 @@ export class ProductsTableComponent {
   @Output() editItem = new EventEmitter<Product>();
   @Output() deleteItem = new EventEmitter<Product>();
   @Output() manageImages = new EventEmitter<Product>();
+
+  tableConfig = {
+    styleClass: 'p-datatable-sm',
+    tableMinWidth: '860px',
+    colspanEmpty: 8,
+    badgeSuccess: 'success' as const,
+    badgeError: 'error' as const
+  } as const;
+
+  content = {
+    headers: {
+      img: 'Img',
+      product: 'Producto',
+      sku: 'SKU',
+      category: 'Categoría',
+      brand: 'Marca',
+      price: 'Precio',
+      stock: 'Stock',
+      actions: 'Acciones'
+    },
+    tooltips: {
+      images: 'Imágenes',
+      edit: 'Editar',
+      delete: 'Eliminar'
+    },
+    emptyMessage: 'No se encontraron productos.',
+    icons: {
+      images: 'pi pi-images',
+      edit: 'pi pi-pencil',
+      delete: 'pi pi-trash'
+    }
+  };
 }

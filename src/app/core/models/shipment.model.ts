@@ -24,3 +24,8 @@ export interface CreateShipmentRequest {
   shippingCost: number;
   estimatedArrival: string;
 }
+
+export interface CreateShipmentMethodRequest {
+  methodName: string;
+  basePrice: number;
+}

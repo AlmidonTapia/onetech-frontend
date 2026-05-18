@@ -1,1 +1,148 @@
-/* Profile styles */
+.profile-page { padding: 28px 0 64px; }
+
+.account-header {
+  display: flex; align-items: center; gap: 20px;
+  background: var(--ot-bg-surface);
+  border: 1px solid var(--ot-border-color);
+  border-radius: var(--ot-radius-xl);
+  padding: 24px 28px;
+  margin: 16px 0 28px;
+  box-shadow: var(--ot-shadow-theme);
+  flex-wrap: wrap;
+  transition: var(--ot-transition);
+}
+
+.account-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ot-blue), var(--ot-blue-dark));
+  color: #ffffff; font-size: 26px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.account-info { flex: 1; }
+.account-info h1 { font-size: 20px; font-weight: 700; color: var(--ot-text-main); }
+.account-info p  { font-size: 14px; color: var(--ot-text-muted); margin-top: 2px; }
+
+.account-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  align-items: flex-end !important;
+  flex-shrink: 0 !important;
+}
+
+.actions-group {
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.profile-logout-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ot-error) !important;
+  background: var(--ot-error-bg) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--ot-radius-md) !important;
+  cursor: pointer !important;
+  transition: var(--ot-transition) !important;
+  white-space: nowrap !important;
+}
+
+.profile-logout-btn:hover {
+  background: #fca5a5 !important;
+  color: #b91c1c !important;
+}
+
+.dark-mode .profile-logout-btn {
+  background: rgba(220, 38, 38, 0.15) !important;
+  border-color: rgba(220, 38, 38, 0.25) !important;
+  color: #f87171 !important;
+}
+
+.dark-mode .profile-logout-btn:hover {
+  background: rgba(220, 38, 38, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.profile-tabs-container {
+  background: var(--ot-bg-surface);
+  border: 1px solid var(--ot-border-color);
+  border-radius: var(--ot-radius-xl);
+  padding: 28px;
+  margin-top: 16px;
+  box-shadow: var(--ot-shadow-theme);
+  transition: var(--ot-transition);
+}
+
+.profile-tabs-container ::ng-deep .p-tablist-tab-list {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-bottom: 1px solid var(--ot-border-color) !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 24px !important;
+  list-style: none !important;
+}
+
+.profile-tabs-container ::ng-deep .p-tab {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ot-text-muted) !important;
+  border-radius: var(--ot-radius-md) !important;
+  cursor: pointer !important;
+  transition: var(--ot-transition) !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.profile-tabs-container ::ng-deep .p-tab i {
+  font-size: 15px !important;
+}
+
+.profile-tabs-container ::ng-deep .p-tab:hover {
+  background: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+}
+
+.profile-tabs-container ::ng-deep .p-tab-active {
+  background: var(--ot-blue-50) !important;
+  color: var(--ot-blue) !important;
+  font-weight: 600 !important;
+}
+
+.dark-mode .profile-tabs-container ::ng-deep .p-tab-active {
+  background: rgba(77, 136, 255, 0.15) !important;
+  color: var(--ot-blue-light) !important;
+}
+
+.profile-tabs-container ::ng-deep .p-tabpanel {
+  padding: 4px 0 0 0 !important;
+  background: transparent !important;
+  color: var(--ot-text-main) !important;
+}
+
+@media (max-width: 640px) {
+  .account-actions {
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+  .actions-group {
+    width: 100% !important;
+  }
+  .actions-group app-button {
+    flex: 1 !important;
+  }
+  .profile-logout-btn {
+    justify-content: center !important;
+  }
+}

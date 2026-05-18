@@ -1,1 +1,5 @@
-/* Home styles */
+:host { 
+  display: block; 
+  background: var(--ot-bg-body);
+  transition: var(--ot-transition);
+}

@@ -1,1 +1,52 @@
-<p>catalog-filters works!</p>
+<aside class="filters-panel">
+  <div class="filters-header">
+    <h3>{{ content.mainTitle }}</h3>
+    <button class="reset-btn" (click)="onReset()">{{ content.resetBtnText }}</button>
+  </div>
+
+  <div class="filter-group">
+    <h4 class="filter-title">{{ content.categoryTitle }}</h4>
+    <ul class="filter-options">
+      <li>
+        <label class="filter-option" [class.filter-option--active]="!localFilters.categoryId">
+          <input type="radio" name="category" [value]="undefined" [(ngModel)]="localFilters.categoryId" />
+          <span>{{ content.allCategoriesOption }}</span>
+        </label>
+      </li>
+      @for (cat of categories; track cat.idCategory) {
+      <li>
+        <label class="filter-option" [class.filter-option--active]="localFilters.categoryId === cat.idCategory">
+          <input type="radio" name="category" [value]="cat.idCategory" [(ngModel)]="localFilters.categoryId" />
+          <span>{{ cat.categoryName }}</span>
+        </label>
+      </li>
+      }
+    </ul>
+  </div>
+
+  <div class="filter-group">
+    <h4 class="filter-title">{{ content.brandTitle }}</h4>
+    <ul class="filter-options">
+      @for (brand of brands; track brand.idBrand) {
+      <li>
+        <label class="filter-option" [class.filter-option--active]="isBrandSelected(brand.idBrand)">
+          <input type="checkbox" [checked]="isBrandSelected(brand.idBrand)" (change)="toggleBrand(brand.idBrand)" />
+          <span>{{ brand.brandName }}</span>
+        </label>
+      </li>
+      }
+    </ul>
+  </div>
+
+  <div class="filter-group">
+    <h4 class="filter-title">{{ content.priceTitle }}</h4>
+    <div class="price-inputs">
+      <input type="number" [(ngModel)]="localFilters.minPrice" [placeholder]="content.minPricePlaceholder" min="0" />
+      <span class="price-sep">—</span>
+      <input type="number" [(ngModel)]="localFilters.maxPrice" [placeholder]="content.maxPricePlaceholder" min="0" />
+    </div>
+  </div>
+
+  <app-button variant="primary" [label]="content.applyBtnLabel" [icon]="content.applyBtnIcon" [fullWidth]="true"
+    (clicked)="onApply()" />
+</aside>

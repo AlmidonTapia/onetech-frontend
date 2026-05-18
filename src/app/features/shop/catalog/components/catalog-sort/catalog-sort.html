@@ -1,1 +1,11 @@
-<p>catalog-sort works!</p>
+<div class="sort-bar">
+  <span class="results-count">
+    <strong>{{ totalRecords }}</strong> {{ content.resultsSuffix }}
+  </span>
+
+  <div class="sort-control">
+    <label class="sort-label">{{ content.sortLabelText }}</label>
+    <p-select [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="sort"
+      (ngModelChange)="sortChange.emit($event)" [style]="{ 'width': content.selectWidth }" />
+  </div>
+</div>

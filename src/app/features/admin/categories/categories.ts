@@ -27,33 +27,90 @@ export class CategoriesComponent implements OnInit {
   formVisible = signal(false);
   editingCat = signal<Category | null>(null);
 
-  ngOnInit() { this.loadCategories(); }
+  apiConfig = {
+    pageSize: 10
+  };
+
+  content = {
+    title: 'Categorías',
+    countSuffix: 'categorías registradas',
+    createBtnLabel: 'Nueva categoría',
+    createBtnIcon: 'pi-plus',
+    cardPadding: 'none',
+    alerts: {
+      saveSuccess: 'Categoría guardada',
+      saveError: 'Error al guardar',
+      deleteNotImplemented: 'Eliminar categorías no implementado aún'
+    },
+    confirmModal: {
+      title: '¿Eliminar categoría?',
+      severity: 'danger',
+      confirmLabel: 'Sí, eliminar'
+    }
+  } as const;
+
+  ngOnInit() {
+    this.loadCategories();
+  }
 
   loadCategories(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.categoryService.getAll(page, 10).subscribe({
-      next: r => { this.categories.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
+    this.categoryService.getAll(page, this.apiConfig.pageSize).subscribe({
+      next: r => {
+        this.categories.set(r.content);
+        this.totalRecords.set(r.totalElements);
+        this.loading.set(false);
+      },
       error: () => this.loading.set(false),
     });
   }
 
-  openCreate() { this.editingCat.set(null); this.formVisible.set(true); }
-  openEdit(c: Category) { this.editingCat.set(c); this.formVisible.set(true); }
+  openCreate() {
+    this.editingCat.set(null);
+    this.formVisible.set(true);
+  }
+
+  openEdit(c: Category) {
+    this.editingCat.set(c);
+    this.formVisible.set(true);
+  }
 
   onSave(data: CreateCategoryRequest) {
     this.saving.set(true);
+
     this.categoryService.create(data).subscribe({
-      next: () => { this.alertService.success('Categoría guardada'); this.formVisible.set(false); this.saving.set(false); this.loadCategories(); },
-      error: () => { this.alertService.error('Error al guardar'); this.saving.set(false); }
+      next: () => {
+        this.alertService.success(this.content.alerts.saveSuccess);
+        this.formVisible.set(false);
+        this.saving.set(false);
+        this.loadCategories();
+      },
+      error: () => {
+        this.alertService.error(this.content.alerts.saveError);
+        this.saving.set(false);
+      }
     });
+
+    /* ── PENDIENTE DE IMPLEMENTAR EN EL BACKEND ──
+    const currentCat = this.editingCat();
+    const request$ = currentCat
+      ? this.categoryService.update(currentCat.idCategory, data as any)
+      : this.categoryService.create(data);
+
+    request$.subscribe({
+      next: () => { ... }
+    });
+    ───────────────────────────────────────────── */
   }
 
   onDelete(c: Category) {
     this.modalService.open({
-      title: '¿Eliminar categoría?', message: `"${c.categoryName}" será eliminada.`,
-      severity: 'danger', confirmLabel: 'Sí, eliminar',
-      onConfirm: () => this.alertService.warn('Eliminar categorías no implementado aún'),
+      title: this.content.confirmModal.title,
+      message: `"${c.categoryName}" será eliminada.`,
+      severity: this.content.confirmModal.severity as any,
+      confirmLabel: this.content.confirmModal.confirmLabel,
+      onConfirm: () => this.alertService.warn(this.content.alerts.deleteNotImplemented),
     });
   }
 }

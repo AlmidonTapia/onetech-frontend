@@ -1,25 +1,33 @@
-<ul class="nav-menu" role="menubar">
-    @for (cat of categories(); track cat.label) {
-    <li role="none" class="nav-item" [ngClass]="{ 'has-submenu': cat.subcategories && cat.subcategories.length > 0 }">
-        <a [routerLink]="cat.route" [queryParams]="cat.queryParams" class="nav-link"
-           [ngClass]="{ 'nav-link--accent': cat.accent }" role="menuitem">
-            <span class="nav-label">{{ cat.label }}</span>
-            @if (cat.subcategories && cat.subcategories.length > 0) {
-                <i class="pi pi-chevron-down submenu-icon"></i>
-            }
-        </a>
-        
-        @if (cat.subcategories && cat.subcategories.length > 0) {
-            <ul class="submenu" role="menu">
-                @for (sub of cat.subcategories; track sub.label) {
-                    <li role="none">
-                        <a [routerLink]="sub.route" [queryParams]="sub.queryParams" class="submenu-link" role="menuitem">
-                            {{ sub.label }}
-                        </a>
-                    </li>
+<nav class="navbar-navigation" [attr.aria-label]="content.ariaLabelNav">
+    <ul class="nav-menu-list">
+
+        @for (item of categories(); track item.label) {
+        <li class="menu-item-node"
+            [class.menu-item-node--has-subs]="item.subcategories && item.subcategories.length > 0">
+
+            <a [routerLink]="item.route" [queryParams]="item.queryParams" routerLinkActive="menu-link-active"
+                [class.menu-link-accent]="item.accent" class="menu-root-link">
+                {{ item.label }}
+                @if (item.subcategories && item.subcategories.length > 0) {
+                <i class="pi pi-angle-down arrow-sub-icon"></i>
+                }
+            </a>
+
+            @if (item.subcategories && item.subcategories.length > 0) {
+            <ul class="dropdown-submenu animate-fade-in">
+                @for (sub of item.subcategories; track sub.label) {
+                <li class="submenu-item-node">
+                    <a [routerLink]="sub.route" [queryParams]="sub.queryParams" routerLinkActive="submenu-link-active"
+                        class="menu-sub-link">
+                        {{ sub.label }}
+                    </a>
+                </li>
                 }
             </ul>
+            }
+
+        </li>
         }
-    </li>
-    }
-</ul>
+
+    </ul>
+</nav>

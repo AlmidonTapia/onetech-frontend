@@ -21,4 +21,9 @@ export class InventoryService {
   register(data: CreateInventoryMovementRequest) {
     return this.http.post<InventoryMovement>(this.url, data);
   }
+
+  getByProduct(productId: string, page = 0, size = 10) {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<PageResponse<InventoryMovement>>(`${this.url}/product/${productId}`, { params });
+  }
 }

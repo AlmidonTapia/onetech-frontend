@@ -1,45 +1,98 @@
 .ot-alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: var(--ot-radius-md);
-  border: 1px solid transparent;
-  font-size: 14px;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: var(--ot-radius-md) !important;
+  border: 1px solid transparent !important;
+  font-size: 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.alert-icon { 
+  font-size: 18px !important; 
+  flex-shrink: 0 !important; 
+  margin-top: 2px !important; 
+}
 
-.alert-body { flex: 1; }
-.alert-title { display: block; font-weight: 600; margin-bottom: 2px; }
-.alert-content { line-height: 1.5; }
+.alert-body { 
+  flex: 1 !important; 
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important; 
+}
+
+.alert-title { 
+  display: block !important; 
+  font-weight: 600 !important; 
+  line-height: 1.2 !important;
+}
+
+.alert-content { 
+  line-height: 1.5 !important; 
+}
 
 .alert-close {
-  background: none; border: none; cursor: pointer;
-  padding: 2px; opacity: .6; flex-shrink: 0;
-  border-radius: var(--ot-radius-sm);
-  transition: opacity var(--ot-transition);
-  color: inherit;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important; 
+  border: none !important; 
+  outline: none !important;
+  cursor: pointer !important;
+  padding: 0 !important; 
+  margin: 0 !important;
+  opacity: .6 !important; 
+  flex-shrink: 0 !important;
+  width: 24px !important; 
+  height: 24px !important; 
+  border-radius: var(--ot-radius-sm) !important;
+  transition: opacity var(--ot-transition), background var(--ot-transition) !important;
+  color: inherit !important;
 }
-.alert-close:hover { opacity: 1; }
+
+.alert-close:hover { 
+  opacity: 1 !important; 
+  background: rgba(0, 0, 0, 0.05) !important; 
+}
 
 .alert-success {
-  background: var(--ot-success-bg);
-  color: #14532d;
-  border-color: #86efac;
+  background: var(--ot-success-bg) !important;
+  color: var(--ot-success) !important;
+  border-color: rgba(22, 163, 74, 0.2) !important;
 }
+.dark-mode .alert-success {
+  background: rgba(22, 163, 74, 0.15) !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
+}
+
 .alert-error {
-  background: var(--ot-error-bg);
-  color: #7f1d1d;
-  border-color: #fca5a5;
+  background: var(--ot-error-bg) !important;
+  color: var(--ot-error) !important;
+  border-color: rgba(220, 38, 38, 0.2) !important;
 }
+.dark-mode .alert-error {
+  background: rgba(220, 38, 38, 0.15) !important;
+  border-color: rgba(220, 38, 38, 0.3) !important;
+}
+
 .alert-warning {
-  background: var(--ot-warning-bg);
-  color: #78350f;
-  border-color: #fcd34d;
+  background: var(--ot-warning-bg) !important;
+  color: var(--ot-warning) !important;
+  border-color: rgba(217, 119, 6, 0.2) !important;
 }
+.dark-mode .alert-warning {
+  background: rgba(217, 119, 6, 0.15) !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
+}
+
 .alert-info {
-  background: var(--ot-info-bg);
-  color: #0c4a6e;
-  border-color: #7dd3fc;
+  background: var(--ot-info-bg) !important;
+  color: var(--ot-info) !important;
+  border-color: rgba(2, 132, 199, 0.2) !important;
+}
+.dark-mode .alert-info {
+  background: rgba(2, 132, 199, 0.15) !important;
+  border-color: rgba(2, 132, 199, 0.3) !important;
 }

@@ -1,14 +1,18 @@
 <div class="admin-page">
+
     <div class="page-header">
         <div class="page-title">
-            <h1>Órdenes</h1>
-            <p class="page-subtitle">{{ totalRecords() }} órdenes en total</p>
+            <h1>{{ content.title }}</h1>
+            <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
         </div>
     </div>
-    <app-card padding="none">
+
+    <app-card [padding]="content.cardPadding">
         <app-orders-table [orders]="orders()" [totalRecords]="totalRecords()" [loading]="loading()"
             (lazyLoad)="loadOrders($event)" (changeStatus)="openStatus($event)" (viewDetail)="openStatus($event)" />
     </app-card>
+
 </div>
+
 <app-order-status-form [(visible)]="statusVisible" [order]="editingOrder()" [saving]="saving()"
     (save)="onStatusSave($event)" (cancel)="statusVisible.set(false)" />

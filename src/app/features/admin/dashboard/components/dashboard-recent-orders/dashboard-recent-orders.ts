@@ -16,6 +16,14 @@ type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'cont
 export class DashboardRecentOrdersComponent {
   @Input() orders: Order[] = [];
 
+  content = {
+    title: 'Órdenes recientes',
+    viewAllLabel: 'Ver todas →',
+    viewAllRoute: '/admin/orders',
+    emptyMessage: 'No hay órdenes recientes.',
+    idPrefix: '#'
+  } as const;
+
   readonly statusConfig: Record<OrderStatus, { label: string; severity: SeverityType }> = {
     PENDIENTE: { label: 'Pendiente', severity: 'warn' },
     PAGADO: { label: 'Pagado', severity: 'info' },
@@ -24,6 +32,11 @@ export class DashboardRecentOrdersComponent {
     CANCELADO: { label: 'Cancelado', severity: 'danger' },
   };
 
-  getStatusLabel(status: any): string { return this.statusConfig[status as OrderStatus]?.label || status; }
-  getStatusSeverity(status: any): SeverityType { return this.statusConfig[status as OrderStatus]?.severity || 'info'; }
+  getStatusLabel(status: any): string {
+    return this.statusConfig[status as OrderStatus]?.label || status;
+  }
+
+  getStatusSeverity(status: any): SeverityType {
+    return this.statusConfig[status as OrderStatus]?.severity || 'info';
+  }
 }

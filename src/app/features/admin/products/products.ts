@@ -41,16 +41,45 @@ export class ProductsComponent implements OnInit {
   editingProduct = signal<Product | null>(null);
   search = '';
 
+  apiConfig = {
+    pageSize: 10,
+    lookupPage: 0,
+    lookupSize: 100
+  };
+
+  content = {
+    title: 'Productos',
+    countSuffix: 'productos registrados',
+    createBtnLabel: 'Nuevo producto',
+    createBtnIcon: 'pi-plus',
+    cardPadding: 'none',
+    searchPlaceholder: 'Buscar por nombre o SKU...',
+    refreshBtnLabel: 'Actualizar',
+    refreshBtnIcon: 'pi-refresh',
+    alerts: {
+      createSuccess: 'Producto creado',
+      updateSuccess: 'Producto actualizado',
+      saveError: 'Error al guardar',
+      deleteSuccess: 'Producto eliminado',
+      deleteError: 'Error al eliminar'
+    },
+    confirmModal: {
+      title: '¿Eliminar producto?',
+      severity: 'danger' as const,
+      confirmLabel: 'Sí, eliminar'
+    }
+  } as const; // Aserto estricto para blindar propiedades como cardPadding
+
   ngOnInit() {
-    this.categoryService.getAll(0, 100).subscribe(r => this.categories.set(r.content));
-    this.brandService.getAll(0, 100).subscribe(r => this.brands.set(r.content));
+    this.categoryService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).subscribe(r => this.categories.set(r.content));
+    this.brandService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).subscribe(r => this.brands.set(r.content));
     this.loadProducts();
   }
 
   loadProducts(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.productService.getAll({ page, size: 10, search: this.search || undefined }).subscribe({
+    this.productService.getAll({ page, size: this.apiConfig.pageSize, search: this.search || undefined }).subscribe({
       next: r => { this.products.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
       error: () => this.loading.set(false),
     });
@@ -62,26 +91,37 @@ export class ProductsComponent implements OnInit {
 
   onSave(data: CreateProductRequest) {
     this.saving.set(true);
-    const op = this.editingProduct()
+    const isEditing = !!this.editingProduct();
+    const op = isEditing
       ? this.productService.update(this.editingProduct()!.idProduct, data)
       : this.productService.create(data);
+
     op.subscribe({
       next: () => {
-        this.alertService.success(this.editingProduct() ? 'Producto actualizado' : 'Producto creado');
-        this.formVisible.set(false); this.saving.set(false); this.loadProducts();
+        this.alertService.success(isEditing ? this.content.alerts.updateSuccess : this.content.alerts.createSuccess);
+        this.formVisible.set(false);
+        this.saving.set(false);
+        this.loadProducts();
       },
-      error: () => { this.alertService.error('Error al guardar'); this.saving.set(false); }
+      error: () => {
+        this.alertService.error(this.content.alerts.saveError);
+        this.saving.set(false);
+      }
     });
   }
 
   onDelete(p: Product) {
     this.modalService.open({
-      title: '¿Eliminar producto?',
+      title: this.content.confirmModal.title,
       message: `"${p.productName}" será eliminado permanentemente.`,
-      severity: 'danger', confirmLabel: 'Sí, eliminar',
+      severity: this.content.confirmModal.severity,
+      confirmLabel: this.content.confirmModal.confirmLabel,
       onConfirm: () => this.productService.delete(p.idProduct).subscribe({
-        next: () => { this.alertService.success('Producto eliminado'); this.loadProducts(); },
-        error: () => this.alertService.error('Error al eliminar'),
+        next: () => {
+          this.alertService.success(this.content.alerts.deleteSuccess);
+          this.loadProducts();
+        },
+        error: () => this.alertService.error(this.content.alerts.deleteError),
       }),
     });
   }

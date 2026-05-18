@@ -4,13 +4,19 @@
   gap: 10px;
   padding: 8px 14px;
   border-radius: var(--ot-radius-md);
-  color: var(--ot-gray-700);
-  transition: background var(--ot-transition), color var(--ot-transition);
+  color: var(--ot-text-main);
+  transition: var(--ot-transition);
 }
 
 .cart-btn:hover {
   background: var(--ot-blue-50);
   color: var(--ot-blue);
+}
+
+/* Ajuste del hover para que se integre visualmente en modo oscuro */
+.dark-mode .cart-btn:hover {
+  background: var(--ot-bg-body);
+  color: var(--p-primary-color);
 }
 
 .cart-icon-wrapper {
@@ -24,7 +30,7 @@
   top: -8px; right: -10px;
   min-width: 18px; height: 18px;
   background: var(--ot-orange);
-  color: #fff;
+  color: #ffffff;
   font-size: 10px;
   font-weight: 700;
   border-radius: var(--ot-radius-full);
@@ -43,7 +49,7 @@
 
 .cart-label {
   font-size: 11px;
-  color: var(--ot-gray-400);
+  color: var(--ot-text-muted);
   text-transform: uppercase;
   letter-spacing: .04em;
 }
@@ -51,5 +57,5 @@
 .cart-total {
   font-size: 13px;
   font-weight: 600;
-  color: var(--ot-gray-800);
+  color: var(--ot-text-main);
 }

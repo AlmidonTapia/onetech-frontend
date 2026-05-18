@@ -8,9 +8,11 @@ import { ShipmentService } from '../../../core/services/shipment.service';
 import { Shipment, CreateShipmentRequest, ShipmentStatus } from '../../../core/models/shipment.model';
 
 @Component({
-  selector: 'app-shipments', standalone: true,
+  selector: 'app-shipments',
+  standalone: true,
   imports: [ShipmentsTableComponent, ShipmentFormComponent, ButtonComponent, CardComponent],
-  templateUrl: './shipments.html', styleUrl: './shipments.css'
+  templateUrl: './shipments.html',
+  styleUrl: './shipments.css'
 })
 export class ShipmentsComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
@@ -23,33 +25,80 @@ export class ShipmentsComponent implements OnInit {
   formVisible = signal(false);
   editingShipment = signal<Shipment | null>(null);
 
-  ngOnInit() { this.loadShipments(); }
+  apiConfig = {
+    pageSize: 10
+  };
+
+  content = {
+    title: 'Envíos',
+    countSuffix: 'envíos registrados',
+    createBtnLabel: 'Nuevo envío',
+    createBtnIcon: 'pi-plus',
+    cardPadding: 'none',
+    alerts: {
+      createSuccess: 'Envío creado',
+      createError: 'Error al crear',
+      updateSuccess: 'Estado actualizado',
+      updateError: 'Error al actualizar'
+    }
+  } as const;
+
+  ngOnInit() {
+    this.loadShipments();
+  }
 
   loadShipments(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.shipmentService.getAll(page, 10).subscribe({
-      next: r => { this.shipments.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
+    this.shipmentService.getAll(page, this.apiConfig.pageSize).subscribe({
+      next: r => {
+        this.shipments.set(r.content);
+        this.totalRecords.set(r.totalElements);
+        this.loading.set(false);
+      },
       error: () => this.loading.set(false),
     });
   }
 
-  openCreate() { this.editingShipment.set(null); this.formVisible.set(true); }
-  openEdit(s: Shipment) { this.editingShipment.set(s); this.formVisible.set(true); }
+  openCreate() {
+    this.editingShipment.set(null);
+    this.formVisible.set(true);
+  }
+
+  openEdit(s: Shipment) {
+    this.editingShipment.set(s);
+    this.formVisible.set(true);
+  }
 
   onCreate(data: CreateShipmentRequest) {
     this.saving.set(true);
     this.shipmentService.create(data).subscribe({
-      next: () => { this.alertService.success('Envío creado'); this.formVisible.set(false); this.saving.set(false); this.loadShipments(); },
-      error: () => { this.alertService.error('Error al crear'); this.saving.set(false); }
+      next: () => {
+        this.alertService.success(this.content.alerts.createSuccess);
+        this.formVisible.set(false);
+        this.saving.set(false);
+        this.loadShipments();
+      },
+      error: () => {
+        this.alertService.error(this.content.alerts.createError);
+        this.saving.set(false);
+      }
     });
   }
 
   onUpdateStatus(data: { id: string, status: ShipmentStatus }) {
     this.saving.set(true);
     this.shipmentService.updateStatus(data.id, data.status).subscribe({
-      next: () => { this.alertService.success('Estado actualizado'); this.formVisible.set(false); this.saving.set(false); this.loadShipments(); },
-      error: () => { this.alertService.error('Error al actualizar'); this.saving.set(false); }
+      next: () => {
+        this.alertService.success(this.content.alerts.updateSuccess);
+        this.formVisible.set(false);
+        this.saving.set(false);
+        this.loadShipments();
+      },
+      error: () => {
+        this.alertService.error(this.content.alerts.updateError);
+        this.saving.set(false);
+      }
     });
   }
 }

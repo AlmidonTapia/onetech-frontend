@@ -7,15 +7,15 @@
 @media (max-width: 560px) { .stats-grid { grid-template-columns: 1fr; } }
 
 .stat-card {
-  background: var(--ot-white);
+  background: var(--ot-bg-surface);
   border-radius: var(--ot-radius-lg);
-  border: 1px solid var(--ot-gray-200);
+  border: 1px solid var(--ot-border-color);
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: var(--ot-shadow-sm);
-  transition: box-shadow var(--ot-transition), transform var(--ot-transition);
+  box-shadow: var(--ot-shadow-theme);
+  transition: var(--ot-transition);
 }
 .stat-card:hover { box-shadow: var(--ot-shadow-md); transform: translateY(-2px); }
 
@@ -29,11 +29,18 @@
   flex-shrink: 0;
 }
 .stat-icon--blue   { background: var(--ot-blue-50); color: var(--ot-blue); }
+.dark-mode .stat-icon--blue { background: rgba(77, 136, 255, 0.15); color: var(--ot-blue-light); }
+
 .stat-icon--orange { background: var(--ot-orange-light); color: var(--ot-orange); }
+.dark-mode .stat-icon--orange { background: rgba(255, 102, 0, 0.15); color: var(--ot-orange-light); }
+
 .stat-icon--green  { background: var(--ot-success-bg); color: var(--ot-success); }
+.dark-mode .stat-icon--green { background: rgba(22, 163, 74, 0.15); color: #4ade80; }
+
 .stat-icon--purple { background: #f3e8ff; color: #7c3aed; }
+.dark-mode .stat-icon--purple { background: rgba(124, 58, 237, 0.15); color: #a78bfa; }
 
 .stat-body { display: flex; flex-direction: column; }
-.stat-value { font-size: 28px; font-weight: 700; color: var(--ot-gray-900); line-height: 1.1; }
-.stat-label { font-size: 13px; font-weight: 600; color: var(--ot-gray-700); margin-top: 4px; }
-.stat-suffix { font-size: 12px; color: var(--ot-gray-400); }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--ot-text-main); line-height: 1.1; }
+.stat-label { font-size: 13px; font-weight: 600; color: var(--ot-text-main); margin-top: 4px; }
+.stat-suffix { font-size: 12px; color: var(--ot-text-muted); }

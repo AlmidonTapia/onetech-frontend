@@ -1,1 +1,54 @@
-<p>profile-security works!</p>
+<div class="profile-section">
+    <div class="section-header">
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.subtitle }}</p>
+    </div>
+
+    <form [formGroup]="form" class="security-form" novalidate>
+
+        <div class="form-field">
+            <label>{{ content.labels.currentPassword }}</label>
+            <p-password formControlName="currentPassword" [placeholder]="content.placeholders.currentPassword"
+                [feedback]="false" [toggleMask]="true" styleClass="w-full"
+                [class.ng-invalid]="isInvalid('currentPassword')" [class.ng-dirty]="isInvalid('currentPassword')" />
+            @if (isInvalid('currentPassword') && form.get('currentPassword')?.errors?.['required']) {
+            <span class="field-error">{{ content.errors.required }}</span>
+            }
+        </div>
+
+        <div class="form-field">
+            <label>{{ content.labels.newPassword }}</label>
+            <p-password formControlName="newPassword" [placeholder]="content.placeholders.newPassword" [feedback]="true"
+                [toggleMask]="true" styleClass="w-full" promptLabel="Escribe una contraseña" weakLabel="Débil"
+                mediumLabel="Media" strongLabel="Segura" [class.ng-invalid]="isInvalid('newPassword')"
+                [class.ng-dirty]="isInvalid('newPassword')" />
+            @if (isInvalid('newPassword')) {
+            @if (form.get('newPassword')?.errors?.['required']) {
+            <span class="field-error">{{ content.errors.required }}</span>
+            }
+            @if (form.get('newPassword')?.errors?.['minlength']) {
+            <span class="field-error">{{ content.errors.minlength }}</span>
+            }
+            }
+        </div>
+
+        <div class="form-field">
+            <label>{{ content.labels.confirmPassword }}</label>
+            <p-password formControlName="confirmPassword" [placeholder]="content.placeholders.confirmPassword"
+                [feedback]="false" [toggleMask]="true" styleClass="w-full"
+                [class.ng-invalid]="isInvalid('confirmPassword')" [class.ng-dirty]="isInvalid('confirmPassword')" />
+            @if (isInvalid('confirmPassword') && form.get('confirmPassword')?.errors?.['required']) {
+            <span class="field-error">{{ content.errors.required }}</span>
+            }
+            @if (form.errors?.['mismatch'] && form.get('confirmPassword')?.touched) {
+            <span class="field-error">{{ content.errors.mismatch }}</span>
+            }
+        </div>
+
+        <div class="form-actions">
+            <app-button variant="primary" [label]="content.actions.submitLabel" [icon]="content.actions.submitIcon"
+                [loading]="saving()" (clicked)="onSave()" />
+        </div>
+
+    </form>
+</div>

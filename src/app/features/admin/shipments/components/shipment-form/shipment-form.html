@@ -1,54 +1,72 @@
 <p-dialog [visible]="visible" [header]="title" [modal]="true" [closable]="true" [draggable]="false"
-    [style]="{ width: '450px' }" (onHide)="onCancel()">
-    
-    @if (shipment) {
-      <form [formGroup]="statusForm" class="simple-form">
-        @for (row of statusFormConfig; track $index) {
-          <div class="form-row">
-            @for (field of row; track field.name) {
-              <div class="form-field" [style.flex]="field.flex || '1'">
-                  <label>{{ field.label }}</label>
-                  @if (field.type === 'select') {
-                    <p-select [formControlName]="field.name" [options]="getOptions(field.optionsKey)" [optionLabel]="field.optionLabel" [optionValue]="field.optionValue" [placeholder]="field.placeholder" [appendTo]="'body'" [style]="{'width':'100%'}" />
-                  }
-                  @if (isInvalid(field.name, statusForm)) {
-                  <span class="field-error">Campo requerido</span>
-                  }
-              </div>
-            }
-          </div>
-        }
-      </form>
-    } @else {
-      <form [formGroup]="form" class="simple-form">
-        @for (row of formConfig; track $index) {
-          <div class="form-row">
-            @for (field of row; track field.name) {
-              <div class="form-field" [style.flex]="field.flex || '1'">
-                  <label>{{ field.label }}</label>
-                  @if (field.type === 'text') {
-                    <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder" />
-                  } @else if (field.type === 'select') {
-                    <p-select [formControlName]="field.name" [options]="getOptions(field.optionsKey)" [optionLabel]="field.optionLabel" [optionValue]="field.optionValue" [placeholder]="field.placeholder" [appendTo]="'body'" [style]="{'width':'100%'}" />
-                  } @else if (field.type === 'number') {
-                    <p-inputNumber [formControlName]="field.name" [min]="field.min" [minFractionDigits]="field.minFractionDigits || 0" mode="decimal" [style]="{'width':'100%'}" [placeholder]="field.placeholder || ''" />
-                  } @else if (field.type === 'date') {
-                    <input pInputText type="date" [formControlName]="field.name" />
-                  }
-                  @if (isInvalid(field.name, form)) {
-                  <span class="field-error">Campo requerido</span>
-                  }
-              </div>
-            }
-          </div>
-        }
-      </form>
-    }
+  [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
 
-    <ng-template pTemplate="footer">
-        <div class="dialog-footer">
-            <app-button variant="ghost" label="Cancelar" (clicked)="onCancel()" />
-            <app-button variant="primary" label="Guardar" icon="pi-check" [loading]="saving" (clicked)="onSave()" />
-        </div>
-    </ng-template>
+  @if (shipment) {
+  <form [formGroup]="statusForm" class="simple-form" novalidate>
+    @for (row of statusFormConfig; track $index) {
+    <div class="form-row">
+      @for (field of row; track field.name) {
+      <div class="form-field" [style.flex]="field.flex || '1'">
+        <label>{{ field.label }}</label>
+        @if (field.type === 'select') {
+        <p-select [formControlName]="field.name" [options]="getOptions(field.optionsKey)"
+          [optionLabel]="field.optionLabel" [optionValue]="field.optionValue" [placeholder]="field.placeholder"
+          [appendTo]="content.styles.appendTo" [style]="{ 'width': content.styles.selectWidth }" />
+        }
+        @if (isInvalid(field.name, statusForm)) {
+        <span class="field-error">{{ content.errorRequired }}</span>
+        }
+      </div>
+      }
+    </div>
+    }
+  </form>
+  }
+
+  @else {
+  <form [formGroup]="form" class="simple-form" novalidate>
+    @for (row of formConfig; track $index) {
+    <div class="form-row">
+      @for (field of row; track field.name) {
+      <div class="form-field" [style.flex]="field.flex || '1'">
+        <label>{{ field.label }}</label>
+
+        @if (field.type === 'text') {
+        <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder"
+          [class.ng-invalid]="isInvalid(field.name, form)" />
+        }
+
+        @else if (field.type === 'select') {
+        <p-select [formControlName]="field.name" [options]="getOptions(field.optionsKey)"
+          [optionLabel]="field.optionLabel" [optionValue]="field.optionValue" [placeholder]="field.placeholder"
+          [appendTo]="content.styles.appendTo" [style]="{ 'width': content.styles.selectWidth }" />
+        }
+
+        @else if (field.type === 'number') {
+        <p-inputNumber [formControlName]="field.name" [min]="field.min"
+          [minFractionDigits]="field.minFractionDigits || 0" mode="decimal"
+          [style]="{ 'width': content.styles.selectWidth }" [placeholder]="field.placeholder || ''" />
+        }
+
+        @else if (field.type === 'date') {
+        <input pInputText type="date" [formControlName]="field.name" [class.ng-invalid]="isInvalid(field.name, form)" />
+        }
+
+        @if (isInvalid(field.name, form)) {
+        <span class="field-error">{{ content.errorRequired }}</span>
+        }
+      </div>
+      }
+    </div>
+    }
+  </form>
+  }
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
+      <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
+        [loading]="saving" (clicked)="onSave()" />
+    </div>
+  </ng-template>
 </p-dialog>

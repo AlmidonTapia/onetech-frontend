@@ -1,1 +1,8 @@
-/* CatalogSort styles */
+.sort-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; gap:16px; flex-wrap:wrap;
+}
+.results-count { font-size:14px; color:var(--ot-gray-600); }
+.results-count strong { color:var(--ot-gray-900); font-weight:700; }
+.sort-control { display:flex; align-items:center; gap:10px; }
+.sort-label { font-size:13px; color:var(--ot-gray-500); white-space:nowrap; }

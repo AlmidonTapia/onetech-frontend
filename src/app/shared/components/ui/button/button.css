@@ -25,7 +25,7 @@
 /* Primary */
 .btn-primary {
   background: var(--ot-blue);
-  color: #fff;
+  color: #ffffff;
   border-color: var(--ot-blue);
 }
 .btn-primary:hover:not(:disabled) {
@@ -33,11 +33,21 @@
   border-color: var(--ot-blue-dark);
   box-shadow: 0 4px 12px rgba(0,71,204,.3);
 }
+.dark-mode .btn-primary {
+  background: var(--ot-blue-light);
+  border-color: var(--ot-blue-light);
+  color: var(--ot-dark);
+}
+.dark-mode .btn-primary:hover:not(:disabled) {
+  background: var(--ot-blue);
+  border-color: var(--ot-blue);
+  box-shadow: 0 4px 12px rgba(77,136,255,.2);
+}
 
 /* Accent */
 .btn-accent {
   background: var(--ot-orange);
-  color: #fff;
+  color: #ffffff;
   border-color: var(--ot-orange);
 }
 .btn-accent:hover:not(:disabled) {
@@ -49,28 +59,31 @@
 /* Outline */
 .btn-outline {
   background: transparent;
-  color: var(--ot-blue);
-  border-color: var(--ot-blue);
+  color: var(--p-primary-color);
+  border-color: var(--p-primary-color);
 }
 .btn-outline:hover:not(:disabled) {
-  background: var(--ot-blue-50);
+  background: rgba(0, 71, 204, 0.08);
+}
+.dark-mode .btn-outline:hover:not(:disabled) {
+  background: rgba(77, 136, 255, 0.12);
 }
 
 /* Ghost */
 .btn-ghost {
   background: transparent;
-  color: var(--ot-gray-600);
-  border-color: var(--ot-gray-300);
+  color: var(--ot-text-main);
+  border-color: var(--ot-border-color);
 }
 .btn-ghost:hover:not(:disabled) {
-  background: var(--ot-gray-100);
-  border-color: var(--ot-gray-400);
+  background: var(--ot-bg-body);
+  border-color: var(--ot-text-muted);
 }
 
 /* Danger */
 .btn-danger {
   background: var(--ot-error);
-  color: #fff;
+  color: #ffffff;
   border-color: var(--ot-error);
 }
 .btn-danger:hover:not(:disabled) {

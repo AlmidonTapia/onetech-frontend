@@ -2,6 +2,6 @@
     <p-rating [(ngModel)]="rating" [readonly]="readonly" (ngModelChange)="onRate($event)" />
 
     @if (showCount && count !== undefined) {
-    <span class="rating-count">({{ count }} reseñas)</span>
+    <span class="rating-count">({{ count }} {{ content.reviewsSuffix }})</span>
     }
 </div>

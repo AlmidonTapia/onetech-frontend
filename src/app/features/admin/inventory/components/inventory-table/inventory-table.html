@@ -1,1 +1,43 @@
-<p>inventory-table works!</p>
+<p-table [value]="movements" [loading]="loading" [paginator]="true" [rows]="tableConfig.defaultRows"
+    [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true"
+    [styleClass]="tableConfig.styleClass" [tableStyle]="{ 'min-width': tableConfig.tableMinWidth }">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>{{ content.headers.product }}</th>
+            <th style="width:130px">{{ content.headers.type }}</th>
+            <th style="width:100px">{{ content.headers.quantity }}</th>
+            <th>{{ content.headers.reason }}</th>
+            <th style="width:150px">{{ content.headers.date }}</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-mv>
+        <tr>
+            <td>{{ mv.productName }}</td>
+            <td>
+                <app-badge
+                    [variant]="mv.movementType === tableConfig.typeIn ? tableConfig.badgeSuccess : tableConfig.badgeError">
+                    <i [class]="mv.movementType === tableConfig.typeIn ? content.icons.inIcon : content.icons.outIcon"
+                        style="font-size: 0.75rem; margin-right: 0.25rem;"></i>
+                    {{ mv.movementType === tableConfig.typeIn ? content.labels.inText : content.labels.outText }}
+                </app-badge>
+            </td>
+            <td class="qty">
+                {{ mv.movementType === tableConfig.typeIn ? content.labels.inSign : content.labels.outSign }}{{
+                mv.quantity }}
+            </td>
+            <td>{{ mv.reason }}</td>
+            <td>{{ mv.createdAt | date: content.dateFormat }}</td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="empty-cell">
+                {{ content.emptyMessage }}
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>

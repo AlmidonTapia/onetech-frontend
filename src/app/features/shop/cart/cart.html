@@ -1,1 +1,42 @@
-<p>cart works!</p>
+<div class="cart-page">
+  <div class="container">
+    <!-- Breadcrumb dinámico -->
+    <app-breadcrumb [items]="breadcrumb" class="cart-breadcrumb" />
+
+    <h1 class="cart-title">
+      {{ content.title }}
+      @if (cartService.itemCount() > 0) {
+      <span class="cart-count">({{ cartService.itemCount() }})</span>
+      }
+    </h1>
+
+    @if (loading) {
+    <app-spinner size="md" [label]="content.loadingLabel" />
+    }
+
+    @else if (cartService.itemCount() === 0) {
+    <div class="cart-empty">
+      <i class="pi pi-shopping-cart"></i>
+      <h3>{{ content.emptyTitle }}</h3>
+      <p>{{ content.emptyDescription }}</p>
+      <app-button variant="primary" [label]="content.exploreBtnLabel" [routerLink]="routes.catalog" />
+    </div>
+    }
+
+    @else {
+    <div class="cart-layout">
+      <div class="cart-main">
+        <div class="cart-items-card">
+          <app-cart-items [items]="cartService.cart()?.items ?? []" (updateQty)="onUpdateQty($event)"
+            (removeItem)="onRemove($event)" />
+        </div>
+      </div>
+
+      <div class="cart-aside">
+        <app-cart-summary [totalAmount]="cartService.totalAmount()" [itemCount]="cartService.itemCount()"
+          (checkout)="goCheckout()" />
+      </div>
+    </div>
+    }
+  </div>
+</div>

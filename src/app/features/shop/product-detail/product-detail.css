@@ -1,1 +1,23 @@
-/* ProductDetail styles */
+.detail-page { padding:24px 0 64px; }
+.detail-breadcrumb { display:block; margin-bottom:24px; }
+
+.detail-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:48px; align-items:start; margin-bottom:48px;
+}
+@media (max-width:768px) { .detail-grid { grid-template-columns:1fr; gap:28px; } }
+
+.detail-tabs { margin-bottom:48px; }
+
+.tab-description { padding:8px 0; }
+.tab-description p { font-size:15px; color:var(--ot-text-muted); line-height:1.7; }
+
+.specifications { margin-top:24px; }
+.specifications h4 { font-size:15px; font-weight:600; color:var(--ot-text-main); margin-bottom:12px; }
+.specifications table { width:100%; border-collapse:collapse; font-size:14px; }
+.specifications th,
+.specifications td { padding:10px 14px; border:1px solid var(--ot-border-color); text-align:left; }
+.specifications th { background:var(--ot-bg-body); font-weight:500; color:var(--ot-text-main); width:35%; }
+.specifications td { color:var(--ot-text-muted); }
+
+.not-found { text-align:center; padding:80px; color:var(--ot-text-muted); font-size:16px; }

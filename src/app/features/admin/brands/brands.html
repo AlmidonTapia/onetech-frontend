@@ -1,15 +1,19 @@
 <div class="admin-page">
+
   <div class="page-header">
     <div class="page-title">
-      <h1>Marcas</h1>
-      <p class="page-subtitle">{{ totalRecords() }} marcas registradas</p>
+      <h1>{{ content.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
     </div>
-    <app-button label="Nueva marca" icon="pi-plus" (clicked)="openCreate()" />
+    <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="openCreate()" />
   </div>
-  <app-card padding="none">
+
+  <app-card [padding]="content.cardPadding">
     <app-brands-table [brands]="brands()" [totalRecords]="totalRecords()" [loading]="loading()"
       (lazyLoad)="loadBrands($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)" />
   </app-card>
+
 </div>
+
 <app-brand-form [(visible)]="formVisible" [brand]="editingBrand()" [saving]="saving()" (save)="onSave($event)"
   (cancel)="formVisible.set(false)" />

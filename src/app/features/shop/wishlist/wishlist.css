@@ -1,1 +1,70 @@
-/* Wishlist styles */
+.wishlist-page { padding: 28px 0 64px; }
+
+/* Header */
+.page-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px;
+  margin: 16px 0 28px;
+}
+.page-header h1 { font-size: 26px; font-weight: 700; color: var(--ot-text-main); }
+.page-sub { font-size: 14px; color: var(--ot-text-muted); margin-top: 4px; }
+
+.clear-btn {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--ot-error);
+  padding: 8px 14px; border-radius: var(--ot-radius-md);
+  border: 1px solid var(--ot-error-bg);
+  background: var(--ot-error-bg);
+  transition: background var(--ot-transition);
+  white-space: nowrap;
+}
+.clear-btn:hover { background: #fecaca; }
+.dark-mode .clear-btn { background: rgba(220, 38, 38, 0.15); border-color: rgba(220, 38, 38, 0.3); }
+.dark-mode .clear-btn:hover { background: rgba(220, 38, 38, 0.25); }
+
+/* Grid */
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1024px) { .wishlist-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px)  { .wishlist-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .wishlist-grid { grid-template-columns: 1fr; } }
+
+.wishlist-item { display: flex; flex-direction: column; gap: 8px; }
+
+.remove-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 12px; font-weight: 500; color: var(--ot-text-muted);
+  padding: 7px; border-radius: var(--ot-radius-md);
+  border: 1px solid var(--ot-border-color); background: var(--ot-bg-surface);
+  transition: var(--ot-transition);
+}
+.remove-btn:hover {
+  color: var(--ot-error);
+  border-color: var(--ot-error);
+  background: var(--ot-error-bg);
+}
+.dark-mode .remove-btn:hover { background: rgba(220, 38, 38, 0.15); }
+
+/* Empty state */
+.empty-wishlist {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 16px;
+  padding: 80px 24px; text-align: center;
+}
+
+.empty-icon {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: var(--ot-error-bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.dark-mode .empty-icon { background: rgba(220, 38, 38, 0.15); }
+.empty-icon .pi { font-size: 40px; color: var(--ot-error); opacity: .6; }
+
+.empty-wishlist h3 { font-size: 22px; font-weight: 700; color: var(--ot-text-main); }
+.empty-wishlist p  {
+  font-size: 15px; color: var(--ot-text-muted);
+  line-height: 1.6; max-width: 380px;
+}

@@ -15,6 +15,7 @@ import { Category, CreateCategoryRequest } from '../../../../../core/models/cate
 })
 export class CategoryFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
+
   @Input() visible: boolean = false;
   @Input() category: Category | null = null;
   @Input() categories: Category[] = [];
@@ -22,6 +23,23 @@ export class CategoryFormComponent implements OnChanges {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<CreateCategoryRequest>();
   @Output() cancel = new EventEmitter<void>();
+
+  content = {
+    dialogWidth: '460px',
+    titleNew: 'Nueva Categoría',
+    titleEdit: 'Editar Categoría',
+    optionalText: '(opcional)',
+    errorRequired: 'Campo requerido',
+    styles: {
+      selectWidth: '100%',
+      appendTo: 'body'
+    },
+    actions: {
+      cancelLabel: 'Cancelar',
+      saveLabel: 'Guardar',
+      saveIcon: 'pi-check'
+    }
+  } as const;
 
   formConfig: any[] = [
     [{ name: 'categoryName', label: 'Nombre *', type: 'text', placeholder: 'Ej: Laptops & PCs' }],
@@ -33,8 +51,13 @@ export class CategoryFormComponent implements OnChanges {
     parentIdCategory: [null as string | null],
   });
 
-  get title() { return this.category ? 'Editar Categoría' : 'Nueva Categoría'; }
-  get parentOptions() { return this.categories.filter(c => c.idCategory !== this.category?.idCategory); }
+  get title() {
+    return this.category ? this.content.titleEdit : this.content.titleNew;
+  }
+
+  get parentOptions() {
+    return this.categories.filter(c => c.idCategory !== this.category?.idCategory);
+  }
 
   getOptions(key: string) {
     if (key === 'parentOptions') return this.parentOptions;
@@ -52,6 +75,17 @@ export class CategoryFormComponent implements OnChanges {
       : this.form.reset();
   }
 
-  onSave() { if (this.form.invalid) { this.form.markAllAsTouched(); return; } this.save.emit(this.form.value as CreateCategoryRequest); }
-  onCancel() { this.form.reset(); this.cancel.emit(); this.visibleChange.emit(false); }
+  onSave() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.save.emit(this.form.value as CreateCategoryRequest);
+  }
+
+  onCancel() {
+    this.form.reset();
+    this.cancel.emit();
+    this.visibleChange.emit(false);
+  }
 }

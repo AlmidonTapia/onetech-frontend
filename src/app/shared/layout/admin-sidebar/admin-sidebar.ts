@@ -1,18 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
+import { ThemeToggleComponent } from '../../components/ThemeToggleComponent/theme-toggle.component';
 
-interface NavItem {
+interface AdminNavItem {
   label: string;
-  icon: string;
   route: string;
+  icon: string;
 }
 
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgClass],
+  imports: [RouterLink, RouterLinkActive, NgClass, ThemeToggleComponent],
   templateUrl: './admin-sidebar.html',
   styleUrl: './admin-sidebar.css'
 })
@@ -22,21 +23,40 @@ export class AdminSidebarComponent {
 
   collapsed = signal(false);
 
-  readonly navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'pi-chart-bar', route: '/admin/dashboard' },
-    { label: 'Productos', icon: 'pi-box', route: '/admin/products' },
-    { label: 'Categorías', icon: 'pi-tags', route: '/admin/categories' },
-    { label: 'Marcas', icon: 'pi-bookmark', route: '/admin/brands' },
-    { label: 'Órdenes', icon: 'pi-receipt', route: '/admin/orders' },
-    { label: 'Inventario', icon: 'pi-warehouse', route: '/admin/inventory' },
-    { label: 'Envíos', icon: 'pi-truck', route: '/admin/shipments' },
-    { label: 'Usuarios', icon: 'pi-users', route: '/admin/users' },
+  content = {
+    dashboardRoute: '/admin/dashboard',
+    logoTag: 'Admin',
+    logoCollapsed: 'OT',
+    ariaLabelNav: 'Menú admin',
+    defaultAvatarLetter: 'A',
+    userRoleLabel: 'Administrador',
+    logoutLabel: 'Cerrar sesión',
+    ariaLabels: {
+      expand: 'Expandir menú',
+      collapse: 'Colapsar menú'
+    }
+  } as const;
+
+  navItems: AdminNavItem[] = [
+    { label: 'Dashboard', route: '/admin/dashboard', icon: 'pi-home' },
+    { label: 'Productos', route: '/admin/products', icon: 'pi-box' },
+    { label: 'Categorías', route: '/admin/categories', icon: 'pi-tags' },
+    { label: 'Marcas', route: '/admin/brands', icon: 'pi-star' },
+    { label: 'Inventario', route: '/admin/inventory', icon: 'pi-server' },
+    { label: 'Cupones', route: '/admin/coupons', icon: 'pi-ticket' },
+    { label: 'Órdenes', route: '/admin/orders', icon: 'pi-shopping-bag' },
+    { label: 'Envíos', route: '/admin/shipments', icon: 'pi-truck' },
+    { label: 'Métodos Envío', route: '/admin/shipment-methods', icon: 'pi-compass' },
+    { label: 'Métodos Pago', route: '/admin/payment-methods', icon: 'pi-credit-card' },
+    { label: 'Usuarios', route: '/admin/users', icon: 'pi-users' }
   ];
 
-  toggleCollapse() { this.collapsed.update(v => !v); }
+  toggleCollapse() {
+    this.collapsed.update(state => !state);
+  }
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/']);
   }
 }

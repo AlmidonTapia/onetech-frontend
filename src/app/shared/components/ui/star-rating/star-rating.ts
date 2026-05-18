@@ -14,13 +14,21 @@ export class StarRatingComponent implements OnChanges {
   @Input() readonly = true;
   @Input() count?: number;
   @Input() showCount = true;
-  @Output() ratingChange = new EventEmitter<number>();
+  @Output() valueChange = new EventEmitter<number>();
 
   rating = 0;
 
-  ngOnChanges() { this.rating = this.value; }
+  content = {
+    reviewsSuffix: 'reseñas'
+  };
+
+  ngOnChanges() {
+    this.rating = this.value;
+  }
 
   onRate(val: number) {
-    if (!this.readonly) this.ratingChange.emit(val);
+    if (!this.readonly) {
+      this.valueChange.emit(val);
+    }
   }
 }

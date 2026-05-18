@@ -1,0 +1,4 @@
+<button (click)="toggleTheme()" [attr.aria-label]="isDark() ? content.ariaLight : content.ariaDark"
+    class="theme-toggle-btn">
+    <i class="pi" [class]="isDark() ? content.iconLight : content.iconDark"></i>
+</button>

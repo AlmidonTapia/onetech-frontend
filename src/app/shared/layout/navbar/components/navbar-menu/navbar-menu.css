@@ -1,4 +1,8 @@
-.nav-menu {
+.navbar-navigation {
+  width: 100%;
+}
+
+.nav-menu-list {
   display: flex;
   align-items: center;
   gap: 2px;
@@ -7,13 +11,13 @@
   margin: 0;
 }
 
-.nav-item {
+.menu-item-node {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.nav-link {
+.menu-root-link {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -28,72 +32,85 @@
   border-bottom: 2px solid transparent;
 }
 
-.nav-link:hover {
-  color: #fff;
+.menu-root-link:hover {
+  color: #ffffff;
   background: rgba(255, 255, 255, 0.1);
   border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
-.nav-link--accent {
-  color: #ffcc00; /* Keeping the yellow for offers */
-  font-weight: 700;
+/* Sincronización de color de texto en barra de categorías para modo oscuro */
+.dark-mode .menu-root-link {
+  color: var(--ot-text-main);
+}
+.dark-mode .menu-root-link:hover {
+  background: var(--ot-bg-body);
+  border-bottom-color: var(--p-primary-color);
 }
 
-.submenu-icon {
+.menu-link-accent {
+  color: #ffcc00;
+  font-weight: 700;
+}
+.dark-mode .menu-link-accent {
+  color: #ffcc00;
+}
+
+.arrow-sub-icon {
   font-size: 10px;
   opacity: 0.7;
   transition: transform var(--ot-transition);
 }
 
-.nav-item:hover .submenu-icon {
+.menu-item-node:hover .arrow-sub-icon {
   transform: rotate(180deg);
 }
 
-/* ── Submenu ────────────────────────────────── */
-.submenu {
+/* ── Dropdown Submenu Corregido Flotante ── */
+.dropdown-submenu {
   position: absolute;
   top: 100%;
   left: 0;
   min-width: 220px;
-  background: var(--ot-dark); /* Using design token #1a1a2e */
+  background: var(--ot-bg-surface); 
   list-style: none;
   padding: 10px 0;
   margin: 0;
   box-shadow: var(--ot-shadow-lg);
+  border: 1px solid var(--ot-border-color);
   border-radius: 0 0 var(--ot-radius-md) var(--ot-radius-md);
-  z-index: 1000;
+  z-index: 1010; 
   
-  /* Initial state for animation */
+  /* Estado inicial para animaciones */
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
   transition: all var(--ot-transition);
-  border-top: 2px solid var(--ot-blue-light); /* Added a blue accent on top */
+  border-top: 2px solid var(--p-primary-color); 
 }
 
-.nav-item:hover .submenu {
+/* Disparador hover corregido acoplado al árbol DOM */
+.menu-item-node:hover .dropdown-submenu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-.submenu-link {
+.menu-sub-link {
   display: block;
   padding: 10px 24px;
   font-size: 13px;
-  color: var(--ot-gray-300);
+  color: var(--ot-text-main);
   text-decoration: none;
   transition: all 200ms ease;
   white-space: nowrap;
 }
 
-.submenu-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+.menu-sub-link:hover {
+  background: var(--ot-bg-body); 
+  color: var(--p-primary-color);
   padding-left: 28px;
 }
 
-/* PrimeNG / Tailwind Concordance */
-.has-submenu {
-    cursor: pointer;
+.menu-item-node--has-subs {
+  cursor: pointer;
 }

@@ -28,6 +28,24 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   @Output() cancel = new EventEmitter<void>();
 
   methods = signal<ShipmentMethod[]>([]);
+
+  content = {
+    dialogWidth: '450px',
+    titleNew: 'Nuevo Envío',
+    titleUpdate: 'Actualizar Estado',
+    errorRequired: 'Campo requerido',
+    apiTimezoneSuffix: 'T00:00:00Z',
+    styles: {
+      selectWidth: '100%',
+      appendTo: 'body'
+    },
+    actions: {
+      cancelLabel: 'Cancelar',
+      saveLabel: 'Guardar',
+      saveIcon: 'pi-check'
+    }
+  } as const;
+
   statuses = [
     { label: 'En Preparación', value: 'EN_PREPARACION' },
     { label: 'En Camino', value: 'EN_CAMINO' },
@@ -59,6 +77,17 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   statusForm = this.fb.group({ status: ['', Validators.required] });
 
+  get title() {
+    return this.shipment ? this.content.titleUpdate : this.content.titleNew;
+  }
+
+  ngOnInit() {
+    this.shipmentService.getMethods().subscribe({
+      next: (m) => this.methods.set(m),
+      error: () => { }
+    });
+  }
+
   getOptions(key: string) {
     if (key === 'methods') return this.methods();
     if (key === 'statuses') return this.statuses;
@@ -70,15 +99,6 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     return control?.invalid && control?.touched;
   }
 
-  ngOnInit() {
-    this.shipmentService.getMethods().subscribe({
-        next: (m) => this.methods.set(m),
-        error: () => {}
-    });
-  }
-
-  get title() { return this.shipment ? 'Actualizar Estado' : 'Nuevo Envío'; }
-
   ngOnChanges() {
     if (this.shipment) {
       this.statusForm.patchValue({ status: this.shipment.status });
@@ -89,16 +109,22 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   onSave() {
     if (this.shipment) {
-      if (this.statusForm.invalid) { this.statusForm.markAllAsTouched(); return; }
+      if (this.statusForm.invalid) {
+        this.statusForm.markAllAsTouched();
+        return;
+      }
       this.updateStatus.emit({ id: this.shipment.idShipment, status: this.statusForm.value.status as ShipmentStatus });
     } else {
-      if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+      if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        return;
+      }
       const payload: CreateShipmentRequest = {
-         idOrder: this.form.value.idOrder as string,
-         idShipmentMethod: this.form.value.idShipmentMethod as string,
-         trackingNumber: this.form.value.trackingNumber as string,
-         shippingCost: this.form.value.shippingCost as number,
-         estimatedArrival: (this.form.value.estimatedArrival as string) + 'T00:00:00Z'
+        idOrder: this.form.value.idOrder as string,
+        idShipmentMethod: this.form.value.idShipmentMethod as string,
+        trackingNumber: this.form.value.trackingNumber as string,
+        shippingCost: this.form.value.shippingCost as number,
+        estimatedArrival: (this.form.value.estimatedArrival as string) + this.content.apiTimezoneSuffix
       };
       this.save.emit(payload);
     }

@@ -3,17 +3,16 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { ProductService } from '../../../../../core/services/product.service';
 import { Product, ProductImage } from '../../../../../core/models/product.model';
+import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
-  selector: 'app-product-images-manager',
+  selector: 'app-product-images-manager', // Alínea con tu selector original
   standalone: true,
   imports: [DialogModule, FileUploadModule, ButtonComponent],
   templateUrl: './product-images-manager.html',
-  styleUrl: './product-images-manager.css'
 })
-export class ProductImagesManagerComponent implements OnChanges {
+export class ProductImagesManagerComponent implements OnChanges { 
   private productService = inject(ProductService);
   private alertService = inject(AlertService);
 
@@ -23,31 +22,77 @@ export class ProductImagesManagerComponent implements OnChanges {
   @Output() updated = new EventEmitter<void>();
 
   images = signal<ProductImage[]>([]);
+  uploading = signal(false);
+
+  content = {
+    headerPrefix: 'Imágenes — ',
+    dialogWidth: '620px',
+    altText: 'Imagen del producto',
+    mainBadgeLabel: 'Principal',
+    emptyMessage: 'Sin imágenes. Sube la primera imagen abajo.',
+    uploadConfig: {
+      mode: 'advanced' as const,
+      accept: 'image/*',
+      chooseLabel: 'Elegir imágenes',
+      uploadLabel: 'Subir',
+      cancelLabel: 'Limpiar',
+      maxFileSize: 5000000,
+      styleClass: 'upload-area'
+    },
+    actions: {
+      closeLabel: 'Cerrar'
+    },
+    alerts: {
+      uploadSuccess: 'Imágenes subidas con éxito',
+      uploadError: 'Error al subir imágenes',
+      deleteSuccess: 'Imagen eliminada',
+      deleteError: 'Error al eliminar la imagen'
+    }
+  } as const;
 
   ngOnChanges() {
-    if (this.product && this.visible) this.loadImages();
-  }
-
-  loadImages() {
-    if (!this.product) return;
-    this.productService.getImages(this.product.idProduct).subscribe(imgs => this.images.set(imgs));
+    if (this.product) {
+      this.images.set(this.product.images ?? []);
+    }
   }
 
   onUpload(event: any) {
     if (!this.product) return;
-    this.productService.uploadImages(this.product.idProduct, event.files, 0).subscribe({
-      next: () => { this.alertService.success('Imágenes subidas'); this.loadImages(); this.updated.emit(); },
-      error: () => this.alertService.error('Error al subir imágenes'),
+
+    this.uploading.set(true);
+    const files: File[] = event.files;
+
+    this.productService.uploadImages(this.product.idProduct, files, 0).subscribe({
+      next: (updatedImages: any) => {
+        this.alertService.success(this.content.alerts.uploadSuccess);
+        this.images.set(updatedImages);
+        this.updated.emit();
+        this.uploading.set(false);
+        event.clear();
+      },
+      error: () => {
+        this.alertService.error(this.content.alerts.uploadError);
+        this.uploading.set(false);
+      }
     });
   }
 
-  deleteImage(imageId: string) {
+  deleteImage(idImage: string) {
     if (!this.product) return;
-    this.productService.deleteImage(this.product.idProduct, imageId).subscribe({
-      next: () => { this.alertService.success('Imagen eliminada'); this.loadImages(); },
-      error: () => this.alertService.error('Error al eliminar'),
+
+    this.productService.deleteImage(this.product.idProduct, idImage).subscribe({
+      next: () => {
+        this.alertService.success(this.content.alerts.deleteSuccess);
+        this.images.update((imgs: ProductImage[]) => imgs.filter((img: ProductImage) => img.idProductImage !== idImage));
+        this.updated.emit();
+      },
+      error: () => {
+        this.alertService.error(this.content.alerts.deleteError);
+      }
     });
   }
 
-  close() { this.visibleChange.emit(false); }
+  close() {
+    this.visibleChange.emit(false);
+  }
 }

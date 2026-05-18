@@ -23,7 +23,6 @@ export class UserService {
     return this.http.get<PageResponse<User>>(this.url, { params });
   }
 
-  // Addresses
   getAddresses() {
     return this.http.get<Address[]>(`${this.url}/address`);
   }

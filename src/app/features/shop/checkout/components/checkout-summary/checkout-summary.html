@@ -1,1 +1,80 @@
-<p>checkout-summary works!</p>
+<div class="checkout-summary">
+
+    <div class="summary-block">
+        <h4 class="block-title">
+            <i [class]="content.blocks.productsIcon"></i> {{ content.blocks.productsTitle }}
+        </h4>
+        <div class="items-list">
+            @for (item of cart?.items ?? []; track item.idProduct) {
+            <div class="summary-item">
+                <div class="item-img">
+                    @if (item.productImageUrl) {
+                    <img [src]="item.productImageUrl" [alt]="item.productName" />
+                    } @else {
+                    <i class="pi pi-image"></i>
+                    }
+                </div>
+                <span class="item-name">{{ item.productName }}</span>
+                <span class="item-qty">× {{ item.quantity }}</span>
+                <span class="item-price">{{ item.subtotal | currencyPen }}</span>
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="summary-block">
+        <h4 class="block-title">
+            <i [class]="content.blocks.addressIcon"></i> {{ content.blocks.addressTitle }}
+        </h4>
+        @if (address) {
+        <p class="block-detail">
+            {{ address.mainAddress }}, {{ address.district }}, {{ address.region }}
+        </p>
+        @if (address.reference) {
+        <p class="block-sub">Ref: {{ address.reference }}</p>
+        }
+        } @else {
+        <p class="block-empty">{{ content.blocks.addressEmpty }}</p>
+        }
+    </div>
+
+    <div class="summary-block">
+        <h4 class="block-title">
+            <i [class]="content.blocks.shippingIcon"></i> {{ content.blocks.shippingTitle }}
+        </h4>
+        @if (shipMethod) {
+        <div class="block-row">
+            <span class="block-detail">{{ shipMethod.methodName }}</span>
+            <span class="block-price">{{ shipMethod.basePrice | currencyPen }}</span>
+        </div>
+        } @else {
+        <p class="block-empty">{{ content.blocks.shippingEmpty }}</p>
+        }
+    </div>
+
+    <div class="summary-block">
+        <h4 class="block-title">
+            <i [class]="content.blocks.paymentIcon"></i> {{ content.blocks.paymentTitle }}
+        </h4>
+        @if (payMethod) {
+        <p class="block-detail">{{ payMethod.methodName }}</p>
+        } @else {
+        <p class="block-empty">{{ content.blocks.paymentEmpty }}</p>
+        }
+    </div>
+
+    <div class="totals-block">
+        <div class="total-row">
+            <span>{{ content.totals.subtotalLabel }}</span>
+            <span>{{ subtotal | currencyPen }}</span>
+        </div>
+        <div class="total-row">
+            <span>{{ content.totals.shippingLabel }}</span>
+            <span>{{ shipping | currencyPen }}</span>
+        </div>
+        <div class="total-row total-row--grand">
+            <span>{{ content.totals.grandTotalLabel }}</span>
+            <strong>{{ grandTotal | currencyPen }}</strong>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,50 @@
-<p>hero-banner works!</p>
+<section class="hero">
+  <div class="container hero-inner">
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i [class]="content.badgeIcon"></i> {{ content.badgeText }}
+      </div>
+
+      <h1 class="hero-title">
+        {{ content.titleNormal }}<br>
+        <span class="hero-accent">{{ content.titleAccent }}</span>
+      </h1>
+
+      <p class="hero-sub">
+        {{ content.subTextPre }}<strong>{{ content.freeShippingThreshold }}</strong>{{ content.subTextPost }}
+      </p>
+
+      <div class="hero-actions">
+        <app-button variant="accent" size="lg" [label]="content.primaryBtn.label" [icon]="content.primaryBtn.icon"
+          iconPos="right" [routerLink]="content.primaryBtn.route" />
+
+        <app-button variant="outline" size="lg" [label]="content.secondaryBtn.label"
+          [routerLink]="content.secondaryBtn.route" [queryParams]="content.secondaryBtn.queryParams" />
+      </div>
+
+      <div class="hero-stats">
+        @for (stat of stats; track stat.label; let last = $last) {
+        <div class="hero-stat">
+          <strong>{{ stat.value }}</strong>
+          <span>{{ stat.label }}</span>
+        </div>
+        @if (!last) { <div class="hero-stat-sep"></div> }
+        }
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-glow"></div>
+
+      <div class="hero-icon-grid">
+        @for (item of visualIcons; track $index) {
+        <div [class]="item.class">
+          <i [class]="item.icon"></i>
+        </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>

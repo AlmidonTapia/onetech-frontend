@@ -1,1 +1,57 @@
-<p>movement-form works!</p>
+<p-dialog [visible]="visible" [header]="content.headerTitle" [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
+
+    <form [formGroup]="form" class="simple-form" novalidate>
+        <div class="form-field">
+            <label>Producto *</label>
+            <p-select formControlName="idProduct" [options]="products" optionLabel="productName" optionValue="idProduct"
+                placeholder="Seleccionar producto" [filter]="true" filterPlaceholder="Buscar..."
+                [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-field">
+                <label>Tipo de movimiento *</label>
+                <p-select formControlName="movementType" [options]="typeOptions" optionLabel="label" optionValue="value"
+                    [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo">
+                    <ng-template pTemplate="selectedItem" let-selectedOption>
+                        @if (selectedOption) {
+                        <div class="flex align-items-center">
+                            <i [class]="typeIcons[selectedOption.value]"
+                                style="font-size: 0.85rem; margin-right: 0.5rem;"></i>
+                            <div>{{ selectedOption.label }}</div>
+                        </div>
+                        }
+                    </ng-template>
+                    <ng-template pTemplate="item" let-option>
+                        <div class="flex align-items-center">
+                            <i [class]="typeIcons[option.value]" style="font-size: 0.85rem; margin-right: 0.5rem;"></i>
+                            <div>{{ option.label }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+            <div class="form-field">
+                <label>Cantidad *</label>
+                <p-inputNumber formControlName="quantity" [min]="1" [style]="{ 'width': content.styles.selectWidth }" />
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label>Motivo *</label>
+            <input pInputText formControlName="reason" placeholder="Ej: Compra de proveedor, Venta, Ajuste..."
+                [class.ng-invalid]="isInvalid('reason')" />
+            @if (isInvalid('reason') && form.get('reason')?.errors?.['required']) {
+            <span class="field-error">{{ content.errorRequired }}</span>
+            }
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
+            <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
+                [loading]="saving" (clicked)="onSave()" />
+        </div>
+    </ng-template>
+</p-dialog>

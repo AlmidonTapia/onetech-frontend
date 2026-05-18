@@ -1,1 +1,11 @@
-<p>related-products works!</p>
+@if (products.length > 0) {
+<section class="related-section">
+  <h3 class="related-title">{{ content.title }}</h3>
+
+  <div class="related-grid">
+    @for (product of products.slice(0, displayConfig.maxItems); track product.idProduct) {
+    <app-product-card [product]="product" />
+    }
+  </div>
+</section>
+}

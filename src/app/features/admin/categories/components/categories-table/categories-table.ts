@@ -18,4 +18,29 @@ export class CategoriesTableComponent {
   @Output() lazyLoad = new EventEmitter<any>();
   @Output() editItem = new EventEmitter<Category>();
   @Output() deleteItem = new EventEmitter<Category>();
+
+  tableConfig = {
+    defaultRows: 10,
+    styleClass: 'p-datatable-sm',
+    actionsWidth: '100px',
+    colspanEmpty: 3
+  } as const;
+
+  content = {
+    headers: {
+      name: 'Nombre',
+      parent: 'Categoría padre',
+      actions: 'Acciones'
+    },
+    rootCategoryLabel: 'Categoría raíz',
+    tooltips: {
+      edit: 'Editar',
+      delete: 'Eliminar'
+    },
+    emptyMessage: 'No hay categorías registradas.',
+    icons: {
+      edit: 'pi pi-pencil',
+      delete: 'pi pi-trash'
+    }
+  };
 }

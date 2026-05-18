@@ -21,7 +21,6 @@ export class CartService {
   });
 
   constructor() {
-    // If authenticated on startup, fetch from server
     if (this.authService.isAuthenticated()) {
       this.getCart().subscribe();
     }
@@ -42,7 +41,7 @@ export class CartService {
         tap(() => this.getCart().subscribe())
       );
     } else {
-      // Guest logic: fetch product details to store them locally
+
       return this.productService.getById(data.idProduct).pipe(
         tap(product => {
           const currentCart = this.cart() || { idCart: 'guest', idUser: 'guest', items: [], totalAmount: 0 };

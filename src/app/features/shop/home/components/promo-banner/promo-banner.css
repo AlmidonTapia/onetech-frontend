@@ -1,1 +1,42 @@
-/* PromoBanner styles */
+.promo-section { padding: 0 0 64px; }
+.promo-grid { display:grid; grid-template-columns:1.6fr 1fr; gap:20px; }
+@media (max-width:768px) { .promo-grid { grid-template-columns:1fr; } }
+
+.promo-card {
+  border-radius:var(--ot-radius-xl); padding:40px;
+  display:flex; align-items:center; justify-content:space-between;
+  overflow:hidden; position:relative;
+}
+
+.promo-main {
+  background:linear-gradient(135deg, var(--ot-blue) 0%, var(--ot-blue-dark) 100%);
+  color:#ffffff;
+}
+.dark-mode .promo-main {
+  background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid var(--ot-border-color);
+}
+
+.promo-secondary {
+  background:linear-gradient(135deg, var(--ot-dark) 0%, #0d2452 100%);
+  color:#ffffff;
+}
+.dark-mode .promo-secondary {
+  background:linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border: 1px solid var(--ot-border-color);
+}
+
+.promo-content { display:flex; flex-direction:column; gap:12px; position:relative; z-index:1; }
+.promo-tag { font-size:13px; font-weight:600; opacity:.8; }
+.promo-content h3 { font-size:24px; font-weight:800; line-height:1.2; }
+.promo-content p { font-size:13px; opacity:.75; line-height:1.5; }
+
+.promo-icon {
+  font-size:80px; opacity:.12; position:absolute; right:32px;
+  color:#ffffff; line-height:1;
+}
+
+.promo-card :host ::ng-deep .btn-outline {
+  border-color:rgba(255,255,255,.4); color:#ffffff;
+}
+.promo-card :host ::ng-deep .btn-outline:hover { background:rgba(255,255,255,.1); }

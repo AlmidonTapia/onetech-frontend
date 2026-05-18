@@ -1,1 +1,27 @@
-<p>promo-banner works!</p>
+<section class="promo-section">
+  <div class="container">
+    <div class="promo-grid">
+
+      @for (card of promoCards; track card.tag) {
+      <div [class]="'promo-card ' + card.customClass">
+        <div class="promo-content">
+          <span class="promo-tag">{{ card.tag }}</span>
+          <h3>
+            {{ card.titleLine1 }}<br>
+            {{ card.titleLine2 }}
+          </h3>
+          <p>{{ card.description }}</p>
+
+          <app-button [variant]="card.button.variant" [label]="card.button.label" [routerLink]="card.button.route"
+            [queryParams]="card.button.queryParams || null" />
+        </div>
+
+        <div class="promo-icon">
+          <i [class]="card.icon"></i>
+        </div>
+      </div>
+      }
+
+    </div>
+  </div>
+</section>

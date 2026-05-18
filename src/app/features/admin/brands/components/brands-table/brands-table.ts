@@ -17,4 +17,27 @@ export class BrandsTableComponent {
   @Output() lazyLoad = new EventEmitter<any>();
   @Output() editItem = new EventEmitter<Brand>();
   @Output() deleteItem = new EventEmitter<Brand>();
+
+  tableConfig = {
+    defaultRows: 10,
+    styleClass: 'p-datatable-sm',
+    actionsWidth: '100px',
+    colspanEmpty: 2
+  };
+
+  content = {
+    headers: {
+      brand: 'Marca',
+      actions: 'Acciones'
+    },
+    tooltips: {
+      edit: 'Editar',
+      delete: 'Eliminar'
+    },
+    emptyMessage: 'No hay marcas registradas.',
+    icons: {
+      edit: 'pi pi-pencil',
+      delete: 'pi pi-trash'
+    }
+  };
 }

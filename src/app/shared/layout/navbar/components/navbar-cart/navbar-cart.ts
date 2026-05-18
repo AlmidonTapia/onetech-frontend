@@ -12,6 +12,14 @@ import { CurrencyPenPipe } from '../../../../pipes/currency-pen.pipe';
 })
 export class NavbarCartComponent {
   private cartService = inject(CartService);
+
   itemCount = this.cartService.itemCount;
   totalAmount = this.cartService.totalAmount;
+
+  content = {
+    cartRoute: '/cart',
+    ariaLabelCart: 'Ver carrito',
+    cartIcon: 'pi pi-shopping-cart',
+    labelText: 'Carrito'
+  };
 }

@@ -1,21 +1,27 @@
 <div class="recent-card">
   <div class="recent-header">
-    <h3 class="recent-title">Órdenes recientes</h3>
-    <a routerLink="/admin/orders" class="view-all">Ver todas →</a>
+    <h3 class="recent-title">{{ content.title }}</h3>
+    <a [routerLink]="content.viewAllRoute" class="view-all">{{ content.viewAllLabel }}</a>
   </div>
 
   <div class="recent-body">
     @if (orders.length === 0) {
-    <p class="recent-empty">No hay órdenes recientes.</p>
-    } @else {
+    <p class="recent-empty">{{ content.emptyMessage }}</p>
+    }
+
+    @else {
     @for (order of orders; track order.idOrder) {
     <div class="order-row">
       <div class="order-info">
-        <span class="order-id">#{{ order.idOrder.substring(0, 8) }}</span>
+        <span class="order-id">
+          {{ content.idPrefix }}{{ order.idOrder.substring(0, 8) }}
+        </span>
         <span class="order-user">{{ order.userFullName }}</span>
       </div>
+
       <div class="order-meta">
         <span class="order-total">{{ order.totalAmount | currencyPen }}</span>
+
         <p-tag [value]="getStatusLabel(order.orderStatus)" [severity]="getStatusSeverity(order.orderStatus)" />
       </div>
     </div>

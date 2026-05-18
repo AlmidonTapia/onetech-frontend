@@ -23,6 +23,35 @@ export class OrdersTableComponent {
   @Output() changeStatus = new EventEmitter<Order>();
   @Output() viewDetail = new EventEmitter<Order>();
 
+  tableConfig = {
+    defaultRows: 10,
+    styleClass: 'p-datatable-sm',
+    tableMinWidth: '820px',
+    colspanEmpty: 6
+  } as const;
+
+  content = {
+    idPrefix: '#',
+    dateFormat: 'dd/MM/yyyy HH:mm',
+    emptyMessage: 'No hay órdenes registradas.',
+    headers: {
+      orderId: 'ID Orden',
+      client: 'Cliente',
+      date: 'Fecha',
+      total: 'Total',
+      status: 'Estado',
+      actions: 'Acciones'
+    },
+    tooltips: {
+      viewDetail: 'Ver detalle',
+      changeStatus: 'Cambiar estado'
+    },
+    icons: {
+      viewDetail: 'pi pi-eye',
+      changeStatus: 'pi pi-sync'
+    }
+  };
+
   readonly statusConfig: Record<OrderStatus, { label: string; severity: SeverityType }> = {
     PENDIENTE: { label: 'Pendiente', severity: 'warn' },
     PAGADO: { label: 'Pagado', severity: 'info' },
@@ -31,6 +60,11 @@ export class OrdersTableComponent {
     CANCELADO: { label: 'Cancelado', severity: 'danger' },
   };
 
-  getStatusLabel(status: any): string { return this.statusConfig[status as OrderStatus]?.label || status; }
-  getStatusSeverity(status: any): SeverityType { return this.statusConfig[status as OrderStatus]?.severity || 'info'; }
+  getStatusLabel(status: any): string {
+    return this.statusConfig[status as OrderStatus]?.label || status;
+  }
+
+  getStatusSeverity(status: any): SeverityType {
+    return this.statusConfig[status as OrderStatus]?.severity || 'info';
+  }
 }

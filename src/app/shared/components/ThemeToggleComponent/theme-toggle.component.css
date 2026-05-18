@@ -1,0 +1,19 @@
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ot-radius-md);
+  color: var(--ot-text-main);
+  background: transparent;
+  transition: var(--ot-transition);
+}
+
+.theme-toggle-btn:hover {
+  background: var(--ot-border-color);
+}
+
+.theme-toggle-btn i {
+  font-size: 1.25rem;
+}
