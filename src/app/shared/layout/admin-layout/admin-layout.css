@@ -1,7 +1,8 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--ot-gray-50);
+  background: var(--ot-bg-body);
+  transition: var(--ot-transition);
 }
 
 .admin-content {
@@ -9,11 +10,11 @@
   margin-left: var(--ot-sidebar-width);
   padding: 28px 32px;
   min-height: 100vh;
-  transition: margin-left .25s ease;
+  background: var(--ot-bg-body);
+  transition: margin-left .25s ease, var(--ot-transition);
   animation: fadeIn .2s ease both;
 }
 
-/* Cuando el sidebar está colapsado (68px) */
 :host-context(.sidebar-collapsed) .admin-content {
   margin-left: 68px;
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { NgClass } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CategoryService } from '../../../../../core/services/category.service';
 
 interface NavCategory {
@@ -14,27 +13,47 @@ interface NavCategory {
 @Component({
   selector: 'app-navbar-menu',
   standalone: true,
-  imports: [RouterLink, NgClass],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar-menu.html',
   styleUrl: './navbar-menu.css'
 })
 export class NavbarMenuComponent implements OnInit {
   private categoryService = inject(CategoryService);
-  
+
   categories = signal<NavCategory[]>([]);
+
+  content = {
+    ariaLabelNav: 'Navegación por categorías',
+    baseCatalogRoute: '/catalog',
+    fixedItems: {
+      allCategoriesLabel: 'Todas las categorías',
+      offersLabel: '⚡ Ofertas',
+      offersSearchValue: 'oferta'
+    }
+  };
 
   ngOnInit() {
     this.categoryService.getTree().subscribe({
       next: (res) => {
         const mapped: NavCategory[] = res.map(cat => this.mapCategory(cat));
-        
-        // Add "All" at the beginning
-        mapped.unshift({ label: 'Todas las categorías', route: '/catalog', queryParams: {} });
 
-        // Add a static "Offers" item at the end if desired
-        mapped.push({ label: '⚡ Ofertas', route: '/catalog', queryParams: { search: 'oferta' }, accent: true });
-        
+        mapped.unshift({
+          label: this.content.fixedItems.allCategoriesLabel,
+          route: this.content.baseCatalogRoute,
+          queryParams: {}
+        });
+
+        mapped.push({
+          label: this.content.fixedItems.offersLabel,
+          route: this.content.baseCatalogRoute,
+          queryParams: { search: this.content.fixedItems.offersSearchValue },
+          accent: true
+        });
+
         this.categories.set(mapped);
+      },
+      error: () => {
+        this.categories.set([]);
       }
     });
   }
@@ -42,7 +61,7 @@ export class NavbarMenuComponent implements OnInit {
   private mapCategory(cat: any): NavCategory {
     return {
       label: cat.categoryName,
-      route: '/catalog',
+      route: this.content.baseCatalogRoute,
       queryParams: { idCategory: cat.idCategory },
       subcategories: cat.subcategories?.map((sub: any) => this.mapCategory(sub))
     };

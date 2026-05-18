@@ -1,35 +1,51 @@
-<p-table [value]="shipments" [loading]="loading" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [lazy]="true"
-    (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" styleClass="p-datatable-sm">
+<p-table [value]="shipments" [loading]="loading" [paginator]="true" [rows]="tableConfig.defaultRows"
+    [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true"
+    [styleClass]="tableConfig.styleClass">
+
     <ng-template pTemplate="header">
         <tr>
-            <th>ID Pedido</th>
-            <th>Método</th>
-            <th>Tracking</th>
-            <th>Costo</th>
-            <th>Llegada Estimada</th>
-            <th>Estado</th>
-            <th style="width:80px">Acciones</th>
+            <th>{{ content.headers.orderId }}</th>
+            <th>{{ content.headers.method }}</th>
+            <th>{{ content.headers.tracking }}</th>
+            <th>{{ content.headers.cost }}</th>
+            <th>{{ content.headers.arrival }}</th>
+            <th>{{ content.headers.status }}</th>
+            <th [style.width]="tableConfig.actionsWidth">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-s>
         <tr>
-            <td><span class="order-id">{{ s.idOrder | slice:0:8 }}</span></td>
+            <td>
+                <span class="order-id">
+                    {{ s.idOrder | slice: tableConfig.sliceStart : tableConfig.sliceEnd }}
+                </span>
+            </td>
             <td>{{ s.shipmentMethodName }}</td>
             <td>{{ s.trackingNumber }}</td>
-            <td>{{ s.shippingCost | currency:'PEN' }}</td>
-            <td>{{ s.estimatedArrival | date:'mediumDate' }}</td>
-            <td><span class="status-badge" [class]="s.status | lowercase">{{ s.status | titlecase }}</span></td>
+            <td>{{ s.shippingCost | currency: tableConfig.currencyCode }}</td>
+            <td>{{ s.estimatedArrival | date: content.dateFormat }}</td>
+            <td>
+                <span class="status-badge" [class]="s.status | lowercase">
+                    {{ s.status | titlecase }}
+                </span>
+            </td>
             <td>
                 <div class="row-actions">
-                    <button class="act-btn" pTooltip="Cambiar Estado" (click)="editItem.emit(s)"><i
-                            class="pi pi-pencil"></i></button>
+                    <button class="act-btn" [pTooltip]="content.tooltipEdit" (click)="editItem.emit(s)">
+                        <i [class]="content.icons.edit"></i>
+                    </button>
                 </div>
             </td>
         </tr>
     </ng-template>
+
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="7" class="empty-cell">No hay envíos registrados.</td>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="empty-cell">
+                {{ content.emptyMessage }}
+            </td>
         </tr>
     </ng-template>
+
 </p-table>

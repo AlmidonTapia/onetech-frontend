@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 export interface StatCard {
-  label:  string;
-  value:  string | number;
-  icon:   string;
+  label: string;
+  value: string | number;
+  icon: string;
   suffix: string;
-  color:  'blue' | 'orange' | 'green' | 'purple';
+  color: 'blue' | 'orange' | 'green' | 'purple';
 }
 
 @Component({
@@ -18,4 +18,9 @@ export interface StatCard {
 })
 export class DashboardStatsComponent {
   @Input() stats: StatCard[] = [];
+
+  content = {
+    iconBaseClass: 'pi',
+    iconColorPrefix: 'stat-icon--'
+  } as const;
 }

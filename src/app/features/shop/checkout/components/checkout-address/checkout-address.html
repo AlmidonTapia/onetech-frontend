@@ -1,1 +1,71 @@
-<p>checkout-address works!</p>
+<div class="step-section">
+  <h3 class="step-title">
+    <i [class]="content.titleIcon"></i> {{ content.title }}
+  </h3>
+
+  <div class="address-list">
+    @for (addr of addresses(); track addr.idAddress) {
+    <div class="address-option" [class.address-option--selected]="selectedId() === addr.idAddress"
+      (click)="selectAddress(addr)">
+      <div class="addr-radio">
+        <div class="radio-circle" [class.radio-circle--active]="selectedId() === addr.idAddress"></div>
+      </div>
+      <div class="addr-info">
+        <p class="addr-main">{{ addr.mainAddress }}</p>
+        <p class="addr-detail">{{ addr.district }}, {{ addr.region }} — {{ addr.country }}</p>
+        @if (addr.reference) { <p class="addr-ref">Ref: {{ addr.reference }}</p> }
+        @if (addr.isDefault) { <span class="addr-default">{{ content.defaultBadgeText }}</span> }
+      </div>
+    </div>
+    }
+  </div>
+
+  @if (!showNewForm()) {
+  <button class="add-address-btn" (click)="showNewForm.set(true)">
+    <i class="pi pi-plus"></i> {{ content.addAddressBtnText }}
+  </button>
+  } @else {
+  <form [formGroup]="form" class="new-address-form animate-fade-in" novalidate>
+    <h4>{{ content.formTitle }}</h4>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>{{ content.fields.regionLabel }}</label>
+        <input type="text" formControlName="region" [placeholder]="content.fields.regionPlaceholder"
+          [class.ng-invalid]="isInvalid('region')" [class.ng-dirty]="isInvalid('region')" />
+        @if (isInvalid('region')) {
+        <small class="field-error">{{ content.fields.errorRequired }}</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label>{{ content.fields.districtLabel }}</label>
+        <input type="text" formControlName="district" [placeholder]="content.fields.districtPlaceholder"
+          [class.ng-invalid]="isInvalid('district')" [class.ng-dirty]="isInvalid('district')" />
+        @if (isInvalid('district')) {
+        <small class="field-error">{{ content.fields.errorRequired }}</small>
+        }
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>{{ content.fields.mainAddressLabel }}</label>
+      <input type="text" formControlName="mainAddress" [placeholder]="content.fields.mainAddressPlaceholder"
+        [class.ng-invalid]="isInvalid('mainAddress')" [class.ng-dirty]="isInvalid('mainAddress')" />
+      @if (isInvalid('mainAddress')) {
+      <small class="field-error">{{ content.fields.errorRequired }}</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label>{{ content.fields.referenceLabel }}</label>
+      <input type="text" formControlName="reference" [placeholder]="content.fields.referencePlaceholder" />
+    </div>
+
+    <div class="form-actions">
+      <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="showNewForm.set(false)" />
+      <app-button variant="primary" [label]="content.actions.saveLabel" [loading]="saving()" (clicked)="saveNew()" />
+    </div>
+  </form>
+  }
+</div>

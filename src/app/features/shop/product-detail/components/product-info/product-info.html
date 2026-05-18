@@ -1,1 +1,61 @@
-<p>product-info works!</p>
+<div class="product-info">
+
+  <div class="info-tags">
+    <app-badge variant="blue">{{ product.categoryName }}</app-badge>
+    <app-badge variant="gray">{{ product.brandName }}</app-badge>
+  </div>
+
+  <h1 class="info-name">{{ product.productName }}</h1>
+
+  @if (product.averageRating) {
+  <div class="info-rating">
+    <app-star-rating [value]="product.averageRating" [count]="product.totalReviews" [readonly]="true" />
+  </div>
+  }
+
+  <div class="info-sku">{{ content.skuLabel }} <code>{{ product.sku }}</code></div>
+
+  <div class="info-price">
+    <span class="price-main">{{ product.price | currencyPen }}</span>
+    <span class="price-cuotas">{{ content.financingPrefix }}{{ (product.price / 12) | currencyPen }}</span>
+  </div>
+
+  <div class="info-stock">
+    @if (product.stockQuantity > 0) {
+    <span class="stock-ok">
+      <i [class]="content.stock.availableIcon"></i>
+      {{ content.stock.availablePrefix }}{{ product.stockQuantity }}{{ content.stock.availableSuffix }}
+    </span>
+    } @else {
+    <span class="stock-out">
+      <i [class]="content.stock.outIcon"></i>
+      {{ content.stock.outLabel }}
+    </span>
+    }
+  </div>
+
+  <p class="info-desc">{{ product.description }}</p>
+
+  @if (product.stockQuantity > 0) {
+  <div class="info-actions">
+    <div class="qty-control">
+      <button class="qty-btn" (click)="changeQty(-1)" [disabled]="qty() <= 1">−</button>
+      <span class="qty-value">{{ qty() }}</span>
+      <button class="qty-btn" (click)="changeQty(1)" [disabled]="qty() >= product.stockQuantity">+</button>
+    </div>
+
+    <app-button variant="accent" size="lg" [label]="content.actions.addToCartLabel"
+      [icon]="content.actions.addToCartIcon" [loading]="adding()" (clicked)="addToCart()" />
+  </div>
+  }
+
+  <div class="info-shipping">
+    @for (perk of content.shippingPerks; track perk.text) {
+    <div class="shipping-item">
+      <i [class]="perk.icon"></i>
+      <span>{{ perk.text }}</span>
+    </div>
+    }
+  </div>
+
+</div>

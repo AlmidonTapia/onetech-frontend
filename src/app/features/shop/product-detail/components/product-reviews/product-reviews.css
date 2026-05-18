@@ -1,1 +1,35 @@
-/* ProductReviews styles */
+.reviews-section { display:flex; flex-direction:column; gap:24px; }
+.reviews-header { display:flex; align-items:center; justify-content:space-between; }
+.reviews-header h3 { font-size:18px; font-weight:700; color:var(--ot-text-main); }
+
+.review-form {
+  background:var(--ot-bg-body); border-radius:var(--ot-radius-lg);
+  border:1px solid var(--ot-border-color); padding:20px;
+  display:flex; flex-direction:column; gap:14px;
+}
+.review-form h4 { font-size:15px; font-weight:600; color:var(--ot-text-main); }
+.form-field { display:flex; flex-direction:column; gap:6px; }
+.form-field label { font-size:13px; font-weight:500; color:var(--ot-text-main); }
+.form-field textarea { width:100%; padding:10px 14px; border:1px solid var(--ot-border-color);
+  background:var(--ot-bg-surface); color:var(--ot-text-main);
+  border-radius:var(--ot-radius-md); font-size:14px; resize:vertical; outline:none;
+  transition:border-color var(--ot-transition); font-family:inherit; }
+.form-field textarea:focus { border-color:var(--p-primary-color); }
+.form-actions { display:flex; justify-content:flex-end; gap:10px; }
+
+.reviews-empty { display:flex; flex-direction:column; align-items:center; gap:10px;
+  padding:40px; color:var(--ot-text-muted); }
+.reviews-empty .pi { font-size:36px; }
+.reviews-loading { color:var(--ot-text-muted); text-align:center; padding:24px; }
+
+.reviews-list { display:flex; flex-direction:column; gap:16px; }
+.review-card { background:var(--ot-bg-surface); border:1px solid var(--ot-border-color);
+  border-radius:var(--ot-radius-lg); padding:18px; }
+.review-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+.reviewer-avatar { width:36px; height:36px; border-radius:50%; background:var(--ot-blue);
+  color:#ffffff; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.dark-mode .reviewer-avatar { background:var(--ot-blue-light); color:var(--ot-dark); }
+.reviewer-name { font-size:14px; font-weight:600; color:var(--ot-text-main); display:block; }
+.review-date { font-size:12px; color:var(--ot-text-muted); }
+.review-rating { margin-left:auto; }
+.review-comment { font-size:14px; color:var(--ot-text-muted); line-height:1.6; }

@@ -1,1 +1,42 @@
-<p>catalog works!</p>
+<div class="catalog-page">
+  <div class="container">
+
+    <app-breadcrumb [items]="breadcrumb" class="catalog-breadcrumb" />
+
+    <div class="catalog-layout">
+
+      <!-- Sidebar de filtros -->
+      <aside class="catalog-sidebar">
+        <div class="sidebar-card">
+          <app-catalog-filters
+            [filters]="filters()"
+            (apply)="onFiltersApply($event)" />
+        </div>
+      </aside>
+
+      <!-- Contenido principal -->
+      <div class="catalog-content">
+        <app-catalog-sort
+          [totalRecords]="totalRecords()"
+          [sort]="sort()"
+          (sortChange)="onSortChange($event)" />
+
+        <app-catalog-grid
+          [products]="products()"
+          [loading]="loading()" />
+
+        @if (totalRecords() > rows) {
+          <div class="pagination-wrapper">
+            <p-paginator
+              [rows]="rows"
+              [totalRecords]="totalRecords()"
+              [first]="page() * rows"
+              (onPageChange)="onPageChange($event)"
+              [rowsPerPageOptions]="[]" />
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+</div>

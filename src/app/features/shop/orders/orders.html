@@ -1,1 +1,27 @@
-<p>orders works!</p>
+<div class="orders-page">
+    <div class="container">
+
+        <app-breadcrumb [items]="breadcrumb" />
+
+        <div class="page-header">
+            <h1>{{ content.title }}</h1>
+            <p class="page-sub">{{ content.subtitle }}</p>
+        </div>
+
+        @if (loading()) {
+        <app-spinner size="md" [label]="content.loadingLabel" />
+        } @else {
+        <app-orders-list [orders]="orders()" [loading]="loading()" (viewDetail)="openDetail($event)" />
+
+        @if (totalRecords() > rows) {
+        <div class="paginator-wrap">
+            <p-paginator [rows]="rows" [totalRecords]="totalRecords()" [first]="page() * rows"
+                (onPageChange)="loadOrders($event)" />
+        </div>
+        }
+        }
+
+    </div>
+</div>
+
+<app-order-detail [visible]="detailVisible()" (visibleChange)="detailVisible.set($event)" [order]="selectedOrder()" />

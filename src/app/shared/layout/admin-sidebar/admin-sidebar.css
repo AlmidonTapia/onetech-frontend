@@ -1,136 +1,177 @@
 .admin-sidebar {
-  width: var(--ot-sidebar-width);
-  min-height: 100vh;
-  background: var(--ot-dark);
   display: flex;
   flex-direction: column;
+  width: var(--ot-sidebar-width);
+  height: 100vh;
+  background: var(--ot-dark);
+  color: rgba(255, 255, 255, 0.7);
   position: fixed;
-  left: 0; top: 0;
+  top: 0;
+  left: 0;
   z-index: 100;
-  transition: width .25s ease;
-  overflow: hidden;
+  transition: width var(--ot-transition);
 }
 
-.sidebar-collapsed { width: 68px; }
+.sidebar-collapsed {
+  width: 68px;
+}
 
-/* ── Header ─────────────────────────────────── */
+/* ── Cabecera del Sidebar Reestructurada con Flexbox Elástico ── */
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  height: 64px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  flex-shrink: 0;
+  justify-content: space-between; 
+  padding: 16px;
+  height: var(--ot-nav-main-height);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 8px;
 }
 
 .sidebar-logo {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
-  letter-spacing: -.4px;
+  color: #ffffff;
+  text-decoration: none;
   white-space: nowrap;
-  overflow: hidden;
+  flex-shrink: 0;
 }
-.logo-one  { color: #fff; }
-.logo-tech { color: var(--ot-orange); }
+
+.logo-one {
+  color: #ffffff;
+}
+
+.logo-tech {
+  color: var(--ot-orange);
+}
+
 .logo-tag {
   font-size: 10px;
-  font-weight: 600;
   background: var(--ot-orange);
-  color: #fff;
-  padding: 2px 6px;
+  color: #ffffff;
+  padding: 1px 5px;
   border-radius: var(--ot-radius-sm);
-  margin-left: 6px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  align-self: center;
+  margin-left: 4px;
+}
+
+/* ── Posicionamiento Elástico del Botón de Modo Oscuro ── */
+.sidebar-header app-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: auto;
+  margin-left: auto !important; 
+  margin-right: 4px !important; 
+}
+
+.sidebar-header app-theme-toggle ::ng-deep .theme-toggle-btn {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  border: none !important;
+  width: 32px !important; 
+  height: 32px !important;
+  border-radius: var(--ot-radius-md) !important;
+  box-shadow: none !important;
+  transition: all var(--ot-transition) !important;
+}
+
+.sidebar-header app-theme-toggle ::ng-deep .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
 }
 
 .collapse-btn {
-  display: flex;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 6px;
+  transition: color var(--ot-transition);
+  flex-shrink: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: var(--ot-radius-md);
-  color: rgba(255,255,255,.5);
-  transition: background var(--ot-transition), color var(--ot-transition);
-  flex-shrink: 0;
-}
-.collapse-btn:hover {
-  background: rgba(255,255,255,.08);
-  color: #fff;
 }
 
-/* ── Nav ────────────────────────────────────── */
+.collapse-btn:hover {
+  color: #ffffff;
+}
+
+/* ── Navegación del Menú ── */
 .sidebar-nav {
   flex: 1;
-  padding: 12px 10px;
+  padding: 24px 0;
   overflow-y: auto;
 }
 
 .sidebar-nav ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--ot-radius-md);
-  color: rgba(255,255,255,.65);
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: background var(--ot-transition), color var(--ot-transition);
+  padding: 12px 24px;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  transition: all var(--ot-transition);
 }
 
 .nav-item:hover {
-  background: rgba(255,255,255,.07);
-  color: rgba(255,255,255,.9);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .nav-active {
+  color: #ffffff !important;
   background: var(--ot-blue) !important;
-  color: #fff !important;
+  font-weight: 600;
 }
 
-.nav-icon { font-size: 17px; flex-shrink: 0; }
-.nav-label { flex: 1; }
+.nav-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
 
-/* ── Footer ─────────────────────────────────── */
+.nav-label {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ── Footer del Sidebar ── */
 .sidebar-footer {
-  padding: 12px 10px;
-  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: var(--ot-radius-md);
-  background: rgba(255,255,255,.05);
-  overflow: hidden;
+  gap: 12px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--ot-radius-lg);
 }
-.user-info--collapsed { justify-content: center; }
+
+.user-info--collapsed {
+  padding: 4px;
+  justify-content: center;
+}
 
 .user-avatar {
-  width: 34px; height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--ot-blue);
-  color: #fff;
-  font-size: 14px;
+  color: #ffffff;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -141,36 +182,34 @@
 .user-details {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  min-width: 0;
 }
+
 .user-name {
   font-size: 13px;
   font-weight: 600;
-  color: #fff;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .user-role {
   font-size: 11px;
-  color: rgba(255,255,255,.4);
-  text-transform: uppercase;
-  letter-spacing: .06em;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .logout-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 12px;
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.6);
   border-radius: var(--ot-radius-md);
-  color: rgba(255,255,255,.5);
-  font-size: 13px;
-  transition: background var(--ot-transition), color var(--ot-transition);
-  width: 100%;
+  transition: all var(--ot-transition);
 }
+
 .logout-btn:hover {
-  background: rgba(220,38,38,.15);
-  color: #fca5a5;
+  color: #ffffff;
+  background: rgba(220, 38, 38, 0.1);
 }
-.logout-btn .pi { font-size: 16px; }

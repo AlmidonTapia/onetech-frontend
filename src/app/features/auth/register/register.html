@@ -1,42 +1,133 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h2>Crear Cuenta</h2>
-      <p>Únete a OneTech hoy mismo</p>
-    </div>
+<div class="auth-layout">
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
-      @for (field of fields; track field.name) {
-        <div class="form-field">
-          <label [for]="field.name">{{ field.label }}</label>
-          <input 
-            pInputText 
-            [id]="field.name" 
-            [type]="field.type" 
-            [formControlName]="field.name" 
-            [placeholder]="field.placeholder"
-            [class.ng-invalid]="isInvalid(field.name)"
-            [class.ng-dirty]="isInvalid(field.name)"
-          />
-          @if (isInvalid(field.name)) {
-            <small class="field-error">Campo inválido o requerido</small>
-          }
-        </div>
-      }
+  <!-- ── Panel izquierdo (branding) ──────────────────────── -->
+  <div class="auth-brand">
+    <div class="brand-inner">
 
-      <div class="form-actions">
-        <app-button 
-          type="submit" 
-          variant="primary" 
-          label="Registrarse" 
-          class="w-full"
-          [loading]="loading()" 
-        />
+      <a routerLink="/" class="brand-logo">
+        <span class="logo-one">One</span><span class="logo-tech">Tech</span>
+      </a>
+
+      <div class="brand-copy">
+        <h2>{{ brandData.title }}</h2>
+        <p>{{ brandData.description }}</p>
       </div>
-    </form>
 
-    <div class="auth-footer">
-      <p>¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a></p>
+      <div class="brand-stats">
+        @for (stat of brandData.stats; track stat.label; let last = $last) {
+        <div class="brand-stat">
+          <strong>{{ stat.value }}</strong>
+          <span>{{ stat.label }}</span>
+        </div>
+        @if (!last) { <div class="stat-divider"></div> }
+        }
+      </div>
+
+      <ul class="brand-perks">
+        @for (perk of brandData.perks; track perk) {
+        <li><i class="pi pi-check-circle"></i> {{ perk }}</li>
+        }
+      </ul>
+
     </div>
   </div>
+
+  <!-- ── Panel derecho (formulario) ──────────────────────── -->
+  <div class="auth-form-panel">
+    <div class="auth-form-card">
+
+      <div class="form-header">
+        <h1>{{ formData.title }}</h1>
+        <p>
+          {{ formData.loginText }}
+          <a [routerLink]="formData.loginRoute" class="form-link">{{ formData.loginLinkText }}</a>
+        </p>
+      </div>
+
+      @if (errorMsg()) {
+      <app-alert type="error" [closeable]="true" (closed)="errorMsg.set('')">
+        {{ errorMsg() }}
+      </app-alert>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form" novalidate>
+
+        @for (field of fields; track field.name) {
+        <div class="form-field">
+          <label [for]="field.name">{{ field.label }} *</label>
+
+          @if (field.type === 'text') {
+          <input [id]="field.name" pInputText [formControlName]="field.name" [placeholder]="field.placeholder"
+            [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" />
+          }
+
+          @if (field.type === 'email') {
+          <div class="input-wrapper">
+            <i [class]="field.icon + ' input-icon'"></i>
+            <input [id]="field.name" pInputText type="email" [formControlName]="field.name"
+              [placeholder]="field.placeholder" class="with-icon" [class.ng-invalid]="isInvalid(field.name)"
+              [class.ng-dirty]="isInvalid(field.name)" />
+          </div>
+          }
+
+          @if (field.type === 'password') {
+          <p-password [inputId]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder"
+            [feedback]="field.feedback ?? false" [toggleMask]="true" styleClass="w-full"
+            promptLabel="Escribe una contraseña" weakLabel="Débil" mediumLabel="Media" strongLabel="Segura"
+            [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" />
+          }
+
+          @if (isInvalid(field.name)) {
+          @if (form.get(field.name)?.errors?.['required']) {
+          <span class="field-error">Campo requerido</span>
+          }
+          @if (form.get(field.name)?.errors?.['email']) {
+          <span class="field-error">Correo inválido</span>
+          }
+          @if (form.get(field.name)?.errors?.['minlength']) {
+          <span class="field-error">
+            Mínimo {{ form.get(field.name)?.errors?.['minlength']?.requiredLength }} caracteres
+          </span>
+          }
+          }
+        </div>
+        }
+
+        @if (isInvalid('confirmPassword') && form.errors?.['mismatch']) {
+        <span class="field-error" style="margin-top: -8px; margin-bottom: 12px; display: block;">
+          {{ formData.mismatchErrorMsg }}
+        </span>
+        }
+
+        <!-- Checkbox de Términos Dinámico -->
+        <div class="form-check" [class.form-check--error]="isInvalid('terms')">
+          <p-checkbox formControlName="terms" inputId="terms" [binary]="true" />
+          <label for="terms">
+            {{ formData.termsText }}
+            <a href="#" class="form-link">{{ formData.termsLink }}</a>
+            {{ formData.privacyText }}
+            <a href="#" class="form-link">{{ formData.privacyLink }}</a>
+          </label>
+        </div>
+
+        @if (isInvalid('terms')) {
+        <span class="field-error" style="margin-top:-12px">
+          {{ formData.termsErrorMsg }}
+        </span>
+        }
+
+        <app-button type="submit" variant="primary" class="w-full" [label]="formData.submitButtonLabel"
+          [loading]="loading()" />
+
+      </form>
+
+      <a routerLink="/" class="back-to-shop">
+        <i class="pi pi-arrow-left"></i>
+        {{ formData.backToShopText }}
+      </a>
+
+    </div>
+  </div>
+
 </div>

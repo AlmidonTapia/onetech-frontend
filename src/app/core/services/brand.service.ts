@@ -21,4 +21,6 @@ export class BrandService {
   create(data: CreateBrandRequest) {
     return this.http.post<Brand>(this.url, data);
   }
+  
+  //update -delete 
 }

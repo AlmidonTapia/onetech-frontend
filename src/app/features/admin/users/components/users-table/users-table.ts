@@ -16,4 +16,24 @@ export class UsersTableComponent {
   @Input() totalRecords = 0;
   @Input() loading = false;
   @Output() lazyLoad = new EventEmitter<any>();
+
+  tableConfig = {
+    defaultRows: 10,
+    styleClass: 'p-datatable-sm',
+    colspanEmpty: 5,
+    adminRoleKey: 'ADMIN'
+  } as const;
+
+  content = {
+    headers: {
+      fullName: 'Nombre Completo',
+      email: 'Email',
+      role: 'Rol',
+      phone: 'Teléfono',
+      regDate: 'Fecha Registro'
+    },
+    notRegisteredLabel: 'No registrado',
+    emptyMessage: 'No hay usuarios registrados.',
+    dateFormat: 'mediumDate'
+  };
 }

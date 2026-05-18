@@ -1,1 +1,9 @@
-/* ProfileSecurity styles */
+.profile-section { display: flex; flex-direction: column; gap: 24px; }
+.section-header h3 { font-size: 18px; font-weight: 700; color: var(--ot-text-main); margin-bottom: 4px; }
+.section-header p  { font-size: 14px; color: var(--ot-text-muted); }
+
+.security-form { display: flex; flex-direction: column; gap: 18px; max-width: 480px; }
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field label { font-size: 13px; font-weight: 500; color: var(--ot-text-main); }
+.field-error { font-size: 12px; color: var(--ot-error); }
+.form-actions { padding-top: 8px; }

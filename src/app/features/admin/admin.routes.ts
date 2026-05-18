@@ -45,5 +45,20 @@ export const ADMIN_ROUTES: AdminRoutes = [
     path: 'users',
     loadComponent: () =>
       import('./users/users').then(m => m.UsersComponent)
+  },
+  {
+    path: 'coupons',
+    loadComponent: () =>
+      import('./coupons/coupons').then(m => m.CouponsComponent)
+  },
+  {
+    path: 'shipment-methods',
+    loadComponent: () =>
+      import('./shipment-methods/shipment-methods').then(m => m.ShipmentMethodsComponent)
+  },
+  {
+    path: 'payment-methods',
+    loadComponent: () =>
+      import('./payment-methods/payment-methods').then(m => m.PaymentMethodsComponent)
   }
 ];

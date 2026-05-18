@@ -1,6 +1,33 @@
-.simple-form{display:flex;flex-direction:column;gap:16px;padding:4px 0;}
-.form-field{display:flex;flex-direction:column;gap:6px;}
-.form-field label{font-size:13px;font-weight:500;color:var(--ot-gray-700);}
-.form-field input{width:100%;}
-.field-error{font-size:12px;color:var(--ot-error);}
-.dialog-footer{display:flex;justify-content:flex-end;gap:10px;}
+.simple-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ot-text-main);
+}
+
+.form-field input {
+  width: 100%;
+}
+
+.field-error {
+  font-size: 12px;
+  color: var(--ot-error);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

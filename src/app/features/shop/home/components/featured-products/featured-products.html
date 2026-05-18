@@ -1,1 +1,26 @@
-<p>featured-products works!</p>
+<section class="section">
+  <div class="container">
+
+    <div class="section-header">
+      <h2 class="section-title">{{ title }}</h2>
+      <a [routerLink]="content.viewAllRoute" class="section-link">{{ content.viewAllText }}</a>
+    </div>
+
+    @if (products.length === 0) {
+    <div class="products-skeleton">
+      @for (_ of skeletonConfig.items; track $index) {
+      <div class="skeleton-card"></div>
+      }
+    </div>
+    }
+
+    @else {
+    <div class="products-grid">
+      @for (product of products; track product.idProduct) {
+      <app-product-card [product]="product" />
+      }
+    </div>
+    }
+
+  </div>
+</section>

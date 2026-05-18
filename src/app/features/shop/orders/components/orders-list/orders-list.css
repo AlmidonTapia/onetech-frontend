@@ -1,1 +1,55 @@
-/* OrdersList styles */
+.orders-list { display: flex; flex-direction: column; gap: 16px; }
+
+.order-card {
+  background: var(--ot-white);
+  border: 1px solid var(--ot-gray-200);
+  border-radius: var(--ot-radius-xl);
+  padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+  box-shadow: var(--ot-shadow-sm);
+  transition: box-shadow var(--ot-transition);
+}
+.order-card:hover { box-shadow: var(--ot-shadow-md); }
+
+.order-card-header {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+}
+.order-id-block { display: flex; align-items: center; gap: 10px; }
+.order-label { font-size: 12px; color: var(--ot-gray-400); text-transform: uppercase; letter-spacing: .06em; }
+.order-id { font-size: 16px; font-weight: 700; color: var(--ot-gray-900); font-family: monospace; }
+
+.order-meta {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 12px 0; border-top: 1px solid var(--ot-gray-100); border-bottom: 1px solid var(--ot-gray-100);
+}
+.meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ot-gray-600); }
+.meta-item .pi { color: var(--ot-blue); font-size: 14px; }
+.meta-item strong { color: var(--ot-gray-900); font-weight: 700; }
+
+.order-items-preview { display: flex; flex-wrap: wrap; gap: 6px; }
+.item-chip {
+  font-size: 12px; padding: 3px 10px;
+  background: var(--ot-gray-100); color: var(--ot-gray-600);
+  border-radius: var(--ot-radius-full);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
+}
+.item-chip--more { background: var(--ot-blue-50); color: var(--ot-blue); font-weight: 600; }
+
+.order-card-footer { display: flex; justify-content: flex-end; }
+
+/* Empty */
+.orders-empty {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 14px; padding: 64px 24px; text-align: center;
+}
+.orders-empty .pi { font-size: 56px; color: var(--ot-gray-300); }
+.orders-empty h3 { font-size: 20px; font-weight: 600; color: var(--ot-gray-700); }
+.orders-empty p  { font-size: 14px; color: var(--ot-gray-500); }
+
+/* Skeleton */
+.orders-skeleton { display: flex; flex-direction: column; gap: 16px; }
+.skeleton-row { height: 160px; border-radius: var(--ot-radius-xl);
+  background: linear-gradient(90deg, var(--ot-gray-100) 25%, var(--ot-gray-200) 50%, var(--ot-gray-100) 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }

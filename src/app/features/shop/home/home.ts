@@ -1,11 +1,27 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { HeroBannerComponent }         from './components/hero-banner/hero-banner';
+import { FeaturedCategoriesComponent } from './components/featured-categories/featured-categories';
+import { FeaturedProductsComponent }   from './components/featured-products/featured-products';
+import { PromoBannerComponent }        from './components/promo-banner/promo-banner';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [HeroBannerComponent, FeaturedCategoriesComponent,
+            FeaturedProductsComponent, PromoBannerComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class HomeComponent {}
+export class HomeComponent implements OnInit {
+  private productService = inject(ProductService);
+
+  featured  = signal<Product[]>([]);
+  newArrivals = signal<Product[]>([]);
+
+  ngOnInit() {
+    this.productService.getAll({ page: 0, size: 8 }).subscribe(r => this.featured.set(r.content));
+    this.productService.getAll({ page: 1, size: 8 }).subscribe(r => this.newArrivals.set(r.content));
+  }
+}

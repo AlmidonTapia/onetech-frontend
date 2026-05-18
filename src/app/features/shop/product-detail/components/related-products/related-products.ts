@@ -1,11 +1,22 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { ProductCardComponent } from '../../../../../shared/components/product-card/product-card';
+import { Product } from '../../../../../core/models/product.model';
 
 @Component({
   selector: 'app-related-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ProductCardComponent],
   templateUrl: './related-products.html',
   styleUrl: './related-products.css'
 })
-export class RelatedProductsComponent {}
+export class RelatedProductsComponent {
+  @Input() products: Product[] = [];
+
+  displayConfig = {
+    maxItems: 4
+  };
+
+  content = {
+    title: 'Productos relacionados'
+  };
+}

@@ -1,1 +1,57 @@
-<p>orders-list works!</p>
+<div class="orders-container">
+
+    @if (loading) {
+    <div class="orders-loading">
+        <i class="pi pi-spin pi-spinner animate-spin"></i>
+        <p>{{ content.loadingLabel }}</p>
+    </div>
+    }
+
+    @else if (orders.length === 0) {
+    <div class="orders-empty animate-fade-in">
+        <i class="pi pi-box"></i>
+        <h3>{{ content.emptyTitle }}</h3>
+        <p>{{ content.emptyDescription }}</p>
+    </div>
+    }
+
+    @else {
+    <div class="orders-grid animate-fade-in">
+        @for (order of orders; track order.idOrder) {
+        <div class="order-card">
+
+            <div class="card-header">
+                <div class="header-info">
+                    <span class="order-id">
+                        {{ content.orderPrefix }}{{ order.idOrder.substring(0, 8).toUpperCase() }}
+                    </span>
+                    <span class="order-date">
+                        {{ order.createdAt | date: content.dateFormat }}
+                    </span>
+                </div>
+                <app-badge [variant]="statusMap[order.orderStatus].variant" [dot]="true">
+                    {{ statusMap[order.orderStatus].label }}
+                </app-badge>
+            </div>
+
+            <div class="card-body">
+                <span class="order-summary-text">
+                    {{ order.details.length }}
+                    {{ order.details.length === 1 ? content.productSuffixSingular : content.productSuffixPlural }}
+                </span>
+                <div class="order-price-block">
+                    <span class="price-amount">{{ order.totalAmount | currencyPen }}</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <app-button variant="outline" [label]="content.actionBtnLabel" [icon]="content.actionBtnIcon"
+                    [fullWidth]="true" (clicked)="viewDetail.emit(order)" />
+            </div>
+
+        </div>
+        }
+    </div>
+    }
+
+</div>

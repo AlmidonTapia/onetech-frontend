@@ -1,1 +1,21 @@
-<p>featured-categories works!</p>
+<section class="section">
+  <div class="container">
+
+    <div class="section-header">
+      <h2 class="section-title">{{ content.title }}</h2>
+      <a [routerLink]="content.viewAllRoute" class="section-link">{{ content.viewAllText }}</a>
+    </div>
+
+    <div class="cat-grid">
+      @for (cat of categories(); track cat.label) {
+      <a [routerLink]="cat.route" [queryParams]="cat.queryParams" class="cat-tile">
+        <div class="cat-icon-wrapper">
+          <i [class]="cat.iconClass + ' cat-icon'"></i>
+        </div>
+        <span class="cat-label">{{ cat.label }}</span>
+      </a>
+      }
+    </div>
+
+  </div>
+</section>

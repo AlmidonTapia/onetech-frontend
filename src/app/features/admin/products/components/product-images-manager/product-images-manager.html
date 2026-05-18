@@ -1,26 +1,34 @@
-<p-dialog [visible]="visible" [header]="'Imágenes — ' + (product?.productName ?? '')" [modal]="true" [closable]="true"
-    [draggable]="false" [style]="{ width: '620px' }" (onHide)="close()">
+<p-dialog [visible]="visible" [header]="content.headerPrefix + (product?.productName ?? '')" [modal]="true"
+    [closable]="true" [draggable]="false" [style]="{ width: content.dialogWidth }" (onHide)="close()">
 
     <div class="images-grid">
         @for (img of images(); track img.idProductImage) {
         <div class="img-item" [class.img-item--main]="img.isPrincipal">
-            <img [src]="img.imageUrl" [alt]="'Imagen'" />
-            @if (img.isPrincipal) { <span class="main-badge">Principal</span> }
+            <img [src]="img.imageUrl" [alt]="content.altText" />
+
+            @if (img.isPrincipal) {
+            <span class="main-badge">{{ content.mainBadgeLabel }}</span>
+            }
+
             <button class="img-del" (click)="deleteImage(img.idProductImage)">
                 <i class="pi pi-times"></i>
             </button>
         </div>
         }
+
         @if (images().length === 0) {
-        <p class="no-img">Sin imágenes. Sube la primera imagen abajo.</p>
+        <p class="no-img">{{ content.emptyMessage }}</p>
         }
     </div>
 
-    <p-fileUpload mode="advanced" [multiple]="true" accept="image/*" chooseLabel="Elegir imágenes" uploadLabel="Subir"
-        cancelLabel="Limpiar" [auto]="false" [customUpload]="true" (uploadHandler)="onUpload($event)"
-        [maxFileSize]="5000000" styleClass="upload-area" />
+    <p-fileUpload [mode]="content.uploadConfig.mode" [multiple]="true" [accept]="content.uploadConfig.accept"
+        [chooseLabel]="content.uploadConfig.chooseLabel" [uploadLabel]="content.uploadConfig.uploadLabel"
+        [cancelLabel]="content.uploadConfig.cancelLabel" [auto]="false" [customUpload]="true"
+        (uploadHandler)="onUpload($event)" [maxFileSize]="content.uploadConfig.maxFileSize"
+        [styleClass]="content.uploadConfig.styleClass" />
 
     <ng-template pTemplate="footer">
-        <app-button variant="ghost" label="Cerrar" (clicked)="close()" />
+        <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
     </ng-template>
+
 </p-dialog>

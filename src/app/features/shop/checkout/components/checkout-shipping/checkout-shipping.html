@@ -1,1 +1,18 @@
-<p>checkout-shipping works!</p>
+<div class="step-section">
+  <h3 class="step-title">
+    <i [class]="content.titleIcon"></i> {{ content.title }}
+  </h3>
+
+  <div class="shipping-list">
+    @for (method of methods(); track method.idShipmentMethod) {
+    <div class="shipping-option" [class.shipping-option--selected]="selectedId() === method.idShipmentMethod"
+      (click)="select(method)">
+      <div class="radio-circle" [class.radio-circle--active]="selectedId() === method.idShipmentMethod"></div>
+      <div class="method-info">
+        <span class="method-name">{{ method.methodName }}</span>
+        <span class="method-price">{{ method.basePrice | currencyPen }}</span>
+      </div>
+    </div>
+    }
+  </div>
+</div>

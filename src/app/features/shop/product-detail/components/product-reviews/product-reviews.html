@@ -1,1 +1,62 @@
-<p>product-reviews works!</p>
+<div class="reviews-section">
+  <div class="reviews-header">
+    <h3>{{ content.mainTitle }}</h3>
+    @if (authService.isAuthenticated() && !showForm()) {
+    <app-button variant="outline" [label]="content.writeBtnLabel" [icon]="content.writeBtnIcon"
+      (clicked)="showForm.set(true)" />
+    }
+  </div>
+
+  @if (showForm()) {
+  <div class="review-form animate-fade-in">
+    <h4>{{ content.formTitle }}</h4>
+
+    <div class="form-field">
+      <label>{{ content.ratingLabel }}</label>
+      <app-star-rating [(value)]="newRating" [readonly]="false" />
+    </div>
+
+    <div class="form-field">
+      <label>{{ content.commentLabel }}</label>
+      <textarea [(ngModel)]="newComment" rows="3" [placeholder]="content.commentPlaceholder"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="showForm.set(false)" />
+      <app-button variant="primary" [label]="content.actions.submitLabel" [loading]="sending()"
+        (clicked)="onSubmit()" />
+    </div>
+  </div>
+  }
+
+  @if (loading()) {
+  <p class="reviews-loading">{{ content.loadingLabel }}</p>
+  } @else if (reviews().length === 0) {
+  <div class="reviews-empty">
+    <i class="pi pi-comment"></i>
+    <p>{{ content.emptyTitle }}</p>
+  </div>
+  } @else {
+  <div class="reviews-list">
+    @for (review of reviews(); track review.idQualification) {
+    <div class="review-card">
+      <div class="review-header">
+        <div class="reviewer-avatar">
+          {{ review.userFullName?.[0]?.toUpperCase() ?? content.defaultAvatarLetter }}
+        </div>
+
+        <div>
+          <span class="reviewer-name">{{ review.userFullName }}</span>
+          <span class="review-date">{{ review.qualificationDate | date: content.dateFormat }}</span>
+        </div>
+
+        <div class="review-rating">
+          <app-star-rating [value]="review.rating" [readonly]="true" [showCount]="false" />
+        </div>
+      </div>
+      <p class="review-comment">{{ review.commentText }}</p>
+    </div>
+    }
+  </div>
+  }
+</div>

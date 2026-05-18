@@ -1,1 +1,56 @@
-<p>wishlist works!</p>
+<div class="wishlist-page">
+    <div class="container">
+        <app-breadcrumb [items]="breadcrumb" />
+
+        <div class="page-header">
+            <div>
+                <h1>{{ content.title }}</h1>
+                <p class="page-sub">
+                    @if (count() > 0) {
+                    {{ count() }} {{ count() === 1 ? content.singularSuffix : content.pluralSuffix }}
+                    } @else {
+                    {{ content.emptyListLabel }}
+                    }
+                </p>
+            </div>
+
+            @if (count() > 0) {
+            <button class="clear-btn" (click)="clearAll()">
+                <i class="pi pi-trash"></i> {{ content.clearBtnText }}
+            </button>
+            }
+        </div>
+
+        @if (loading()) {
+        <app-spinner size="md" [label]="content.loadingLabel" />
+        }
+
+        @else if (products().length === 0) {
+        <div class="empty-wishlist">
+            <div class="empty-icon">
+                <i class="pi pi-heart"></i>
+            </div>
+            <h3>{{ content.emptyState.title }}</h3>
+            <p>{{ content.emptyState.description }}</p>
+
+            <app-button variant="primary" [label]="content.emptyState.exploreBtnLabel"
+                [icon]="content.emptyState.exploreBtnIcon" iconPos="right"
+                [routerLink]="content.emptyState.exploreRoute" />
+        </div>
+        }
+
+        @else {
+        <div class="wishlist-grid animate-fade-in">
+            @for (product of products(); track product.idProduct) {
+            <div class="wishlist-item">
+                <app-product-card [product]="product" />
+
+                <button class="remove-btn" (click)="removeProduct(product)" [title]="content.actions.removeTitle">
+                    <i class="pi pi-times"></i> {{ content.actions.removeText }}
+                </button>
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>

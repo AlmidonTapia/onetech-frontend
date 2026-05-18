@@ -1,6 +1,5 @@
 <header class="navbar-wrapper">
 
-    <!-- ── Top bar ──────────────────────────────── -->
     <div class="navbar-topbar">
         <div class="container topbar-inner">
             <span class="topbar-left">
@@ -9,47 +8,60 @@
             </span>
             <span class="topbar-right">
                 @for(item of topbarInfo.right; track item.text; let last = $last) {
-                    <i class="pi" [class]="item.icon"></i>
-                    {{ item.text }}
-                    @if(!last) { &nbsp;|&nbsp; }
+                <i class="pi" [class]="item.icon"></i>
+                {{ item.text }}
+                @if(!last) { &nbsp;|&nbsp; }
                 }
             </span>
         </div>
     </div>
 
-    <!-- ── Main bar ─────────────────────────────── -->
     <div class="navbar-main">
         <div class="container main-inner">
 
-            <!-- Logo -->
-            <a routerLink="/" class="navbar-logo" aria-label="OneTech — Inicio">
+            <a [routerLink]="content.homeRoute" class="navbar-logo" [attr.aria-label]="content.ariaLabelLogo">
                 <span class="logo-one">One</span><span class="logo-tech">Tech</span>
             </a>
 
-            <!-- Search -->
             <div class="navbar-search">
                 <app-navbar-search />
             </div>
 
-            <!-- Actions -->
             <div class="navbar-actions">
+                
+                <app-theme-toggle />
+
                 @if (authService.isAuthenticated()) {
-                <a routerLink="/profile" class="action-link">
+                <a [routerLink]="content.account.profileRoute" class="action-link">
                     <i class="pi pi-user"></i>
                     <div class="action-text">
-                        <span class="action-label">Mi cuenta</span>
+                        <span class="action-label">{{ content.account.labelAuthenticated }}</span>
                         <span class="action-name">{{ authService.currentUser()?.firstName }}</span>
                     </div>
                 </a>
                 } @else {
-                <a routerLink="/auth/login" class="action-link">
+                <a [routerLink]="content.account.loginRoute" class="action-link">
                     <i class="pi pi-user"></i>
                     <div class="action-text">
-                        <span class="action-label">Hola, ingresa</span>
-                        <span class="action-name">Mi cuenta</span>
+                        <span class="action-label">{{ content.account.labelGuest }}</span>
+                        <span class="action-name">{{ content.account.defaultName }}</span>
                     </div>
                 </a>
                 }
+
+                <a [routerLink]="content.wishlist.route" class="action-link wishlist-action"
+                    [attr.title]="content.wishlist.title">
+                    <div class="wishlist-icon-wrapper">
+                        <i class="pi pi-heart"></i>
+                        @if (wishlistService.count() > 0) {
+                        <span class="wishlist-badge">{{ wishlistService.count() }}</span>
+                        }
+                    </div>
+                    <div class="action-text">
+                        <span class="action-label">{{ content.wishlist.labelPre }}</span>
+                        <span class="action-name">{{ content.wishlist.labelPost }}</span>
+                    </div>
+                </a>
 
                 <app-navbar-cart />
             </div>
@@ -57,8 +69,7 @@
         </div>
     </div>
 
-    <!-- ── Category nav ─────────────────────────── -->
-    <nav class="navbar-categories" aria-label="Categorías">
+    <nav class="navbar-categories" [attr.aria-label]="content.ariaLabelNav">
         <div class="container">
             <app-navbar-menu />
         </div>

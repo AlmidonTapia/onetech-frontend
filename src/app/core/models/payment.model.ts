@@ -19,3 +19,7 @@ export interface CreatePaymentRequest {
   transactionId: string;
   amountPaid: number;
 }
+
+export interface CreatePaymentMethodRequest {
+  methodName: string;
+}

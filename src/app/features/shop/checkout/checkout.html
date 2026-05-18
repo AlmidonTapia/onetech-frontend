@@ -1,1 +1,88 @@
-<p>checkout works!</p>
+<div class="checkout-page">
+  <div class="container">
+
+    <div class="checkout-steps">
+      @for (step of steps; track step; let idx = $index) {
+      <div class="step-item" [class.step-item--active]="currentStep() === idx"
+        [class.step-item--completed]="currentStep() > idx">
+        <div class="step-number">{{ idx + 1 }}</div>
+        <span class="step-label">{{ step }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="checkout-layout">
+      <div class="checkout-main">
+        @if (currentStep() === 0) {
+        <app-checkout-address (selected)="onAddressSelected($event)" />
+        }
+        @if (currentStep() === 1) {
+        <app-checkout-shipping (selected)="selectedShipMethod.set($event)" />
+        }
+        @if (currentStep() === 2) {
+        <app-checkout-payment (selected)="selectedPayMethod.set($event)" />
+        }
+        @if (currentStep() === 3) {
+        <app-checkout-summary [cart]="cartService.cart()" [address]="selectedAddress()"
+          [shipMethod]="selectedShipMethod()" [payMethod]="selectedPayMethod()" />
+        }
+
+        <div class="checkout-actions">
+          @if (currentStep() > 0) {
+          <app-button variant="outline" label="Atrás" (clicked)="prev()" />
+          }
+
+          @if (currentStep()
+          < 3) { <app-button variant="primary" label="Continuar" [disabled]="!canGoNext()" (clicked)="next()" />
+          } @else {
+          <app-button variant="accent" label="Confirmar y Pagar" [loading]="placing()" (clicked)="placeOrder()" />
+          }
+        </div>
+      </div>
+
+      <div class="checkout-aside">
+        <div class="mini-summary-card">
+          <h4>{{ content.summaryTitle }} ({{ cartService.itemCount() }})</h4>
+
+          <div class="mini-items-list">
+            @for (item of cartService.cart()?.items ?? []; track item.idProduct) {
+            <div class="mini-item">
+              <span class="mini-name">{{ item.productName }}</span>
+              <span class="mini-qty">× {{ item.quantity }}</span>
+              <span class="mini-price">{{ item.subtotal | currencyPen }}</span>
+            </div>
+            }
+          </div>
+
+          <div class="mini-total">
+            <span>Subtotal</span>
+            <strong>{{ cartService.totalAmount() | currencyPen }}</strong>
+          </div>
+
+          <div class="mini-coupon">
+            <div class="coupon-input-group">
+              <input type="text" [(ngModel)]="couponCode" placeholder="Código de descuento" [disabled]="!!selectedCouponId()">
+              <app-button variant="outline" label="Aplicar" [loading]="validatingCoupon()" [disabled]="!couponCode() || !!selectedCouponId()" (clicked)="applyCoupon()" />
+            </div>
+            @if (couponError()) {
+              <small class="error-text">{{ couponError() }}</small>
+            }
+          </div>
+
+          @if (discountAmount() > 0) {
+            <div class="mini-total discount">
+              <span>Descuento</span>
+              <strong>- {{ discountAmount() | currencyPen }}</strong>
+            </div>
+          }
+
+          <div class="mini-total final">
+            <span>{{ content.totalLabel }}</span>
+            <strong>{{ finalTotal | currencyPen }}</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

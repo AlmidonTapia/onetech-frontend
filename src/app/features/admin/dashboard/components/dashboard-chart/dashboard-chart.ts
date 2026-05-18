@@ -11,14 +11,25 @@ import { ChartModule } from 'primeng/chart';
 export class DashboardChartComponent implements OnChanges {
   @Input() data: any = null;
 
+  content = {
+    title: 'Órdenes por estado',
+    subtitle: 'últimas 10 órdenes',
+    emptyMessage: 'Sin datos disponibles',
+    chartType: 'doughnut',
+    chartHeight: '240'
+  } as const;
+
   chartOptions = {
     plugins: {
-      legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 } } }
+      legend: {
+        position: 'bottom' as const,
+        labels: { padding: 16, font: { size: 12 } }
+      }
     },
     cutout: '65%',
   };
 
   ngOnChanges() {
-    // PrimeNG Chart re-renders when data input changes
+    // El gráfico de PrimeNG se vuelve a renderizar automáticamente al mutar el @Input data
   }
 }

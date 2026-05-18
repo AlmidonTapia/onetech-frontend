@@ -1,7 +1,8 @@
-<form class="search-form" (ngSubmit)="search()">
-    <input type="text" class="search-input" [(ngModel)]="query" name="query"
-        placeholder="Buscar laptops, celulares, componentes..." autocomplete="off" aria-label="Buscar productos" />
-    <button type="submit" class="search-btn" aria-label="Buscar">
-        <i class="pi pi-search"></i>
+<form class="search-form" (ngSubmit)="search()" novalidate>
+    <input type="text" class="search-input" [(ngModel)]="query" name="query" [placeholder]="content.placeholderText"
+        autocomplete="off" [attr.aria-label]="content.ariaLabels.input" />
+
+    <button type="submit" class="search-btn" [attr.aria-label]="content.ariaLabels.button">
+        <i [class]="content.searchIcon"></i>
     </button>
 </form>

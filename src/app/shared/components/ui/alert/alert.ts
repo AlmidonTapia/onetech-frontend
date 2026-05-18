@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 export type AlertType = 'success' | 'error' | 'warning' | 'info';
@@ -10,7 +10,7 @@ export type AlertType = 'success' | 'error' | 'warning' | 'info';
   templateUrl: './alert.html',
   styleUrl: './alert.css'
 })
-export class AlertComponent {
+export class AlertComponent implements OnChanges {
   @Input() type: AlertType = 'info';
   @Input() title = '';
   @Input() closeable = false;
@@ -25,9 +25,17 @@ export class AlertComponent {
     info: 'pi-info-circle',
   };
 
-  get icon() { return this.icons[this.type]; }
+  get icon(): string {
+    return this.icons[this.type] || this.icons.info;
+  }
 
-  dismiss() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['title'] || changes['type']) {
+      this.dismissed = false;
+    }
+  }
+
+  dismiss(): void {
     this.dismissed = true;
     this.closed.emit();
   }

@@ -16,12 +16,34 @@ import { Order, OrderStatus } from '../../../../../core/models/order.model';
 })
 export class OrderStatusFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
+
   @Input() visible: boolean = false;
   @Input() order: Order | null = null;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<OrderStatus>();
   @Output() cancel = new EventEmitter<void>();
+
+  content = {
+    dialogWidth: '440px',
+    headerTitle: 'Cambiar estado de orden',
+    idPrefix: '#',
+    labels: {
+      order: 'Orden:',
+      client: 'Cliente:',
+      total: 'Total:',
+      newStatus: 'Nuevo estado *'
+    },
+    placeholderSelect: 'Seleccionar estado',
+    styles: {
+      selectWidth: '100%'
+    },
+    actions: {
+      cancelLabel: 'Cancelar',
+      saveLabel: 'Actualizar estado',
+      saveIcon: 'pi-check'
+    }
+  } as const;
 
   form = this.fb.group({ status: ['' as OrderStatus, Validators.required] });
 
@@ -42,5 +64,8 @@ export class OrderStatusFormComponent implements OnChanges {
     this.save.emit(this.form.value.status as OrderStatus);
   }
 
-  onCancel() { this.cancel.emit(); this.visibleChange.emit(false); }
+  onCancel() {
+    this.cancel.emit();
+    this.visibleChange.emit(false);
+  }
 }

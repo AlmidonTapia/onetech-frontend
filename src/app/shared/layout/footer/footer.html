@@ -1,16 +1,13 @@
 <footer class="ot-footer">
 
-    <!-- ── Main grid ─────────────────────────────── -->
     <div class="container footer-grid">
 
-        <!-- Col 1: Brand -->
         <div class="footer-col footer-brand">
-            <a routerLink="/" class="footer-logo" aria-label="OneTech">
+            <a [routerLink]="content.brandRoute" class="footer-logo" [attr.aria-label]="content.ariaLabelLogo">
                 <span class="logo-one">One</span><span class="logo-tech">Tech</span>
             </a>
             <p class="footer-tagline">
-                Tu tienda de tecnología de confianza en Lima, Perú.
-                Los mejores precios en laptops, celulares y componentes.
+                {{ content.tagline }}
             </p>
             <div class="footer-social">
                 @for (s of social; track s.label) {
@@ -21,9 +18,8 @@
             </div>
         </div>
 
-        <!-- Col 2: Categorías -->
         <div class="footer-col">
-            <h3 class="footer-heading">Categorías</h3>
+            <h3 class="footer-heading">{{ content.headings.categories }}</h3>
             <ul class="footer-links">
                 @for (cat of categories; track cat.label) {
                 <li>
@@ -35,9 +31,8 @@
             </ul>
         </div>
 
-        <!-- Col 3: Ayuda -->
         <div class="footer-col">
-            <h3 class="footer-heading">Ayuda</h3>
+            <h3 class="footer-heading">{{ content.headings.help }}</h3>
             <ul class="footer-links">
                 @for (link of helpLinks; track link.label) {
                 <li>
@@ -47,17 +42,16 @@
             </ul>
         </div>
 
-        <!-- Col 4: Contacto -->
         <div class="footer-col">
-            <h3 class="footer-heading">Contacto</h3>
+            <h3 class="footer-heading">{{ content.headings.contact }}</h3>
             <ul class="footer-contact">
                 @for(item of contactInfo; track item.text) {
                 <li>
                     <i class="pi" [class]="item.icon"></i>
                     @if (item.link) {
-                        <a [href]="item.link">{{ item.text }}</a>
+                    <a [href]="item.link">{{ item.text }}</a>
                     } @else {
-                        <span>{{ item.text }}</span>
+                    <span>{{ item.text }}</span>
                     }
                 </li>
                 }
@@ -66,12 +60,11 @@
 
     </div>
 
-    <!-- ── Bottom bar ────────────────────────────── -->
     <div class="footer-bottom">
         <div class="container footer-bottom-inner">
 
             <p class="footer-copy">
-                © {{ year }} OneTech. Todos los derechos reservados.
+                {{ content.copyPre }}{{ year }}{{ content.copyPost }}
             </p>
 
             <div class="footer-payments">

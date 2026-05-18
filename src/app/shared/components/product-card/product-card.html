@@ -1,0 +1,39 @@
+<a [routerLink]="['/product', product.idProduct]" class="product-card">
+  <div class="card-image">
+    @if (mainImage) {
+    <img [src]="mainImage" [alt]="product.productName" loading="lazy" />
+    } @else {
+    <div class="img-placeholder"><i class="pi pi-image"></i></div>
+    }
+
+    <button class="wishlist-btn" [class.wishlist-btn--active]="wishlistService.isInWishlist(product.idProduct)"
+      (click)="onToggleWishlist($event)"
+      [attr.aria-label]="wishlistService.isInWishlist(product.idProduct) ? content.ariaLabels.removeWishlist : content.ariaLabels.addWishlist">
+      <i class="pi"
+        [class]="wishlistService.isInWishlist(product.idProduct) ? content.icons.wishlistActive : content.icons.wishlistInactive"></i>
+    </button>
+
+    @if (product.stockQuantity === 0) {
+    <span class="out-badge">{{ content.outBadgeLabel }}</span>
+    }
+  </div>
+
+  <div class="card-body">
+    @if (showBrand) {
+    <span class="card-brand">{{ product.brandName }}</span>
+    }
+    <h3 class="card-name">{{ product.productName }}</h3>
+
+    @if (product.averageRating) {
+    <app-star-rating [value]="product.averageRating" [count]="product.totalReviews" [readonly]="true" />
+    }
+
+    <div class="card-footer">
+      <span class="card-price">{{ product.price | currencyPen }}</span>
+      <button class="add-btn" [class.add-btn--loading]="adding" [disabled]="adding || product.stockQuantity === 0"
+        (click)="onAddToCart($event)" [attr.aria-label]="content.ariaLabels.addToCart">
+        <i class="pi" [class]="adding ? content.icons.cartLoading : content.icons.cartDefault"></i>
+      </button>
+    </div>
+  </div>
+</a>

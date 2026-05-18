@@ -1,1 +1,51 @@
-<p>profile-info works!</p>
+<div class="profile-section">
+    <div class="section-header">
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.subtitle }}</p>
+    </div>
+
+    <form [formGroup]="form" class="profile-form" novalidate>
+        <div class="form-row">
+            <div class="form-field">
+                <label>{{ content.labels.firstName }}</label>
+                <input pInputText formControlName="firstName" readonly />
+            </div>
+            <div class="form-field">
+                <label>{{ content.labels.lastName }}</label>
+                <input pInputText formControlName="lastName" readonly />
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label>{{ content.labels.email }}</label>
+            <input pInputText formControlName="email" readonly />
+            <span class="field-hint">{{ content.hints.emailImmutable }}</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-field">
+                <label>{{ content.labels.documentType }}</label>
+                <p-select formControlName="documentType" [options]="docTypes" optionLabel="label" optionValue="value"
+                    [placeholder]="content.placeholders.docTypeSelect"
+                    [style]="{ 'width': content.styles.selectWidth }" />
+            </div>
+            <div class="form-field">
+                <label>{{ content.labels.documentNumber }}</label>
+                <input pInputText formControlName="documentNumber" [placeholder]="content.placeholders.docNumber" />
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label>{{ content.labels.phone }}</label>
+            <input pInputText formControlName="phone" [placeholder]="content.placeholders.phone" maxlength="9" />
+            @if (isInvalid('phone') && form.get('phone')?.errors?.['pattern']) {
+            <span class="field-error">{{ content.errors.phonePattern }}</span>
+            }
+        </div>
+
+        <div class="form-actions">
+            <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
+                [loading]="saving()" (clicked)="onSave()" />
+        </div>
+    </form>
+</div>

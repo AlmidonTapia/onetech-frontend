@@ -1,1 +1,14 @@
-<p>checkout-payment works!</p>
+<div class="step-section">
+  <h3 class="step-title">
+    <i [class]="content.titleIcon"></i> {{ content.title }}
+  </h3>
+  <div class="payment-list">
+    @for (m of methods(); track m.idPaymentMethod) {
+    <div class="payment-option" [class.payment-option--selected]="selectedId() === m.idPaymentMethod"
+      (click)="select(m)">
+      <div class="radio-circle" [class.radio-circle--active]="selectedId() === m.idPaymentMethod"></div>
+      <span class="method-name">{{ m.methodName }}</span>
+    </div>
+    }
+  </div>
+</div>

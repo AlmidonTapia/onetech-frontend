@@ -1,1 +1,33 @@
-<p>cart-items works!</p>
+<div class="cart-items">
+  @for (item of items; track item.idProduct) {
+    <div class="cart-item">
+      <div class="item-image">
+        @if (item.productImageUrl) {
+          <img [src]="item.productImageUrl" [alt]="item.productName" />
+        } @else {
+          <i class="pi pi-image"></i>
+        }
+      </div>
+
+      <div class="item-info">
+        <a [routerLink]="['/product', item.idProduct]" class="item-name">
+          {{ item.productName }}
+        </a>
+        <span class="item-unit-price">{{ item.unitPrice | currencyPen }} c/u</span>
+      </div>
+
+      <div class="item-qty">
+        <button class="qty-btn" (click)="updateQty.emit({ id: item.idProduct, qty: item.quantity - 1 })"
+                [disabled]="item.quantity <= 1">−</button>
+        <span class="qty-val">{{ item.quantity }}</span>
+        <button class="qty-btn" (click)="updateQty.emit({ id: item.idProduct, qty: item.quantity + 1 })">+</button>
+      </div>
+
+      <div class="item-subtotal">{{ item.subtotal | currencyPen }}</div>
+
+      <button class="remove-btn" (click)="removeItem.emit(item.idProduct)" title="Eliminar">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  }
+</div>

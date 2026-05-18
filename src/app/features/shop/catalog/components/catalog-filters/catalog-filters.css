@@ -1,1 +1,33 @@
-/* CatalogFilters styles */
+.filters-panel { display:flex; flex-direction:column; gap:0; }
+.filters-header { display:flex; align-items:center; justify-content:space-between;
+  padding:16px; border-bottom:1px solid var(--ot-border-color); }
+.filters-header h3 { font-size:15px; font-weight:700; color:var(--ot-text-main); }
+.reset-btn { font-size:13px; color:var(--p-primary-color); background:none; border:none; cursor:pointer; }
+.reset-btn:hover { text-decoration:underline; }
+
+.filter-group { padding:16px; border-bottom:1px solid var(--ot-border-color); }
+.filter-title { font-size:13px; font-weight:600; color:var(--ot-text-main);
+  text-transform:uppercase; letter-spacing:.06em; margin-bottom:12px; }
+
+.filter-options { list-style:none; padding:0; display:flex; flex-direction:column; gap:4px; }
+.filter-option {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 8px; border-radius:var(--ot-radius-sm);
+  font-size:13px; color:var(--ot-text-main); cursor:pointer;
+  transition:background var(--ot-transition);
+}
+.filter-option:hover { background:var(--ot-bg-body); }
+.filter-option--active { color:var(--p-primary-color); font-weight:500; }
+.filter-option input { accent-color:var(--ot-blue); }
+
+.price-inputs { display:flex; align-items:center; gap:8px; }
+.price-inputs input {
+  flex:1; padding:8px 10px; border:1px solid var(--ot-border-color);
+  background:var(--ot-bg-body); color:var(--ot-text-main);
+  border-radius:var(--ot-radius-md); font-size:13px; outline:none;
+  transition:border-color var(--ot-transition);
+}
+.price-inputs input:focus { border-color:var(--p-primary-color); }
+.price-sep { color:var(--ot-text-muted); font-size:12px; }
+
+:host app-button { padding:16px; display:block; }

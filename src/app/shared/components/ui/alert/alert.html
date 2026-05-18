@@ -3,8 +3,12 @@
     <i class="pi alert-icon" [ngClass]="icon" aria-hidden="true"></i>
 
     <div class="alert-body">
-        @if (title) { <strong class="alert-title">{{ title }}</strong> }
-        <div class="alert-content"><ng-content /></div>
+        @if (title) {
+        <strong class="alert-title">{{ title }}</strong>
+        }
+        <div class="alert-content">
+            <ng-content />
+        </div>
     </div>
 
     @if (closeable) {

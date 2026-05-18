@@ -1,1 +1,28 @@
-/* Catalog styles */
+.catalog-page { padding: 24px 0 64px; }
+.catalog-breadcrumb { margin-bottom: 20px; display:block; }
+
+.catalog-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) { .catalog-layout { grid-template-columns: 1fr; } }
+
+.catalog-sidebar { position: sticky; top: calc(var(--ot-nav-total) + 16px); }
+.sidebar-card {
+  background: var(--ot-bg-surface);
+  border: 1px solid var(--ot-border-color);
+  border-radius: var(--ot-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ot-shadow-theme);
+  transition: var(--ot-transition);
+}
+
+.catalog-content { display:flex; flex-direction:column; gap:4px; }
+
+.pagination-wrapper { display:flex; justify-content:center; margin-top:32px; }
+
+@media (max-width: 900px) {
+  .catalog-sidebar { position:static; }
+}

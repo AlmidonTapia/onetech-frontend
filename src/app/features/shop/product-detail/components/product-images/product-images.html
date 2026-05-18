@@ -1,1 +1,20 @@
-<p>product-images works!</p>
+<div class="images-wrapper">
+  <div class="main-image">
+    @if (active()) {
+      <img [src]="active()!" alt="Imagen del producto" />
+    } @else {
+      <div class="img-placeholder"><i class="pi pi-image"></i></div>
+    }
+  </div>
+
+  @if (images.length > 1) {
+    <div class="thumbnails">
+      @for (img of images; track img.idProductImage ) {
+        <button class="thumb-btn" [class.thumb-btn--active]="active() === img.imageUrl"
+                (click)="active.set(img.imageUrl)">
+          <img [src]="img.imageUrl" alt="Vista del producto" />
+        </button>
+      }
+    </div>
+  }
+</div>

@@ -1,1 +1,63 @@
-<p>order-detail works!</p>
+<p-dialog [visible]="visible" [header]="content.headerPrefix + (order?.idOrder?.substring(0,8)?.toUpperCase() ?? '')"
+    [modal]="true" [closable]="true" [draggable]="false" [style]="{ width: content.dialogWidth }" (onHide)="close()">
+
+    @if (order) {
+    <div class="order-detail">
+
+        <div class="detail-header">
+            <app-badge [variant]="statusMap[order.orderStatus].variant" [dot]="true">
+                {{ statusMap[order.orderStatus].label }}
+            </app-badge>
+            <span class="detail-date">{{ order.createdAt | date: content.dateFormat }}</span>
+        </div>
+
+        <div class="detail-section">
+            <h4 class="section-title">{{ content.sections.productsTitle }}</h4>
+            <div class="detail-items">
+                @for (item of order.details; track item.idOrderDetail) {
+                <div class="detail-item">
+                    <div class="item-info">
+                        <span class="item-name">{{ item.productName }}</span>
+                        <span class="item-qty">× {{ item.quantity }}</span>
+                    </div>
+                    <div class="item-prices">
+                        <span class="item-unit">{{ item.unitPrice | currencyPen }}{{ content.totals.unitSuffix }}</span>
+                        <span class="item-subtotal">{{ item.subtotal | currencyPen }}</span>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="detail-totals">
+            <div class="total-row">
+                <span>{{ content.totals.subtotalLabel }}</span>
+                <span>{{ order.totalAmount | currencyPen }}</span>
+            </div>
+            <div class="total-row total-row--grand">
+                <span>{{ content.totals.grandTotalLabel }}</span>
+                <strong>{{ order.totalAmount | currencyPen }}</strong>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <h4 class="section-title">{{ content.sections.infoTitle }}</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">{{ content.labels.client }}</span>
+                    <span>{{ order.userFullName }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">{{ content.labels.orderId }}</span>
+                    <code>{{ order.idOrder }}</code>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    }
+
+    <ng-template pTemplate="footer">
+        <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
+    </ng-template>
+</p-dialog>

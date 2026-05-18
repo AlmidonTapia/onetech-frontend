@@ -1,1 +1,23 @@
-<p>catalog-grid works!</p>
+@if (loading) {
+<div class="grid-skeleton">
+  @for (_ of skeletonConfig.items; track $index) {
+  <div class="skeleton-card"></div>
+  }
+</div>
+}
+
+@else if (products.length === 0) {
+<div class="empty-state">
+  <i [class]="content.emptyIcon" style="font-size:48px; color:var(--ot-gray-300)"></i>
+  <h3>{{ content.emptyTitle }}</h3>
+  <p>{{ content.emptyDescription }}</p>
+</div>
+}
+
+@else {
+<div class="products-grid animate-fade-in">
+  @for (product of products; track product.idProduct) {
+  <app-product-card [product]="product" />
+  }
+</div>
+}

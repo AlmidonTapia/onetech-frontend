@@ -1,1 +1,7 @@
-/* Orders styles */
+.orders-page { padding: 28px 0 64px; }
+
+.page-header { margin: 16px 0 28px; }
+.page-header h1 { font-size: 26px; font-weight: 700; color: var(--ot-text-main); }
+.page-sub { font-size: 14px; color: var(--ot-text-muted); margin-top: 4px; }
+
+.paginator-wrap { display: flex; justify-content: center; margin-top: 28px; }

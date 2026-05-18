@@ -1,1 +1,4 @@
-/* RelatedProducts styles */
+.related-section { padding-top:40px; border-top:1px solid var(--ot-gray-200); }
+.related-title { font-size:20px; font-weight:700; color:var(--ot-gray-900); margin-bottom:20px; }
+.related-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+@media (max-width:900px) { .related-grid { grid-template-columns:repeat(2,1fr); } }
