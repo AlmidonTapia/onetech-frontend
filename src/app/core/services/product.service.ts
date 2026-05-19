@@ -37,22 +37,30 @@ export class ProductService {
   }
 
   create(data: CreateProductRequest) {
-    return this.http.post<Product>(this.url, data);
+    return this.http.post<Product>(this.url, data).pipe(
+      tap(() => this.clearCache())
+    );
   }
 
   update(id: string, data: Partial<CreateProductRequest>) {
-    return this.http.put<Product>(`${this.url}/${id}`, data);
+    return this.http.put<Product>(`${this.url}/${id}`, data).pipe(
+      tap(() => this.clearCache())
+    );
   }
 
   delete(id: string) {
-    return this.http.delete<void>(`${this.url}/${id}`);
+    return this.http.delete<void>(`${this.url}/${id}`).pipe(
+      tap(() => this.clearCache())
+    );
   }
 
   uploadImages(productId: string, files: File[], principalIndex: number) {
     const formData = new FormData();
     files.forEach(f => formData.append('files', f));
     formData.append('isPrincipalIndex', principalIndex.toString());
-    return this.http.post(`${this.url}/${productId}/images`, formData);
+    return this.http.post(`${this.url}/${productId}/images`, formData).pipe(
+      tap(() => this.clearCache())
+    );
   }
 
   getImages(productId: string) {
@@ -60,6 +68,25 @@ export class ProductService {
   }
 
   deleteImage(productId: string, imageId: string) {
-    return this.http.delete<void>(`${this.url}/${productId}/images/${imageId}`);
+    return this.http.delete<void>(`${this.url}/${productId}/images/${imageId}`).pipe(
+      tap(() => this.clearCache())
+    );
+  }
+
+  setPrincipalImage(productId: string, imageId: string) {
+    return this.http.put<void>(`${this.url}/${productId}/images/${imageId}/principal`, {}).pipe(
+      tap(() => this.clearCache())
+    );
+  }
+
+  private clearCache() {
+    const keysToClear = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key && key.startsWith('products_')) {
+        keysToClear.push(key);
+      }
+    }
+    keysToClear.forEach(key => sessionStorage.removeItem(key));
   }
 }

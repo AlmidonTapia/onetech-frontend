@@ -9,12 +9,14 @@ export interface Shipment {
   shippingCost: number;
   estimatedArrival: string;
   status: ShipmentStatus;
+  shipmentStatus?: ShipmentStatus;
 }
 
 export interface ShipmentMethod {
   idShipmentMethod: string;
   methodName: string;
   basePrice: number;
+  status?: string;
 }
 
 export interface CreateShipmentRequest {
@@ -28,4 +30,5 @@ export interface CreateShipmentRequest {
 export interface CreateShipmentMethodRequest {
   methodName: string;
   basePrice: number;
+  status?: string;
 }

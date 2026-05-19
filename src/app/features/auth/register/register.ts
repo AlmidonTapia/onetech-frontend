@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
@@ -19,15 +19,21 @@ import { AlertComponent } from '../../../shared/components/ui/alert/alert';
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private alertService = inject(AlertService);
+  private route = inject(ActivatedRoute);
 
   loading = signal(false);
   errorMsg = signal('');
   success = signal(false);
+  returnUrl = signal<string | null>(null);
+
+  ngOnInit() {
+    this.returnUrl.set(this.route.snapshot.queryParams['returnUrl'] || null);
+  }
 
   brandData = {
     title: 'Únete a OneTech',
@@ -113,8 +119,14 @@ export class RegisterComponent {
           email: this.f['email'].value!,
           password: this.f['password'].value!,
         }).subscribe({
-          next: () => this.router.navigate(['/']),
-          error: () => this.router.navigate(['/auth/login'])
+          next: () => {
+            const targetUrl = this.returnUrl() || '/';
+            this.router.navigate([targetUrl]);
+          },
+          error: () => {
+            const targetUrl = this.returnUrl() || '/';
+            this.router.navigate(['/auth/login'], { queryParams: { returnUrl: targetUrl } });
+          }
         });
       },
       error: (err) => {

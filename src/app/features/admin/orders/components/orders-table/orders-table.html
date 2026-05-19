@@ -36,7 +36,9 @@
                         <i [class]="content.icons.viewDetail"></i>
                     </button>
                     <!-- Acción 2: Lanzar formulario de mutación de estado -->
-                    <button class="act-btn" [pTooltip]="content.tooltips.changeStatus"
+                    <button class="act-btn" 
+                        [pTooltip]="(order.orderStatus === 'COMPLETADO' || order.orderStatus === 'CANCELADO') ? 'Pedido Finalizado (No editable)' : content.tooltips.changeStatus"
+                        [disabled]="order.orderStatus === 'COMPLETADO' || order.orderStatus === 'CANCELADO'"
                         (click)="changeStatus.emit(order)">
                         <i [class]="content.icons.changeStatus"></i>
                     </button>

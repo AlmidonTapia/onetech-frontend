@@ -78,8 +78,12 @@ export class CategoriesComponent implements OnInit {
 
   onSave(data: CreateCategoryRequest) {
     this.saving.set(true);
+    const currentCat = this.editingCat();
+    const request$ = currentCat
+      ? this.categoryService.update(currentCat.idCategory, data as any)
+      : this.categoryService.create(data);
 
-    this.categoryService.create(data).subscribe({
+    request$.subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.saveSuccess);
         this.formVisible.set(false);
@@ -91,17 +95,6 @@ export class CategoriesComponent implements OnInit {
         this.saving.set(false);
       }
     });
-
-    /* ── PENDIENTE DE IMPLEMENTAR EN EL BACKEND ──
-    const currentCat = this.editingCat();
-    const request$ = currentCat
-      ? this.categoryService.update(currentCat.idCategory, data as any)
-      : this.categoryService.create(data);
-
-    request$.subscribe({
-      next: () => { ... }
-    });
-    ───────────────────────────────────────────── */
   }
 
   onDelete(c: Category) {
@@ -110,7 +103,17 @@ export class CategoriesComponent implements OnInit {
       message: `"${c.categoryName}" será eliminada.`,
       severity: this.content.confirmModal.severity as any,
       confirmLabel: this.content.confirmModal.confirmLabel,
-      onConfirm: () => this.alertService.warn(this.content.alerts.deleteNotImplemented),
+      onConfirm: () => {
+        this.categoryService.delete(c.idCategory).subscribe({
+          next: () => {
+            this.alertService.success('Categoría eliminada exitosamente');
+            this.loadCategories();
+          },
+          error: () => {
+            this.alertService.error('Error al eliminar la categoría');
+          }
+        });
+      },
     });
   }
 }

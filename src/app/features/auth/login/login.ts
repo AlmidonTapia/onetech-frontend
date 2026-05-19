@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { PasswordModule } from 'primeng/password';
@@ -20,14 +20,20 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private alertService = inject(AlertService);
+  private route = inject(ActivatedRoute);
 
   loading = signal(false);
   errorMsg = signal('');
+  returnUrl = signal<string | null>(null);
+
+  ngOnInit() {
+    this.returnUrl.set(this.route.snapshot.queryParams['returnUrl'] || null);
+  }
 
   brandData = {
     title: 'Bienvenido de vuelta',
@@ -77,10 +83,11 @@ export class LoginComponent {
       next: (res) => {
         this.loading.set(false);
         this.alertService.success('Bienvenido', `Hola de nuevo, ${res.firstName}`);
+        const targetUrl = this.returnUrl() || '/';
         if (res.role === 'ADMIN') {
           this.router.navigate(['/admin/dashboard']);
         } else {
-          this.router.navigate(['/']);
+          this.router.navigate([targetUrl]);
         }
       },
       error: err => {

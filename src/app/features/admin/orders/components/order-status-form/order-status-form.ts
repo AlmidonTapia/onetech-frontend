@@ -55,6 +55,28 @@ export class OrderStatusFormComponent implements OnChanges {
     { label: 'Cancelado', value: 'CANCELADO' },
   ];
 
+  get filteredOptions() {
+    if (!this.order) return [];
+    const current = this.order.orderStatus;
+    
+    if (current === 'COMPLETADO' || current === 'CANCELADO') {
+      return this.statusOptions.filter(o => o.value === current);
+    }
+    
+    const allowed: OrderStatus[] = [current];
+    if (current === 'PENDIENTE') {
+      allowed.push('PAGADO');
+      allowed.push('CANCELADO');
+    } else if (current === 'PAGADO') {
+      allowed.push('ENVIADO');
+      allowed.push('CANCELADO');
+    } else if (current === 'ENVIADO') {
+      allowed.push('COMPLETADO');
+    }
+    
+    return this.statusOptions.filter(o => allowed.includes(o.value));
+  }
+
   ngOnChanges() {
     if (this.order) this.form.patchValue({ status: this.order.orderStatus });
   }

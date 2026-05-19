@@ -1,0 +1,64 @@
+<p-dialog [visible]="visible" [header]="title" [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
+
+    <form [formGroup]="form" class="coupon-form" novalidate>
+        <div class="form-grid">
+            <div class="form-field">
+                <label>{{ content.fields.codeLabel }}</label>
+                <input pInputText formControlName="code" [placeholder]="content.fields.codePlaceholder"
+                    [class.ng-invalid]="isInvalid('code')" [class.ng-dirty]="isInvalid('code')" />
+                @if (isInvalid('code')) {
+                <span class="field-error">{{ content.errorRequired }}</span>
+                }
+            </div>
+
+            <div class="form-field">
+                <label>{{ content.fields.typeLabel }}</label>
+                <p-select formControlName="discountType" [options]="discountTypes"
+                    optionLabel="label" optionValue="value" [style]="{ 'width': content.styles.selectWidth }"
+                    [appendTo]="content.styles.appendTo" />
+            </div>
+
+            <div class="form-field">
+                <label>{{ content.fields.valueLabel }}</label>
+                <p-inputNumber formControlName="discountValue" [min]="0.01" [minFractionDigits]="2"
+                    [style]="{ 'width': content.styles.selectWidth }" />
+                @if (isInvalid('discountValue')) {
+                <span class="field-error">{{ content.errorRequired }}</span>
+                }
+            </div>
+
+            <div class="form-field">
+                <label>{{ content.fields.expirationLabel }}</label>
+                <input pInputText type="date" formControlName="expirationDate"
+                    [class.ng-invalid]="isInvalid('expirationDate')" [class.ng-dirty]="isInvalid('expirationDate')" />
+                @if (isInvalid('expirationDate')) {
+                <span class="field-error">{{ content.errorRequired }}</span>
+                }
+            </div>
+
+            <div class="form-field">
+                <label>{{ content.fields.limitLabel }}</label>
+                <p-inputNumber formControlName="usageLimit" [min]="1"
+                    [style]="{ 'width': content.styles.selectWidth }" />
+            </div>
+
+            @if (coupon) {
+            <div class="form-field">
+                <label>{{ content.fields.statusLabel }}</label>
+                <p-select formControlName="status" [options]="statuses"
+                    optionLabel="label" optionValue="value" [style]="{ 'width': content.styles.selectWidth }"
+                    [appendTo]="content.styles.appendTo" />
+            </div>
+            }
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
+            <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
+                [loading]="saving" [disabled]="form.invalid" (clicked)="onSave()" />
+        </div>
+    </ng-template>
+</p-dialog>

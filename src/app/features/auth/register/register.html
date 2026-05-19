@@ -40,7 +40,7 @@
         <h1>{{ formData.title }}</h1>
         <p>
           {{ formData.loginText }}
-          <a [routerLink]="formData.loginRoute" class="form-link">{{ formData.loginLinkText }}</a>
+          <a [routerLink]="formData.loginRoute" queryParamsHandling="merge" class="form-link">{{ formData.loginLinkText }}</a>
         </p>
       </div>
 

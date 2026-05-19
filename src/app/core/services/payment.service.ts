@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Payment, PaymentMethod, CreatePaymentRequest, CreatePaymentMethodRequest } from '../models/payment.model';
 
@@ -23,5 +24,13 @@ export class PaymentService {
 
   createMethod(data: CreatePaymentMethodRequest) {
     return this.http.post<PaymentMethod>(this.methodsUrl, data);
+  }
+
+  updateMethod(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.methodsUrl}/${id}`, data);
+  }
+
+  deleteMethod(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.methodsUrl}/${id}`);
   }
 }

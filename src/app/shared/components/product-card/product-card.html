@@ -13,8 +13,10 @@
         [class]="wishlistService.isInWishlist(product.idProduct) ? content.icons.wishlistActive : content.icons.wishlistInactive"></i>
     </button>
 
-    @if (product.stockQuantity === 0) {
+    @if (product.stockQuantity === 0 || product.status === 'AGOTADO') {
     <span class="out-badge">{{ content.outBadgeLabel }}</span>
+    } @else if (product.status === 'INACTIVO') {
+    <span class="out-badge" style="background-color: var(--ot-gray-500, #64748b);">No disponible</span>
     }
   </div>
 
@@ -30,7 +32,7 @@
 
     <div class="card-footer">
       <span class="card-price">{{ product.price | currencyPen }}</span>
-      <button class="add-btn" [class.add-btn--loading]="adding" [disabled]="adding || product.stockQuantity === 0"
+      <button class="add-btn" [class.add-btn--loading]="adding" [disabled]="adding || product.stockQuantity === 0 || product.status === 'AGOTADO' || product.status === 'INACTIVO'"
         (click)="onAddToCart($event)" [attr.aria-label]="content.ariaLabels.addToCart">
         <i class="pi" [class]="adding ? content.icons.cartLoading : content.icons.cartDefault"></i>
       </button>

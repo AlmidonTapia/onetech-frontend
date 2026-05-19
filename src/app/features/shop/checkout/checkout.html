@@ -1,14 +1,31 @@
 <div class="checkout-page">
   <div class="container">
 
-    <div class="checkout-steps">
-      @for (step of steps; track step; let idx = $index) {
-      <div class="step-item" [class.step-item--active]="currentStep() === idx"
-        [class.step-item--completed]="currentStep() > idx">
-        <div class="step-number">{{ idx + 1 }}</div>
-        <span class="step-label">{{ step }}</span>
+    <div class="checkout-stepper-container">
+      <div class="checkout-stepper">
+        @for (step of steps; track step; let idx = $index) {
+          <div class="stepper-item" 
+               [class.stepper-item--active]="currentStep() === idx"
+               [class.stepper-item--completed]="currentStep() > idx">
+            
+            <div class="stepper-node">
+              @if (currentStep() > idx) {
+                <i class="pi pi-check"></i>
+              } @else {
+                {{ idx + 1 }}
+              }
+            </div>
+            
+            <span class="stepper-label">{{ step }}</span>
+          </div>
+
+          @if (idx < steps.length - 1) {
+            <div class="stepper-line" 
+                 [class.stepper-line--completed]="currentStep() > idx">
+            </div>
+          }
+        }
       </div>
-      }
     </div>
 
     <div class="checkout-layout">

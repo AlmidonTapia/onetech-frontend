@@ -11,6 +11,58 @@
             <span class="detail-date">{{ order.createdAt | date: content.dateFormat }}</span>
         </div>
 
+        <!-- Shipment Tracking Section -->
+        <div class="detail-section">
+            <h4 class="section-title">{{ content.sections.shipmentTitle }}</h4>
+            
+            @if (loadingShipment()) {
+                <div class="shipment-loading">
+                    <i class="pi pi-spin pi-spinner animate-spin"></i>
+                    <span>Cargando información de envío...</span>
+                </div>
+            } @else if (shipment()) {
+                <div class="shipment-tracker">
+                    <div class="tracker-steps">
+                        @for (step of shipmentSteps; track step.status; let idx = $index) {
+                            <div class="tracker-step"
+                                 [class.tracker-step--active]="getStepIndex(shipment()?.status) === idx"
+                                 [class.tracker-step--completed]="getStepIndex(shipment()?.status) > idx">
+                                <div class="step-node">
+                                    <i [class]="step.icon"></i>
+                                </div>
+                                <span class="step-label">{{ step.label }}</span>
+                            </div>
+                            @if (idx < shipmentSteps.length - 1) {
+                                <div class="tracker-line"
+                                     [class.tracker-line--completed]="getStepIndex(shipment()?.status) > idx">
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <div class="shipment-info-box">
+                        @if (shipment()?.trackingNumber) {
+                            <div class="shipment-info-row">
+                                <span class="info-label">{{ content.labels.trackingNumber }}</span>
+                                <code class="tracking-code">{{ shipment()?.trackingNumber }}</code>
+                            </div>
+                        }
+                        @if (shipment()?.estimatedArrival) {
+                            <div class="shipment-info-row">
+                                <span class="info-label">{{ content.labels.estimatedArrival }}</span>
+                                <span class="info-val">{{ shipment()?.estimatedArrival | date: 'dd MMMM yyyy' }}</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @else {
+                <div class="shipment-empty-box">
+                    <i class="pi pi-info-circle"></i>
+                    <span>{{ content.labels.noShipment }}</span>
+                </div>
+            }
+        </div>
+
         <div class="detail-section">
             <h4 class="section-title">{{ content.sections.productsTitle }}</h4>
             <div class="detail-items">

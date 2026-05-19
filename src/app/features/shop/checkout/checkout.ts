@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin, switchMap } from 'rxjs';
+import { forkJoin, switchMap, of } from 'rxjs';
 import { CurrencyPenPipe } from '../../../shared/pipes/currency-pen.pipe';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { CheckoutSummaryComponent } from './components/checkout-summary/checkout-summary';
@@ -141,30 +141,23 @@ export class CheckoutComponent {
     createOrder$.pipe(
       switchMap((order: any) => {
         return forkJoin({
-          orderData: [order],
+          order: of(order),
           payment: this.paymentService.register({
-            idOrder: order.idOrder,
+            idOrder: order.id,
             idPaymentMethod: this.selectedPayMethod()!.idPaymentMethod,
             transactionId: `${this.content.navigation.txnPrefix}${Date.now()}`,
             amountPaid: this.finalTotal,
-          }) as any,
-          shipment: this.shipmentService.create({
-            idOrder: order.idOrder,
-            idShipmentMethod: this.selectedShipMethod()!.idShipmentMethod,
-            trackingNumber: `${this.content.navigation.trkPrefix}${Date.now()}`,
-            shippingCost: this.selectedShipMethod()!.basePrice,
-            estimatedArrival: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
           }) as any,
           cartClear: this.cartService.clearCart() as any
         });
       })
     ).subscribe({
       next: (result: any) => {
-        const order = result.orderData[0];
-
+        const order = result.order;
+ 
         this.alertService.success(
           this.content.alerts.successTitle,
-          `${this.content.alerts.successSub}${order.idOrder.substring(0, 8)}${this.content.alerts.successEnd}`
+          `${this.content.alerts.successSub}${order.id.substring(0, 8)}${this.content.alerts.successEnd}`
         );
         this.placing.set(false);
         this.router.navigate([this.content.navigation.routeSuccess]);

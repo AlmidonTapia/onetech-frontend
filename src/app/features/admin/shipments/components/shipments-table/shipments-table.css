@@ -12,13 +12,13 @@
   display: inline-block; 
 }
 
-.status-badge.preparando { 
+.status-badge.en-preparacion { 
   background-color: var(--ot-bg-body); 
-  color: var(--ot-text-main); 
+  color: var(--ot-text-muted); 
   border: 1px solid var(--ot-border-color);
 }
 
-.status-badge.en_camino { 
+.status-badge.en-camino { 
   background-color: var(--ot-warning-bg); 
   color: var(--ot-warning); 
 }
@@ -26,6 +26,11 @@
 .status-badge.entregado { 
   background-color: var(--ot-success-bg); 
   color: var(--ot-success); 
+}
+
+.status-badge.devuelto { 
+  background-color: var(--ot-error-bg); 
+  color: var(--ot-error); 
 }
 
 .empty-cell { 

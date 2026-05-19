@@ -5,12 +5,29 @@
 
     <div class="catalog-layout">
 
+      <!-- Mobile Filter Toggle -->
+      <div class="mobile-filter-toggle">
+        <button class="mobile-filter-btn" (click)="toggleMobileFilters()">
+          <i class="pi pi-filter"></i>
+          Filtros
+        </button>
+      </div>
+
+      <!-- Mobile Filter Backdrop -->
+      @if (showMobileFilters) {
+        <div class="sidebar-backdrop" (click)="toggleMobileFilters()"></div>
+      }
+
       <!-- Sidebar de filtros -->
-      <aside class="catalog-sidebar">
+      <aside class="catalog-sidebar" [class.sidebar-mobile-open]="showMobileFilters">
         <div class="sidebar-card">
+          <div class="mobile-drawer-header">
+             <h3>Filtros</h3>
+             <button class="drawer-close-btn" (click)="toggleMobileFilters()"><i class="pi pi-times"></i></button>
+          </div>
           <app-catalog-filters
             [filters]="filters()"
-            (apply)="onFiltersApply($event)" />
+            (apply)="onFiltersApply($event); showMobileFilters = false" />
         </div>
       </aside>
 

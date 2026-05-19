@@ -114,3 +114,44 @@
 .menu-item-node--has-subs {
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  /* Hacemos que el scroll vaya de borde a borde (edge-to-edge) */
+  .navbar-navigation {
+    margin-left: calc(-1 * var(--ot-container-px));
+    margin-right: calc(-1 * var(--ot-container-px));
+    width: calc(100% + 2 * var(--ot-container-px));
+  }
+  
+  .nav-menu-list {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important; /* Firefox */
+    width: 100% !important;
+    padding: 0 var(--ot-container-px) !important;
+  }
+  
+  .nav-menu-list::-webkit-scrollbar {
+    display: none !important; /* Safari/Chrome */
+  }
+  
+  .menu-item-node {
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .menu-root-link {
+    padding: 0 12px !important;
+    font-size: 13px !important;
+  }
+
+  .dropdown-submenu {
+    display: none !important;
+  }
+
+  .arrow-sub-icon {
+    display: none !important;
+  }
+}
+

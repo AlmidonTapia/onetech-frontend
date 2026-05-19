@@ -21,7 +21,12 @@
   </div>
 
   <div class="info-stock">
-    @if (product.stockQuantity > 0) {
+    @if (product.status === 'INACTIVO') {
+    <span class="stock-out" style="color: var(--ot-gray-500, #64748b);">
+      <i class="pi pi-ban"></i>
+      No disponible
+    </span>
+    } @else if (product.stockQuantity > 0 && product.status !== 'AGOTADO') {
     <span class="stock-ok">
       <i [class]="content.stock.availableIcon"></i>
       {{ content.stock.availablePrefix }}{{ product.stockQuantity }}{{ content.stock.availableSuffix }}
@@ -36,7 +41,7 @@
 
   <p class="info-desc">{{ product.description }}</p>
 
-  @if (product.stockQuantity > 0) {
+  @if (product.stockQuantity > 0 && product.status !== 'AGOTADO' && product.status !== 'INACTIVO') {
   <div class="info-actions">
     <div class="qty-control">
       <button class="qty-btn" (click)="changeQty(-1)" [disabled]="qty() <= 1">−</button>

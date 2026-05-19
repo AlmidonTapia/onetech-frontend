@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Brand, CreateBrandRequest } from '../models/brand.model';
 import { PageResponse } from '../models/page-response.model';
@@ -21,6 +22,12 @@ export class BrandService {
   create(data: CreateBrandRequest) {
     return this.http.post<Brand>(this.url, data);
   }
-  
-  //update -delete 
+
+  update(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.url}/${id}`, data);
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.url}/${id}`);
+  }
 }

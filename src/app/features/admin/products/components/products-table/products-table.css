@@ -21,3 +21,32 @@
 .act-btn--danger:hover { background: var(--ot-error-bg); color: var(--ot-error); }
 .dark-mode .act-btn--danger:hover { background: rgba(220, 38, 38, 0.15); }
 .empty-cell { text-align: center; padding: 48px; color: var(--ot-text-muted); font-size: 14px; }
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+}
+.badge-status {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge-status--active {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.badge-status--inactive {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+.badge-status--out {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}

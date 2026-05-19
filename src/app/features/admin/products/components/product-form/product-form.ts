@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePipe } from '@angular/common';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Product, CreateProductRequest } from '../../../../../core/models/product.model';
 import { Category } from '../../../../../core/models/category.model';
@@ -16,8 +17,8 @@ import { BrandService } from '../../../../../core/services/brand.service';
   selector: 'app-product-form',
   standalone: true,
   imports: [
-    ReactiveFormsModule, DialogModule, InputTextModule,
-    TextareaModule, SelectModule, InputNumberModule, ButtonComponent
+    ReactiveFormsModule, FormsModule, DialogModule, InputTextModule,
+    TextareaModule, SelectModule, InputNumberModule, ButtonComponent, DatePipe
   ],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css'
@@ -33,6 +34,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<CreateProductRequest>();
   @Output() cancel = new EventEmitter<void>();
+  @Output() manageImages = new EventEmitter<Product>();
 
   categories = signal<Category[]>([]);
   brands = signal<Brand[]>([]);
@@ -50,8 +52,28 @@ export class ProductFormComponent implements OnChanges, OnInit {
       cancelLabel: 'Cancelar',
       saveLabel: 'Guardar',
       saveIcon: 'pi-check'
+    },
+    specs: {
+      title: 'Especificaciones Técnicas',
+      addLabel: 'Añadir Propiedad',
+      addIcon: 'pi-plus',
+      keyPlaceholder: 'Propiedad (Ej: RAM, Procesador)',
+      valuePlaceholder: 'Valor (Ej: 16GB, Intel i7)',
+      deleteTitle: 'Eliminar propiedad',
+      emptyMessage: 'No hay especificaciones añadidas para este producto.'
+    },
+    imagesInfo: {
+      newProductMsg: 'Podrá subir imágenes una vez que guarde el producto por primera vez.',
+      manageBtnLabel: 'Gestionar Imágenes',
+      manageBtnIcon: 'pi pi-images'
     }
   } as const;
+
+  statuses = [
+    { label: 'Activo', value: 'ACTIVO' },
+    { label: 'Inactivo', value: 'INACTIVO' },
+    { label: 'Agotado', value: 'AGOTADO' }
+  ];
 
   formConfig: any[] = [
     [
@@ -63,8 +85,9 @@ export class ProductFormComponent implements OnChanges, OnInit {
       { name: 'idBrand', label: 'Marca *', type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'idBrand', placeholder: 'Seleccionar marca' }
     ],
     [
-      { name: 'price', label: 'Precio (S/.) *', type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 },
-      { name: 'stockQuantity', label: 'Stock Inicial *', type: 'number', mode: 'decimal', min: 0 }
+      { name: 'price', label: 'Precio (S/.) *', type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
+      { name: 'stockQuantity', label: 'Stock Inicial *', type: 'number', mode: 'decimal', min: 0 },
+      { name: 'status', label: 'Estado *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccionar estado' }
     ],
     [
       { name: 'description', label: 'Descripción del producto *', type: 'textarea', placeholder: 'Ingresa las especificaciones y características principales...' }
@@ -76,8 +99,9 @@ export class ProductFormComponent implements OnChanges, OnInit {
     sku: ['', Validators.required],
     idCategory: ['', Validators.required],
     idBrand: ['', Validators.required],
-    price: [0, [Validators.required, Validators.min(0)]],
+    price: [null as number | null, [Validators.required, Validators.min(0.01)]],
     stockQuantity: [0, [Validators.required, Validators.min(0)]],
+    status: ['ACTIVO', Validators.required],
     description: ['', Validators.required]
   });
 
@@ -93,12 +117,23 @@ export class ProductFormComponent implements OnChanges, OnInit {
   getOptions(key: string) {
     if (key === 'categories') return this.categories();
     if (key === 'brands') return this.brands();
+    if (key === 'statuses') return this.statuses;
     return [];
   }
 
   isInvalid(field: string) {
     const control = this.form.get(field);
     return control?.invalid && control?.touched;
+  }
+
+  specificationsList = signal<{ key: string; value: string }[]>([]);
+
+  addSpecification() {
+    this.specificationsList.update(list => [...list, { key: '', value: '' }]);
+  }
+
+  removeSpecification(index: number) {
+    this.specificationsList.update(list => list.filter((_, i) => i !== index));
   }
 
   ngOnChanges() {
@@ -110,10 +145,21 @@ export class ProductFormComponent implements OnChanges, OnInit {
         idBrand: this.product.idBrand,
         price: this.product.price,
         stockQuantity: this.product.stockQuantity,
-        description: this.product.description
+        description: this.product.description,
+        status: this.product.status || 'ACTIVO'
       });
+      if (this.product.specifications) {
+        const list = Object.entries(this.product.specifications).map(([key, value]) => ({
+          key,
+          value: String(value)
+        }));
+        this.specificationsList.set(list);
+      } else {
+        this.specificationsList.set([]);
+      }
     } else {
-      this.form.reset({ price: 0, stockQuantity: 0 });
+      this.form.reset({ price: 0, stockQuantity: 0, status: 'ACTIVO' });
+      this.specificationsList.set([]);
     }
   }
 
@@ -122,12 +168,32 @@ export class ProductFormComponent implements OnChanges, OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    this.save.emit(this.form.value as CreateProductRequest);
+
+    const specsMap: Record<string, any> = {};
+    this.specificationsList().forEach(spec => {
+      if (spec.key.trim() && spec.value.trim()) {
+        specsMap[spec.key.trim()] = spec.value.trim();
+      }
+    });
+
+    const requestData: CreateProductRequest = {
+      ...(this.form.value as unknown as CreateProductRequest),
+      specifications: specsMap
+    };
+
+    this.save.emit(requestData);
   }
 
   onCancel() {
-    this.form.reset({ price: 0, stockQuantity: 0 });
+    this.form.reset({ price: null, stockQuantity: 0, status: 'ACTIVO' });
+    this.specificationsList.set([]);
     this.cancel.emit();
     this.visibleChange.emit(false);
+  }
+
+  onManageImages() {
+    if (this.product) {
+      this.manageImages.emit(this.product);
+    }
   }
 }

@@ -1,13 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { DatePipe, CurrencyPipe, TitleCasePipe, LowerCasePipe, SlicePipe } from '@angular/common';
-import { Shipment } from '../../../../../core/models/shipment.model';
+import { DatePipe, CurrencyPipe, SlicePipe } from '@angular/common';
+import { Shipment, ShipmentStatus } from '../../../../../core/models/shipment.model';
 
 @Component({
   selector: 'app-shipments-table',
   standalone: true,
-  imports: [TableModule, TooltipModule, DatePipe, CurrencyPipe, TitleCasePipe, LowerCasePipe, SlicePipe],
+  imports: [TableModule, TooltipModule, DatePipe, CurrencyPipe, SlicePipe],
   templateUrl: './shipments-table.html',
   styleUrl: './shipments-table.css'
 })
@@ -45,4 +45,19 @@ export class ShipmentsTableComponent {
       edit: 'pi pi-pencil'
     }
   };
+
+  readonly statusConfig: Record<ShipmentStatus, { label: string; class: string }> = {
+    EN_PREPARACION: { label: 'En Preparación', class: 'en-preparacion' },
+    EN_CAMINO: { label: 'En Camino', class: 'en-camino' },
+    ENTREGADO: { label: 'Entregado', class: 'entregado' },
+    DEVUELTO: { label: 'Devuelto', class: 'devuelto' },
+  };
+
+  getStatusLabel(status: ShipmentStatus): string {
+    return this.statusConfig[status]?.label || status;
+  }
+
+  getStatusClass(status: ShipmentStatus): string {
+    return this.statusConfig[status]?.class || '';
+  }
 }

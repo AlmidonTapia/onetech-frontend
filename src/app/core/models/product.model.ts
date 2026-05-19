@@ -14,6 +14,7 @@ export interface Product {
   averageRating?: number;
   totalReviews?: number;
   createdAt?: string;
+  updatedAt?: string;
   status?: string;
 }
 

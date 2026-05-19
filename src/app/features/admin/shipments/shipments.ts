@@ -5,7 +5,9 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ShipmentService } from '../../../core/services/shipment.service';
-import { Shipment, CreateShipmentRequest, ShipmentStatus } from '../../../core/models/shipment.model';
+import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod } from '../../../core/models/shipment.model';
+
+import { Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-shipments',
@@ -19,6 +21,7 @@ export class ShipmentsComponent implements OnInit {
   private alertService = inject(AlertService);
 
   shipments = signal<Shipment[]>([]);
+  methods = signal<ShipmentMethod[]>([]);
   totalRecords = signal(0);
   loading = signal(false);
   saving = signal(false);
@@ -38,13 +41,26 @@ export class ShipmentsComponent implements OnInit {
     alerts: {
       createSuccess: 'Envío creado',
       createError: 'Error al crear',
-      updateSuccess: 'Estado actualizado',
+      updateSuccess: 'Estado y detalles actualizados',
       updateError: 'Error al actualizar'
     }
   } as const;
 
   ngOnInit() {
-    this.loadShipments();
+    this.loadMethodsAndShipments();
+  }
+
+  loadMethodsAndShipments() {
+    this.loading.set(true);
+    this.shipmentService.getMethods().subscribe({
+      next: m => {
+        this.methods.set(m);
+        this.loadShipments();
+      },
+      error: () => {
+        this.loadShipments();
+      }
+    });
   }
 
   loadShipments(event?: any) {
@@ -52,7 +68,14 @@ export class ShipmentsComponent implements OnInit {
     this.loading.set(true);
     this.shipmentService.getAll(page, this.apiConfig.pageSize).subscribe({
       next: r => {
-        this.shipments.set(r.content);
+        const mappedContent = r.content.map(s => {
+          const method = this.methods().find(m => m.idShipmentMethod === s.idShipmentMethod);
+          return {
+            ...s,
+            shipmentMethodName: method ? method.methodName : 'Desconocido'
+          };
+        });
+        this.shipments.set(mappedContent);
         this.totalRecords.set(r.totalElements);
         this.loading.set(false);
       },
@@ -86,9 +109,20 @@ export class ShipmentsComponent implements OnInit {
     });
   }
 
-  onUpdateStatus(data: { id: string, status: ShipmentStatus }) {
+  onUpdateStatus(data: { id: string, status: ShipmentStatus, estimatedArrival?: string, shippingCost?: number, trackingNumber?: string }) {
     this.saving.set(true);
-    this.shipmentService.updateStatus(data.id, data.status).subscribe({
+    
+    const arrivalUpdate$: Observable<any> = data.estimatedArrival
+      ? this.shipmentService.updateArrival(data.id, data.estimatedArrival, data.shippingCost, data.trackingNumber)
+      : of(null);
+
+    const statusUpdate$: Observable<any> = data.status !== this.editingShipment()?.status
+      ? this.shipmentService.updateStatus(data.id, data.status)
+      : of(null);
+
+    arrivalUpdate$.pipe(
+      switchMap(() => statusUpdate$)
+    ).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.updateSuccess);
         this.formVisible.set(false);

@@ -39,6 +39,11 @@ export class CatalogFiltersComponent implements OnInit {
     brandSize: 50
   };
 
+  isCategoryOpen = true;
+  isBrandOpen = true;
+  isPriceOpen = true;
+
+
   content = {
     mainTitle: 'Filtros',
     resetBtnText: 'Limpiar',

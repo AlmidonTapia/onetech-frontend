@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -13,4 +13,18 @@ import { ModalComponent } from '../../components/ui/modal/modal';
   templateUrl: './admin-layout.html',
   styleUrl: './admin-layout.css'
 })
-export class AdminLayoutComponent { }
+export class AdminLayoutComponent implements OnInit {
+  isSidebarCollapsed = false;
+
+  ngOnInit() {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      this.isSidebarCollapsed = true;
+    }
+  }
+
+  closeSidebarOnMobileClick() {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      this.isSidebarCollapsed = true;
+    }
+  }
+}

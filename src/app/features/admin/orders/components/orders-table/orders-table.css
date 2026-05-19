@@ -35,6 +35,11 @@
   color: var(--p-primary-color); 
 }
 
+.act-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .empty-cell { 
   text-align: center;
   padding: 48px;

@@ -98,12 +98,28 @@ export class CheckoutAddressComponent implements OnInit {
     }
 
     this.saving.set(true);
-    this.userService.addAddress(this.form.value as CreateAddressRequest).subscribe({
-      next: (addr: Address) => {
-        this.alertService.success(this.content.alerts.success);
-        this.addresses.update(a => [...a, addr]);
+    const requestData = this.form.value as CreateAddressRequest;
 
-        this.selectAddress(addr);
+    this.userService.addAddress(requestData).subscribe({
+      next: (res: any) => {
+        this.alertService.success(this.content.alerts.success);
+
+        const newAddress: Address = {
+          idAddress: res?.id || 'addr_' + Date.now(),
+          country: requestData.country,
+          region: requestData.region,
+          district: requestData.district,
+          mainAddress: requestData.mainAddress,
+          reference: requestData.reference,
+          isDefault: requestData.isDefault
+        };
+
+        if (newAddress.isDefault) {
+          this.addresses.update(addrs => addrs.map(a => ({ ...a, isDefault: false })));
+        }
+
+        this.addresses.update(a => [...a, newAddress]);
+        this.selectAddress(newAddress);
 
         this.showNewForm.set(false);
         this.saving.set(false);

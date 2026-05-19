@@ -30,34 +30,39 @@
             </div>
         </div>
 
-        <div class="profile-tabs-container">
-            <p-tabs [value]="content.tabs.infoValue">
-                <p-tablist>
-                    <p-tab [value]="content.tabs.infoValue">
-                        <i [class]="content.tabs.infoIcon"></i> {{ content.tabs.infoLabel }}
-                    </p-tab>
-                    <p-tab [value]="content.tabs.addressesValue">
-                        <i [class]="content.tabs.addressesIcon"></i> {{ content.tabs.addressesLabel }}
-                    </p-tab>
-                    <p-tab [value]="content.tabs.securityValue">
-                        <i [class]="content.tabs.securityIcon"></i> {{ content.tabs.securityLabel }}
-                    </p-tab>
-                </p-tablist>
+        <div class="profile-sections-container">
+            <!-- Profile Info Section -->
+            <div class="profile-card-section">
+                <div class="section-header">
+                    <i [class]="content.tabs.infoIcon"></i>
+                    <h2>{{ content.tabs.infoLabel }}</h2>
+                </div>
+                <div class="section-content">
+                    <app-profile-info />
+                </div>
+            </div>
 
-                <p-tabpanels>
-                    <p-tabpanel [value]="content.tabs.infoValue">
-                        <app-profile-info />
-                    </p-tabpanel>
+            <!-- Profile Addresses Section -->
+            <div class="profile-card-section">
+                <div class="section-header">
+                    <i [class]="content.tabs.addressesIcon"></i>
+                    <h2>{{ content.tabs.addressesLabel }}</h2>
+                </div>
+                <div class="section-content">
+                    <app-profile-addresses />
+                </div>
+            </div>
 
-                    <p-tabpanel [value]="content.tabs.addressesValue">
-                        <app-profile-addresses />
-                    </p-tabpanel>
-
-                    <p-tabpanel [value]="content.tabs.securityValue">
-                        <app-profile-security />
-                    </p-tabpanel>
-                </p-tabpanels>
-            </p-tabs>
+            <!-- Profile Security Section -->
+            <div class="profile-card-section">
+                <div class="section-header">
+                    <i [class]="content.tabs.securityIcon"></i>
+                    <h2>{{ content.tabs.securityLabel }}</h2>
+                </div>
+                <div class="section-content">
+                    <app-profile-security />
+                </div>
+            </div>
         </div>
 
     </div>

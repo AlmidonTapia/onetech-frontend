@@ -1,34 +1,80 @@
 <p-dialog [visible]="visible" [header]="content.headerPrefix + (product?.productName ?? '')" [modal]="true"
-    [closable]="true" [draggable]="false" [style]="{ width: content.dialogWidth }" (onHide)="close()">
+    [closable]="true" [draggable]="false" [style]="{ width: '700px', 'max-width': '95vw' }" (onHide)="close()">
 
-    <div class="images-grid">
-        @for (img of images(); track img.idProductImage) {
-        <div class="img-item" [class.img-item--main]="img.isPrincipal">
-            <img [src]="img.imageUrl" [alt]="content.altText" />
+    <div class="images-container">
+        <h3 class="manager-subtitle">
+            <i class="pi pi-images"></i> Imágenes cargadas ({{ images().length }}/5)
+        </h3>
+        
+        <div class="images-grid">
+            @for (img of images(); track img.idProductImage) {
+            <div class="img-card" [class.img-card--main]="img.isPrincipal">
+                <div class="img-wrapper">
+                    <img [src]="img.imageUrl" [alt]="content.altText" />
+                </div>
 
-            @if (img.isPrincipal) {
-            <span class="main-badge">{{ content.mainBadgeLabel }}</span>
+                @if (img.isPrincipal) {
+                <span class="main-badge">
+                    <i class="pi pi-star-fill"></i> Principal
+                </span>
+                }
+
+                <div class="img-actions">
+                    @if (!img.isPrincipal) {
+                    <button class="action-btn action-btn--star" (click)="setAsPrincipal(img.idProductImage)" 
+                            title="Establecer como principal">
+                        <i class="pi pi-star"></i>
+                    </button>
+                    }
+                    <button class="action-btn action-btn--del" (click)="deleteImage(img.idProductImage)" 
+                            title="Eliminar imagen">
+                        <i class="pi pi-trash"></i>
+                    </button>
+                </div>
+            </div>
             }
 
-            <button class="img-del" (click)="deleteImage(img.idProductImage)">
-                <i class="pi pi-times"></i>
-            </button>
+            @if (images().length === 0) {
+            <div class="no-img-placeholder">
+                <i class="pi pi-images"></i>
+                <p>{{ content.emptyMessage }}</p>
+            </div>
+            }
         </div>
-        }
 
-        @if (images().length === 0) {
-        <p class="no-img">{{ content.emptyMessage }}</p>
-        }
+        <div class="upload-section">
+            <h3 class="manager-subtitle">
+                <i class="pi pi-cloud-upload"></i> Subir nuevas imágenes
+            </h3>
+            <p class="upload-note">Soporta múltiples archivos. Límite de 5 imágenes en total. Tamaño máx: 10MB.</p>
+            
+            <p-fileUpload #fileUpload 
+                [multiple]="true" 
+                [accept]="content.uploadConfig.accept"
+                [auto]="false" 
+                [customUpload]="true"
+                (uploadHandler)="onUpload($event, fileUpload)" 
+                [maxFileSize]="content.uploadConfig.maxFileSize"
+                [styleClass]="content.uploadConfig.styleClass">
+                
+                <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                    <div class="upload-actions-bar">
+                        <app-button variant="outline" [label]="content.uploadConfig.chooseLabel" icon="pi pi-plus" (clicked)="chooseCallback()" />
+                        <app-button variant="primary" [label]="content.uploadConfig.uploadLabel" icon="pi pi-upload" 
+                                    [disabled]="!files || files.length === 0" (clicked)="uploadCallback()" />
+                        <app-button variant="ghost" [label]="content.uploadConfig.cancelLabel" icon="pi pi-times" 
+                                    [disabled]="!files || files.length === 0" (clicked)="clearCallback()" />
+                    </div>
+                </ng-template>
+
+            </p-fileUpload>
+        </div>
     </div>
 
-    <p-fileUpload [mode]="content.uploadConfig.mode" [multiple]="true" [accept]="content.uploadConfig.accept"
-        [chooseLabel]="content.uploadConfig.chooseLabel" [uploadLabel]="content.uploadConfig.uploadLabel"
-        [cancelLabel]="content.uploadConfig.cancelLabel" [auto]="false" [customUpload]="true"
-        (uploadHandler)="onUpload($event)" [maxFileSize]="content.uploadConfig.maxFileSize"
-        [styleClass]="content.uploadConfig.styleClass" />
-
     <ng-template pTemplate="footer">
-        <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
+        <div class="dialog-footer">
+            <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
+        </div>
     </ng-template>
 
 </p-dialog>

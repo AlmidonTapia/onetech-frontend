@@ -11,6 +11,7 @@ export interface Payment {
 export interface PaymentMethod {
   idPaymentMethod: string;
   methodName: string;
+  status?: string;
 }
 
 export interface CreatePaymentRequest {
@@ -22,4 +23,5 @@ export interface CreatePaymentRequest {
 
 export interface CreatePaymentMethodRequest {
   methodName: string;
+  status?: string;
 }

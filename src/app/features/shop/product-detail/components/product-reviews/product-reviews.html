@@ -47,7 +47,7 @@
 
         <div>
           <span class="reviewer-name">{{ review.userFullName }}</span>
-          <span class="review-date">{{ review.qualificationDate | date: content.dateFormat }}</span>
+          <span class="review-date">{{ (review.createdAt || review.qualificationDate) | date: content.dateFormat }}</span>
         </div>
 
         <div class="review-rating">

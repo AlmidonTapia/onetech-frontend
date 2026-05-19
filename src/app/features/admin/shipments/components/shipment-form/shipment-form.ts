@@ -24,7 +24,13 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<CreateShipmentRequest>();
-  @Output() updateStatus = new EventEmitter<{ id: string, status: ShipmentStatus }>();
+  @Output() updateStatus = new EventEmitter<{
+    id: string;
+    status: ShipmentStatus;
+    estimatedArrival?: string;
+    shippingCost?: number;
+    trackingNumber?: string;
+  }>();
   @Output() cancel = new EventEmitter<void>();
 
   methods = signal<ShipmentMethod[]>([]);
@@ -34,7 +40,7 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     titleNew: 'Nuevo Envío',
     titleUpdate: 'Actualizar Estado',
     errorRequired: 'Campo requerido',
-    apiTimezoneSuffix: 'T00:00:00Z',
+    apiTimezoneSuffix: 'T00:00:00',
     styles: {
       selectWidth: '100%',
       appendTo: 'body'
@@ -64,7 +70,12 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   ];
 
   statusFormConfig: any[] = [
-    [{ name: 'status', label: 'Estado del Envío', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccione un estado' }]
+    [{ name: 'status', label: 'Estado del Envío *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccione un estado' }],
+    [{ name: 'trackingNumber', label: 'Tracking Number', type: 'text', placeholder: 'Ej: TRK-987' }],
+    [
+      { name: 'shippingCost', label: 'Costo (S/.) *', type: 'number', placeholder: '0.00', min: 0, minFractionDigits: 2 },
+      { name: 'estimatedArrival', label: 'Llegada Estimada', type: 'date' }
+    ]
   ];
 
   form = this.fb.group({
@@ -75,7 +86,12 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     estimatedArrival: ['', Validators.required]
   });
 
-  statusForm = this.fb.group({ status: ['', Validators.required] });
+  statusForm = this.fb.group({
+    status: ['', Validators.required],
+    shippingCost: [0, [Validators.required, Validators.min(0)]],
+    estimatedArrival: [''],
+    trackingNumber: ['']
+  });
 
   get title() {
     return this.shipment ? this.content.titleUpdate : this.content.titleNew;
@@ -90,7 +106,26 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   getOptions(key: string) {
     if (key === 'methods') return this.methods();
-    if (key === 'statuses') return this.statuses;
+    if (key === 'statuses') {
+      if (!this.shipment) return this.statuses;
+      const current = this.shipment.status;
+      
+      if (current === 'ENTREGADO' || current === 'DEVUELTO') {
+        return this.statuses.filter(s => s.value === current);
+      }
+      
+      const allowed: ShipmentStatus[] = [current];
+      if (current === 'EN_PREPARACION') {
+        allowed.push('EN_CAMINO');
+        allowed.push('ENTREGADO');
+        allowed.push('DEVUELTO');
+      } else if (current === 'EN_CAMINO') {
+        allowed.push('ENTREGADO');
+        allowed.push('DEVUELTO');
+      }
+      
+      return this.statuses.filter(s => allowed.includes(s.value as ShipmentStatus));
+    }
     return [];
   }
 
@@ -101,7 +136,16 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   ngOnChanges() {
     if (this.shipment) {
-      this.statusForm.patchValue({ status: this.shipment.status });
+      let formattedDate = '';
+      if (this.shipment.estimatedArrival) {
+        formattedDate = this.shipment.estimatedArrival.substring(0, 10);
+      }
+      this.statusForm.patchValue({
+        status: this.shipment.status,
+        shippingCost: this.shipment.shippingCost || 0,
+        estimatedArrival: formattedDate,
+        trackingNumber: this.shipment.trackingNumber || ''
+      });
     } else {
       this.form.reset({ shippingCost: 0 });
     }
@@ -113,7 +157,13 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
         this.statusForm.markAllAsTouched();
         return;
       }
-      this.updateStatus.emit({ id: this.shipment.idShipment, status: this.statusForm.value.status as ShipmentStatus });
+      this.updateStatus.emit({
+        id: this.shipment.idShipment,
+        status: this.statusForm.value.status as ShipmentStatus,
+        estimatedArrival: this.statusForm.value.estimatedArrival ? (this.statusForm.value.estimatedArrival + this.content.apiTimezoneSuffix) : undefined,
+        shippingCost: this.statusForm.value.shippingCost ?? undefined,
+        trackingNumber: this.statusForm.value.trackingNumber ?? undefined
+      });
     } else {
       if (this.form.invalid) {
         this.form.markAllAsTouched();
