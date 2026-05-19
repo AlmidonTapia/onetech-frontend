@@ -7,6 +7,7 @@ export interface Coupon {
   usageLimit?: number;
   timesUsed?: number;
   active: boolean;
+  status?: string;
 }
 
 export interface CreateCouponRequest {

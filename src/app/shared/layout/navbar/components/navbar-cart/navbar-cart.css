@@ -59,3 +59,14 @@
   font-weight: 600;
   color: var(--ot-text-main);
 }
+
+@media (max-width: 768px) {
+  .cart-btn {
+    padding: 8px 10px;
+  }
+  
+  .cart-text {
+    display: none;
+  }
+}
+

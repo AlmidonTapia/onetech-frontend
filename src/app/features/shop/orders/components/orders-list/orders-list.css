@@ -1,55 +1,126 @@
-.orders-list { display: flex; flex-direction: column; gap: 16px; }
+.orders-container {
+  display: block;
+}
+
+.orders-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 24px;
+  color: var(--ot-text-muted);
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
 
 .order-card {
-  background: var(--ot-white);
-  border: 1px solid var(--ot-gray-200);
+  background: var(--ot-bg-surface);
+  border: 1px solid var(--ot-border-color);
   border-radius: var(--ot-radius-xl);
-  padding: 20px 24px;
-  display: flex; flex-direction: column; gap: 14px;
-  box-shadow: var(--ot-shadow-sm);
-  transition: box-shadow var(--ot-transition);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--ot-shadow-theme);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.order-card:hover { box-shadow: var(--ot-shadow-md); }
 
-.order-card-header {
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 12px;
+.order-card:hover {
+  border-color: var(--p-primary-color);
+  box-shadow: var(--ot-shadow-md);
+  transform: translateY(-2px);
 }
-.order-id-block { display: flex; align-items: center; gap: 10px; }
-.order-label { font-size: 12px; color: var(--ot-gray-400); text-transform: uppercase; letter-spacing: .06em; }
-.order-id { font-size: 16px; font-weight: 700; color: var(--ot-gray-900); font-family: monospace; }
 
-.order-meta {
-  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
-  padding: 12px 0; border-top: 1px solid var(--ot-gray-100); border-bottom: 1px solid var(--ot-gray-100);
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
 }
-.meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ot-gray-600); }
-.meta-item .pi { color: var(--ot-blue); font-size: 14px; }
-.meta-item strong { color: var(--ot-gray-900); font-weight: 700; }
 
-.order-items-preview { display: flex; flex-wrap: wrap; gap: 6px; }
-.item-chip {
-  font-size: 12px; padding: 3px 10px;
-  background: var(--ot-gray-100); color: var(--ot-gray-600);
-  border-radius: var(--ot-radius-full);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-.item-chip--more { background: var(--ot-blue-50); color: var(--ot-blue); font-weight: 600; }
 
-.order-card-footer { display: flex; justify-content: flex-end; }
+.order-id {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ot-text-main);
+  font-family: monospace;
+}
 
-/* Empty */
+.order-date {
+  font-size: 12px;
+  color: var(--ot-text-muted);
+}
+
+.card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ot-bg-body);
+  border-radius: var(--ot-radius-lg);
+  padding: 12px 16px;
+  border: 1px dashed var(--ot-border-color);
+}
+
+.order-summary-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ot-text-muted);
+}
+
+.order-price-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.price-amount {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--p-primary-color);
+}
+
+.card-footer {
+  margin-top: auto;
+}
+
+/* Empty State */
 .orders-empty {
-  display: flex; flex-direction: column; align-items: center;
-  gap: 14px; padding: 64px 24px; text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+  background: var(--ot-bg-surface);
+  border: 1px solid var(--ot-border-color);
+  border-radius: var(--ot-radius-xl);
+  box-shadow: var(--ot-shadow-theme);
 }
-.orders-empty .pi { font-size: 56px; color: var(--ot-gray-300); }
-.orders-empty h3 { font-size: 20px; font-weight: 600; color: var(--ot-gray-700); }
-.orders-empty p  { font-size: 14px; color: var(--ot-gray-500); }
 
-/* Skeleton */
-.orders-skeleton { display: flex; flex-direction: column; gap: 16px; }
-.skeleton-row { height: 160px; border-radius: var(--ot-radius-xl);
-  background: linear-gradient(90deg, var(--ot-gray-100) 25%, var(--ot-gray-200) 50%, var(--ot-gray-100) 75%);
-  background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-@keyframes shimmer { to { background-position: -200% 0; } }
+.orders-empty i {
+  font-size: 48px;
+  color: var(--ot-text-muted);
+}
+
+.orders-empty h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ot-text-main);
+  margin: 0;
+}
+
+.orders-empty p {
+  font-size: 14px;
+  color: var(--ot-text-muted);
+  margin: 0;
+}

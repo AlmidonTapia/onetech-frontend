@@ -23,7 +23,7 @@ export class CheckoutShippingComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.shipmentService.getMethods().subscribe(methods => {
+    this.shipmentService.getMethods(true).subscribe(methods => {
       this.methods.set(methods);
 
       if (methods.length) {

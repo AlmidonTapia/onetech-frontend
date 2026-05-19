@@ -80,8 +80,12 @@ export class BrandsComponent implements OnInit {
 
   onSave(data: CreateBrandRequest) {
     this.saving.set(true);
+    const currentBrand = this.editingBrand();
+    const request$ = currentBrand
+      ? this.brandService.update(currentBrand.idBrand, data as any)
+      : this.brandService.create(data);
 
-    this.brandService.create(data).subscribe({
+    request$.subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.saveSuccess);
         this.formVisible.set(false);
@@ -93,17 +97,6 @@ export class BrandsComponent implements OnInit {
         this.saving.set(false);
       }
     });
-
-    /* ── PENDIENTE DE IMPLEMENTAR EN EL BACKEND ──
-    const currentBrand = this.editingBrand();
-    const request$ = currentBrand
-      ? this.brandService.update(currentBrand.idBrand, data as any)
-      : this.brandService.create(data);
-
-    request$.subscribe({
-      next: () => { ... }
-    });
-    ───────────────────────────────────────────── */
   }
 
   onDelete(b: Brand) {
@@ -112,7 +105,17 @@ export class BrandsComponent implements OnInit {
       message: `"${b.brandName}" será eliminada.`,
       severity: this.content.confirmModal.severity as any,
       confirmLabel: this.content.confirmModal.confirmLabel,
-      onConfirm: () => this.alertService.warn(this.content.alerts.deleteNotImplemented),
+      onConfirm: () => {
+        this.brandService.delete(b.idBrand).subscribe({
+          next: () => {
+            this.alertService.success('Marca eliminada exitosamente');
+            this.loadBrands();
+          },
+          error: () => {
+            this.alertService.error('Error al eliminar la marca');
+          }
+        });
+      },
     });
   }
 }

@@ -94,42 +94,242 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   padding-inline: var(--ot-container-px);
 }
 
-.p-toast { z-index: 9999 !important; }
-.p-toast-top-right { top: calc(var(--ot-nav-total) + 8px) !important; }
+/* ── ULTRA-PREMIUM GLASSMORPHIC TOASTS (ALERTS) ── */
+.p-toast {
+  z-index: 99999 !important;
+  width: 360px !important;
+  max-width: 90vw !important;
+}
+
+.p-toast-top-right {
+  top: 24px !important;
+  right: 24px !important;
+}
+
+.p-toast-message {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  border-radius: var(--ot-radius-lg) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 16px -6px rgba(0, 0, 0, 0.05) !important;
+  margin-bottom: 12px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.dark-mode .p-toast-message {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 16px -6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.p-toast-message-content {
+  padding: 16px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Color accents and left borders */
+.p-toast-message-success {
+  border-left: 4px solid var(--ot-success) !important;
+}
+.p-toast-message-success .p-toast-message-icon,
+.p-toast-message-success .p-toast-icon-close-icon {
+  color: var(--ot-success) !important;
+}
+
+.p-toast-message-error {
+  border-left: 4px solid var(--ot-error) !important;
+}
+.p-toast-message-error .p-toast-message-icon,
+.p-toast-message-error .p-toast-icon-close-icon {
+  color: var(--ot-error) !important;
+}
+
+.p-toast-message-warn {
+  border-left: 4px solid var(--ot-warning) !important;
+}
+.p-toast-message-warn .p-toast-message-icon,
+.p-toast-message-warn .p-toast-icon-close-icon {
+  color: var(--ot-warning) !important;
+}
+
+.p-toast-message-info {
+  border-left: 4px solid var(--ot-info) !important;
+}
+.p-toast-message-info .p-toast-message-icon,
+.p-toast-message-info .p-toast-icon-close-icon {
+  color: var(--ot-info) !important;
+}
+
+/* Icon style */
+.p-toast-message-icon {
+  font-size: 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+
+/* Text structure */
+.p-toast-message-text {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  margin: 0 !important;
+}
+
+.p-toast-summary {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  color: var(--ot-text-main) !important;
+  line-height: 1.4 !important;
+}
+
+.p-toast-detail {
+  font-size: 12px !important;
+  color: var(--ot-text-muted) !important;
+  line-height: 1.4 !important;
+}
+
+/* Close Button */
+.p-toast-close-button,
+.p-toast-icon-close-button {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--ot-text-muted) !important;
+  cursor: pointer !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+  padding: 0 !important;
+}
+
+.p-toast-close-button:hover,
+.p-toast-icon-close-button:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--ot-text-main) !important;
+  transform: rotate(90deg) !important;
+}
+
+.dark-mode .p-toast-close-button:hover,
+.dark-mode .p-toast-icon-close-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.p-toast-close-icon,
+.p-toast-icon-close-icon {
+  font-size: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-.animate-fade-in { animation: fadeIn .25s ease both; }
+.animate-fade-in { animation: fadeIn .25s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--ot-bg-body); }
 ::-webkit-scrollbar-thumb { background: var(--ot-border-color); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--ot-text-muted); }
 
-/* ── CONTENEDORES DE DIÁLOGOS DE PRIMENG ── */
+/* ── DIALOG MASK OVERLAY & MODALS ── */
+.p-dialog-mask {
+  background: rgba(15, 23, 42, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  transition: all 0.3s ease !important;
+  z-index: 9999 !important;
+}
+
 .p-dialog-mask .p-dialog {
   display: flex !important;
   flex-direction: column !important;
   background: var(--ot-bg-surface) !important;
   border: 1px solid var(--ot-border-color) !important;
-  border-radius: var(--ot-radius-lg) !important;
-  box-shadow: var(--ot-shadow-lg) !important;
+  border-radius: var(--ot-radius-xl) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .p-dialog-mask .p-dialog-header {
-  padding: 20px 24px !important;
+  padding: 24px 28px !important;
+  background: var(--ot-bg-surface) !important;
   border-bottom: 1px solid var(--ot-border-color) !important;
+  color: var(--ot-text-main) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.p-dialog-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--ot-text-main) !important;
+  letter-spacing: -0.01em !important;
+}
+
+.p-dialog-header-icons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.p-dialog-header-icon {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--ot-text-muted) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.p-dialog-header-icon:hover {
+  background: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+  transform: rotate(90deg) !important;
 }
 
 .p-dialog-mask .p-dialog-content {
-  padding: 24px !important;
+  padding: 28px !important;
+  background: var(--ot-bg-surface) !important;
+  color: var(--ot-text-main) !important;
+  overflow-y: auto !important;
   flex-grow: 1 !important;
 }
 
 .p-dialog-mask .p-dialog-footer {
-  padding: 16px 24px !important;
+  padding: 20px 28px !important;
+  background: var(--ot-bg-body) !important;
   border-top: 1px solid var(--ot-border-color) !important;
   display: flex !important;
   justify-content: flex-end !important;
@@ -137,36 +337,106 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 }
 
 /* ── PASADA DE AJUSTES MAESTRA PARA TABLAS ADMINISTRATIVAS ── */
-body .p-datatable .p-datatable-thead > tr > th {
-  padding: 14px 16px !important;
+body .p-datatable {
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-xl) !important;
+  overflow: hidden !important;
+  box-shadow: var(--ot-shadow-theme) !important;
   background: var(--ot-bg-surface) !important;
+}
+
+body .p-datatable .p-datatable-thead > tr > th {
+  padding: 16px 20px !important;
+  background: color-mix(in srgb, var(--ot-border-color) 25%, var(--ot-bg-surface)) !important;
   color: var(--ot-text-main) !important;
-  font-weight: 600 !important;
-  font-size: 13px !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
   border-bottom: 2px solid var(--ot-border-color) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
   text-align: left;
 }
 
 body .p-datatable .p-datatable-tbody > tr > td {
-  padding: 12px 16px !important;
+  padding: 16px 20px !important;
   background: var(--ot-bg-surface) !important;
   color: var(--ot-text-main) !important;
   font-size: 13px !important;
+  font-weight: 500 !important;
   border-bottom: 1px solid var(--ot-border-color) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+body .p-datatable .p-datatable-tbody > tr {
+  transition: all 0.2s ease !important;
 }
 
 body .p-datatable .p-datatable-tbody > tr:hover {
-  background: var(--ot-bg-body) !important;
+  background: color-mix(in srgb, var(--p-primary-color) 4%, var(--ot-bg-surface)) !important;
 }
 body .p-datatable .p-datatable-tbody > tr:hover > td {
-  background: var(--ot-bg-body) !important;
+  background: color-mix(in srgb, var(--p-primary-color) 4%, var(--ot-bg-surface)) !important;
+  color: var(--ot-text-main) !important;
+}
+
+body .p-datatable .p-datatable-tbody > tr:last-child > td {
+  border-bottom: none !important;
 }
 
 body .p-paginator {
-  padding: 12px !important;
+  padding: 14px 20px !important;
   background: var(--ot-bg-surface) !important;
   border-top: 1px solid var(--ot-border-color) !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
 }
+
+body .p-paginator .p-paginator-page,
+body .p-paginator .p-paginator-first,
+body .p-paginator .p-paginator-prev,
+body .p-paginator .p-paginator-next,
+body .p-paginator .p-paginator-last {
+  min-width: 36px !important;
+  height: 36px !important;
+  border-radius: var(--ot-radius-md) !important;
+  border: 1px solid transparent !important;
+  color: var(--ot-text-muted) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  transition: all 0.2s ease !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+body .p-paginator .p-paginator-page:hover:not(.p-highlight),
+body .p-paginator .p-paginator-first:hover:not(.p-disabled),
+body .p-paginator .p-paginator-prev:hover:not(.p-disabled),
+body .p-paginator .p-paginator-next:hover:not(.p-disabled),
+body .p-paginator .p-paginator-last:hover:not(.p-disabled) {
+  background: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+  border-color: var(--ot-border-color) !important;
+}
+
+body .p-paginator .p-paginator-page.p-highlight {
+  background: var(--p-primary-color) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--p-primary-color) 25%, transparent) !important;
+}
+
 
 /* ── Formulación Estructural ── */
 .simple-form, .product-form {
@@ -199,4 +469,132 @@ body .p-paginator {
     grid-template-columns: 1fr !important;
     gap: 14px !important;
   }
+}
+
+
+/* Text inputs, number inputs, textareas */
+.p-inputtext, 
+.p-textarea, 
+.p-inputnumber-input {
+  font-family: inherit !important;
+  font-size: 13px !important;
+  background: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-md) !important;
+  padding: 10px 14px !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  width: 100% !important;
+}
+
+.p-inputtext:hover, 
+.p-textarea:hover, 
+.p-inputnumber-input:hover {
+  border-color: var(--ot-gray-400) !important;
+}
+
+.p-inputtext:focus, 
+.p-textarea:focus, 
+.p-inputnumber-input:focus {
+  outline: none !important;
+  border-color: var(--p-primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
+  background: var(--ot-bg-surface) !important;
+}
+
+/* Textarea specifically */
+.p-textarea {
+  resize: vertical !important;
+  min-height: 80px !important;
+}
+
+/* Select Component (PrimeNG p-select) */
+.p-select {
+  position: relative !important;
+  font-family: inherit !important;
+  background: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-md) !important;
+  transition: all 0.25s ease !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+.p-select:hover {
+  border-color: var(--ot-gray-400) !important;
+}
+
+.p-select:focus-within,
+.p-select.p-focus {
+  outline: none !important;
+  border-color: var(--p-primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
+  background: var(--ot-bg-surface) !important;
+}
+
+.p-select-label {
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  color: var(--ot-text-main) !important;
+  font-weight: 500 !important;
+}
+
+.p-select-label.p-placeholder {
+  color: var(--ot-text-muted) !important;
+}
+
+.p-select-dropdown {
+  width: 40px !important;
+  color: var(--ot-text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Select Dropdown Overlay Panel */
+.p-select-panel {
+  background: var(--ot-bg-surface) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-md) !important;
+  box-shadow: var(--ot-shadow-lg) !important;
+  padding: 4px !important;
+  margin-top: 4px !important;
+}
+
+.p-select-list {
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+
+.p-select-option {
+  font-family: inherit !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  color: var(--ot-text-main) !important;
+  border-radius: var(--ot-radius-sm) !important;
+  margin: 2px 0 !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+}
+
+.p-select-option:hover,
+.p-select-option.p-highlight:hover {
+  background: var(--ot-bg-body) !important;
+  color: var(--p-primary-color) !important;
+}
+
+.p-select-option.p-highlight {
+  background: var(--ot-blue-50) !important;
+  color: var(--ot-blue) !important;
+  font-weight: 600 !important;
+}
+
+.dark-mode .p-select-option.p-highlight {
+  background: rgba(14, 165, 233, 0.15) !important;
+  color: var(--p-primary-color) !important;
 }

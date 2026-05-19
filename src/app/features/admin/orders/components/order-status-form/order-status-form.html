@@ -21,8 +21,9 @@
     <form [formGroup]="form" class="simple-form" novalidate>
         <div class="form-field">
             <label>{{ content.labels.newStatus }}</label>
-            <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value"
-                [placeholder]="content.placeholderSelect" [style]="{ 'width': content.styles.selectWidth }" />
+            <p-select formControlName="status" [options]="filteredOptions" optionLabel="label" optionValue="value"
+                [placeholder]="content.placeholderSelect" [style]="{ 'width': content.styles.selectWidth }"
+                appendTo="body" />
         </div>
     </form>
 

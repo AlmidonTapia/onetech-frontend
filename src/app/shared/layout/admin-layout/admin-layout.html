@@ -1,10 +1,20 @@
 <p-toast position="top-right" />
 <app-modal />
 
-<div class="admin-layout">
-    <app-admin-sidebar />
+<div class="admin-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+    <div class="admin-mobile-header">
+        <button class="mobile-toggle-btn" (click)="isSidebarCollapsed = !isSidebarCollapsed" aria-label="Menu">
+            <i class="pi pi-bars"></i>
+        </button>
+        <a routerLink="/admin/dashboard" class="mobile-logo">
+            <span class="logo-one">One</span><span class="logo-tech">Tech</span>
+            <span class="logo-tag">Admin</span>
+        </a>
+    </div>
 
-    <div class="admin-content">
+    <app-admin-sidebar [collapsedState]="isSidebarCollapsed" (collapsedChange)="isSidebarCollapsed = $event" />
+
+    <div class="admin-content" (click)="closeSidebarOnMobileClick()">
         <router-outlet />
     </div>
 </div>

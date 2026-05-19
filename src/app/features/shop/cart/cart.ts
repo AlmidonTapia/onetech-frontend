@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router'; // <- Añadido RouterLink si se requiere en el botón dinámico
 import { CartItemsComponent } from './components/cart-items/cart-items';
 import { CartSummaryComponent } from './components/cart-summary/cart-summary';
@@ -26,6 +26,7 @@ export class CartComponent implements OnInit {
   cartService = inject(CartService);
   private alertService = inject(AlertService);
   private router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
 
   loading = false;
 
@@ -51,23 +52,41 @@ export class CartComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.cartService.getCart().subscribe({
-      next: () => this.loading = false,
-      error: () => this.loading = false
+      next: () => {
+        this.loading = false;
+        this.cd.detectChanges();
+      },
+      error: () => {
+        this.loading = false;
+        this.cd.detectChanges();
+      }
     });
   }
 
   onUpdateQty({ id, qty }: { id: string; qty: number }) {
     if (qty <= 0) { this.onRemove(id); return; }
-    // Ejemplo con alertas dinámicas  (por implementar)
-    // this.cartService.updateItem(id, qty).subscribe({
-    //   error: () => this.alertService.error(this.content.alertUpdateError)
-    // });
+    this.cartService.updateQuantity(id, qty).subscribe({
+      next: () => {
+        this.cd.detectChanges();
+      },
+      error: () => {
+        this.alertService.error(this.content.alertUpdateError);
+        this.cd.detectChanges();
+      }
+    });
   }
+
 
   onRemove(id: string) {
     this.cartService.removeItem(id).subscribe({
-      next: () => this.alertService.info(this.content.alertRemoved),
-      error: () => this.alertService.error(this.content.alertRemoveError)
+        next: () => {
+          this.alertService.info(this.content.alertRemoved);
+          this.cd.detectChanges();
+        },
+        error: () => {
+          this.alertService.error(this.content.alertRemoveError);
+          this.cd.detectChanges();
+        }
     });
   }
 

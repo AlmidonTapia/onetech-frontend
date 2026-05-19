@@ -11,6 +11,7 @@
             <th>{{ content.headers.brand }}</th>
             <th style="width:110px">{{ content.headers.price }}</th>
             <th style="width:80px">{{ content.headers.stock }}</th>
+            <th style="width:100px">{{ content.headers.status }}</th>
             <th style="width:110px">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
@@ -35,6 +36,17 @@
                 <app-badge [variant]="p.stockQuantity > 0 ? tableConfig.badgeSuccess : tableConfig.badgeError">
                     {{ p.stockQuantity }}
                 </app-badge>
+            </td>
+            <td>
+                <div class="status-indicator" style="margin-top: 0;">
+                    @if (p.status === 'ACTIVO') {
+                    <span class="badge-status badge-status--active">Activo</span>
+                    } @else if (p.status === 'INACTIVO') {
+                    <span class="badge-status badge-status--inactive">Inactivo</span>
+                    } @else if (p.status === 'AGOTADO') {
+                    <span class="badge-status badge-status--out">Agotado</span>
+                    }
+                </div>
             </td>
             <td>
                 <div class="row-actions">

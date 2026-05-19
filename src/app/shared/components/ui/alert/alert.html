@@ -12,7 +12,7 @@
     </div>
 
     @if (closeable) {
-    <button class="alert-close" (click)="dismiss()" aria-label="Cerrar">
+    <button class="alert-close" (click)="dismiss()" [attr.aria-label]="content.closeAriaLabel">
         <i class="pi pi-times"></i>
     </button>
     }

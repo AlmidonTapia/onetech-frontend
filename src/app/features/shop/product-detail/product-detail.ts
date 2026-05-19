@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { TabsModule } from 'primeng/tabs';
 import { ProductImagesComponent } from './components/product-images/product-images';
 import { ProductInfoComponent } from './components/product-info/product-info';
 import { ProductReviewsComponent } from './components/product-reviews/product-reviews';
@@ -15,7 +14,6 @@ import { Product } from '../../../core/models/product.model';
   selector: 'app-product-detail',
   standalone: true,
   imports: [
-    TabsModule,
     KeyValuePipe,
     ProductImagesComponent,
     ProductInfoComponent,

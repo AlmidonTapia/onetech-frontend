@@ -26,8 +26,8 @@
             <td>{{ s.shippingCost | currency: tableConfig.currencyCode }}</td>
             <td>{{ s.estimatedArrival | date: content.dateFormat }}</td>
             <td>
-                <span class="status-badge" [class]="s.status | lowercase">
-                    {{ s.status | titlecase }}
+                <span class="status-badge" [class]="getStatusClass(s.status)">
+                    {{ getStatusLabel(s.status) }}
                 </span>
             </td>
             <td>

@@ -102,7 +102,8 @@
   position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
   color: var(--ot-text-muted); font-size: 15px; pointer-events: none; z-index: 1;
 }
-.input-wrapper input.with-icon { padding-left: 40px; }
+.input-wrapper input.with-icon { padding-left: 40px !important; }
+
 
 .field-error { font-size: 12px; color: var(--ot-error); font-weight: 500; }
 

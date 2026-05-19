@@ -1,5 +1,10 @@
-<app-hero-banner />
-<app-featured-categories />
-<app-featured-products title="Productos destacados" [products]="featured()" />
-<app-promo-banner />
-<app-featured-products title="Nuevos ingresos" [products]="newArrivals()" />
+<div class="home-page">
+  <app-hero-banner />
+  
+  <div class="container sections-container">
+    <app-featured-categories />
+    <app-featured-products title="Productos destacados" [products]="featured()" />
+    <app-promo-banner />
+    <app-featured-products title="Nuevos ingresos" [products]="newArrivals()" />
+  </div>
+</div>

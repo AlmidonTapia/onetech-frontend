@@ -63,7 +63,11 @@ export class MovementFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.productService.getAll({ page: 0, size: 100 }).subscribe(r => this.products = r.content);
+    this.productService.getAll({ page: 0, size: 100 }).subscribe(r => {
+      setTimeout(() => {
+        this.products = r.content;
+      });
+    });
   }
 
   isInvalid(field: string): boolean {

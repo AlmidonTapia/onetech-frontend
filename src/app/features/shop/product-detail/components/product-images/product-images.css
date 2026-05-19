@@ -1,21 +1,210 @@
-.images-wrapper { display:flex; flex-direction:column; gap:12px; }
-
-.main-image {
-  aspect-ratio: 1; background:var(--ot-bg-body);
-  border-radius:var(--ot-radius-xl); overflow:hidden;
-  border:1px solid var(--ot-border-color);
-  display:flex; align-items:center; justify-content:center;
+.images-wrapper {
+  display: flex !important;
+  gap: 20px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  align-items: flex-start !important;
 }
-.main-image img { width:100%; height:100%; object-fit:contain; }
-.img-placeholder { font-size:64px; color:var(--ot-text-muted); }
 
-.thumbnails { display:flex; gap:10px; flex-wrap:wrap; }
+/* Vertical Thumbnails Container */
+.thumbnails-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+}
+
 .thumb-btn {
-  width:72px; height:72px; border-radius:var(--ot-radius-md);
-  overflow:hidden; border:2px solid var(--ot-border-color);
-  padding:0; transition:var(--ot-transition);
-  background:var(--ot-bg-surface);
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: var(--ot-radius-md) !important;
+  overflow: hidden !important;
+  border: 2px solid var(--ot-border-color) !important;
+  padding: 0 !important;
+  transition: all 0.25s ease !important;
+  background: var(--ot-bg-surface) !important;
+  cursor: pointer !important;
 }
-.thumb-btn img { width:100%; height:100%; object-fit:cover; }
-.thumb-btn--active { border-color:var(--p-primary-color); }
-.thumb-btn:hover { border-color:var(--ot-blue-light); }
+
+.thumb-btn img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  padding: 4px !important;
+}
+
+.thumb-btn--active {
+  border-color: var(--p-primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(0, 71, 204, 0.15) !important;
+}
+
+.thumb-btn:hover {
+  border-color: var(--ot-blue-light) !important;
+}
+
+/* Main Image Container on the Right */
+.main-image-container {
+  position: relative !important;
+  flex: 1 !important;
+  aspect-ratio: 4 / 3 !important;
+  background: #f1f5f9 !important;
+  border-radius: var(--ot-radius-xl) !important;
+  overflow: hidden !important;
+  border: 1px solid var(--ot-border-color) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: var(--ot-transition) !important;
+}
+
+.dark-mode .main-image-container {
+  background: var(--ot-bg-surface) !important;
+}
+
+.main-img {
+  width: 90% !important;
+  height: 90% !important;
+  object-fit: contain !important;
+  transition: transform 0.5s ease !important;
+}
+
+.main-image-container:hover .main-img {
+  transform: scale(1.05) !important;
+}
+
+.img-placeholder {
+  font-size: 64px !important;
+  color: var(--ot-text-muted) !important;
+}
+
+/* New Badge - Top Right */
+.badge-new {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  background: #15803d !important; 
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+  padding: 8px 12px !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: var(--ot-shadow-sm) !important;
+}
+
+/* Zoom/Expand Button - Bottom Left */
+.zoom-btn {
+  position: absolute !important;
+  bottom: 16px !important;
+  left: 16px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--ot-text-main) !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  box-shadow: var(--ot-shadow-sm) !important;
+}
+
+.zoom-btn:hover {
+  background: #ffffff !important;
+  color: var(--p-primary-color) !important;
+  transform: scale(1.1) !important;
+}
+
+.dark-mode .zoom-btn {
+  background: rgba(30, 41, 59, 0.95) !important;
+}
+
+/* Referential Image Label - Bottom Right */
+.label-referential {
+  position: absolute !important;
+  bottom: 16px !important;
+  right: 16px !important;
+  background: rgba(15, 23, 42, 0.8) !important; /* Semi-transparent dark gray */
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  padding: 6px 12px !important;
+  border-radius: var(--ot-radius-sm) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Zoom dialog structure */
+::ng-deep .zoom-dialog {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .zoom-dialog .p-dialog-content {
+  background: transparent !important;
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.zoom-dialog-content {
+  position: relative !important;
+  display: inline-block !important;
+}
+
+.zoomed-img {
+  max-width: 85vw !important;
+  max-height: 85vh !important;
+  object-fit: contain !important;
+  border-radius: var(--ot-radius-xl) !important;
+  background: #ffffff !important;
+  padding: 24px !important;
+  box-shadow: var(--ot-shadow-lg) !important;
+}
+
+.close-zoom-btn {
+  position: absolute !important;
+  top: -12px !important;
+  right: -12px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  border: 1px solid var(--ot-border-color) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: var(--ot-shadow-md) !important;
+  color: var(--ot-text-main) !important;
+  z-index: 10 !important;
+  transition: all 0.2s ease !important;
+}
+
+.close-zoom-btn:hover {
+  transform: scale(1.1) rotate(90deg) !important;
+  color: var(--ot-error) !important;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .images-wrapper {
+    flex-direction: column-reverse !important;
+    gap: 12px !important;
+  }
+  .thumbnails-container {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    padding-bottom: 4px !important;
+  }
+}

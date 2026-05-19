@@ -2,24 +2,32 @@
   background: var(--ot-bg-surface); 
   border: 1px solid var(--ot-border-color);
   border-radius: var(--ot-radius-xl); 
-  padding: 24px; 
+  padding: 28px; 
   position: sticky;
-  top: calc(var(--ot-nav-total) + 16px); 
+  top: 100px; 
   display: flex; 
   flex-direction: column; 
-  gap: 20px; 
+  gap: 24px; 
+  box-shadow: var(--ot-shadow-theme);
+  transition: var(--ot-transition);
+}
+
+.summary-card:hover {
+  border-color: var(--p-primary-color);
+  box-shadow: var(--ot-shadow-md);
 }
 
 .summary-title { 
   font-size: 18px; 
   font-weight: 700; 
   color: var(--ot-text-main); 
+  margin: 0;
 }
 
 .summary-rows { 
   display: flex; 
   flex-direction: column; 
-  gap: 12px; 
+  gap: 14px; 
 }
 
 .summary-row { 
@@ -27,31 +35,33 @@
   justify-content: space-between; 
   font-size: 14px; 
   color: var(--ot-text-muted); 
+  font-weight: 500;
 }
 
 .free-shipping { 
   color: var(--ot-success); 
-  font-weight: 500; 
+  font-weight: 600; 
   display: inline-flex; 
   align-items: center; 
-  gap: 4px; 
+  gap: 6px; 
 }
 
 .shipping-cost { 
   color: var(--ot-text-muted); 
+  font-weight: 600;
 }
 
 .summary-total { 
   display: flex; 
   justify-content: space-between; 
   align-items: center;
-  padding-top: 16px; 
-  border-top: 2px solid var(--ot-border-color); 
+  padding-top: 18px; 
+  border-top: 2px dashed var(--ot-border-color); 
 }
 
 .summary-total span:first-child { 
   font-size: 16px; 
-  font-weight: 600; 
+  font-weight: 700; 
   color: var(--ot-text-main); 
 }
 
@@ -65,9 +75,12 @@
   display: flex; 
   align-items: center; 
   justify-content: center; 
-  gap: 6px;
+  gap: 8px;
   font-size: 13px; 
   color: var(--ot-text-muted); 
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--ot-transition);
 }
 
 .continue-shopping:hover { 
@@ -77,26 +90,31 @@
 .payment-methods { 
   display: flex; 
   flex-direction: column; 
-  gap: 8px; 
+  gap: 12px; 
+  border-top: 1px solid var(--ot-border-color);
+  padding-top: 20px;
 }
 
 .payment-methods span:first-child { 
   font-size: 12px; 
   color: var(--ot-text-muted); 
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
 }
 
 .methods-grid { 
   display: flex; 
-  gap: 6px; 
+  gap: 8px; 
   flex-wrap: wrap; 
 }
 
 .method-chip { 
-  padding: 3px 8px; 
+  padding: 4px 10px; 
   border: 1px solid var(--ot-border-color);
-  border-radius: 4px; 
+  border-radius: var(--ot-radius-md); 
   font-size: 11px; 
   color: var(--ot-text-main); 
-  font-weight: 600; 
+  font-weight: 700; 
   background: var(--ot-bg-body);
 }

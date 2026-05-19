@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, Router } from '@angular/router'; // 👈 IMPORTADO: Router
-import { TabsModule } from 'primeng/tabs';
+import { RouterLink, Router } from '@angular/router';
 import { ProfileInfoComponent } from './components/profile-info/profile-info';
 import { ProfileAddressesComponent } from './components/profile-addresses/profile-addresses';
 import { ProfileSecurityComponent } from './components/profile-security/profile-security';
@@ -13,7 +12,6 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [
     RouterLink,
-    TabsModule,
     ProfileInfoComponent,
     ProfileAddressesComponent,
     ProfileSecurityComponent,
@@ -59,7 +57,6 @@ export class ProfileComponent {
 
   onLogout(): void {
     this.authService.logout();
-
     this.router.navigate(['/']);
   }
 }

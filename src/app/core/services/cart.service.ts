@@ -15,14 +15,16 @@ export class CartService {
   private readonly GUEST_CART_KEY = 'onetech_guest_cart';
 
   cart = signal<Cart | null>(this.loadGuestCart());
-  itemCount = computed(() => this.cart()?.items?.length ?? 0);
+  itemCount = computed(() => this.cart()?.items.reduce((acc, item) => acc + item.quantity, 0) ?? 0);
   totalAmount = computed(() => {
     return this.cart()?.items.reduce((acc, item) => acc + (item.unitPrice * item.quantity), 0) ?? 0;
   });
 
   constructor() {
     if (this.authService.isAuthenticated()) {
-      this.getCart().subscribe();
+      setTimeout(() => {
+        this.getCart().subscribe();
+      });
     }
   }
 
@@ -105,11 +107,27 @@ export class CartService {
   syncGuestCart() {
     const guestCart = this.loadGuestCart();
     if (guestCart && guestCart.items.length > 0 && this.authService.isAuthenticated()) {
-      // Synchronize each item to the server
-      guestCart.items.forEach(item => {
-        this.addItem({ idProduct: item.idProduct, quantity: item.quantity }).subscribe();
-      });
-      localStorage.removeItem(this.GUEST_CART_KEY);
+      const items = [...guestCart.items];
+      
+      const syncNext = () => {
+        if (items.length === 0) {
+          localStorage.removeItem(this.GUEST_CART_KEY);
+          this.getCart().subscribe();
+          return;
+        }
+        const item = items.shift();
+        if (item) {
+          this.http.post(`${this.url}/items`, { idProduct: item.idProduct, quantity: item.quantity }).subscribe({
+            next: () => syncNext(),
+            error: (err) => {
+              console.error('Error syncing cart item', err);
+              syncNext();
+            }
+          });
+        }
+      };
+      
+      syncNext();
     }
   }
 

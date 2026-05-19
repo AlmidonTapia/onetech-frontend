@@ -18,6 +18,10 @@ export class AlertComponent implements OnChanges {
 
   dismissed = false;
 
+  content = {
+    closeAriaLabel: 'Cerrar'
+  };
+
   readonly icons: Record<AlertType, string> = {
     success: 'pi-check-circle',
     error: 'pi-times-circle',

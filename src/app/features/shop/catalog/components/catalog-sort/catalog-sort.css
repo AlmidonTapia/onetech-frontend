@@ -1,8 +1,23 @@
 .sort-bar {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 0; gap:16px; flex-wrap:wrap;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: var(--ot-bg-surface) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-xl) !important;
+  padding: 14px 24px !important;
+  margin-bottom: 24px !important;
+  box-shadow: var(--ot-shadow-theme) !important;
+  flex-wrap: wrap !important;
+  gap: 16px !important;
+  transition: var(--ot-transition) !important;
 }
-.results-count { font-size:14px; color:var(--ot-gray-600); }
-.results-count strong { color:var(--ot-gray-900); font-weight:700; }
-.sort-control { display:flex; align-items:center; gap:10px; }
-.sort-label { font-size:13px; color:var(--ot-gray-500); white-space:nowrap; }
+
+.sort-bar:hover {
+  border-color: var(--p-primary-color) !important;
+}
+
+.results-count { font-size:14px; color:var(--ot-text-muted); }
+.results-count strong { color:var(--ot-text-main); font-weight:700; }
+.sort-control { display:flex; align-items:center; gap:12px; }
+.sort-label { font-size:13px; color:var(--ot-text-muted); white-space:nowrap; font-weight:600; }

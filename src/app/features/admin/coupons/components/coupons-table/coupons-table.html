@@ -1,0 +1,57 @@
+<p-table [value]="coupons" [loading]="loading" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
+    [lazy]="true" (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" [styleClass]="tableConfig.styleClass"
+    [tableStyle]="{ 'min-width': tableConfig.tableMinWidth }">
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>{{ content.headers.code }}</th>
+            <th>{{ content.headers.discountType }}</th>
+            <th>{{ content.headers.discountValue }}</th>
+            <th>{{ content.headers.expirationDate }}</th>
+            <th>{{ content.headers.usageLimit }}</th>
+            <th style="width:100px; text-align: center;">{{ content.headers.active }}</th>
+            <th style="width:110px">{{ content.headers.actions }}</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-c>
+        <tr>
+            <td><strong>{{ c.code }}</strong></td>
+            <td>{{ c.discountType }}</td>
+            <td>{{ c.discountValue }}</td>
+            <td>{{ c.expirationDate | date }}</td>
+            <td>{{ c.usageLimit || 'Sin límite' }}</td>
+            <td style="text-align: center;">
+                <span class="status-badge" 
+                    [class.status-active]="c.status === 'ACTIVO'" 
+                    [class.status-inactive]="c.status === 'INACTIVO'"
+                    [class.status-exhausted]="c.status === 'AGOTADO'"
+                    [class.status-expired]="c.status === 'EXPIRADO'">
+                    {{ c.status === 'ACTIVO' ? 'Activo' : 
+                       c.status === 'INACTIVO' ? 'Inactivo' : 
+                       c.status === 'AGOTADO' ? 'Agotado' : 'Expirado' }}
+                </span>
+            </td>
+            <td>
+                <div class="row-actions">
+                    <button class="act-btn" [pTooltip]="content.tooltips.edit" (click)="editItem.emit(c)">
+                        <i [class]="content.icons.edit"></i>
+                    </button>
+                    <button class="act-btn act-btn--danger" [pTooltip]="content.tooltips.delete"
+                        (click)="deleteItem.emit(c)">
+                        <i [class]="content.icons.delete"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="empty-cell">
+                {{ content.emptyMessage }}
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>

@@ -40,11 +40,49 @@
     }
   </form>
 
+  <div class="specs-section">
+    <div class="specs-header">
+      <span class="specs-title">{{ content.specs.title }}</span>
+      <app-button variant="ghost" [label]="content.specs.addLabel" [icon]="content.specs.addIcon" (clicked)="addSpecification()" />
+    </div>
+
+    <div class="specs-list">
+      @for (spec of specificationsList(); track $index) {
+      <div class="spec-row">
+        <input pInputText class="spec-input" [(ngModel)]="spec.key" [placeholder]="content.specs.keyPlaceholder" />
+        <input pInputText class="spec-input" [(ngModel)]="spec.value" [placeholder]="content.specs.valuePlaceholder" />
+        <button class="spec-btn-del" type="button" (click)="removeSpecification($index)" [title]="content.specs.deleteTitle">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+      }
+      @if (specificationsList().length === 0) {
+      <p class="no-specs">{{ content.specs.emptyMessage }}</p>
+      }
+    </div>
+  </div>
+
+  @if (product && product.updatedAt) {
+  <div class="product-metadata">
+    <i class="pi pi-history"></i>
+    <span class="meta-label">Última modificación:</span>
+    <span class="meta-value">{{ product.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+  </div>
+  }
+
+  <div class="image-prompt-section">
+    @if (!product) {
+      <p class="image-prompt-text"><i class="pi pi-info-circle"></i> {{ content.imagesInfo.newProductMsg }}</p>
+    } @else {
+      <app-button variant="outline" [label]="content.imagesInfo.manageBtnLabel" [icon]="content.imagesInfo.manageBtnIcon" (clicked)="onManageImages()" />
+    }
+  </div>
+
   <ng-template pTemplate="footer">
     <div class="dialog-footer">
       <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
       <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
-        [loading]="saving" (clicked)="onSave()" />
+        [loading]="saving" [disabled]="form.invalid" (clicked)="onSave()" />
     </div>
   </ng-template>
 </p-dialog>

@@ -25,7 +25,7 @@ export class ProductsTableComponent {
   tableConfig = {
     styleClass: 'p-datatable-sm',
     tableMinWidth: '860px',
-    colspanEmpty: 8,
+    colspanEmpty: 9,
     badgeSuccess: 'success' as const,
     badgeError: 'error' as const
   } as const;
@@ -39,6 +39,7 @@ export class ProductsTableComponent {
       brand: 'Marca',
       price: 'Precio',
       stock: 'Stock',
+      status: 'Estado',
       actions: 'Acciones'
     },
     tooltips: {

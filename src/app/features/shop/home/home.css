@@ -3,3 +3,21 @@
   background: var(--ot-bg-body);
   transition: var(--ot-transition);
 }
+
+.home-page {
+  padding-bottom: 80px;
+}
+
+.sections-container {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  margin-top: 48px;
+}
+
+@media (max-width: 768px) {
+  .sections-container {
+    gap: 48px;
+    margin-top: 32px;
+  }
+}

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Coupon, CreateCouponRequest } from '../models/coupon.model';
 import { PageResponse } from '../models/page-response.model';
@@ -20,6 +21,10 @@ export class CouponService {
 
   create(data: CreateCouponRequest) {
     return this.http.post<Coupon>(this.url, data);
+  }
+
+  update(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.url}/${id}`, data);
   }
 
   delete(id: string) {

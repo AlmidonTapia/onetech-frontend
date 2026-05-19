@@ -37,7 +37,7 @@
         <h1>{{ formData.title }}</h1>
         <p>
           {{ formData.registerText }}
-          <a [routerLink]="formData.registerRoute" class="form-link">{{ formData.registerLinkText }}</a>
+          <a [routerLink]="formData.registerRoute" queryParamsHandling="merge" class="form-link">{{ formData.registerLinkText }}</a>
         </p>
       </div>
 

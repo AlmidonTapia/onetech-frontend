@@ -21,7 +21,9 @@ export class CategoryService {
   }
 
   create(data: CreateCategoryRequest) {
-    return this.http.post<Category>(this.url, data);
+    return this.http.post<Category>(this.url, data).pipe(
+      tap(() => sessionStorage.removeItem('category_tree'))
+    );
   }
 
   getTree(): Observable<any[]> {
@@ -32,6 +34,18 @@ export class CategoryService {
 
     return this.http.get<any[]>(`${this.url}/tree`).pipe(
       tap(res => sessionStorage.setItem('category_tree', JSON.stringify(res)))
+    );
+  }
+
+  update(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.url}/${id}`, data).pipe(
+      tap(() => sessionStorage.removeItem('category_tree'))
+    );
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.url}/${id}`).pipe(
+      tap(() => sessionStorage.removeItem('category_tree'))
     );
   }
 }

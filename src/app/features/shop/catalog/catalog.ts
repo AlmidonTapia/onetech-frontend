@@ -26,7 +26,14 @@ export class CatalogComponent implements OnInit {
 
   products     = signal<Product[]>([]);
   totalRecords = signal(0);
-  loading      = signal(false);
+  loading = signal(false);
+
+  showMobileFilters = false;
+
+  toggleMobileFilters() {
+    this.showMobileFilters = !this.showMobileFilters;
+  }
+
   page         = signal(0);
   rows         = 12;
   sort         = signal('relevance');

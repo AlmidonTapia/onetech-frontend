@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, Input, Output, EventEmitter } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
@@ -22,6 +22,11 @@ export class AdminSidebarComponent {
   private router = inject(Router);
 
   collapsed = signal(false);
+  @Input() set collapsedState(value: boolean) {
+    this.collapsed.set(value);
+  }
+  @Output() collapsedChange = new EventEmitter<boolean>();
+
 
   content = {
     dashboardRoute: '/admin/dashboard',
@@ -53,6 +58,7 @@ export class AdminSidebarComponent {
 
   toggleCollapse() {
     this.collapsed.update(state => !state);
+    this.collapsedChange.emit(this.collapsed());
   }
 
   logout() {

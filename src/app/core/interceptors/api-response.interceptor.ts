@@ -8,7 +8,10 @@ export const apiResponseInterceptor: HttpInterceptorFn = (req, next) => {
         const body = event.body as any;
         
         if (body && typeof body === 'object' && 'message' in body && 'timestamp' in body) {
-          return event.clone({ body: body.data });
+          const responseData = (body.data !== null && body.data !== undefined)
+            ? body.data
+            : (body.id ? { id: body.id } : null);
+          return event.clone({ body: responseData });
         }
       }
       return event;

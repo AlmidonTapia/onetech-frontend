@@ -7,10 +7,11 @@ import { Product, ProductImage } from '../../../../../core/models/product.model'
 import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
-  selector: 'app-product-images-manager', // Alínea con tu selector original
+  selector: 'app-product-images-manager',
   standalone: true,
   imports: [DialogModule, FileUploadModule, ButtonComponent],
   templateUrl: './product-images-manager.html',
+  styleUrl: './product-images-manager.css'
 })
 export class ProductImagesManagerComponent implements OnChanges { 
   private productService = inject(ProductService);
@@ -36,7 +37,7 @@ export class ProductImagesManagerComponent implements OnChanges {
       chooseLabel: 'Elegir imágenes',
       uploadLabel: 'Subir',
       cancelLabel: 'Limpiar',
-      maxFileSize: 5000000,
+      maxFileSize: 10000000,
       styleClass: 'upload-area'
     },
     actions: {
@@ -52,26 +53,39 @@ export class ProductImagesManagerComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.product) {
-      this.images.set(this.product.images ?? []);
+      this.productService.getImages(this.product.idProduct).subscribe({
+        next: (imgs) => this.images.set(imgs || []),
+        error: () => this.images.set(this.product!.images ?? [])
+      });
     }
   }
 
-  onUpload(event: any) {
+  onUpload(event: any, fileUpload: any) {
     if (!this.product) return;
 
     this.uploading.set(true);
     const files: File[] = event.files;
 
     this.productService.uploadImages(this.product.idProduct, files, 0).subscribe({
-      next: (updatedImages: any) => {
+      next: () => {
         this.alertService.success(this.content.alerts.uploadSuccess);
-        this.images.set(updatedImages);
-        this.updated.emit();
-        this.uploading.set(false);
-        event.clear();
+        this.productService.getImages(this.product!.idProduct).subscribe({
+          next: (imgs) => {
+            this.images.set(imgs || []);
+            this.updated.emit();
+            this.uploading.set(false);
+            if (fileUpload) {
+              fileUpload.clear();
+            }
+          },
+          error: () => {
+            this.uploading.set(false);
+          }
+        });
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.uploadError);
+      error: (err: any) => {
+        const errorMsg = err?.error?.message || this.content.alerts.uploadError;
+        this.alertService.error(errorMsg);
         this.uploading.set(false);
       }
     });
@@ -88,6 +102,26 @@ export class ProductImagesManagerComponent implements OnChanges {
       },
       error: () => {
         this.alertService.error(this.content.alerts.deleteError);
+      }
+    });
+  }
+
+  setAsPrincipal(idImage: string) {
+    if (!this.product) return;
+
+    this.productService.setPrincipalImage(this.product.idProduct, idImage).subscribe({
+      next: () => {
+        this.alertService.success('Imagen establecida como principal');
+        this.images.update((imgs: ProductImage[]) =>
+          imgs.map((img: ProductImage) => ({
+            ...img,
+            isPrincipal: img.idProductImage === idImage
+          }))
+        );
+        this.updated.emit();
+      },
+      error: () => {
+        this.alertService.error('Error al establecer la imagen principal');
       }
     });
   }

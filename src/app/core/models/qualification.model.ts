@@ -6,6 +6,7 @@ export interface Qualification {
   rating: number;
   commentText: string;
   qualificationDate: string;
+  createdAt?: string;
 }
 
 export interface CreateQualificationRequest {

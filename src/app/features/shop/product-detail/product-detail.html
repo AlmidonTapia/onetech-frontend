@@ -22,42 +22,30 @@
       </div>
     </div>
 
-    <div class="detail-tabs-section">
-      <p-tabs value="0">
-        <p-tablist>
-          <p-tab value="0">{{ content.tabs.descriptionLabel }}</p-tab>
-          <p-tab value="1">{{ content.tabs.specsLabel }}</p-tab>
-          <p-tab value="2">
-            {{ content.tabs.reviewsLabel }}
-            @if (prod.totalReviews) { <span>({{ prod.totalReviews }})</span> }
-          </p-tab>
-        </p-tablist>
+    <!-- Description Section -->
+    <div class="detail-info-section">
+      <h3 class="section-title">{{ content.tabs.descriptionLabel }}</h3>
+      <p class="tab-desc-text">{{ prod.description }}</p>
+    </div>
 
-        <p-tabpanels>
-          <p-tabpanel value="0">
-            <p class="tab-desc-text">{{ prod.description }}</p>
-          </p-tabpanel>
+    <!-- Specifications Section -->
+    @if (prod.specifications && (prod.specifications | keyvalue).length > 0) {
+    <div class="detail-info-section">
+      <h3 class="section-title">{{ content.tabs.specsLabel }}</h3>
+      <div class="specs-table">
+        @for (spec of prod.specifications | keyvalue; track spec.key) {
+        <div class="specs-row">
+          <span class="spec-key">{{ spec.key }}</span>
+          <span class="spec-value">{{ spec.value }}</span>
+        </div>
+        }
+      </div>
+    </div>
+    }
 
-          <p-tabpanel value="1">
-            @if (prod.specifications && (prod.specifications | keyvalue).length > 0) {
-            <div class="specs-table">
-              @for (spec of prod.specifications | keyvalue; track spec.key) {
-              <div class="specs-row">
-                <span class="spec-key">{{ spec.key }}</span>
-                <span class="spec-value">{{ spec.value }}</span>
-              </div>
-              }
-            </div>
-            } @else {
-            <p class="tab-empty-text">{{ content.tabs.noSpecsMsg }}</p>
-            }
-          </p-tabpanel>
-
-          <p-tabpanel value="2">
-            <app-product-reviews [productId]="prod.idProduct" />
-          </p-tabpanel>
-        </p-tabpanels>
-      </p-tabs>
+    <!-- Reviews Section -->
+    <div class="detail-info-section">
+      <app-product-reviews [productId]="prod.idProduct" />
     </div>
 
     <app-related-products [products]="related()" />
