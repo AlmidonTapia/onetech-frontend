@@ -9,6 +9,8 @@
             <th style="width:100px">{{ content.headers.quantity }}</th>
             <th>{{ content.headers.reason }}</th>
             <th style="width:150px">{{ content.headers.date }}</th>
+            <th style="width:130px">{{ content.headers.status }}</th>
+            <th style="width:120px; text-align: center;">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
 
@@ -28,7 +30,17 @@
                 mv.quantity }}
             </td>
             <td>{{ mv.reason }}</td>
-            <td>{{ mv.createdAt | date: content.dateFormat }}</td>
+            <td>{{ mv.movementDate | date: content.dateFormat }}</td>
+            <td>
+                <app-badge [variant]="mv.status === 'HABILITADO' ? 'success' : 'error'">
+                    {{ mv.status === 'HABILITADO' ? content.labels.enabledText : content.labels.canceledText }}
+                </app-badge>
+            </td>
+            <td style="text-align: center;">
+                @if (mv.status === 'HABILITADO') {
+                    <app-button variant="danger" size="sm" icon="pi pi-ban" (clicked)="cancel.emit(mv.idInventoryMovement)"></app-button>
+                }
+            </td>
         </tr>
     </ng-template>
 
