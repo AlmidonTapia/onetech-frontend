@@ -2,12 +2,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { DatePipe } from '@angular/common';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { InventoryMovement } from '../../../../../core/models/inventory.model';
 
 @Component({
   selector: 'app-inventory-table',
   standalone: true,
-  imports: [TableModule, BadgeComponent, DatePipe],
+  imports: [TableModule, BadgeComponent, ButtonComponent, DatePipe],
   templateUrl: './inventory-table.html',
   styleUrl: './inventory-table.css'
 })
@@ -16,12 +17,13 @@ export class InventoryTableComponent {
   @Input() totalRecords = 0;
   @Input() loading = false;
   @Output() lazyLoad = new EventEmitter<any>();
+  @Output() cancel = new EventEmitter<string>();
 
   tableConfig = {
     defaultRows: 10,
     styleClass: 'p-datatable-sm',
     tableMinWidth: '700px',
-    colspanEmpty: 5,
+    colspanEmpty: 7,
     typeIn: 'IN',
     badgeSuccess: 'success' as const,
     badgeError: 'error' as const
@@ -33,13 +35,17 @@ export class InventoryTableComponent {
       type: 'Tipo',
       quantity: 'Cantidad',
       reason: 'Motivo',
-      date: 'Fecha'
+      date: 'Fecha',
+      status: 'Estado',
+      actions: 'Acciones'
     },
     labels: {
       inText: 'Entrada',
       outText: 'Salida',
       inSign: '+',
-      outSign: '-'
+      outSign: '-',
+      enabledText: 'Habilitado',
+      canceledText: 'Anulado'
     },
     icons: {
       inIcon: 'pi pi-arrow-up',
