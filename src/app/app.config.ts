@@ -8,6 +8,7 @@ import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { apiResponseInterceptor } from './core/interceptors/api-response.interceptor';
+import { idempotencyInterceptor } from './core/interceptors/idempotency.interceptor';
 
 function initializeTheme() {
   return () => {
@@ -27,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, idempotencyInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {

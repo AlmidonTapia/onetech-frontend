@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Payment, PaymentMethod, CreatePaymentRequest, CreatePaymentMethodRequest } from '../models/payment.model';
@@ -18,8 +18,9 @@ export class PaymentService {
     return this.http.get<Payment>(`${this.url}/order/${orderId}`);
   }
 
-  register(data: CreatePaymentRequest) {
-    return this.http.post<Payment>(this.url, data);
+  register(data: CreatePaymentRequest, idempotencyKey?: string) {
+    const headers = idempotencyKey ? new HttpHeaders({ 'Idempotency-Key': idempotencyKey }) : undefined;
+    return this.http.post<Payment>(this.url, data, { headers });
   }
 
   createMethod(data: CreatePaymentMethodRequest) {

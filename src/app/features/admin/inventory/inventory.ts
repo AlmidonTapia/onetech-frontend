@@ -4,6 +4,7 @@ import { MovementFormComponent } from './components/movement-form/movement-form'
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
+import { ModalService } from '../../../shared/services/modal.service';
 import { InventoryService } from '../../../core/services/inventory.service';
 import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core/models/inventory.model';
 
@@ -17,6 +18,7 @@ import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core
 export class InventoryComponent implements OnInit {
   private inventoryService = inject(InventoryService);
   private alertService = inject(AlertService);
+  private modalService = inject(ModalService);
 
   movements = signal<InventoryMovement[]>([]);
   totalRecords = signal(0);
@@ -36,7 +38,15 @@ export class InventoryComponent implements OnInit {
     cardPadding: 'none',
     alerts: {
       success: 'Movimiento registrado correctamente',
-      error: 'Error al registrar movimiento'
+      error: 'Error al registrar movimiento',
+      cancelSuccess: 'Movimiento de inventario anulado correctamente',
+      cancelError: 'Error al anular el movimiento de inventario'
+    },
+    confirmModal: {
+      title: '¿Anular movimiento?',
+      message: 'Esta acción anulará el movimiento seleccionado y revertirá el stock afectado del producto de forma permanente.',
+      severity: 'danger' as const,
+      confirmLabel: 'Sí, anular'
     }
   } as const;
 
@@ -69,6 +79,28 @@ export class InventoryComponent implements OnInit {
       error: () => {
         this.alertService.error(this.content.alerts.error);
         this.saving.set(false);
+      }
+    });
+  }
+
+  onCancel(id: string) {
+    this.modalService.open({
+      title: this.content.confirmModal.title,
+      message: this.content.confirmModal.message,
+      severity: this.content.confirmModal.severity,
+      confirmLabel: this.content.confirmModal.confirmLabel,
+      onConfirm: () => {
+        this.loading.set(true);
+        this.inventoryService.cancel(id).subscribe({
+          next: () => {
+            this.alertService.success(this.content.alerts.cancelSuccess);
+            this.loadMovements();
+          },
+          error: () => {
+            this.alertService.error(this.content.alerts.cancelError);
+            this.loading.set(false);
+          }
+        });
       }
     });
   }

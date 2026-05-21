@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.productService.getAll({ page: 0, size: 8 }).subscribe(r => this.featured.set(r.content));
-    this.productService.getAll({ page: 1, size: 8 }).subscribe(r => this.newArrivals.set(r.content));
+    this.productService.getAll({ page: 0, size: 8, sort: 'createdAt,desc' }).subscribe(r => this.newArrivals.set(r.content));
     this.productService.getAll({ badge: 'BESTSELLER', size: 8, page: 0 }).subscribe(r => this.bestSellers.set(r.content));
   }
 }

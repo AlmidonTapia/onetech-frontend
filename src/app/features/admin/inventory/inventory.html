@@ -9,7 +9,7 @@
 
     <app-card [padding]="content.cardPadding">
         <app-inventory-table [movements]="movements()" [totalRecords]="totalRecords()" [loading]="loading()"
-            (lazyLoad)="loadMovements($event)" />
+            (lazyLoad)="loadMovements($event)" (cancel)="onCancel($event)" />
     </app-card>
 </div>
 
