@@ -26,4 +26,8 @@ export class InventoryService {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<PageResponse<InventoryMovement>>(`${this.url}/product/${productId}`, { params });
   }
+
+  cancel(id: string) {
+    return this.http.delete<any>(`${this.url}/${id}`);
+  }
 }

@@ -6,6 +6,7 @@ export interface InventoryMovement {
   quantity: number;
   reason: string;
   movementDate: string;
+  status?: string;
 }
 
 export interface CreateInventoryMovementRequest {
