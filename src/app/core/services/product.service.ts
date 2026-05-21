@@ -20,6 +20,9 @@ export class ProductService {
     if (filters.minPrice)   params = params.set('minPrice', filters.minPrice);
     if (filters.maxPrice)   params = params.set('maxPrice', filters.maxPrice);
     if (filters.search)     params = params.set('search', filters.search);
+    if (filters.badge)      params = params.set('badge', filters.badge);
+    if (filters.sort)       params = params.set('sort', filters.sort);
+
 
     const cacheKey = `products_${params.toString()}`;
     const cached = sessionStorage.getItem(cacheKey);

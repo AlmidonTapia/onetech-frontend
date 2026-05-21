@@ -49,6 +49,11 @@ export class ProductInfoComponent {
     }
   };
 
+  getDiscountPercent(): number {
+    if (!this.product.originalPrice || this.product.originalPrice <= this.product.price) return 0;
+    return Math.round((1 - this.product.price / this.product.originalPrice) * 100);
+  }
+
   changeQty(delta: number) {
     const next = this.qty() + delta;
     if (next >= 1 && next <= this.product.stockQuantity) this.qty.set(next);

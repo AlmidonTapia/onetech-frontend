@@ -1,10 +1,20 @@
 <div class="home-page">
   <app-hero-banner />
-  
+
+  <!-- Trust Badges -->
+  <app-trust-badges />
+
   <div class="container sections-container">
     <app-featured-categories />
     <app-featured-products title="Productos destacados" [products]="featured()" />
     <app-promo-banner />
     <app-featured-products title="Nuevos ingresos" [products]="newArrivals()" />
+
+    @if (bestSellers().length > 0) {
+    <app-featured-products title="Lo más vendido" [products]="bestSellers()" badgeContext="bestseller" />
+    }
   </div>
+
+  <!-- FAQ Section -->
+  <app-faq-section />
 </div>

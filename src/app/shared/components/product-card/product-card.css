@@ -71,3 +71,97 @@ overflow: hidden;}
 .add-btn:hover:not(:disabled) { background:var(--ot-blue-dark); }
 .dark-mode .add-btn:hover:not(:disabled) { background: var(--ot-blue); }
 .add-btn:disabled { opacity:.5; cursor:not-allowed; }
+
+/* ── Product Badges ─────────────────────── */
+.product-badge {
+  position: absolute; top: 10px; left: 10px;
+  z-index: 5; display: flex; flex-direction: column; gap: 4px;
+}
+.badge-pill {
+  display: inline-flex; align-items: center;
+  padding: 3px 8px; border-radius: var(--ot-radius-sm);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  line-height: 1.4; white-space: nowrap;
+}
+.badge-new     { background: var(--ot-blue);    color: #fff; }
+.badge-hot     { background: var(--ot-orange);  color: #fff; }
+.badge-offer   { background: var(--ot-success); color: #fff; }
+.badge-discount{ background: var(--ot-error);   color: #fff; font-size: 11px; }
+
+/* ── Price block ───────────────────────── */
+.card-price-block { display: flex; flex-direction: column; gap: 2px; }
+.card-original-price {
+  font-size: 12px; color: var(--ot-text-muted);
+  text-decoration: line-through; line-height: 1;
+}
+
+/* ── Stock urgency ─────────────────────── */
+.stock-urgency {
+  font-size: 11px; font-weight: 600; color: var(--ot-error);
+  display: flex; align-items: center; gap: 4px;
+}
+.stock-urgency .pi { font-size: 10px; }
+
+/* ── Quick View Button ───────────────────── */
+.quick-view-btn {
+  position: absolute; top: 52px; right: 10px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--ot-gray-400);
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  transition: color var(--ot-transition), transform var(--ot-transition), opacity var(--ot-transition);
+  opacity: 0; border: none; cursor: pointer; z-index: 10;
+}
+.dark-mode .quick-view-btn {
+  background: rgba(30, 41, 59, 0.92);
+  color: var(--ot-text-muted);
+}
+.product-card:hover .quick-view-btn { opacity: 1; }
+.quick-view-btn:hover { transform: scale(1.12); color: var(--ot-blue); }
+
+/* ── Quick View Modal ──────────────────── */
+::ng-deep .quick-view-dialog .p-dialog-content {
+  padding: 0 !important; 
+  border-radius: var(--ot-radius-xl) !important;
+  max-height: 85vh !important;
+  overflow-y: auto !important;
+}
+
+.quick-view-content {
+  position: relative; background: var(--ot-bg-surface);
+  min-height: min-content;
+}
+
+.close-btn {
+  position: absolute; top: 16px; right: 16px; z-index: 10;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--ot-bg-body); border: 1px solid var(--ot-border-color);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ot-text-main); font-size: 14px; cursor: pointer;
+  transition: transform var(--ot-transition), background var(--ot-transition);
+}
+.close-btn:hover { background: var(--ot-error); color: #fff; transform: scale(1.1); border-color: transparent; }
+
+.quick-view-layout {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.quick-view-media {
+  flex: 1 1 320px;
+  padding: 32px 24px; background: var(--ot-bg-body);
+  display: flex; align-items: flex-start; justify-content: center;
+}
+
+.quick-view-info { 
+  flex: 1 1 320px;
+  padding: 32px 32px 40px 32px; 
+}
+
+@media (max-width: 768px) {
+  .quick-view-overlay { display: none; }
+}
