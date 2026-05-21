@@ -75,6 +75,13 @@ export class ProductFormComponent implements OnChanges, OnInit {
     { label: 'Agotado', value: 'AGOTADO' }
   ];
 
+  badges = [
+    { label: 'Ninguno', value: null },
+    { label: 'Nuevo', value: 'NEW' },
+    { label: 'Más vendido', value: 'BESTSELLER' },
+    { label: 'Oferta', value: 'OFFER' }
+  ];
+
   formConfig: any[] = [
     [
       { name: 'productName', label: 'Nombre del producto *', type: 'text', placeholder: 'Ej: Laptop Asus ROG' },
@@ -86,8 +93,12 @@ export class ProductFormComponent implements OnChanges, OnInit {
     ],
     [
       { name: 'price', label: 'Precio (S/.) *', type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
+      { name: 'originalPrice', label: 'Precio Original (tachado)', type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
+    ],
+    [
       { name: 'stockQuantity', label: 'Stock Inicial *', type: 'number', mode: 'decimal', min: 0 },
-      { name: 'status', label: 'Estado *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccionar estado' }
+      { name: 'status', label: 'Estado *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccionar estado' },
+      { name: 'badge', label: 'Insignia', type: 'select', optionsKey: 'badges', optionLabel: 'label', optionValue: 'value', placeholder: 'Sin insignia' }
     ],
     [
       { name: 'description', label: 'Descripción del producto *', type: 'textarea', placeholder: 'Ingresa las especificaciones y características principales...' }
@@ -100,6 +111,8 @@ export class ProductFormComponent implements OnChanges, OnInit {
     idCategory: ['', Validators.required],
     idBrand: ['', Validators.required],
     price: [null as number | null, [Validators.required, Validators.min(0.01)]],
+    originalPrice: [null as number | null],
+    badge: [null as string | null],
     stockQuantity: [0, [Validators.required, Validators.min(0)]],
     status: ['ACTIVO', Validators.required],
     description: ['', Validators.required]
@@ -118,6 +131,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
     if (key === 'categories') return this.categories();
     if (key === 'brands') return this.brands();
     if (key === 'statuses') return this.statuses;
+    if (key === 'badges') return this.badges;
     return [];
   }
 
@@ -144,6 +158,8 @@ export class ProductFormComponent implements OnChanges, OnInit {
         idCategory: this.product.idCategory,
         idBrand: this.product.idBrand,
         price: this.product.price,
+        originalPrice: this.product.originalPrice ?? null,
+        badge: this.product.badge ?? null,
         stockQuantity: this.product.stockQuantity,
         description: this.product.description,
         status: this.product.status || 'ACTIVO'
@@ -158,7 +174,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
         this.specificationsList.set([]);
       }
     } else {
-      this.form.reset({ price: 0, stockQuantity: 0, status: 'ACTIVO' });
+      this.form.reset({ price: 0, originalPrice: null, badge: null, stockQuantity: 0, status: 'ACTIVO' });
       this.specificationsList.set([]);
     }
   }
@@ -185,7 +201,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
   }
 
   onCancel() {
-    this.form.reset({ price: null, stockQuantity: 0, status: 'ACTIVO' });
+    this.form.reset({ price: null, originalPrice: null, badge: null, stockQuantity: 0, status: 'ACTIVO' });
     this.specificationsList.set([]);
     this.cancel.emit();
     this.visibleChange.emit(false);

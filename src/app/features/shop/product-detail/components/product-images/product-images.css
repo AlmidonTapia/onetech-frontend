@@ -12,6 +12,17 @@
   flex-direction: column !important;
   gap: 12px !important;
   flex-shrink: 0 !important;
+  max-height: 450px !important;
+  overflow-y: auto !important;
+  padding-right: 4px !important;
+}
+
+.thumbnails-container::-webkit-scrollbar {
+  width: 4px !important;
+}
+.thumbnails-container::-webkit-scrollbar-thumb {
+  background: var(--ot-border-color) !important;
+  border-radius: 4px !important;
 }
 
 .thumb-btn {

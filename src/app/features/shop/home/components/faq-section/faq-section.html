@@ -1,0 +1,23 @@
+<section class="faq-section">
+  <div class="container">
+    <div class="faq-header">
+      <h2 class="faq-title">Preguntas frecuentes</h2>
+      <p class="faq-sub">Todo lo que necesitas saber para comprar con confianza</p>
+    </div>
+    <div class="faq-list">
+      @for (item of faqItems; track item.question; let i = $index) {
+      <div class="faq-item" [class.faq-item--open]="openIndex === i">
+        <button class="faq-question" (click)="toggle(i)">
+          <span>{{ item.question }}</span>
+          <i class="pi" [class.pi-angle-down]="openIndex !== i" [class.pi-angle-up]="openIndex === i"></i>
+        </button>
+        @if (openIndex === i) {
+        <div class="faq-answer">
+          <p>{{ item.answer }}</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+</section>

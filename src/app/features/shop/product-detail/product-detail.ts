@@ -7,6 +7,7 @@ import { ProductReviewsComponent } from './components/product-reviews/product-re
 import { RelatedProductsComponent } from './components/related-products/related-products';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
+import { WhatsappBtnComponent } from '../../../shared/components/ui/whatsapp-btn/whatsapp-btn';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
 
@@ -20,7 +21,8 @@ import { Product } from '../../../core/models/product.model';
     ProductReviewsComponent,
     RelatedProductsComponent,
     SpinnerComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    WhatsappBtnComponent
   ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'

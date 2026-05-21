@@ -45,5 +45,20 @@ export const SHOP_ROUTES: ShopRoutes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./wishlist/wishlist').then(m => m.WishlistComponent)
+  },
+  {
+    path: 'quienes-somos',
+    loadComponent: () =>
+      import('./pages/who-we-are/who-we-are').then(m => m.WhoWeAreComponent)
+  },
+  {
+    path: 'preguntas-frecuentes',
+    loadComponent: () =>
+      import('./pages/faq-page/faq-page').then(m => m.FaqPageComponent)
+  },
+  {
+    path: 'terminos',
+    loadComponent: () =>
+      import('./pages/terms/terms').then(m => m.TermsComponent)
   }
 ];

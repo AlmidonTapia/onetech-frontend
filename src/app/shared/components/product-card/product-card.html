@@ -12,11 +12,31 @@
       <i class="pi"
         [class]="wishlistService.isInWishlist(product.idProduct) ? content.icons.wishlistActive : content.icons.wishlistInactive"></i>
     </button>
+    
+    <!-- Quick view small floating button -->
+    <button class="quick-view-btn" (click)="openQuickView($event)" [attr.aria-label]="content.ariaLabels.quickView">
+      <i class="pi pi-eye"></i>
+    </button>
 
+    <!-- Status badges (Agotado / Inactivo) -->
     @if (product.stockQuantity === 0 || product.status === 'AGOTADO') {
     <span class="out-badge">{{ content.outBadgeLabel }}</span>
     } @else if (product.status === 'INACTIVO') {
     <span class="out-badge" style="background-color: var(--ot-gray-500, #64748b);">No disponible</span>
+    } @else {
+    <!-- Product badges (New, Bestseller, Offer, Discount%) -->
+    <div class="product-badge">
+      @if (product.badge === 'NEW') {
+        <span class="badge-pill badge-new">Nuevo</span>
+      } @else if (product.badge === 'BESTSELLER') {
+        <span class="badge-pill badge-hot">Más vendido</span>
+      } @else if (product.badge === 'OFFER') {
+        <span class="badge-pill badge-offer">Oferta</span>
+      }
+      @if (discountPercent > 0) {
+        <span class="badge-pill badge-discount">-{{ discountPercent }}%</span>
+      }
+    </div>
     }
   </div>
 
@@ -30,8 +50,21 @@
     <app-star-rating [value]="product.averageRating" [count]="product.totalReviews" [readonly]="true" />
     }
 
+    <!-- Stock urgency -->
+    @if (product.stockQuantity > 0 && product.stockQuantity <= 5) {
+    <span class="stock-urgency">
+      <i class="pi pi-exclamation-circle"></i>
+      ¡Solo {{ product.stockQuantity }} disponibles!
+    </span>
+    }
+
     <div class="card-footer">
-      <span class="card-price">{{ product.price | currencyPen }}</span>
+      <div class="card-price-block">
+        @if (product.originalPrice && product.originalPrice > product.price) {
+        <span class="card-original-price">{{ product.originalPrice | currencyPen }}</span>
+        }
+        <span class="card-price">{{ product.price | currencyPen }}</span>
+      </div>
       <button class="add-btn" [class.add-btn--loading]="adding" [disabled]="adding || product.stockQuantity === 0 || product.status === 'AGOTADO' || product.status === 'INACTIVO'"
         (click)="onAddToCart($event)" [attr.aria-label]="content.ariaLabels.addToCart">
         <i class="pi" [class]="adding ? content.icons.cartLoading : content.icons.cartDefault"></i>
@@ -39,3 +72,22 @@
     </div>
   </div>
 </a>
+
+<!-- Quick View Modal -->
+<p-dialog [(visible)]="quickViewOpen" [modal]="true" [draggable]="false" [resizable]="false" 
+          [dismissableMask]="true" styleClass="quick-view-dialog" [showHeader]="false"
+          [style]="{width: '900px', maxWidth: '95vw'}">
+  @if (quickViewOpen) {
+  <div class="quick-view-content">
+    <button class="close-btn" (click)="quickViewOpen = false"><i class="pi pi-times"></i></button>
+    <div class="quick-view-layout">
+      <div class="quick-view-media">
+        <app-product-images [images]="product.images ?? []" />
+      </div>
+      <div class="quick-view-info">
+        <app-product-info [product]="product" />
+      </div>
+    </div>
+  </div>
+  }
+</p-dialog>

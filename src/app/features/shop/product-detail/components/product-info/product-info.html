@@ -1,6 +1,9 @@
 <div class="product-info">
 
   <div class="info-tags">
+    @if (product.badge === 'NEW') { <app-badge variant="blue">Nuevo</app-badge> }
+    @else if (product.badge === 'BESTSELLER') { <app-badge variant="blue">Más vendido</app-badge> }
+    @else if (product.badge === 'OFFER') { <app-badge variant="blue">Oferta</app-badge> }
     <app-badge variant="blue">{{ product.categoryName }}</app-badge>
     <app-badge variant="gray">{{ product.brandName }}</app-badge>
   </div>
@@ -16,6 +19,12 @@
   <div class="info-sku">{{ content.skuLabel }} <code>{{ product.sku }}</code></div>
 
   <div class="info-price">
+    @if (product.originalPrice && product.originalPrice > product.price) {
+      <div class="price-original-wrapper">
+        <span class="price-original">{{ product.originalPrice | currencyPen }}</span>
+        <span class="price-discount-badge">-{{ getDiscountPercent() }}%</span>
+      </div>
+    }
     <span class="price-main">{{ product.price | currencyPen }}</span>
     <span class="price-cuotas">{{ content.financingPrefix }}{{ (product.price / 12) | currencyPen }}</span>
   </div>
@@ -27,10 +36,17 @@
       No disponible
     </span>
     } @else if (product.stockQuantity > 0 && product.status !== 'AGOTADO') {
-    <span class="stock-ok">
-      <i [class]="content.stock.availableIcon"></i>
-      {{ content.stock.availablePrefix }}{{ product.stockQuantity }}{{ content.stock.availableSuffix }}
-    </span>
+    @if (product.stockQuantity <= 5) {
+      <span class="stock-urgency">
+        <i class="pi pi-exclamation-circle"></i>
+        ¡Solo {{ product.stockQuantity }} disponibles!
+      </span>
+    } @else {
+      <span class="stock-ok">
+        <i [class]="content.stock.availableIcon"></i>
+        {{ content.stock.availablePrefix }}{{ product.stockQuantity }}{{ content.stock.availableSuffix }}
+      </span>
+    }
     } @else {
     <span class="stock-out">
       <i [class]="content.stock.outIcon"></i>

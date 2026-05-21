@@ -1,0 +1,17 @@
+<section class="trust-section">
+  <div class="container">
+    <div class="trust-grid">
+      @for (item of trustItems; track item.icon) {
+      <div class="trust-item">
+        <div class="trust-icon-wrap">
+          <i class="pi" [class]="item.icon"></i>
+        </div>
+        <div class="trust-text">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>

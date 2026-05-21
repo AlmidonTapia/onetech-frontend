@@ -4,6 +4,8 @@ export interface Product {
   sku: string;
   description: string;
   price: number;
+  originalPrice?: number;
+  badge?: 'NEW' | 'BESTSELLER' | 'OFFER' | string;
   stockQuantity: number;
   specifications?: Record<string, any>;
   idCategory: string;
@@ -43,4 +45,6 @@ export interface ProductFilters {
   minPrice?: number;
   maxPrice?: number;
   search?: string;
+  badge?: string;
+  sort?: string;
 }

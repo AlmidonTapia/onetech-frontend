@@ -34,12 +34,12 @@ export class FooterComponent {
   ];
 
   readonly helpLinks = [
-    { label: 'Centro de ayuda', route: '/help' },
-    { label: 'Devoluciones', route: '/returns' },
-    { label: 'Seguimiento de envío', route: '/tracking' },
-    { label: 'Garantías', route: '/warranty' },
-    { label: 'Preguntas frecuentes', route: '/faq' },
+    { label: 'Quiénes somos', route: '/quienes-somos' },
+    { label: 'Preguntas frecuentes', route: '/preguntas-frecuentes' },
+    { label: 'Términos y condiciones', route: '/terminos' },
+    { label: 'Seguimiento de envío', route: '/profile' },
   ];
+
 
   readonly social = [
     { icon: 'pi-instagram', href: 'https://instagram.com', label: 'Instagram' },
