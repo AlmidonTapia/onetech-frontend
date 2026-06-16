@@ -184,9 +184,7 @@ export class CheckoutComponent {
         }
       },
       callbacks: {
-        onReady: () => {
-          console.log('Mercado Pago Brick listo.');
-        },
+        onReady: () => {},
         onSubmit: (cardFormData: any) => {
           return new Promise((resolve, reject) => {
             this.executeMpPayment(cardFormData, resolve, reject);
