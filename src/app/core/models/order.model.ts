@@ -27,3 +27,8 @@ export interface CreateOrderRequest {
   idCoupon?: string;
   items: { idProduct: string; quantity: number; unitPrice: number }[];
 }
+
+export interface CreateOrderResponse {
+  id: string;
+}
+

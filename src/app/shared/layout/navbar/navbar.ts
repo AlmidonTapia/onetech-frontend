@@ -5,7 +5,7 @@ import { NavbarSearchComponent } from './components/navbar-search/navbar-search'
 import { NavbarCartComponent } from './components/navbar-cart/navbar-cart';
 import { AuthService } from '../../../core/services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
-import { ThemeToggleComponent } from '../../components/ThemeToggleComponent/theme-toggle.component';
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
 
 @Component({
   selector: 'app-navbar',

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { Order, CreateOrderRequest, OrderStatus } from '../models/order.model';
+import { Order, CreateOrderRequest, OrderStatus, CreateOrderResponse } from '../models/order.model';
 import { PageResponse } from '../models/page-response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -25,7 +25,7 @@ export class OrderService {
 
   create(data: CreateOrderRequest, idempotencyKey?: string) {
     const headers = idempotencyKey ? new HttpHeaders({ 'Idempotency-Key': idempotencyKey }) : undefined;
-    return this.http.post<Order>(this.url, data, { headers });
+    return this.http.post<CreateOrderResponse>(this.url, data, { headers });
   }
 
   updateStatus(id: string, newStatus: OrderStatus) {

@@ -23,10 +23,11 @@ export class CheckoutPaymentComponent implements OnInit {
 
   ngOnInit() {
     this.paymentService.getMethods().subscribe(methods => {
-      this.methods.set(methods);
+      const activeMethods = methods.filter(m => m.status === 'ACTIVO');
+      this.methods.set(activeMethods);
 
-      if (methods.length) {
-        const currentSelection = methods.find(m => m.idPaymentMethod === this.selectedId()) ?? methods[0];
+      if (activeMethods.length) {
+        const currentSelection = activeMethods.find(m => m.idPaymentMethod === this.selectedId()) ?? activeMethods[0];
         this.selectedId.set(currentSelection.idPaymentMethod);
         this.selected.emit(currentSelection);
       }

@@ -73,6 +73,13 @@ export class OrderDetailComponent implements OnChanges {
 
   fetchShipment(): void {
     if (!this.order) return;
+
+    if (this.order.orderStatus === 'PENDIENTE' || this.order.orderStatus === 'CANCELADO') {
+      this.shipment.set(null);
+      this.loadingShipment.set(false);
+      return;
+    }
+
     this.loadingShipment.set(true);
     this.shipment.set(null);
 

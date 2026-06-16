@@ -107,27 +107,23 @@ export class CartService {
   syncGuestCart() {
     const guestCart = this.loadGuestCart();
     if (guestCart && guestCart.items.length > 0 && this.authService.isAuthenticated()) {
-      const items = [...guestCart.items];
+      const batchItems = guestCart.items.map(item => ({
+        idProduct: item.idProduct,
+        quantity: item.quantity
+      }));
       
-      const syncNext = () => {
-        if (items.length === 0) {
+      this.http.post(`${this.url}/items/batch`, { items: batchItems }).subscribe({
+        next: () => {
           localStorage.removeItem(this.GUEST_CART_KEY);
           this.getCart().subscribe();
-          return;
+        },
+        error: (err) => {
+          console.error('Error al sincronizar carrito en lote', err);
+          // Fallback en caso de error
+          localStorage.removeItem(this.GUEST_CART_KEY);
+          this.getCart().subscribe();
         }
-        const item = items.shift();
-        if (item) {
-          this.http.post(`${this.url}/items`, { idProduct: item.idProduct, quantity: item.quantity }).subscribe({
-            next: () => syncNext(),
-            error: (err) => {
-              console.error('Error syncing cart item', err);
-              syncNext();
-            }
-          });
-        }
-      };
-      
-      syncNext();
+      });
     }
   }
 

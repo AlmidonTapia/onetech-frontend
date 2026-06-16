@@ -25,3 +25,13 @@ export interface CreatePaymentMethodRequest {
   methodName: string;
   status?: string;
 }
+
+export interface ProcessMpPaymentRequest {
+  idOrder: string;
+  internalPaymentMethodId: string;
+  token: string;
+  transactionAmount: number;
+  installments: number;
+  paymentMethodId: string;
+  payerEmail: string;
+}
