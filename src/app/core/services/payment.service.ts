@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Payment, PaymentMethod, CreatePaymentRequest, CreatePaymentMethodRequest } from '../models/payment.model';
+import { Payment, PaymentMethod, CreatePaymentRequest, CreatePaymentMethodRequest, ProcessMpPaymentRequest } from '../models/payment.model';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -33,5 +33,10 @@ export class PaymentService {
 
   deleteMethod(id: string): Observable<any> {
     return this.http.delete<any>(`${this.methodsUrl}/${id}`);
+  }
+
+  processMpPayment(data: ProcessMpPaymentRequest, idempotencyKey?: string): Observable<any> {
+    const headers = idempotencyKey ? new HttpHeaders({ 'Idempotency-Key': idempotencyKey }) : undefined;
+    return this.http.post<any>(`${this.url}/process-mp`, data, { headers });
   }
 }

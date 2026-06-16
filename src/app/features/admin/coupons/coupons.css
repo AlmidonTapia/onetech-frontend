@@ -3,3 +3,42 @@
 .header-title h2 { margin: 0; font-size: 18px; font-weight: 700; color: var(--ot-text-main); }
 .badge { background: var(--ot-bg-subtle); color: var(--ot-text-muted); padding: 4px 10px; border-radius: var(--ot-radius-full); font-size: 12px; font-weight: 600; }
 .table-container { padding: 0 24px 24px; }
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    transition: all 150ms ease-in-out;
+    border: 1px solid;
+}
+
+.status-active {
+    background-color: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #059669;
+}
+
+.status-inactive {
+    background-color: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+}
+
+.status-exhausted {
+    background-color: rgba(75, 85, 99, 0.15);
+    border-color: rgba(75, 85, 99, 0.3);
+    color: #4b5563;
+}
+
+.status-expired {
+    background-color: rgba(250, 204, 21, 0.15);
+    border-color: rgba(250, 204, 21, 0.3);
+    color: #ca8a04;
+}

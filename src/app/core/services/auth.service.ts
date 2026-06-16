@@ -5,6 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth-response.model';
 import { CartService } from './cart.service';
+import { WishlistService } from '../../shared/services/wishlist.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -38,7 +39,9 @@ export class AuthService {
         this.currentUser.set(authData);
         
         const cartService = this.injector.get(CartService);
+        const wishlistService = this.injector.get(WishlistService);
         cartService.syncGuestCart();
+        wishlistService.syncGuestWishlist();
       })
     );
   }
@@ -57,8 +60,20 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+    try {
+      const decoded = this.decodeToken(token);
+      if (!decoded.exp) return false;
+      return Date.now() >= decoded.exp * 1000;
+    } catch (e) {
+      return true;
+    }
+  }
+
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    return !!this.getToken() && !this.isTokenExpired();
   }
 
   isAdmin(): boolean {

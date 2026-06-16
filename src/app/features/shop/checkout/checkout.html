@@ -42,6 +42,12 @@
         @if (currentStep() === 3) {
         <app-checkout-summary [cart]="cartService.cart()" [address]="selectedAddress()"
           [shipMethod]="selectedShipMethod()" [payMethod]="selectedPayMethod()" />
+        
+        @if (selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
+          <div class="mp-brick-container card mt-4 p-4 border border-gray-100 rounded-lg bg-gray-50/50">
+            <div id="paymentBrick_container"></div>
+          </div>
+        }
         }
 
         <div class="checkout-actions">
@@ -49,10 +55,12 @@
           <app-button variant="outline" label="Atrás" (clicked)="prev()" />
           }
 
-          @if (currentStep()
-          < 3) { <app-button variant="primary" label="Continuar" [disabled]="!canGoNext()" (clicked)="next()" />
+          @if (currentStep() < 3) {
+            <app-button variant="primary" label="Continuar" [disabled]="!canGoNext()" (clicked)="next()" />
           } @else {
-          <app-button variant="accent" label="Confirmar y Pagar" [loading]="placing()" (clicked)="placeOrder()" />
+            @if (!selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
+              <app-button variant="accent" label="Confirmar y Pagar" [loading]="placing()" (clicked)="placeOrder()" />
+            }
           }
         </div>
       </div>
