@@ -22,5 +22,11 @@ export const idempotencyInterceptor: HttpInterceptorFn = (req, next) => {
         headers: req.headers.set('Idempotency-Key', key)
     });
 
-    return next(cloned).pipe(finalize(() => pending.delete(fingerprint)));
+    return next(cloned).pipe(
+        finalize(() => {
+            setTimeout(() => {
+                pending.delete(fingerprint);
+            }, 15000);
+        })
+    );
 };

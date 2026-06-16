@@ -93,7 +93,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
     ],
     [
       { name: 'price', label: 'Precio (S/.) *', type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
-      { name: 'originalPrice', label: 'Precio Original (tachado)', type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
+      { name: 'originalPrice', label: 'Precio Original (Opcional)', type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
     ],
     [
       { name: 'stockQuantity', label: 'Stock Inicial *', type: 'number', mode: 'decimal', min: 0 },

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { Product } from '../../../core/models/product.model';
   templateUrl: './wishlist.html',
   styleUrl: './wishlist.css'
 })
-export class WishlistComponent implements OnInit {
+export class WishlistComponent {
   wishlistService = inject(WishlistService);
   private productService = inject(ProductService);
   private alertService = inject(AlertService);
@@ -54,27 +54,25 @@ export class WishlistComponent implements OnInit {
 
   breadcrumb: BreadcrumbItem[] = [{ label: this.content.breadcrumbLabel }];
 
-  ngOnInit() {
-    this.loadProducts();
-  }
+  constructor() {
+    effect(() => {
+      const ids = this.wishlistService.ids();
+      if (ids.length === 0) {
+        this.products.set([]);
+        this.loading.set(false);
+        return;
+      }
 
-  loadProducts() {
-    const ids = this.wishlistService.ids();
-    if (ids.length === 0) {
-      this.products.set([]);
-      return;
-    }
-
-    this.loading.set(true);
-
-    forkJoin(
-      ids.map(id =>
-        this.productService.getById(id).pipe(catchError(() => of(null)))
-      )
-    ).subscribe(results => {
-      this.products.set(results.filter((p): p is Product => p !== null));
-      this.loading.set(false);
-    });
+      this.loading.set(true);
+      forkJoin(
+        ids.map(id =>
+          this.productService.getById(id).pipe(catchError(() => of(null)))
+        )
+      ).subscribe(results => {
+        this.products.set(results.filter((p): p is Product => p !== null));
+        this.loading.set(false);
+      });
+    }, { allowSignalWrites: true });
   }
 
   removeProduct(product: Product) {

@@ -2,8 +2,7 @@ import { Component, inject, signal, Input, Output, EventEmitter } from '@angular
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
-import { ThemeToggleComponent } from '../../components/ThemeToggleComponent/theme-toggle.component';
-
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
 interface AdminNavItem {
   label: string;
   route: string;

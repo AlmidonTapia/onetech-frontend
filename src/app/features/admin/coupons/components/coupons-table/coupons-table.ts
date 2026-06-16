@@ -23,7 +23,7 @@ export class CouponsTableComponent {
   tableConfig = {
     styleClass: 'p-datatable-sm',
     tableMinWidth: '860px',
-    colspanEmpty: 7
+    colspanEmpty: 8
   } as const;
 
   content = {
@@ -33,6 +33,7 @@ export class CouponsTableComponent {
       discountValue: 'Valor',
       expirationDate: 'Expiración',
       usageLimit: 'Límite de Uso',
+      usedCount: 'Usado',
       active: 'Activo',
       actions: 'Acciones'
     },

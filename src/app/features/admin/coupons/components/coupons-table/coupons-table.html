@@ -9,6 +9,7 @@
             <th>{{ content.headers.discountValue }}</th>
             <th>{{ content.headers.expirationDate }}</th>
             <th>{{ content.headers.usageLimit }}</th>
+            <th>{{ content.headers.usedCount }}</th>
             <th style="width:100px; text-align: center;">{{ content.headers.active }}</th>
             <th style="width:110px">{{ content.headers.actions }}</th>
         </tr>
@@ -17,10 +18,11 @@
     <ng-template pTemplate="body" let-c>
         <tr>
             <td><strong>{{ c.code }}</strong></td>
-            <td>{{ c.discountType }}</td>
+            <td>{{ c.discountType == "PERCENTAGE" ? "Porcentaje" : "Monto fijo" }}</td>
             <td>{{ c.discountValue }}</td>
             <td>{{ c.expirationDate | date }}</td>
             <td>{{ c.usageLimit || 'Sin límite' }}</td>
+            <td>{{c.usedCount}}</td>
             <td style="text-align: center;">
                 <span class="status-badge" 
                     [class.status-active]="c.status === 'ACTIVO'" 

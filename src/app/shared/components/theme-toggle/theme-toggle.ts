@@ -4,8 +4,8 @@ import { Component, signal } from '@angular/core';
     selector: 'app-theme-toggle',
     standalone: true,
     imports: [],
-    templateUrl: './theme-toggle.component.html',
-    styleUrl: './theme-toggle.component.css'
+    templateUrl: './theme-toggle.html',
+    styleUrl: './theme-toggle.css'
 })
 export class ThemeToggleComponent {
     isDark = signal(document.documentElement.classList.contains('dark-mode'));

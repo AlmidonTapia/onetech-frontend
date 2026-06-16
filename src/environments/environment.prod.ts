@@ -1,4 +1,5 @@
 export const environmentProd = {
   production: true,
-  apiUrl: 'https://api-de-produccion.com/api/v1'
+  apiUrl: 'https://api-de-produccion.com/api/v1',
+  mpPublicKey: ''
 };
