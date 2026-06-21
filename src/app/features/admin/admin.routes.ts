@@ -57,8 +57,33 @@ export const ADMIN_ROUTES: AdminRoutes = [
       import('./shipment-methods/shipment-methods').then(m => m.ShipmentMethodsComponent)
   },
   {
+    path: 'shipping',
+    loadComponent: () =>
+      import('./shipping/shipping-page').then(m => m.ShippingPageComponent)
+  },
+  {
     path: 'payment-methods',
     loadComponent: () =>
       import('./payment-methods/payment-methods').then(m => m.PaymentMethodsComponent)
+  },
+  {
+    path: 'reviews',
+    loadComponent: () =>
+      import('./reviews/reviews').then(m => m.ReviewsComponent)
+  },
+  {
+    path: 'inbox',
+    loadComponent: () =>
+      import('./inbox/inbox').then(m => m.InboxComponent)
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./profile/admin-profile').then(m => m.AdminProfileComponent)
+  },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./settings/admin-settings').then(m => m.AdminSettingsComponent)
   }
 ];

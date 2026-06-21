@@ -79,14 +79,14 @@
 }
 
 .dark-mode .profile-logout-btn {
-  color: #f87171 !important;
-  border-color: #f87171 !important;
+  color: var(--ot-error) !important;
+  border-color: var(--ot-error) !important;
 }
 
 .dark-mode .profile-logout-btn:hover {
-  background: #dc2626 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+  background: var(--ot-error) !important;
+  color: var(--ot-white) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ot-error) 40%, transparent) !important;
 }
 
 /* Custom Sequential Sections Styling for Profile */

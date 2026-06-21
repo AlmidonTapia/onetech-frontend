@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Payment, PaymentMethod, CreatePaymentRequest, CreatePaymentMethodRequest, ProcessMpPaymentRequest } from '../models/payment.model';
@@ -10,8 +10,10 @@ export class PaymentService {
   private url = `${environment.apiUrl}/payments`;
   private methodsUrl = `${environment.apiUrl}/payment-methods`;
 
-  getMethods() {
-    return this.http.get<PaymentMethod[]>(this.methodsUrl);
+  getMethods(search?: string) {
+    let params = new HttpParams();
+    if (search) params = params.set('search', search);
+    return this.http.get<PaymentMethod[]>(this.methodsUrl, { params });
   }
 
   getByOrder(orderId: string) {

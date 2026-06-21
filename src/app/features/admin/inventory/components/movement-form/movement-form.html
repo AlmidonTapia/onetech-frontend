@@ -3,7 +3,7 @@
 
     <form [formGroup]="form" class="simple-form" novalidate>
         <div class="form-field">
-            <label>Producto *</label>
+            <label>{{ content.labels.product }}</label>
             <p-select formControlName="idProduct" [options]="products" optionLabel="productName" optionValue="idProduct"
                 placeholder="Seleccionar producto" [filter]="true" filterPlaceholder="Buscar..."
                 [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo" />
@@ -11,7 +11,7 @@
 
         <div class="form-row">
             <div class="form-field">
-                <label>Tipo de movimiento *</label>
+                <label>{{ content.labels.type }}</label>
                 <p-select formControlName="movementType" [options]="typeOptions" optionLabel="label" optionValue="value"
                     [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -32,14 +32,14 @@
                 </p-select>
             </div>
             <div class="form-field">
-                <label>Cantidad *</label>
+                <label>{{ content.labels.quantity }}</label>
                 <p-inputNumber formControlName="quantity" [min]="1" [style]="{ 'width': content.styles.selectWidth }" />
             </div>
         </div>
 
         <div class="form-field">
-            <label>Motivo *</label>
-            <input pInputText formControlName="reason" placeholder="Ej: Compra de proveedor, Venta, Ajuste..."
+            <label>{{ content.labels.reason }}</label>
+            <input pInputText formControlName="reason" [placeholder]="content.placeholders.reason"
                 [class.ng-invalid]="isInvalid('reason')" />
             @if (isInvalid('reason') && form.get('reason')?.errors?.['required']) {
             <span class="field-error">{{ content.errorRequired }}</span>

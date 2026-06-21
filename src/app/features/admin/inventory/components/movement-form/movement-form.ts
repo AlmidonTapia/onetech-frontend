@@ -31,7 +31,16 @@ export class MovementFormComponent implements OnInit {
   products: Product[] = [];
 
   content = {
-    dialogWidth: '500px',
+    dialogWidth: '400px',
+    labels: {
+      product: 'Producto *',
+      type: 'Tipo de movimiento *',
+      quantity: 'Cantidad *',
+      reason: 'Motivo *'
+    },
+    placeholders: {
+      reason: 'Ej: Compra de proveedor, Venta, Ajuste...'
+    },
     headerTitle: 'Registrar movimiento de inventario',
     errorRequired: 'El motivo es requerido',
     styles: {

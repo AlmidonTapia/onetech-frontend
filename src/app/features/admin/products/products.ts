@@ -5,7 +5,7 @@ import { ProductsTableComponent } from './components/products-table/products-tab
 import { ProductFormComponent } from './components/product-form/product-form';
 import { ProductImagesManagerComponent } from './components/product-images-manager/product-images-manager';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { CardComponent } from '../../../shared/components/ui/card/card';
+
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { ProductService } from '../../../core/services/product.service';
@@ -19,7 +19,7 @@ import { Brand } from '../../../core/models/brand.model';
   selector: 'app-products',
   standalone: true,
   imports: [FormsModule, InputTextModule, ProductsTableComponent, ProductFormComponent,
-    ProductImagesManagerComponent, ButtonComponent, CardComponent],
+    ProductImagesManagerComponent, ButtonComponent],
   templateUrl: './products.html',
   styleUrl: './products.css'
 })
@@ -40,6 +40,9 @@ export class ProductsComponent implements OnInit {
   imagesVisible = signal(false);
   editingProduct = signal<Product | null>(null);
   search = '';
+  filterCategory = signal<string | undefined>(undefined);
+  filterBrand = signal<string | undefined>(undefined);
+  filterStatus = signal<string | undefined>(undefined);
 
   apiConfig = {
     pageSize: 10,
@@ -79,10 +82,29 @@ export class ProductsComponent implements OnInit {
   loadProducts(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.productService.getAll({ page, size: this.apiConfig.pageSize, search: this.search || undefined }).subscribe({
+    this.productService.getAll({ 
+      page, 
+      size: this.apiConfig.pageSize, 
+      search: this.search || undefined,
+      idCategory: this.filterCategory(),
+      idBrand: this.filterBrand(),
+      status: this.filterStatus()
+    }).subscribe({
       next: r => { this.products.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
       error: () => this.loading.set(false),
     });
+  }
+
+  onSearch(term: string) {
+    this.search = term;
+    this.loadProducts({ first: 0, rows: this.apiConfig.pageSize });
+  }
+
+  onFilterChange(filters: { category: string, brand: string, status: string }) {
+    this.filterCategory.set(filters.category === 'ALL' ? undefined : filters.category);
+    this.filterBrand.set(filters.brand === 'ALL' ? undefined : filters.brand);
+    this.filterStatus.set(filters.status === 'ALL' ? undefined : filters.status);
+    this.loadProducts({ first: 0, rows: this.apiConfig.pageSize });
   }
 
   openCreate() { this.editingProduct.set(null); this.formVisible.set(true); }

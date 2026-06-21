@@ -47,6 +47,7 @@ export class CouponFormComponent implements OnChanges {
       codePlaceholder: 'Ej: VERANO2026',
       typeLabel: 'Tipo de Descuento *',
       valueLabel: 'Valor de Descuento *',
+      startDateLabel: 'Fecha de Inicio (Opcional)',
       expirationLabel: 'Fecha de Expiración *',
       limitLabel: 'Límite de Usos (Opcional)',
       statusLabel: 'Estado'
@@ -69,6 +70,7 @@ export class CouponFormComponent implements OnChanges {
     code: ['', [Validators.required, Validators.minLength(3)]],
     discountType: ['PERCENTAGE', Validators.required],
     discountValue: [0, [Validators.required, Validators.min(0.01)]],
+    startDate: [''],
     expirationDate: ['', Validators.required],
     usageLimit: [null as number | null, [Validators.min(1)]],
     status: ['ACTIVO']
@@ -86,12 +88,16 @@ export class CouponFormComponent implements OnChanges {
   ngOnChanges() {
     if (this.coupon) {
       const dateFormatted = this.coupon.expirationDate
-        ? new Date(this.coupon.expirationDate).toISOString().substring(0, 10)
+        ? new Date(this.coupon.expirationDate).toISOString().substring(0, 16)
+        : '';
+      const startFormatted = this.coupon.startDate
+        ? new Date(this.coupon.startDate).toISOString().substring(0, 16)
         : '';
       this.form.reset({
         code: this.coupon.code,
         discountType: this.coupon.discountType,
         discountValue: this.coupon.discountValue,
+        startDate: startFormatted,
         expirationDate: dateFormatted,
         usageLimit: this.coupon.usageLimit || null,
         status: this.coupon.status || 'ACTIVO'
@@ -116,6 +122,7 @@ export class CouponFormComponent implements OnChanges {
       code: val.code!,
       discountType: val.discountType as any,
       discountValue: val.discountValue!,
+      startDate: val.startDate ? new Date(val.startDate).toISOString() : undefined,
       expirationDate: new Date(val.expirationDate!).toISOString(),
       usageLimit: val.usageLimit ? val.usageLimit : undefined
     };

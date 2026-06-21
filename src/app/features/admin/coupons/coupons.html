@@ -1,22 +1,22 @@
-<app-card [padding]="content.cardPadding">
-  <div class="card-header">
-    <div class="header-title">
-      <h2>{{ content.title }}</h2>
-      <span class="badge">{{ totalRecords() }} {{ content.countSuffix }}</span>
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
     </div>
     <app-button variant="primary" [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="openCreate()" />
   </div>
 
-  <div class="table-container">
-    <app-coupons-table
-      [coupons]="coupons()"
-      [totalRecords]="totalRecords()"
-      [loading]="loading()"
-      (lazyLoad)="loadCoupons($event)"
-      (editItem)="openEdit($event)"
-      (deleteItem)="onDelete($event)" />
-  </div>
-</app-card>
+  <app-coupons-table
+    [coupons]="coupons()"
+    [totalRecords]="totalRecords()"
+    [loading]="loading()"
+    (lazyLoad)="loadCoupons($event)"
+    (editItem)="openEdit($event)"
+    (deleteItem)="onDelete($event)"
+    (search)="onSearch($event)"
+    (filterChange)="onFilterChange($event)" />
+</div>
 
 <app-coupon-form
   [visible]="formVisible()"

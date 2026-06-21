@@ -1,0 +1,31 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ content.description }}</p>
+    </div>
+  </div>
+
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0">
+        <i class="pi pi-compass mr-2"></i> {{ content.tabs.agencies }}
+      </p-tab>
+      <p-tab value="1">
+        <i class="pi pi-map mr-2"></i> {{ content.tabs.rates }}
+      </p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <div style="padding: 24px;">
+          <app-agencies-table /> 
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="1">
+        <div style="padding: 24px;">
+          <app-rates-table />
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>

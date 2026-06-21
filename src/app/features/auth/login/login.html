@@ -51,7 +51,12 @@
 
         @for (field of fields; track field.name) {
         <div class="form-field">
-          <label [for]="field.name">{{ field.label }}</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <label [for]="field.name" style="margin-bottom: 0;">{{ field.label }}</label>
+            @if (field.name === 'password') {
+              <a [routerLink]="formData.forgotPasswordRoute" class="form-link" style="font-size: 0.875rem;">{{ formData.forgotPasswordText }}</a>
+            }
+          </div>
 
           @if (field.type === 'email') {
           <div class="input-wrapper">
@@ -70,10 +75,10 @@
 
           @if (isInvalid(field.name)) {
           @if (form.get(field.name)?.errors?.['required']) {
-          <small class="field-error">Campo requerido</small>
+          <small class="field-error">{{ formData.errors.required }}</small>
           }
           @if (form.get(field.name)?.errors?.['email']) {
-          <small class="field-error">Ingresa un correo válido</small>
+          <small class="field-error">{{ formData.errors.email }}</small>
           }
           }
         </div>

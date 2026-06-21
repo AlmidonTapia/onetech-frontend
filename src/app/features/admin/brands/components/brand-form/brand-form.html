@@ -20,6 +20,26 @@
       }
     </div>
     }
+    <div class="form-row">
+      <div class="form-field" style="flex: 1">
+        <label>{{ content.image.label }}</label>
+        <div class="image-upload-container">
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" #fileInput style="display: none;" />
+          
+          @if (previewUrl()) {
+            <div class="image-preview" (click)="fileInput.click()">
+              <img [src]="previewUrl()" alt="Preview" />
+              <div class="image-overlay"><i class="pi pi-pencil"></i> {{ content.image.changeText }}</div>
+            </div>
+          } @else {
+            <div class="image-placeholder" (click)="fileInput.click()">
+              <i class="pi pi-image"></i>
+              <span>{{ content.image.selectText }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
   </form>
 
   <ng-template pTemplate="footer">

@@ -58,8 +58,10 @@ export class CatalogComponent implements OnInit {
       page: this.page(), size: this.rows,
       search: this.search() || undefined,
       idCategory: f.categoryId,
+      idBrand: f.brandIds && f.brandIds.length > 0 ? f.brandIds[0] : undefined,
       minPrice: f.minPrice,
       maxPrice: f.maxPrice,
+      sort: this.sort()
     }).subscribe({
       next: r => { this.products.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
       error: () => this.loading.set(false),

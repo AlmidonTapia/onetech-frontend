@@ -1,0 +1,80 @@
+<p-table 
+  [value]="messages" 
+  [lazy]="true"
+  (onLazyLoad)="lazyLoad.emit($event)"
+  [totalRecords]="totalRecords"
+  [loading]="loading"
+  [paginator]="true"
+  [rows]="10"
+  styleClass="p-datatable-sm"
+  [tableStyle]="{ 'min-width': '60rem' }">
+  
+  <ng-template pTemplate="caption">
+    <div class="table-header-container">
+      <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
+      <span class="p-input-icon-left search-input-wrapper">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 15%">{{ content.headers.date }}</th>
+      <th style="width: 20%">{{ content.headers.name }}</th>
+      <th style="width: 20%">{{ content.headers.email }}</th>
+      <th style="width: 25%">{{ content.headers.subject }}</th>
+      <th style="width: 10%">{{ content.headers.status }}</th>
+      <th style="width: 10%; text-align: right">{{ content.headers.actions }}</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-msg>
+    <tr [ngClass]="{'font-bold': msg.status === 'UNREAD'}">
+      <td>{{ msg.createdAt | date:'short' }}</td>
+      <td>{{ msg.name }}</td>
+      <td>{{ msg.email }}</td>
+      <td>{{ msg.subject }}</td>
+      <td>
+        @switch (msg.status) {
+          @case ('UNREAD') {
+            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">{{ content.statusLabels.unread }}</span>
+          }
+          @case ('READ') {
+            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">{{ content.statusLabels.read }}</span>
+          }
+          @case ('REPLIED') {
+            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">{{ content.statusLabels.replied }}</span>
+          }
+        }
+      </td>
+      <td style="text-align: right">
+        <p-menu #menu [model]="getMenuItems(msg)" [popup]="true" appendTo="body"></p-menu>
+        <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-text p-button-secondary" (click)="menu.toggle($event)"></button>
+      </td>
+    </tr>
+    <!-- Row expansion for message body could go here if we used row expansion -->
+    <tr *ngIf="msg.status === 'UNREAD'" class="bg-gray-50 dark:bg-gray-800">
+      <td colspan="6" class="p-3 text-sm text-gray-600 dark:text-gray-300">
+        <em>{{ msg.message }}</em>
+      </td>
+    </tr>
+    <tr *ngIf="msg.status !== 'UNREAD'" class="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
+        <td colspan="6" class="p-3 text-sm text-gray-600 dark:text-gray-400">
+          {{ msg.message }}
+        </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="6" style="text-align: center; padding: 3rem 1rem;">
+        <i class="pi pi-inbox" style="font-size: 2.5rem; color: var(--ot-gray-400); display: block; margin-bottom: 12px;"></i>
+        <p style="color: var(--ot-text-muted); margin: 0; font-weight: 500;">{{ content.emptyMessage }}</p>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

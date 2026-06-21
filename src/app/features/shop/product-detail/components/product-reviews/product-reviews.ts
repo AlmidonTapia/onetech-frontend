@@ -1,34 +1,58 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { StarRatingComponent } from '../../../../../shared/components/ui/star-rating/star-rating';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { AuthService } from '../../../../../core/services/auth.service';
-import { QualificationService } from '../../../../../core/services/qualification.service';
-import { Qualification } from '../../../../../core/models/qualification.model';
+import { ReviewService } from '../../../../../core/services/review.service';
+import { Review } from '../../../../../core/models/review.model';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-product-reviews',
   standalone: true,
-  imports: [FormsModule, StarRatingComponent, ButtonComponent, DatePipe],
+  imports: [FormsModule, StarRatingComponent, ButtonComponent, DatePipe, DecimalPipe, InputTextModule],
   templateUrl: './product-reviews.html',
   styleUrl: './product-reviews.css'
 })
 export class ProductReviewsComponent implements OnInit {
-  private qualService = inject(QualificationService);
+  private reviewService = inject(ReviewService);
   private alertService = inject(AlertService);
   authService = inject(AuthService);
 
   @Input() productId!: string;
 
-  reviews = signal<Qualification[]>([]);
+  reviews = signal<Review[]>([]);
   loading = signal(false);
   sending = signal(false);
   showForm = signal(false);
 
   newRating = 0;
+  newTitle = '';
   newComment = '';
+
+  averageRating = computed(() => {
+    const revs = this.reviews();
+    if (revs.length === 0) return 0;
+    const sum = revs.reduce((acc, r) => acc + r.rating, 0);
+    return sum / revs.length;
+  });
+
+  ratingCounts = computed(() => {
+    const revs = this.reviews();
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    revs.forEach(r => {
+      if (r.rating >= 1 && r.rating <= 5) {
+        counts[r.rating as keyof typeof counts]++;
+      }
+    });
+    return [5, 4, 3, 2, 1].map(stars => ({
+      stars,
+      count: counts[stars as keyof typeof counts],
+      percentage: revs.length > 0 ? (counts[stars as keyof typeof counts] / revs.length) * 100 : 0
+    }));
+  });
 
   content = {
     mainTitle: 'Reseñas de clientes',
@@ -36,19 +60,22 @@ export class ProductReviewsComponent implements OnInit {
     writeBtnIcon: 'pi-pencil',
     formTitle: 'Tu reseña',
     ratingLabel: 'Puntuación',
+    titleLabel: 'Título de la reseña',
+    titlePlaceholder: 'Ej. ¡Excelente producto!',
     commentLabel: 'Comentario',
-    commentPlaceholder: 'Cuéntanos tu experiencia...',
+    commentPlaceholder: 'Cuéntanos tu experiencia completa...',
     loadingLabel: 'Cargando reseñas...',
     emptyTitle: 'Aún no hay reseñas. ¡Sé el primero en opinar!',
     defaultAvatarLetter: 'U',
     dateFormat: 'dd/MM/yyyy',
+    totalReviewsLabel: 'reseñas en total',
     actions: {
       cancelLabel: 'Cancelar',
       submitLabel: 'Publicar reseña'
     },
     alerts: {
-      warnTitle: 'Completa la reseña',
-      warnMsg: 'Selecciona una puntuación y escribe tu comentario.',
+      warnTitle: 'Faltan datos',
+      warnMsg: 'Completa la puntuación, el título y el comentario.',
       successMsg: 'Reseña enviada',
       errorMsg: 'Error al enviar reseña'
     }
@@ -58,29 +85,36 @@ export class ProductReviewsComponent implements OnInit {
 
   loadReviews() {
     this.loading.set(true);
-    this.qualService.getByProduct(this.productId).subscribe({
-      next: r => { this.reviews.set(r); this.loading.set(false); },
+    this.reviewService.getByProduct(this.productId).subscribe({
+      next: r => { this.reviews.set(r.content); this.loading.set(false); },
       error: () => this.loading.set(false),
     });
   }
 
   onSubmit() {
-    if (this.newRating === 0 || !this.newComment.trim()) {
+    if (this.newRating === 0 || !this.newTitle.trim() || !this.newComment.trim()) {
       this.alertService.warn(this.content.alerts.warnTitle, this.content.alerts.warnMsg);
       return;
     }
     this.sending.set(true);
-    this.qualService.create({ idProduct: this.productId, rating: this.newRating, commentText: this.newComment }).subscribe({
+    this.reviewService.create({ 
+      idProduct: this.productId, 
+      rating: this.newRating, 
+      title: this.newTitle, 
+      comment: this.newComment 
+    }).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.successMsg);
         this.newRating = 0;
+        this.newTitle = '';
         this.newComment = '';
         this.showForm.set(false);
         this.sending.set(false);
         this.loadReviews();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.errorMsg);
+      error: (err) => {
+        const msg = err.error?.message || this.content.alerts.errorMsg;
+        this.alertService.error(msg);
         this.sending.set(false);
       }
     });

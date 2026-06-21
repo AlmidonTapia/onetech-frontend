@@ -1,0 +1,18 @@
+<section class="brand-carousel-section">
+  <div class="brand-carousel-header">
+    <h2 class="section-title">{{ content.title }}</h2>
+  </div>
+  <p-carousel [value]="brands" [numVisible]="6" [numScroll]="1" [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions">
+    <ng-template pTemplate="item" let-brand>
+      <div class="brand-item">
+        @if (brand.imageUrl) {
+          <img [src]="brand.imageUrl" [alt]="brand.brandName" class="brand-image" />
+        } @else {
+          <div class="brand-placeholder">
+            <span class="brand-name">{{ brand.brandName }}</span>
+          </div>
+        }
+      </div>
+    </ng-template>
+  </p-carousel>
+</section>

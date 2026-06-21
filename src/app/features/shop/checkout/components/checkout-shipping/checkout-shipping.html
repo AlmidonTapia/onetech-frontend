@@ -14,5 +14,8 @@
       </div>
     </div>
     }
+    @if (methods().length === 0) {
+      <p class="no-methods-available">{{ content.noAvailable }}</p>
+    }
   </div>
 </div>

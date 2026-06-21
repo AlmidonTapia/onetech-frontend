@@ -15,6 +15,7 @@ export class CartService {
   private readonly GUEST_CART_KEY = 'onetech_guest_cart';
 
   cart = signal<Cart | null>(this.loadGuestCart());
+  addedProductInfo = signal<{ product: any, quantity: number } | null>(null);
   itemCount = computed(() => this.cart()?.items.reduce((acc, item) => acc + item.quantity, 0) ?? 0);
   totalAmount = computed(() => {
     return this.cart()?.items.reduce((acc, item) => acc + (item.unitPrice * item.quantity), 0) ?? 0;
@@ -40,7 +41,12 @@ export class CartService {
   addItem(data: AddToCartRequest): Observable<any> {
     if (this.authService.isAuthenticated()) {
       return this.http.post<Cart>(`${this.url}/items`, data).pipe(
-        tap(() => this.getCart().subscribe())
+        tap(() => {
+          this.getCart().subscribe();
+          this.productService.getById(data.idProduct).subscribe(product => {
+            this.addedProductInfo.set({ product, quantity: data.quantity });
+          });
+        })
       );
     } else {
 
@@ -64,6 +70,7 @@ export class CartService {
             currentCart.items.push(newItem);
           }
           this.updateCartSignal(currentCart);
+          this.addedProductInfo.set({ product, quantity: data.quantity });
         })
       );
     }

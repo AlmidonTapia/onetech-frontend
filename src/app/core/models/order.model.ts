@@ -6,6 +6,8 @@ export interface Order {
   userFullName?: string;
   details: OrderItem[];
   totalAmount: number;
+  shippingCost: number;
+  discountAmount: number;
   orderStatus: OrderStatus;
   idAddress: string;
   createdAt: string;

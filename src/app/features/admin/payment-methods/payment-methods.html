@@ -1,0 +1,27 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ methods().length }}{{ content.badgeSuffix }}</p>
+    </div>
+    <app-button variant="primary" [label]="content.newBtnLabel" icon="pi-plus" (clicked)="openCreate()" />
+  </div>
+
+  <app-payment-methods-table
+    [methods]="methods()"
+    [loading]="loading()"
+    [content]="content"
+    (onEdit)="openEdit($event)"
+    (onDelete)="onDelete($event)"
+    (search)="onSearch($event)">
+  </app-payment-methods-table>
+</div>
+
+<app-payment-method-form
+  [visible]="formVisible()"
+  [isEditing]="editingMethod() !== null"
+  [formGroup]="form"
+  [saving]="saving()"
+  (onClose)="formVisible.set(false)"
+  (onSave)="onSave()">
+</app-payment-method-form>

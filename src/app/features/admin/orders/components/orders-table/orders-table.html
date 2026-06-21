@@ -2,6 +2,20 @@
     [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true"
     [styleClass]="tableConfig.styleClass" [tableStyle]="{ 'min-width': tableConfig.tableMinWidth }">
 
+    <ng-template pTemplate="caption">
+        <div class="table-header-container">
+            <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
+            <div class="table-toolbar-filters">
+                <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onFilterStatus()"
+                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
+                <span class="p-input-icon-left search-input-wrapper">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+                </span>
+            </div>
+        </div>
+    </ng-template>
+
     <!-- Encabezados de la Tabla -->
     <ng-template pTemplate="header">
         <tr>
@@ -49,8 +63,9 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="empty-cell">
-                {{ content.emptyMessage }}
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
+                <i class="pi pi-inbox table-empty-icon"></i>
+                <p class="table-empty-text">{{ content.emptyMessage }}</p>
             </td>
         </tr>
     </ng-template>

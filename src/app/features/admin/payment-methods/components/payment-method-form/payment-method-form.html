@@ -1,0 +1,21 @@
+<p-dialog [visible]="visible()" (visibleChange)="!$event && close()" [header]="isEditing() ? content.titleEdit : content.titleNew" [style]="{width: '400px'}" [modal]="true">
+  <form [formGroup]="formGroup()" (ngSubmit)="submit()" class="modal-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>{{ content.labels.name }}</label>
+        <input type="text" formControlName="methodName" class="form-input" [placeholder]="content.placeholders.name" />
+      </div>
+      <div class="form-group" *ngIf="isEditing()">
+        <label>{{ content.labels.status }}</label>
+        <select formControlName="status" class="form-select">
+          <option value="ACTIVO">{{ content.statusOptions.active }}</option>
+          <option value="INACTIVO">{{ content.statusOptions.inactive }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <app-button variant="outline" [label]="content.buttons.cancel" type="button" (clicked)="close()" />
+      <app-button variant="primary" [label]="content.buttons.save" type="submit" [loading]="saving()" [disabled]="formGroup().invalid" />
+    </div>
+  </form>
+</p-dialog>

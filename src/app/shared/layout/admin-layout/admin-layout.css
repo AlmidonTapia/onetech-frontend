@@ -5,18 +5,25 @@
   transition: var(--ot-transition);
 }
 
-.admin-content {
+.admin-main {
   flex: 1;
   margin-left: var(--ot-sidebar-width);
-  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background: var(--ot-bg-body);
-  transition: margin-left .3s cubic-bezier(0.4, 0, 0.2, 1), var(--ot-transition);
-  animation: fadeIn .2s ease both;
+  transition: margin-left .3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar-collapsed .admin-content {
+.sidebar-collapsed .admin-main {
   margin-left: 68px;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 32px 40px;
+  background: var(--ot-bg-body);
+  transition: var(--ot-transition);
+  animation: fadeIn .2s ease both;
 }
 
 /* ── Mobile Header Styling ── */
@@ -93,13 +100,15 @@
     display: flex;
   }
   
-  .admin-content {
+  .admin-main {
     margin-left: 0 !important;
-    padding: 88px 16px 40px 16px; /* Offset the 64px tall mobile topbar with clean safearea gap */
-    min-height: calc(100vh - 64px);
+  }
+  
+  .admin-content {
+    padding: 88px 16px 40px 16px; /* Offset the 64px tall mobile topbar */
   }
 
-  .sidebar-collapsed .admin-content {
+  .sidebar-collapsed .admin-main {
     margin-left: 0;
   }
 }

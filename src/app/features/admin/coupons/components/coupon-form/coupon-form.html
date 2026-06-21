@@ -29,8 +29,14 @@
             </div>
 
             <div class="form-field">
+                <label>{{ content.fields.startDateLabel }}</label>
+                <input pInputText type="datetime-local" formControlName="startDate"
+                    [class.ng-invalid]="isInvalid('startDate')" [class.ng-dirty]="isInvalid('startDate')" />
+            </div>
+
+            <div class="form-field">
                 <label>{{ content.fields.expirationLabel }}</label>
-                <input pInputText type="date" formControlName="expirationDate"
+                <input pInputText type="datetime-local" formControlName="expirationDate"
                     [class.ng-invalid]="isInvalid('expirationDate')" [class.ng-dirty]="isInvalid('expirationDate')" />
                 @if (isInvalid('expirationDate')) {
                 <span class="field-error">{{ content.errorRequired }}</span>

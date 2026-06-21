@@ -73,7 +73,7 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     [{ name: 'status', label: 'Estado del Envío *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccione un estado' }],
     [{ name: 'trackingNumber', label: 'Tracking Number', type: 'text', placeholder: 'Ej: TRK-987' }],
     [
-      { name: 'shippingCost', label: 'Costo (S/.) *', type: 'number', placeholder: '0.00', min: 0, minFractionDigits: 2 },
+      { name: 'shippingCostText', label: 'Costo Pagado', type: 'text', readonly: true },
       { name: 'estimatedArrival', label: 'Llegada Estimada', type: 'date' }
     ]
   ];
@@ -88,7 +88,7 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   statusForm = this.fb.group({
     status: ['', Validators.required],
-    shippingCost: [0, [Validators.required, Validators.min(0)]],
+    shippingCostText: [{ value: '', disabled: false }],
     estimatedArrival: [''],
     trackingNumber: ['']
   });
@@ -142,7 +142,7 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
       }
       this.statusForm.patchValue({
         status: this.shipment.status,
-        shippingCost: this.shipment.shippingCost || 0,
+        shippingCostText: `S/. ${(this.shipment.shippingCost || 0).toFixed(2)}`,
         estimatedArrival: formattedDate,
         trackingNumber: this.shipment.trackingNumber || ''
       });
@@ -161,7 +161,6 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
         id: this.shipment.idShipment,
         status: this.statusForm.value.status as ShipmentStatus,
         estimatedArrival: this.statusForm.value.estimatedArrival ? (this.statusForm.value.estimatedArrival + this.content.apiTimezoneSuffix) : undefined,
-        shippingCost: this.statusForm.value.shippingCost ?? undefined,
         trackingNumber: this.statusForm.value.trackingNumber ?? undefined
       });
     } else {

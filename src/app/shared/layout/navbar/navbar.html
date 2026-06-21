@@ -39,6 +39,14 @@
                         <span class="action-name">{{ authService.currentUser()?.firstName }}</span>
                     </div>
                 </a>
+                
+                <a *appHasRole="'ADMIN'" [routerLink]="content.admin.route" class="action-link">
+                    <i class="pi pi-cog"></i>
+                    <div class="action-text">
+                        <span class="action-label">{{ content.admin.labelPre }}</span>
+                        <span class="action-name">{{ content.admin.labelPost }}</span>
+                    </div>
+                </a>
                 } @else {
                 <a [routerLink]="content.account.loginRoute" class="action-link">
                     <i class="pi pi-user"></i>

@@ -1,0 +1,21 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ content.subtitle }}</p>
+    </div>
+  </div>
+
+  
+    <app-inbox-table 
+      [messages]="messages()" 
+      [totalRecords]="totalRecords()" 
+      [loading]="loading()"
+      [content]="content.table"
+      (lazyLoad)="loadMessages($event)"
+      (search)="onSearch($event)"
+      (statusChange)="onStatusChange($event)"
+      (delete)="onDelete($event)">
+    </app-inbox-table>
+  
+</div>

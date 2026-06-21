@@ -4,11 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductImagesComponent } from './components/product-images/product-images';
 import { ProductInfoComponent } from './components/product-info/product-info';
 import { ProductReviewsComponent } from './components/product-reviews/product-reviews';
+import { ProductReviewFormComponent } from './components/product-review-form/product-review-form';
 import { RelatedProductsComponent } from './components/related-products/related-products';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
 import { WhatsappBtnComponent } from '../../../shared/components/ui/whatsapp-btn/whatsapp-btn';
 import { ProductService } from '../../../core/services/product.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Product } from '../../../core/models/product.model';
 
 @Component({
@@ -19,6 +21,7 @@ import { Product } from '../../../core/models/product.model';
     ProductImagesComponent,
     ProductInfoComponent,
     ProductReviewsComponent,
+    ProductReviewFormComponent,
     RelatedProductsComponent,
     SpinnerComponent,
     BreadcrumbComponent,
@@ -30,6 +33,7 @@ import { Product } from '../../../core/models/product.model';
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  authService = inject(AuthService);
 
   product = signal<Product | null>(null);
   related = signal<Product[]>([]);

@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { BrandsTableComponent } from './components/brands-table/brands-table';
 import { BrandFormComponent } from './components/brand-form/brand-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { BrandService } from '../../../core/services/brand.service';
@@ -11,7 +10,7 @@ import { Brand, CreateBrandRequest } from '../../../core/models/brand.model';
 @Component({
   selector: 'app-brands',
   standalone: true,
-  imports: [BrandsTableComponent, BrandFormComponent, ButtonComponent, CardComponent],
+  imports: [BrandsTableComponent, BrandFormComponent, ButtonComponent],
   templateUrl: './brands.html',
   styleUrl: './brands.css'
 })
@@ -26,6 +25,7 @@ export class BrandsComponent implements OnInit {
   saving = signal(false);
   formVisible = signal(false);
   editingBrand = signal<Brand | null>(null);
+  searchTerm = signal<string | undefined>(undefined);
 
   // ── REGLAS DE NEGOCIO Y CONFIGURACIÓN DE APIS ──
   apiConfig = {
@@ -55,10 +55,15 @@ export class BrandsComponent implements OnInit {
     this.loadBrands();
   }
 
+  onSearch(term: string) {
+    this.searchTerm.set(term);
+    this.loadBrands({ first: 0, rows: this.apiConfig.pageSize });
+  }
+
   loadBrands(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.brandService.getAll(page, this.apiConfig.pageSize).subscribe({
+    this.brandService.getAll(page, this.apiConfig.pageSize, this.searchTerm()).subscribe({
       next: r => {
         this.brands.set(r.content);
         this.totalRecords.set(r.totalElements);
@@ -78,19 +83,39 @@ export class BrandsComponent implements OnInit {
     this.formVisible.set(true);
   }
 
-  onSave(data: CreateBrandRequest) {
+  onSave(payload: { request: CreateBrandRequest, file?: File }) {
     this.saving.set(true);
     const currentBrand = this.editingBrand();
+    const { request, file } = payload;
+    
     const request$ = currentBrand
-      ? this.brandService.update(currentBrand.idBrand, data as any)
-      : this.brandService.create(data);
+      ? this.brandService.update(currentBrand.idBrand, request as any)
+      : this.brandService.create(request);
 
     request$.subscribe({
-      next: () => {
-        this.alertService.success(this.content.alerts.saveSuccess);
-        this.formVisible.set(false);
-        this.saving.set(false);
-        this.loadBrands();
+      next: (response: any) => {
+        const brandId = currentBrand ? currentBrand.idBrand : response;
+        if (file && brandId) {
+          this.brandService.uploadImage(brandId, file).subscribe({
+            next: () => {
+              this.alertService.success(this.content.alerts.saveSuccess);
+              this.formVisible.set(false);
+              this.saving.set(false);
+              this.loadBrands();
+            },
+            error: () => {
+              this.alertService.error('Marca guardada, pero ocurrió un error al subir la imagen');
+              this.saving.set(false);
+              this.formVisible.set(false);
+              this.loadBrands();
+            }
+          });
+        } else {
+          this.alertService.success(this.content.alerts.saveSuccess);
+          this.formVisible.set(false);
+          this.saving.set(false);
+          this.loadBrands();
+        }
       },
       error: () => {
         this.alertService.error(this.content.alerts.saveError);

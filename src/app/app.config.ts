@@ -15,9 +15,9 @@ function initializeTheme() {
     const saved = localStorage.getItem('theme');
     const isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
     if (isDark) {
-      document.documentElement.classList.add('dark-mode');
+      document.documentElement.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark');
     }
   };
 }
@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: '.dark-mode',
+          darkModeSelector: '.dark',
           cssLayer: {
             name: 'primeng',
             order: 'tailwind-base, primeng, tailwind-utilities'

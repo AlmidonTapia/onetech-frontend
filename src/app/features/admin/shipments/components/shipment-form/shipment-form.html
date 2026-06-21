@@ -10,8 +10,8 @@
         <label>{{ field.label }}</label>
 
         @if (field.type === 'text') {
-        <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder"
-          [class.ng-invalid]="isInvalid(field.name, statusForm)" />
+        <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+          [class.ng-invalid]="isInvalid(field.name, statusForm)" [readonly]="field.readonly || false" />
         }
 
         @else if (field.type === 'select') {

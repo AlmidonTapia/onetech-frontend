@@ -8,7 +8,7 @@ import { Component, signal } from '@angular/core';
     styleUrl: './theme-toggle.css'
 })
 export class ThemeToggleComponent {
-    isDark = signal(document.documentElement.classList.contains('dark-mode'));
+    isDark = signal(document.documentElement.classList.contains('dark'));
 
     content = {
         ariaLight: 'Activar modo claro',
@@ -16,7 +16,7 @@ export class ThemeToggleComponent {
         iconLight: 'pi-sun',
         iconDark: 'pi-moon',
         storageKey: 'theme',
-        darkClass: 'dark-mode',
+        darkClass: 'dark',
         lightValue: 'light',
         darkValue: 'dark'
     } as const;

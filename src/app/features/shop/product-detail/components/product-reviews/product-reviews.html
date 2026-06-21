@@ -17,6 +17,11 @@
     </div>
 
     <div class="form-field">
+      <label>{{ content.titleLabel }}</label>
+      <input pInputText [(ngModel)]="newTitle" [placeholder]="content.titlePlaceholder" />
+    </div>
+
+    <div class="form-field">
       <label>{{ content.commentLabel }}</label>
       <textarea [(ngModel)]="newComment" rows="3" [placeholder]="content.commentPlaceholder"></textarea>
     </div>
@@ -37,8 +42,26 @@
     <p>{{ content.emptyTitle }}</p>
   </div>
   } @else {
+  <div class="reviews-summary">
+    <div class="summary-average">
+      <span class="average-number">{{ averageRating() | number:'1.1-1' }}</span>
+      <app-star-rating [value]="averageRating()" [readonly]="true" [showCount]="false" />
+      <span class="total-reviews">{{ reviews().length }} {{ content.totalReviewsLabel }}</span>
+    </div>
+    <div class="summary-bars">
+      @for (stat of ratingCounts(); track stat.stars) {
+      <div class="bar-row">
+        <span class="star-label">{{ stat.stars }} <i class="pi pi-star-fill"></i></span>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="stat.percentage"></div>
+        </div>
+        <span class="percent-label">{{ stat.percentage | number:'1.0-0' }}%</span>
+      </div>
+      }
+    </div>
+  </div>
   <div class="reviews-list">
-    @for (review of reviews(); track review.idQualification) {
+    @for (review of reviews(); track review.idReview) {
     <div class="review-card">
       <div class="review-header">
         <div class="reviewer-avatar">
@@ -47,14 +70,18 @@
 
         <div>
           <span class="reviewer-name">{{ review.userFullName }}</span>
-          <span class="review-date">{{ (review.createdAt || review.qualificationDate) | date: content.dateFormat }}</span>
+          <span class="review-date">{{ review.createdAt | date: content.dateFormat }}</span>
         </div>
 
         <div class="review-rating">
           <app-star-rating [value]="review.rating" [readonly]="true" [showCount]="false" />
         </div>
       </div>
-      <p class="review-comment">{{ review.commentText }}</p>
+      
+      @if (review.title) {
+        <h5 class="review-title">{{ review.title }}</h5>
+      }
+      <p class="review-comment">{{ review.comment }}</p>
     </div>
     }
   </div>

@@ -56,6 +56,14 @@ export class AuthService {
     this.currentUser.set(null);
   }
 
+  forgotPassword(email: string) {
+    return this.http.post(`${environment.apiUrl}/users/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.http.post(`${environment.apiUrl}/users/reset-password`, { token, newPassword });
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }

@@ -1,0 +1,83 @@
+<div class="static-page contact-page">
+  <div class="container page-content">
+    
+    <div class="page-header text-center">
+      <h1>{{ content.title }}</h1>
+      <p>{{ content.subtitle }}</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Información -->
+      <div class="contact-info">
+        <h3>{{ content.infoTitle }}</h3>
+        <div class="info-list">
+          @for (item of content.contactDetails; track item.title) {
+          <div class="info-item">
+            <div class="info-icon"><i [class]="item.icon"></i></div>
+            <div class="info-text">
+              <strong>{{ item.title }}</strong>
+              <p>{{ item.desc }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="contact-form-panel card p-5 border border-gray-100 rounded-2xl bg-white shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <h3 class="mb-4 text-xl font-bold">{{ content.formTitle }}</h3>
+        
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form flex flex-column gap-3" novalidate>
+          
+          <div class="form-field flex flex-column gap-1">
+            <label for="name" class="font-medium text-sm">{{ content.fields.name }}</label>
+            <input pInputText id="name" formControlName="name" class="w-full"
+              [class.ng-invalid]="isInvalid('name')" [class.ng-dirty]="isInvalid('name')" />
+            @if (isInvalid('name')) {
+              <small class="text-red-500">{{ content.errors.required }}</small>
+            }
+          </div>
+
+          <div class="form-field flex flex-column gap-1">
+            <label for="email" class="font-medium text-sm">{{ content.fields.email }}</label>
+            <input pInputText id="email" type="email" formControlName="email" class="w-full"
+              [class.ng-invalid]="isInvalid('email')" [class.ng-dirty]="isInvalid('email')" />
+            @if (isInvalid('email')) {
+              @if (form.get('email')?.errors?.['required']) {
+                <small class="text-red-500">{{ content.errors.required }}</small>
+              }
+              @if (form.get('email')?.errors?.['email']) {
+                <small class="text-red-500">{{ content.errors.email }}</small>
+              }
+            }
+          </div>
+
+          <div class="form-field flex flex-column gap-1">
+            <label for="subject" class="font-medium text-sm">{{ content.fields.subject }}</label>
+            <p-select id="subject" [options]="content.subjects" formControlName="subject" optionLabel="label" optionValue="value"
+              placeholder="Seleccione un asunto" styleClass="w-full"
+              [class.ng-invalid]="isInvalid('subject')" [class.ng-dirty]="isInvalid('subject')"></p-select>
+            @if (isInvalid('subject')) {
+              <small class="text-red-500">{{ content.errors.required }}</small>
+            }
+          </div>
+
+          <div class="form-field flex flex-column gap-1">
+            <label for="message" class="font-medium text-sm">{{ content.fields.message }}</label>
+            <textarea pTextarea id="message" formControlName="message" rows="5" class="w-full" style="resize: vertical"
+              [class.ng-invalid]="isInvalid('message')" [class.ng-dirty]="isInvalid('message')"></textarea>
+            @if (isInvalid('message')) {
+              <small class="text-red-500">{{ content.errors.required }}</small>
+            }
+          </div>
+
+          <app-button type="submit" variant="primary" [label]="content.submitBtn" class="mt-2 w-full"
+            [loading]="loading()" />
+            
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,12 +1,13 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, switchMap, of } from 'rxjs';
-import { CurrencyPenPipe } from '../../../shared/pipes/currency-pen.pipe';
+
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { CheckoutSummaryComponent } from './components/checkout-summary/checkout-summary';
 import { CheckoutAddressComponent } from './components/checkout-address/checkout-address';
 import { CheckoutShippingComponent } from './components/checkout-shipping/checkout-shipping';
 import { CheckoutPaymentComponent } from './components/checkout-payment/checkout-payment';
+import { CheckoutAsideComponent } from './components/checkout-aside/checkout-aside';
 import { AlertService } from '../../../shared/services/alert.service';
 import { CartService } from '../../../core/services/cart.service';
 import { OrderService } from '../../../core/services/order.service';
@@ -26,12 +27,12 @@ declare var MercadoPago: any;
   selector: 'app-checkout',
   standalone: true,
   imports: [
-    CurrencyPenPipe,
     ButtonComponent,
     CheckoutAddressComponent,
     CheckoutShippingComponent,
     CheckoutPaymentComponent,
     CheckoutSummaryComponent,
+    CheckoutAsideComponent,
     FormsModule
   ],
   templateUrl: './checkout.html',
@@ -67,6 +68,18 @@ export class CheckoutComponent {
     steps: ['Dirección', 'Envío', 'Pago', 'Confirmar'],
     summaryTitle: 'Tu pedido',
     totalLabel: 'Total',
+    buttons: {
+      back: 'Atrás',
+      continue: 'Continuar',
+      confirmAndPay: 'Confirmar y Pagar',
+      apply: 'Aplicar'
+    },
+    labels: {
+      subtotal: 'Subtotal',
+      discount: 'Descuento',
+      shipping: 'Envío',
+      couponPlaceholder: 'Código de descuento'
+    },
     navigation: {
       routeSuccess: '/orders',
       txnPrefix: 'TXN-',
@@ -76,7 +89,14 @@ export class CheckoutComponent {
       successTitle: '¡Pedido realizado!',
       successSub: 'Orden #',
       successEnd: ' confirmada.',
-      error: 'Error al procesar el pedido o sus servicios secundarios'
+      error: 'Error al procesar el pedido o sus servicios secundarios',
+      invalidSession: 'Sesión no válida o expirada. Por favor, inicia sesión de nuevo.',
+      sdkNotLoaded: 'El SDK de Mercado Pago no está cargado. Por favor, recarga la página.',
+      brickError: 'Ocurrió un error al cargar el formulario de pago.',
+      paymentError: 'Error al procesar el cargo con tu tarjeta.',
+      couponApplied: 'Cupón aplicado',
+      couponAppliedMsg: 'Se ha aplicado el descuento a tu compra.',
+      couponInvalid: 'Cupón inválido o expirado.'
     }
   };
 
@@ -123,10 +143,10 @@ export class CheckoutComponent {
           this.discountAmount.set(this.cartService.totalAmount() * (coupon.discountValue / 100));
         }
         this.validatingCoupon.set(false);
-        this.alertService.success('Cupón aplicado', 'Se ha aplicado el descuento a tu compra.');
+        this.alertService.success(this.content.alerts.couponApplied, this.content.alerts.couponAppliedMsg);
       },
       error: () => {
-        this.couponError.set('Cupón inválido o expirado.');
+        this.couponError.set(this.content.alerts.couponInvalid);
         this.validatingCoupon.set(false);
         this.selectedCouponId.set(null);
         this.discountAmount.set(0);
@@ -135,7 +155,9 @@ export class CheckoutComponent {
   }
 
   get finalTotal() {
-    return Math.max(0, this.cartService.totalAmount() - this.discountAmount());
+    const subtotal = this.cartService.totalAmount();
+    const shipping = this.selectedShipMethod()?.basePrice ?? 0;
+    return Math.max(0, subtotal - this.discountAmount()) + shipping;
   }
 
   async initMercadoPagoBrick() {
@@ -149,13 +171,13 @@ export class CheckoutComponent {
 
     const currentUser = this.authService.currentUser();
     if (!currentUser || !currentUser.email) {
-      this.alertService.error('Sesión no válida o expirada. Por favor, inicia sesión de nuevo.');
+      this.alertService.error(this.content.alerts.invalidSession);
       this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/checkout' } });
       return;
     }
 
     if (typeof MercadoPago === 'undefined') {
-      this.alertService.error('El SDK de Mercado Pago no está cargado. Por favor, recarga la página.');
+      this.alertService.error(this.content.alerts.sdkNotLoaded);
       return;
     }
 
@@ -192,7 +214,7 @@ export class CheckoutComponent {
         },
         onError: (error: any) => {
           console.error('Error en Brick:', error);
-          this.alertService.error('Ocurrió un error al cargar el formulario de pago.');
+          this.alertService.error(this.content.alerts.brickError);
         }
       }
     };
@@ -257,7 +279,7 @@ export class CheckoutComponent {
       },
       error: (err: any) => {
         console.error('Error al procesar el pago de Mercado Pago:', err);
-        const errMsg = err?.error?.message || 'Error al procesar el cargo con tu tarjeta.';
+        const errMsg = err?.error?.message || this.content.alerts.paymentError;
         this.alertService.error(errMsg);
         this.placing.set(false);
         reject();

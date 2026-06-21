@@ -1,0 +1,29 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ methods().length }}{{ content.badgeSuffix }}</p>
+    </div>
+    <app-button variant="primary" [label]="content.newBtnLabel" [icon]="content.newBtnIcon" (clicked)="openCreate()" />
+  </div>
+
+  <app-shipments-method-table
+    [methods]="methods()"
+    [loading]="loading()"
+    [content]="content"
+    (onEdit)="openEdit($event)"
+    (onDelete)="onDelete($event)"
+    (search)="onSearch($event)">
+  </app-shipments-method-table>
+</div>
+
+<app-shipment-method-form
+  [visible]="formVisible()"
+  [isEditing]="editingMethod() !== null"
+  [formGroup]="form"
+  [saving]="saving()"
+  [content]="content"
+  [statuses]="statuses"
+  (onClose)="formVisible.set(false)"
+  (onSave)="onSave()">
+</app-shipment-method-form>

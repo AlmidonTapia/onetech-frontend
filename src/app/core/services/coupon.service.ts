@@ -10,8 +10,11 @@ export class CouponService {
   private http = inject(HttpClient);
   private url = `${environment.apiUrl}/coupons`;
 
-  getAll(page = 0, size = 10) {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAll(page = 0, size = 10, search?: string, type?: string, status?: string) {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (search) params = params.set('search', search);
+    if (type) params = params.set('type', type);
+    if (status) params = params.set('status', status);
     return this.http.get<PageResponse<Coupon>>(this.url, { params });
   }
 

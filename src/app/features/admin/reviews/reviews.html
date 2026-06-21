@@ -1,0 +1,23 @@
+<div class="page-container">
+  
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ content.subtitle }}</p>
+    </div>
+  </div>
+
+  <app-reviews-table 
+    [reviews]="reviews()"
+    [totalRecords]="totalRecords()"
+    [loading]="loading()"
+    [content]="content"
+    (lazyLoad)="loadReviews($event)"
+    (onApprove)="onApprove($event)"
+    (onReject)="onReject($event)"
+    (onDelete)="onDelete($event)"
+    (search)="onSearch($event)"
+    (filterChange)="onFilterChange($event)"
+  />
+
+</div>

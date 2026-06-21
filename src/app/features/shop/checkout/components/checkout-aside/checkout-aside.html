@@ -1,0 +1,47 @@
+<div class="mini-summary-card">
+  <h4>{{ content.summaryTitle }} ({{ itemCount }})</h4>
+
+  <div class="mini-items-list">
+    @for (item of cart?.items ?? []; track item.idProduct) {
+    <div class="mini-item">
+      <span class="mini-name">{{ item.productName }}</span>
+      <span class="mini-qty">× {{ item.quantity }}</span>
+      <span class="mini-price">{{ item.subtotal | currencyPen }}</span>
+    </div>
+    }
+  </div>
+
+  <div class="mini-total">
+    <span>{{ content.labels.subtotal }}</span>
+    <strong>{{ subtotal | currencyPen }}</strong>
+  </div>
+
+  <div class="mini-coupon">
+    <div class="coupon-input-group">
+      <input type="text" [(ngModel)]="couponCode" [placeholder]="content.labels.couponPlaceholder" [disabled]="!!selectedCouponId">
+      <app-button variant="outline" [label]="content.buttons.apply" [loading]="validatingCoupon" [disabled]="!couponCode || !!selectedCouponId" (clicked)="onApplyCoupon()" />
+    </div>
+    @if (couponError) {
+      <small class="error-text">{{ couponError }}</small>
+    }
+  </div>
+
+  @if (discountAmount > 0) {
+    <div class="mini-total discount">
+      <span>{{ content.labels.discount }}</span>
+      <strong>- {{ discountAmount | currencyPen }}</strong>
+    </div>
+  }
+
+  @if (shipMethod) {
+    <div class="mini-total shipping">
+      <span>{{ content.labels.shipping }}</span>
+      <strong>{{ shipMethod.basePrice | currencyPen }}</strong>
+    </div>
+  }
+
+  <div class="mini-total final">
+    <span>{{ content.totalLabel }}</span>
+    <strong>{{ finalTotal | currencyPen }}</strong>
+  </div>
+</div>

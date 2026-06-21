@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CategoriesTableComponent } from './components/categories-table/categories-table';
 import { CategoryFormComponent } from './components/category-form/category-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { CategoryService } from '../../../core/services/category.service';
@@ -11,7 +10,7 @@ import { Category, CreateCategoryRequest } from '../../../core/models/category.m
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CategoriesTableComponent, CategoryFormComponent, ButtonComponent, CardComponent],
+  imports: [CategoriesTableComponent, CategoryFormComponent, ButtonComponent],
   templateUrl: './categories.html',
   styleUrl: './categories.css'
 })
@@ -26,6 +25,7 @@ export class CategoriesComponent implements OnInit {
   saving = signal(false);
   formVisible = signal(false);
   editingCat = signal<Category | null>(null);
+  searchTerm = signal<string | undefined>(undefined);
 
   apiConfig = {
     pageSize: 10
@@ -53,10 +53,15 @@ export class CategoriesComponent implements OnInit {
     this.loadCategories();
   }
 
+  onSearch(term: string) {
+    this.searchTerm.set(term);
+    this.loadCategories({ first: 0, rows: this.apiConfig.pageSize });
+  }
+
   loadCategories(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.categoryService.getAll(page, this.apiConfig.pageSize).subscribe({
+    this.categoryService.getAll(page, this.apiConfig.pageSize, this.searchTerm()).subscribe({
       next: r => {
         this.categories.set(r.content);
         this.totalRecords.set(r.totalElements);

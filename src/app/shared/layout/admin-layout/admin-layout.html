@@ -14,7 +14,10 @@
 
     <app-admin-sidebar [collapsedState]="isSidebarCollapsed" (collapsedChange)="isSidebarCollapsed = $event" />
 
-    <div class="admin-content" (click)="closeSidebarOnMobileClick()">
-        <router-outlet />
+    <div class="admin-main">
+        <app-admin-topbar (toggleSidebar)="isSidebarCollapsed = !isSidebarCollapsed" />
+        <div class="admin-content" (click)="closeSidebarOnMobileClick()">
+            <router-outlet />
+        </div>
     </div>
 </div>

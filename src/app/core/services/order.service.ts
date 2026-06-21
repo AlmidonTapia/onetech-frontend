@@ -3,14 +3,18 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Order, CreateOrderRequest, OrderStatus, CreateOrderResponse } from '../models/order.model';
 import { PageResponse } from '../models/page-response.model';
+import { ApiResponse } from '../models/api-response.model';
+import { map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private http = inject(HttpClient);
   private url = `${environment.apiUrl}/orders`;
 
-  getAll(page = 0, size = 10) {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAll(page: number, size: number, search?: string, status?: string) {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (search) params = params.set('search', search);
+    if (status) params = params.set('status', status);
     return this.http.get<PageResponse<Order>>(this.url, { params });
   }
 
@@ -25,10 +29,10 @@ export class OrderService {
 
   create(data: CreateOrderRequest, idempotencyKey?: string) {
     const headers = idempotencyKey ? new HttpHeaders({ 'Idempotency-Key': idempotencyKey }) : undefined;
-    return this.http.post<CreateOrderResponse>(this.url, data, { headers });
+    return this.http.post<ApiResponse<any>>(this.url, data, { headers });
   }
 
   updateStatus(id: string, newStatus: OrderStatus) {
-    return this.http.patch<Order>(`${this.url}/${id}/status`, { newStatus });
+    return this.http.patch<ApiResponse<string>>(`${this.url}/${id}/status`, { newStatus });
   }
 }

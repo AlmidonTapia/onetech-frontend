@@ -1,0 +1,29 @@
+
+  <div class="table-toolbar" style="margin: 24px 0 16px 0; display: flex; justify-content: space-between; align-items: center; padding: 0 16px;">
+    <div style="display: flex; align-items: center; gap: 12px; user-select: none; cursor: default;">
+      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600;">{{ content.title }}</h2>
+      <span style="background: var(--ot-bg-surface); border: 1px solid var(--ot-border-color); color: var(--ot-text-muted); padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">{{ methods().length }}{{ content.badgeSuffix }}</span>
+    </div>
+    <app-button variant="primary" [label]="content.newBtnLabel" [icon]="content.newBtnIcon" (clicked)="openCreate()" />
+  </div>
+
+  <app-shipments-method-table
+    [methods]="methods()"
+    [loading]="loading()"
+    [content]="content"
+    (onEdit)="openEdit($event)"
+    (onDelete)="onDelete($event)"
+    (search)="onSearch($event)">
+  </app-shipments-method-table>
+
+
+<app-shipment-method-form
+  [visible]="formVisible()"
+  [isEditing]="editingMethod() !== null"
+  [formGroup]="form"
+  [saving]="saving()"
+  [content]="content"
+  [statuses]="statuses"
+  (onClose)="formVisible.set(false)"
+  (onSave)="onSave()">
+</app-shipment-method-form>

@@ -1,0 +1,34 @@
+<div class="detail-totals">
+  <div class="total-row">
+      <span>{{ content().totals.subtotalLabel }}</span>
+      <span>{{ order().totalAmount - order().shippingCost + order().discountAmount | currencyPen }}</span>
+  </div>
+  @if (order().discountAmount > 0) {
+  <div class="total-row text-red-500">
+      <span>{{ content().labels.discount }}</span>
+      <span>-{{ order().discountAmount | currencyPen }}</span>
+  </div>
+  }
+  <div class="total-row">
+      <span>{{ content().labels.shipping }}</span>
+      <span>{{ order().shippingCost | currencyPen }}</span>
+  </div>
+  <div class="total-row total-row--grand">
+      <span>{{ content().totals.grandTotalLabel }}</span>
+      <strong>{{ order().totalAmount | currencyPen }}</strong>
+  </div>
+</div>
+
+<div class="detail-section">
+  <h4 class="section-title">{{ content().sections.infoTitle }}</h4>
+  <div class="info-grid">
+      <div class="info-item">
+          <span class="info-label">{{ content().labels.client }}</span>
+          <span>{{ order().userFullName }}</span>
+      </div>
+      <div class="info-item">
+          <span class="info-label">{{ content().labels.orderId }}</span>
+          <code>{{ order().idOrder }}</code>
+      </div>
+  </div>
+</div>

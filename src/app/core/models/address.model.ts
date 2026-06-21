@@ -1,8 +1,7 @@
 export interface Address {
   idAddress: string;
   country: string;
-  region: string;
-  district: string;
+  ubigeoCode: string;
   mainAddress: string;
   reference?: string;
   isDefault: boolean;
@@ -10,8 +9,7 @@ export interface Address {
 
 export interface CreateAddressRequest {
   country: string;
-  region: string;
-  district: string;
+  ubigeoCode: string;
   mainAddress: string;
   reference?: string;
   isDefault: boolean;

@@ -6,12 +6,16 @@
 
   <div class="container sections-container">
     <app-featured-categories />
-    <app-featured-products title="Productos destacados" [products]="featured()" />
+    <app-featured-products [title]="content.sections.featured" [products]="featured()" />
     <app-promo-banner />
-    <app-featured-products title="Nuevos ingresos" [products]="newArrivals()" />
+    <app-featured-products [title]="content.sections.newArrivals" [products]="newArrivals()" />
 
     @if (bestSellers().length > 0) {
-    <app-featured-products title="Lo más vendido" [products]="bestSellers()" badgeContext="bestseller" />
+    <app-featured-products [title]="content.sections.bestSellers" [products]="bestSellers()" badgeContext="bestseller" />
+    }
+
+    @if (brands().length > 0) {
+      <app-brand-carousel [brands]="brands()" />
     }
   </div>
 

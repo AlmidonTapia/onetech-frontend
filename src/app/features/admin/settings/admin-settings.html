@@ -1,0 +1,36 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ content.subtitle }}</p>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header">
+      <h3>{{ content.generalSection.title }}</h3>
+    </div>
+
+    <form [formGroup]="form" class="settings-form">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>{{ content.generalSection.labels.storeName }}</label>
+          <input pInputText formControlName="storeName" [placeholder]="content.generalSection.placeholders.storeName" />
+        </div>
+        <div class="form-field">
+          <label>{{ content.generalSection.labels.contactEmail }}</label>
+          <input pInputText formControlName="contactEmail" [placeholder]="content.generalSection.placeholders.contactEmail" />
+        </div>
+        <div class="form-field">
+          <label>{{ content.generalSection.labels.supportPhone }}</label>
+          <input pInputText formControlName="supportPhone" [placeholder]="content.generalSection.placeholders.supportPhone" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <app-button [label]="content.generalSection.saveLabel" [icon]="content.generalSection.saveIcon"
+          [loading]="saving()" (clicked)="onSave()" />
+      </div>
+    </form>
+  </div>
+</div>

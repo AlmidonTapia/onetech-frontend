@@ -1,0 +1,15 @@
+.addresses-list { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+.address-card { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px; border: 1px solid var(--ot-border-color); border-radius: var(--ot-radius-lg); background: var(--ot-bg-surface); transition: var(--ot-transition); }
+.address-card:hover { border-color: var(--p-primary-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.address-card--default { border: 2px solid var(--p-primary-color); }
+.addr-body { display: flex; flex-direction: column; gap: 8px; }
+.addr-row { display: flex; align-items: center; gap: 10px; }
+.addr-row i { color: var(--p-primary-color); font-size: 18px; }
+.addr-main { font-size: 15px; font-weight: 700; color: var(--ot-text-main); }
+.default-chip { padding: 4px 10px; border-radius: var(--ot-radius-full); background: color-mix(in srgb, var(--p-primary-color) 10%, transparent); color: var(--p-primary-color); font-size: 12px; font-weight: 700; }
+.addr-detail, .addr-ref { margin: 0; font-size: 14px; color: var(--ot-text-muted); padding-left: 28px; }
+.delete-btn { background: transparent; border: none; color: var(--ot-text-muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: var(--ot-transition); display: flex; align-items: center; justify-content: center; }
+.delete-btn:hover { color: var(--ot-danger); background: color-mix(in srgb, var(--ot-danger) 10%, transparent); }
+.addresses-empty { text-align: center; padding: 48px 0; background: var(--ot-bg-subtle); border-radius: var(--ot-radius-lg); color: var(--ot-text-muted); border: 1px dashed var(--ot-border-color); }
+.addresses-empty i { font-size: 32px; margin-bottom: 16px; color: var(--ot-text-muted); opacity: 0.5; }
+.addresses-empty p { margin: 0; font-size: 15px; }

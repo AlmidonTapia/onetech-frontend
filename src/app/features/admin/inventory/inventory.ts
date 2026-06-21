@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table';
 import { MovementFormComponent } from './components/movement-form/movement-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { InventoryService } from '../../../core/services/inventory.service';
@@ -11,7 +10,7 @@ import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [InventoryTableComponent, MovementFormComponent, ButtonComponent, CardComponent],
+  imports: [InventoryTableComponent, MovementFormComponent, ButtonComponent],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css'
 })
@@ -25,6 +24,8 @@ export class InventoryComponent implements OnInit {
   loading = signal(false);
   saving = signal(false);
   formVisible = signal(false);
+  searchTerm = signal<string | undefined>(undefined);
+  filterType = signal<string | undefined>(undefined);
 
   apiConfig = {
     pageSize: 10
@@ -54,10 +55,20 @@ export class InventoryComponent implements OnInit {
     this.loadMovements();
   }
 
+  onSearch(term: string) {
+    this.searchTerm.set(term);
+    this.loadMovements({ first: 0, rows: 10 });
+  }
+
+  onFilterType(type: string) {
+    this.filterType.set(type === 'ALL' ? undefined : type);
+    this.loadMovements({ first: 0, rows: 10 });
+  }
+
   loadMovements(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.inventoryService.getAll(page, this.apiConfig.pageSize).subscribe({
+    this.inventoryService.getAll(page, this.apiConfig.pageSize, this.searchTerm(), this.filterType()).subscribe({
       next: r => {
         this.movements.set(r.content);
         this.totalRecords.set(r.totalElements);

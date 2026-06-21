@@ -1,20 +1,21 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { UserService } from '../../../../../core/services/user.service';
 import { Address, CreateAddressRequest } from '../../../../../core/models/address.model';
+import { AddressListComponent } from './components/address-list/address-list';
+import { AddressFormComponent } from './components/address-form/address-form';
 
 @Component({
   selector: 'app-profile-addresses',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, AddressListComponent, AddressFormComponent],
   templateUrl: './profile-addresses.html',
   styleUrl: './profile-addresses.css'
 })
 export class ProfileAddressesComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
@@ -32,12 +33,13 @@ export class ProfileAddressesComponent implements OnInit {
     defaultChipLabel: 'Principal',
     emptyText: 'No tienes direcciones guardadas.',
     formTitle: 'Agregar nueva dirección',
-
     fields: {
-      regionLabel: 'Región *',
-      regionPlaceholder: 'Lima',
+      departmentLabel: 'Departamento *',
+      departmentPlaceholder: 'Seleccione Departamento',
+      provinceLabel: 'Provincia *',
+      provincePlaceholder: 'Seleccione Provincia',
       districtLabel: 'Distrito *',
-      districtPlaceholder: 'Miraflores',
+      districtPlaceholder: 'Seleccione Distrito',
       mainAddressLabel: 'Dirección principal *',
       mainAddressPlaceholder: 'Av. Larco 345, Dpto 201',
       referenceLabel: 'Referencia',
@@ -45,13 +47,11 @@ export class ProfileAddressesComponent implements OnInit {
       defaultCheckboxLabel: 'Establecer como dirección principal',
       errorRequired: 'Campo requerido'
     },
-
     actions: {
       cancelLabel: 'Cancelar',
       saveLabel: 'Guardar dirección',
       saveIcon: 'pi-check'
     },
-
     alerts: {
       saveSuccess: 'Dirección agregada',
       saveError: 'Error al guardar la dirección',
@@ -65,15 +65,6 @@ export class ProfileAddressesComponent implements OnInit {
     }
   };
 
-  form = this.fb.group({
-    country: ['Perú', Validators.required],
-    region: ['', Validators.required],
-    district: ['', Validators.required],
-    mainAddress: ['', Validators.required],
-    reference: [''],
-    isDefault: [false],
-  });
-
   ngOnInit() {
     this.loadAddresses();
   }
@@ -82,23 +73,13 @@ export class ProfileAddressesComponent implements OnInit {
     this.userService.getAddresses().subscribe(a => this.addresses.set(a));
   }
 
-  isInvalid(field: string): boolean {
-    const control = this.form.get(field);
-    return !!(control?.invalid && control?.touched);
-  }
-
-  onSave() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+  onSave(requestData: CreateAddressRequest) {
     this.saving.set(true);
-    this.userService.addAddress(this.form.value as CreateAddressRequest).subscribe({
+    this.userService.addAddress(requestData).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.saveSuccess);
         this.showForm.set(false);
         this.saving.set(false);
-        this.form.reset({ country: 'Perú', isDefault: false });
         this.loadAddresses();
       },
       error: () => {

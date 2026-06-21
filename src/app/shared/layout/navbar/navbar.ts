@@ -6,11 +6,12 @@ import { NavbarCartComponent } from './components/navbar-cart/navbar-cart';
 import { AuthService } from '../../../core/services/auth.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
+import { HasRoleDirective } from '../../directives/has-role.directive';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, NavbarMenuComponent, NavbarSearchComponent, NavbarCartComponent, ThemeToggleComponent],
+  imports: [RouterLink, NavbarMenuComponent, NavbarSearchComponent, NavbarCartComponent, ThemeToggleComponent, HasRoleDirective],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
@@ -29,6 +30,12 @@ export class NavbarComponent {
       labelAuthenticated: 'Mi cuenta',
       labelGuest: 'Hola, ingresa',
       defaultName: 'Mi cuenta'
+    },
+
+    admin: {
+      route: '/admin',
+      labelPre: 'Panel de',
+      labelPost: 'Administración'
     },
 
     wishlist: {

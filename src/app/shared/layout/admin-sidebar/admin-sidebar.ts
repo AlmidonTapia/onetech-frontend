@@ -2,7 +2,7 @@ import { Component, inject, signal, Input, Output, EventEmitter } from '@angular
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
-import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
+
 interface AdminNavItem {
   label: string;
   route: string;
@@ -12,7 +12,7 @@ interface AdminNavItem {
 @Component({
   selector: 'app-admin-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, NgClass, ThemeToggleComponent],
+  imports: [RouterLink, RouterLinkActive, NgClass],
   templateUrl: './admin-sidebar.html',
   styleUrl: './admin-sidebar.css'
 })
@@ -50,18 +50,15 @@ export class AdminSidebarComponent {
     { label: 'Cupones', route: '/admin/coupons', icon: 'pi-ticket' },
     { label: 'Órdenes', route: '/admin/orders', icon: 'pi-shopping-bag' },
     { label: 'Envíos', route: '/admin/shipments', icon: 'pi-truck' },
-    { label: 'Métodos Envío', route: '/admin/shipment-methods', icon: 'pi-compass' },
+    { label: 'Logística / Envíos', route: '/admin/shipping', icon: 'pi-compass' },
     { label: 'Métodos Pago', route: '/admin/payment-methods', icon: 'pi-credit-card' },
-    { label: 'Usuarios', route: '/admin/users', icon: 'pi-users' }
+    { label: 'Usuarios', route: '/admin/users', icon: 'pi-users' },
+    { label: 'Reseñas', route: '/admin/reviews', icon: 'pi-comments' },
+    { label: 'Bandeja Entrada', route: '/admin/inbox', icon: 'pi-inbox' }
   ];
 
   toggleCollapse() {
     this.collapsed.update(state => !state);
     this.collapsedChange.emit(this.collapsed());
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
   }
 }

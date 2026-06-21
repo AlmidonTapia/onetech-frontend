@@ -1,7 +1,7 @@
 <div class="product-info">
 
   <div class="info-tags">
-    @if (product.badge === 'NEW') { <app-badge variant="blue">Nuevo</app-badge> }
+    @if (product.badge === 'NEW') { <app-badge variant="blue">{{ content.newBadge }}</app-badge> }
     @else if (product.badge === 'BESTSELLER') { <app-badge variant="blue">Más vendido</app-badge> }
     @else if (product.badge === 'OFFER') { <app-badge variant="blue">Oferta</app-badge> }
     <app-badge variant="blue">{{ product.categoryName }}</app-badge>

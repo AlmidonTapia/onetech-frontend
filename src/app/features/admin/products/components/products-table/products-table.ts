@@ -1,14 +1,19 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { Product } from '../../../../../core/models/product.model';
+import { Category } from '../../../../../core/models/category.model';
+import { Brand } from '../../../../../core/models/brand.model';
 
 @Component({
   selector: 'app-products-table',
   standalone: true,
-  imports: [TableModule, TooltipModule, BadgeComponent, CurrencyPenPipe],
+  imports: [TableModule, TooltipModule, BadgeComponent, CurrencyPenPipe, InputTextModule, SelectModule, FormsModule],
   templateUrl: './products-table.html',
   styleUrl: './products-table.css'
 })
@@ -21,6 +26,48 @@ export class ProductsTableComponent {
   @Output() editItem = new EventEmitter<Product>();
   @Output() deleteItem = new EventEmitter<Product>();
   @Output() manageImages = new EventEmitter<Product>();
+  @Input() categories: Category[] = [];
+  @Input() brands: Brand[] = [];
+  
+  @Output() search = new EventEmitter<string>();
+  @Output() filterChange = new EventEmitter<{ category: string, brand: string, status: string }>();
+
+  statusOptions = [
+    { label: 'Todos los estados', value: 'ALL' },
+    { label: 'Activo', value: 'ACTIVO' },
+    { label: 'Inactivo', value: 'INACTIVO' }
+  ];
+
+  selectedCategory = 'ALL';
+  selectedBrand = 'ALL';
+  selectedStatus = 'ALL';
+
+  get categoryOptions() {
+    return [
+      { label: 'Todas las categorías', idCategory: 'ALL' }, 
+      ...this.categories.map(c => ({ label: c.categoryName, idCategory: c.idCategory }))
+    ];
+  }
+
+  get brandOptions() {
+    return [
+      { label: 'Todas las marcas', idBrand: 'ALL' }, 
+      ...this.brands.map(b => ({ label: b.brandName, idBrand: b.idBrand }))
+    ];
+  }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.search.emit(target.value);
+  }
+
+  onFilter() {
+    this.filterChange.emit({
+      category: this.selectedCategory,
+      brand: this.selectedBrand,
+      status: this.selectedStatus
+    });
+  }
 
   tableConfig = {
     styleClass: 'p-datatable-sm',
@@ -31,6 +78,8 @@ export class ProductsTableComponent {
   } as const;
 
   content = {
+    quickSearchTitle: 'Catálogo de Productos',
+    searchPlaceholder: 'Buscar producto...',
     headers: {
       img: 'Img',
       product: 'Producto',
@@ -49,9 +98,15 @@ export class ProductsTableComponent {
     },
     emptyMessage: 'No se encontraron productos.',
     icons: {
-      images: 'pi pi-images',
+      images: 'pi pi-image',
       edit: 'pi pi-pencil',
-      delete: 'pi pi-trash'
+      delete: 'pi pi-trash',
+      deleteLabel: 'Eliminar'
+    },
+    statusLabels: {
+      active: 'Activo',
+      inactive: 'Inactivo',
+      outOfStock: 'Agotado'
     }
-  };
+  } as const;
 }

@@ -65,48 +65,48 @@
 
 /* Success style */
 .alert-success {
-  background: #f0fdf4 !important;
-  color: #166534 !important;
-  border-color: #bbf7d0 !important;
+  background: var(--ot-success-bg) !important;
+  color: var(--ot-success) !important;
+  border-color: color-mix(in srgb, var(--ot-success) 30%, transparent) !important;
 }
 .dark-mode .alert-success {
-  background: rgba(22, 101, 52, 0.15) !important;
-  color: #4ade80 !important;
-  border-color: rgba(74, 222, 128, 0.3) !important;
+  background: color-mix(in srgb, var(--ot-success) 15%, transparent) !important;
+  color: var(--ot-success) !important;
+  border-color: color-mix(in srgb, var(--ot-success) 30%, transparent) !important;
 }
 
 /* Error style */
 .alert-error {
-  background: #fef2f2 !important;
-  color: #991b1b !important;
-  border-color: #fecaca !important;
+  background: var(--ot-error-bg) !important;
+  color: var(--ot-error) !important;
+  border-color: color-mix(in srgb, var(--ot-error) 30%, transparent) !important;
 }
 .dark-mode .alert-error {
-  background: rgba(153, 27, 27, 0.15) !important;
-  color: #f87171 !important;
-  border-color: rgba(248, 113, 113, 0.3) !important;
+  background: color-mix(in srgb, var(--ot-error) 15%, transparent) !important;
+  color: var(--ot-error) !important;
+  border-color: color-mix(in srgb, var(--ot-error) 30%, transparent) !important;
 }
 
 /* Warning style */
 .alert-warning {
-  background: #fffbeb !important;
-  color: #92400e !important;
-  border-color: #fde68a !important;
+  background: var(--ot-warning-bg) !important;
+  color: var(--ot-warning) !important;
+  border-color: color-mix(in srgb, var(--ot-warning) 30%, transparent) !important;
 }
 .dark-mode .alert-warning {
-  background: rgba(146, 64, 14, 0.15) !important;
-  color: #fbbf24 !important;
-  border-color: rgba(251, 191, 36, 0.3) !important;
+  background: color-mix(in srgb, var(--ot-warning) 15%, transparent) !important;
+  color: var(--ot-warning) !important;
+  border-color: color-mix(in srgb, var(--ot-warning) 30%, transparent) !important;
 }
 
 /* Info style */
 .alert-info {
-  background: #f0f9ff !important;
-  color: #075985 !important;
-  border-color: #bae6fd !important;
+  background: var(--ot-info-bg) !important;
+  color: var(--ot-info) !important;
+  border-color: color-mix(in srgb, var(--ot-info) 30%, transparent) !important;
 }
 .dark-mode .alert-info {
-  background: rgba(7, 89, 133, 0.15) !important;
-  color: #38bdf8 !important;
-  border-color: rgba(56, 189, 248, 0.3) !important;
+  background: color-mix(in srgb, var(--ot-info) 15%, transparent) !important;
+  color: var(--ot-info) !important;
+  border-color: color-mix(in srgb, var(--ot-info) 30%, transparent) !important;
 }

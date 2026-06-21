@@ -10,8 +10,9 @@ export class BrandService {
   private http = inject(HttpClient);
   private url = `${environment.apiUrl}/brands`;
 
-  getAll(page = 0, size = 50) {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAll(page = 0, size = 50, search?: string) {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (search) params = params.set('search', search);
     return this.http.get<PageResponse<Brand>>(this.url, { params });
   }
 
@@ -29,5 +30,11 @@ export class BrandService {
 
   delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.url}/${id}`);
+  }
+
+  uploadImage(id: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.url}/${id}/image`, formData);
   }
 }

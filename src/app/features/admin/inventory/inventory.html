@@ -1,16 +1,20 @@
-<div class="admin-page">
+<div class="page-container">
     <div class="page-header">
-        <div class="page-title">
-            <h1>{{ content.title }}</h1>
-            <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
-        </div>
+        <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
+    </div>
         <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="formVisible.set(true)" />
     </div>
 
-    <app-card [padding]="content.cardPadding">
+    
         <app-inventory-table [movements]="movements()" [totalRecords]="totalRecords()" [loading]="loading()"
-            (lazyLoad)="loadMovements($event)" (cancel)="onCancel($event)" />
-    </app-card>
+            (lazyLoad)="loadMovements($event)"
+            (onCancel)="onCancel($event)"
+            (search)="onSearch($event)"
+            (filterType)="onFilterType($event)">
+        </app-inventory-table>
+    
 </div>
 
 <app-movement-form [(visible)]="formVisible" [saving]="saving()" (save)="onSave($event)"

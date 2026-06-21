@@ -46,8 +46,9 @@
             <h3 class="manager-subtitle">
                 <i class="pi pi-cloud-upload"></i> Subir nuevas imágenes
             </h3>
-            <p class="upload-note">Soporta múltiples archivos. Límite de 5 imágenes en total. Tamaño máx: 10MB.</p>
-            
+            <ng-template pTemplate="content">
+            <p class="upload-note">{{ content.uploadConfig.uploadNote }}</p>
+        </ng-template>    
             <p-fileUpload #fileUpload 
                 [multiple]="true" 
                 [accept]="content.uploadConfig.accept"

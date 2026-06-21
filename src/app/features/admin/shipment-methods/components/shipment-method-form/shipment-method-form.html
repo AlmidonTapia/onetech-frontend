@@ -1,0 +1,22 @@
+<p-dialog [visible]="visible()" (visibleChange)="!$event && close()" [header]="isEditing() ? content().dialog.editTitle : content().dialog.createTitle" [style]="{width: '400px'}" [modal]="true">
+  <form [formGroup]="formGroup()" (ngSubmit)="submit()" class="modal-form">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>{{ content().dialog.fields.name }}</label>
+        <input type="text" formControlName="methodName" class="form-input" [placeholder]="content().dialog.fields.namePlaceholder" />
+      </div>
+      <div class="form-group">
+        <label>{{ content().dialog.fields.price }}</label>
+        <input type="number" formControlName="basePrice" class="form-input" />
+      </div>
+      <div class="form-group" *ngIf="isEditing()">
+        <label>{{ content().dialog.fields.status }}</label>
+        <p-select formControlName="status" [options]="statuses()" optionLabel="label" optionValue="value" [placeholder]="content().dialog.fields.statusPlaceholder" [style]="{width: '100%'}" appendTo="body"></p-select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <app-button variant="outline" [label]="content().dialog.actions.cancel" type="button" (clicked)="close()" />
+      <app-button variant="primary" [label]="content().dialog.actions.save" type="submit" [loading]="saving()" [disabled]="formGroup().invalid" />
+    </div>
+  </form>
+</p-dialog>

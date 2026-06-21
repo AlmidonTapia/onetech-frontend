@@ -58,7 +58,7 @@
   --ot-transition:   background-color 250ms ease, color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
 }
 
-.dark-mode {
+.dark {
   --ot-bg-body:      var(--ot-gray-900);
   --ot-bg-surface:   var(--ot-gray-800);
   --ot-text-main:    var(--ot-gray-100);
@@ -94,6 +94,37 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   padding-inline: var(--ot-container-px);
 }
 
+/* ── PAGE MASTER LAYOUT ── */
+.page-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ot-text-main);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  color: var(--ot-text-muted);
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0 0;
+}
+
 /* ── ULTRA-PREMIUM GLASSMORPHIC TOASTS (ALERTS) ── */
 .p-toast {
   z-index: 99999 !important;
@@ -120,7 +151,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   align-items: center !important;
 }
 
-.dark-mode .p-toast-message {
+.dark .p-toast-message {
   background: rgba(30, 41, 59, 0.9) !important;
   border-color: rgba(71, 85, 105, 0.5) !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 16px -6px rgba(0, 0, 0, 0.3) !important;
@@ -227,8 +258,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   transform: rotate(90deg) !important;
 }
 
-.dark-mode .p-toast-close-button:hover,
-.dark-mode .p-toast-icon-close-button:hover {
+.dark .p-toast-close-button:hover,
+.dark .p-toast-icon-close-button:hover {
   background: rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -291,6 +322,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   font-weight: 700 !important;
   color: var(--ot-text-main) !important;
   letter-spacing: -0.01em !important;
+  user-select: none !important;
+  cursor: default !important;
 }
 
 .p-dialog-header-icons {
@@ -594,7 +627,126 @@ body .p-paginator .p-paginator-page.p-highlight {
   font-weight: 600 !important;
 }
 
-.dark-mode .p-select-option.p-highlight {
+.dark .p-select-option.p-highlight {
   background: rgba(14, 165, 233, 0.15) !important;
   color: var(--p-primary-color) !important;
 }
+
+/* ── ESTILOS GLOBALES PARA CABECERAS Y BUSCADORES DE TABLAS ADMIN ── */
+.table-header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+@media (min-width: 768px) {
+  .table-header-container {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+  }
+}
+
+.table-header-title {
+  margin: 0;
+  color: var(--ot-text-main);
+  font-size: 16px;
+  font-weight: 600;
+  user-select: none;
+  cursor: default;
+}
+
+/* ── TABLE EMPTY STATE ── */
+.table-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.table-empty-icon {
+  font-size: 2.5rem;
+  color: var(--ot-gray-400);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.table-empty-text {
+  color: var(--ot-text-muted);
+  margin: 0;
+  font-weight: 500;
+}
+
+.table-toolbar-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-dropdown {
+  width: 100%;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.search-input-wrapper i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.filter-search-input {
+  width: 100%;
+  padding-left: 36px !important;
+}
+
+@media (min-width: 640px) {
+  .filter-dropdown {
+      width: 160px;
+  }
+  .search-input-wrapper {
+      width: auto;
+  }
+  .filter-search-input {
+      width: 220px;
+  }
+}
+
+/* ── BOTONES DE ACCIÓN PARA TABLAS ADMIN ── */
+.row-actions {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.act-btn {
+  width: 30px; 
+  height: 30px; 
+  border-radius: var(--ot-radius-sm);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  color: var(--ot-text-muted); 
+  transition: var(--ot-transition);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.act-btn:hover { 
+  background: var(--ot-bg-body); 
+  color: var(--p-primary-color); 
+}
+.act-btn--danger:hover { 
+  background: var(--ot-error-bg); 
+  color: var(--ot-error); 
+}
+.dark .act-btn--danger:hover { 
+  background: rgba(220, 38, 38, 0.15); 
+}
+

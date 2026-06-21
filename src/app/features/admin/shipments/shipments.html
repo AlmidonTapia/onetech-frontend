@@ -1,17 +1,20 @@
-<div class="admin-page">
+<div class="page-container">
 
   <div class="page-header">
-    <div class="page-title">
-      <h1>{{ content.title }}</h1>
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
       <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
     </div>
     <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="openCreate()" />
   </div>
 
-  <app-card [padding]="content.cardPadding">
-    <app-shipments-table [shipments]="shipments()" [totalRecords]="totalRecords()" [loading]="loading()"
-      (lazyLoad)="loadShipments($event)" (editItem)="openEdit($event)" />
-  </app-card>
+  
+    <app-shipments-table [shipments]="shipments()" [totalRecords]="totalRecords()"
+    (lazyLoad)="loadShipments($event)"
+    (onEdit)="openEdit($event)"
+    (search)="onSearch($event)">
+  </app-shipments-table>
+  
 
 </div>
 

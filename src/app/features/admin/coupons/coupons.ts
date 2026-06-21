@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CouponsTableComponent } from './components/coupons-table/coupons-table';
 import { CouponFormComponent } from './components/coupon-form/coupon-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { CouponService } from '../../../core/services/coupon.service';
@@ -11,7 +10,7 @@ import { Coupon, CreateCouponRequest } from '../../../core/models/coupon.model';
 @Component({
   selector: 'app-coupons',
   standalone: true,
-  imports: [CouponsTableComponent, CouponFormComponent, ButtonComponent, CardComponent],
+  imports: [CouponsTableComponent, CouponFormComponent, ButtonComponent],
   templateUrl: './coupons.html',
   styleUrl: './coupons.css'
 })
@@ -26,6 +25,9 @@ export class CouponsComponent implements OnInit {
   saving = signal(false);
   formVisible = signal(false);
   editingCoupon = signal<Coupon | null>(null);
+  searchTerm = signal<string | undefined>(undefined);
+  filterType = signal<string | undefined>(undefined);
+  filterStatus = signal<string | undefined>(undefined);
 
   content = {
     title: 'Cupones',
@@ -51,10 +53,21 @@ export class CouponsComponent implements OnInit {
     this.loadCoupons();
   }
 
+  onSearch(term: string) {
+    this.searchTerm.set(term);
+    this.loadCoupons({ first: 0, rows: 10 });
+  }
+
+  onFilterChange(filters: { type: string, status: string }) {
+    this.filterType.set(filters.type === 'ALL' ? undefined : filters.type);
+    this.filterStatus.set(filters.status === 'ALL' ? undefined : filters.status);
+    this.loadCoupons({ first: 0, rows: 10 });
+  }
+
   loadCoupons(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.couponService.getAll(page, 10).subscribe({
+    this.couponService.getAll(page, 10, this.searchTerm(), this.filterType(), this.filterStatus()).subscribe({
       next: r => {
         this.coupons.set(r.content);
         this.totalRecords.set(r.totalElements);

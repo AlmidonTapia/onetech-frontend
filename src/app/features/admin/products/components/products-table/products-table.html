@@ -2,6 +2,24 @@
     [lazy]="true" (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true" [styleClass]="tableConfig.styleClass"
     [tableStyle]="{ 'min-width': tableConfig.tableMinWidth }">
 
+    <ng-template pTemplate="caption">
+        <div class="table-header-container">
+            <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
+            <div class="table-toolbar-filters">
+                <p-select [options]="categoryOptions" [(ngModel)]="selectedCategory" (onChange)="onFilter()"
+                    optionLabel="label" optionValue="idCategory" styleClass="filter-dropdown" />
+                <p-select [options]="brandOptions" [(ngModel)]="selectedBrand" (onChange)="onFilter()"
+                    optionLabel="label" optionValue="idBrand" styleClass="filter-dropdown" />
+                <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onFilter()"
+                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
+                <span class="p-input-icon-left search-input-wrapper">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+                </span>
+            </div>
+        </div>
+    </ng-template>
+
     <ng-template pTemplate="header">
         <tr>
             <th style="width:56px">{{ content.headers.img }}</th>
@@ -39,14 +57,17 @@
             </td>
             <td>
                 <div class="status-indicator" style="margin-top: 0;">
-                    @if (p.status === 'ACTIVO') {
-                    <span class="badge-status badge-status--active">Activo</span>
-                    } @else if (p.status === 'INACTIVO') {
-                    <span class="badge-status badge-status--inactive">Inactivo</span>
-                    } @else if (p.status === 'AGOTADO') {
-                    <span class="badge-status badge-status--out">Agotado</span>
-                    }
-                </div>
+                    @switch (p.status) {
+                  @case ('ACTIVO') {
+                    <span class="badge-status badge-status--active">{{ content.statusLabels.active }}</span>
+                  }
+                  @case ('INACTIVO') {
+                    <span class="badge-status badge-status--inactive">{{ content.statusLabels.inactive }}</span>
+                  }
+                  @case ('AGOTADO') {
+                    <span class="badge-status badge-status--out">{{ content.statusLabels.outOfStock }}</span>
+                  }
+                }</div>
             </td>
             <td>
                 <div class="row-actions">
@@ -67,8 +88,9 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="empty-cell">
-                {{ content.emptyMessage }}
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
+                <i class="pi pi-inbox table-empty-icon"></i>
+                <p class="table-empty-text">{{ content.emptyMessage }}</p>
             </td>
         </tr>
     </ng-template>

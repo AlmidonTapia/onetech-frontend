@@ -38,7 +38,8 @@ export class ProductImagesManagerComponent implements OnChanges {
       uploadLabel: 'Subir',
       cancelLabel: 'Limpiar',
       maxFileSize: 10000000,
-      styleClass: 'upload-area'
+      styleClass: 'upload-area',
+      uploadNote: 'Soporta múltiples archivos. Límite de 5 imágenes en total. Tamaño máx: 10MB.'
     },
     actions: {
       closeLabel: 'Cerrar'

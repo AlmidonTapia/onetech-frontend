@@ -1,0 +1,73 @@
+<div class="new-addr-form animate-fade-in">
+  <h4>{{ content().formTitle }}</h4>
+  <form [formGroup]="form" class="addr-form" novalidate (ngSubmit)="submit()">
+
+      <div class="form-row">
+          <div class="form-field">
+              <label>{{ content().fields.departmentLabel }}</label>
+              <select formControlName="department" [class.ng-invalid]="isInvalid('department')" [class.ng-dirty]="isInvalid('department')">
+                  <option value="">{{ content().fields.departmentPlaceholder }}</option>
+                  @for (d of departments(); track d.id) {
+                      <option [value]="d.id">{{ d.name }}</option>
+                  }
+              </select>
+              @if (isInvalid('department')) {
+              <span class="field-error">{{ content().fields.errorRequired }}</span>
+              }
+          </div>
+          <div class="form-field">
+              <label>{{ content().fields.provinceLabel }}</label>
+              <select formControlName="province" [class.ng-invalid]="isInvalid('province')" [class.ng-dirty]="isInvalid('province')">
+                  <option value="">{{ content().fields.provincePlaceholder }}</option>
+                  @for (p of provinces(); track p.id) {
+                      <option [value]="p.id">{{ p.name }}</option>
+                  }
+              </select>
+              @if (isInvalid('province')) {
+              <span class="field-error">{{ content().fields.errorRequired }}</span>
+              }
+          </div>
+      </div>
+
+      <div class="form-row">
+          <div class="form-field">
+              <label>{{ content().fields.districtLabel }}</label>
+              <select formControlName="district" [class.ng-invalid]="isInvalid('district')" [class.ng-dirty]="isInvalid('district')">
+                  <option value="">{{ content().fields.districtPlaceholder }}</option>
+                  @for (d of districts(); track d.id) {
+                      <option [value]="d.id">{{ d.name }}</option>
+                  }
+              </select>
+              @if (isInvalid('district')) {
+              <span class="field-error">{{ content().fields.errorRequired }}</span>
+              }
+          </div>
+      </div>
+
+      <div class="form-field">
+          <label>{{ content().fields.mainAddressLabel }}</label>
+          <input type="text" formControlName="mainAddress" [placeholder]="content().fields.mainAddressPlaceholder"
+              [class.ng-invalid]="isInvalid('mainAddress')" [class.ng-dirty]="isInvalid('mainAddress')" />
+          @if (isInvalid('mainAddress')) {
+          <span class="field-error">{{ content().fields.errorRequired }}</span>
+          }
+      </div>
+
+      <div class="form-field">
+          <label>{{ content().fields.referenceLabel }}</label>
+          <input type="text" formControlName="reference" [placeholder]="content().fields.referencePlaceholder" />
+      </div>
+
+      <div class="form-check">
+          <input type="checkbox" id="isDefault" formControlName="isDefault" />
+          <label for="isDefault">{{ content().fields.defaultCheckboxLabel }}</label>
+      </div>
+
+      <div class="form-actions">
+          <app-button variant="ghost" [label]="content().actions.cancelLabel" type="button" (clicked)="cancel()" />
+          <app-button variant="primary" [label]="content().actions.saveLabel" [icon]="content().actions.saveIcon"
+              type="submit" [loading]="saving()" />
+      </div>
+
+  </form>
+</div>

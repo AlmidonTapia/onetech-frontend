@@ -28,7 +28,7 @@
         </h4>
         @if (address) {
         <p class="block-detail">
-            {{ address.mainAddress }}, {{ address.district }}, {{ address.region }}
+            {{ address.mainAddress }}, Ubigeo: {{ address.ubigeoCode }}, {{ address.country }}
         </p>
         @if (address.reference) {
         <p class="block-sub">Ref: {{ address.reference }}</p>
@@ -72,6 +72,12 @@
             <span>{{ content.totals.shippingLabel }}</span>
             <span>{{ shipping | currencyPen }}</span>
         </div>
+        @if (discountAmount > 0) {
+        <div class="total-row discount-row">
+            <span>{{ content.totals.discountLabel }}</span>
+            <span>-{{ discountAmount | currencyPen }}</span>
+        </div>
+        }
         <div class="total-row total-row--grand">
             <span>{{ content.totals.grandTotalLabel }}</span>
             <strong>{{ grandTotal | currencyPen }}</strong>

@@ -32,3 +32,31 @@ export interface CreateShipmentMethodRequest {
   basePrice: number;
   status?: string;
 }
+
+export interface ShippingRate {
+  idRate: number;
+  idShipmentMethod: string;
+  methodName?: string;
+  idDepartment?: string;
+  departmentName?: string;
+  idProvince?: string;
+  provinceName?: string;
+  idDistrict?: string;
+  districtName?: string;
+  cost: number;
+  isAvailable: boolean;
+}
+
+export interface CreateShippingRateRequest {
+  idShipmentMethod: string;
+  idDepartment?: string;
+  idProvince?: string;
+  idDistrict?: string;
+  cost: number;
+  isAvailable: boolean;
+}
+
+export interface LocationResponse {
+  code: string;
+  name: string;
+}

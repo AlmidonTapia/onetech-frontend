@@ -1,16 +1,23 @@
-<div class="admin-page">
+<div class="page-container">
 
     <div class="page-header">
-        <div class="page-title">
-            <h1>{{ content.title }}</h1>
-            <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
-        </div>
+        <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
+    </div>
     </div>
 
-    <app-card [padding]="content.cardPadding">
-        <app-orders-table [orders]="orders()" [totalRecords]="totalRecords()" [loading]="loading()"
-            (lazyLoad)="loadOrders($event)" (changeStatus)="openStatus($event)" (viewDetail)="openStatus($event)" />
-    </app-card>
+    
+        <app-orders-table 
+            [orders]="orders()" 
+            [totalRecords]="totalRecords()" 
+            [loading]="loading()"
+            (lazyLoad)="loadOrders($event)" 
+            (changeStatus)="openStatus($event)" 
+            (viewDetail)="openDetail($event)"
+            (search)="onSearch($event)" 
+            (filterStatus)="onFilterStatus($event)" />
+    
 
 </div>
 

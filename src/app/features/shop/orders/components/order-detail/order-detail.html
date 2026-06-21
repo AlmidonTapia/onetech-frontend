@@ -1,115 +1,28 @@
 <p-dialog [visible]="visible" [header]="content.headerPrefix + (order?.idOrder?.substring(0,8)?.toUpperCase() ?? '')"
-    [modal]="true" [closable]="true" [draggable]="false" [style]="{ width: content.dialogWidth }" (onHide)="close()">
+  [modal]="true" [closable]="true" [draggable]="false" [style]="{ width: content.dialogWidth }" (onHide)="close()">
 
-    @if (order) {
-    <div class="order-detail">
+  @if (order) {
+  <div class="order-detail">
+      <app-order-status 
+          [order]="order" 
+          [shipment]="shipment()" 
+          [loadingShipment]="loadingShipment()" 
+          [content]="content">
+      </app-order-status>
 
-        <div class="detail-header">
-            <app-badge [variant]="statusMap[order.orderStatus].variant" [dot]="true">
-                {{ statusMap[order.orderStatus].label }}
-            </app-badge>
-            <span class="detail-date">{{ order.createdAt | date: content.dateFormat }}</span>
-        </div>
+      <app-order-items 
+          [order]="order" 
+          [content]="content">
+      </app-order-items>
 
-        <!-- Shipment Tracking Section -->
-        <div class="detail-section">
-            <h4 class="section-title">{{ content.sections.shipmentTitle }}</h4>
-            
-            @if (loadingShipment()) {
-                <div class="shipment-loading">
-                    <i class="pi pi-spin pi-spinner animate-spin"></i>
-                    <span>Cargando información de envío...</span>
-                </div>
-            } @else if (shipment()) {
-                <div class="shipment-tracker">
-                    <div class="tracker-steps">
-                        @for (step of shipmentSteps; track step.status; let idx = $index) {
-                            <div class="tracker-step"
-                                 [class.tracker-step--active]="getStepIndex(shipment()?.status) === idx"
-                                 [class.tracker-step--completed]="getStepIndex(shipment()?.status) > idx">
-                                <div class="step-node">
-                                    <i [class]="step.icon"></i>
-                                </div>
-                                <span class="step-label">{{ step.label }}</span>
-                            </div>
-                            @if (idx < shipmentSteps.length - 1) {
-                                <div class="tracker-line"
-                                     [class.tracker-line--completed]="getStepIndex(shipment()?.status) > idx">
-                                </div>
-                            }
-                        }
-                    </div>
+      <app-order-summary 
+          [order]="order" 
+          [content]="content">
+      </app-order-summary>
+  </div>
+  }
 
-                    <div class="shipment-info-box">
-                        @if (shipment()?.trackingNumber) {
-                            <div class="shipment-info-row">
-                                <span class="info-label">{{ content.labels.trackingNumber }}</span>
-                                <code class="tracking-code">{{ shipment()?.trackingNumber }}</code>
-                            </div>
-                        }
-                        @if (shipment()?.estimatedArrival) {
-                            <div class="shipment-info-row">
-                                <span class="info-label">{{ content.labels.estimatedArrival }}</span>
-                                <span class="info-val">{{ shipment()?.estimatedArrival | date: 'dd MMMM yyyy' }}</span>
-                            </div>
-                        }
-                    </div>
-                </div>
-            } @else {
-                <div class="shipment-empty-box">
-                    <i class="pi pi-info-circle"></i>
-                    <span>{{ content.labels.noShipment }}</span>
-                </div>
-            }
-        </div>
-
-        <div class="detail-section">
-            <h4 class="section-title">{{ content.sections.productsTitle }}</h4>
-            <div class="detail-items">
-                @for (item of order.details; track item.idOrderDetail) {
-                <div class="detail-item">
-                    <div class="item-info">
-                        <span class="item-name">{{ item.productName }}</span>
-                        <span class="item-qty">× {{ item.quantity }}</span>
-                    </div>
-                    <div class="item-prices">
-                        <span class="item-unit">{{ item.unitPrice | currencyPen }}{{ content.totals.unitSuffix }}</span>
-                        <span class="item-subtotal">{{ item.subtotal | currencyPen }}</span>
-                    </div>
-                </div>
-                }
-            </div>
-        </div>
-
-        <div class="detail-totals">
-            <div class="total-row">
-                <span>{{ content.totals.subtotalLabel }}</span>
-                <span>{{ order.totalAmount | currencyPen }}</span>
-            </div>
-            <div class="total-row total-row--grand">
-                <span>{{ content.totals.grandTotalLabel }}</span>
-                <strong>{{ order.totalAmount | currencyPen }}</strong>
-            </div>
-        </div>
-
-        <div class="detail-section">
-            <h4 class="section-title">{{ content.sections.infoTitle }}</h4>
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">{{ content.labels.client }}</span>
-                    <span>{{ order.userFullName }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">{{ content.labels.orderId }}</span>
-                    <code>{{ order.idOrder }}</code>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    }
-
-    <ng-template pTemplate="footer">
-        <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
-    </ng-template>
+  <ng-template pTemplate="footer">
+      <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
+  </ng-template>
 </p-dialog>

@@ -1,0 +1,57 @@
+.section-card {
+  background: var(--ot-bg-surface);
+  border: 1px solid var(--ot-border-color);
+  border-radius: var(--ot-radius-xl);
+  padding: 2rem;
+  max-width: 800px;
+}
+
+.section-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--ot-border-color);
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--ot-text-main);
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ot-text-main);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ot-border-color);
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

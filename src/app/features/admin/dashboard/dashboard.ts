@@ -1,13 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { forkJoin } from 'rxjs';
-import { ProductService } from '../../../core/services/product.service';
-import { OrderService } from '../../../core/services/order.service';
-import { UserService } from '../../../core/services/user.service';
-import { Order, OrderStatus } from '../../../core/models/order.model';
+import { Order } from '../../../core/models/order.model';
 import { DashboardStatsComponent, StatCard } from './components/dashboard-stats/dashboard-stats';
 import { DashboardChartComponent } from './components/dashboard-chart/dashboard-chart';
 import { DashboardRecentOrdersComponent } from './components/dashboard-recent-orders/dashboard-recent-orders';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
+import { DashboardService } from '../../../core/services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,21 +15,12 @@ import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner'
   styleUrl: './dashboard.css'
 })
 export class DashboardComponent implements OnInit {
-  private productService = inject(ProductService);
-  private orderService = inject(OrderService);
-  private userService = inject(UserService);
+  private dashboardService = inject(DashboardService);
 
   loading = signal(true);
   stats = signal<StatCard[]>([]);
   recentOrders = signal<Order[]>([]);
   chartData = signal<any>(null);
-
-  apiConfig = {
-    firstPage: 0,
-    minSize: 1,
-    ordersFetchSize: 10,
-    recentOrdersLimit: 5
-  };
 
   content = {
     title: 'Dashboard',
@@ -60,40 +48,36 @@ export class DashboardComponent implements OnInit {
   loadDashboard() {
     this.loading.set(true);
 
-    forkJoin({
-      products: this.productService.getAll({ page: this.apiConfig.firstPage, size: this.apiConfig.minSize }),
-      orders: this.orderService.getAll(this.apiConfig.firstPage, this.apiConfig.ordersFetchSize),
-      users: this.userService.getAllUsers(this.apiConfig.firstPage, this.apiConfig.minSize),
-    }).subscribe({
-      next: ({ products, orders, users }) => {
-        const pending = orders.content.filter(o => o.orderStatus === 'PENDIENTE').length;
-
+    this.dashboardService.getStats().subscribe({
+      next: (data) => {
         this.stats.set([
-          { label: this.content.statsLabels.products.title, value: products.totalElements, icon: this.content.statsLabels.products.icon, color: this.content.statsLabels.products.color, suffix: this.content.statsLabels.products.suffix },
-          { label: this.content.statsLabels.orders.title, value: orders.totalElements, icon: this.content.statsLabels.orders.icon, color: this.content.statsLabels.orders.color, suffix: this.content.statsLabels.orders.suffix },
-          { label: this.content.statsLabels.users.title, value: users.totalElements, icon: this.content.statsLabels.users.icon, color: this.content.statsLabels.users.color, suffix: this.content.statsLabels.users.suffix },
-          { label: this.content.statsLabels.pending.title, value: pending, icon: this.content.statsLabels.pending.icon, color: this.content.statsLabels.pending.color, suffix: this.content.statsLabels.pending.suffix },
+          { label: this.content.statsLabels.products.title, value: data.totalProducts, icon: this.content.statsLabels.products.icon, color: this.content.statsLabels.products.color, suffix: this.content.statsLabels.products.suffix },
+          { label: this.content.statsLabels.orders.title, value: data.totalOrders, icon: this.content.statsLabels.orders.icon, color: this.content.statsLabels.orders.color, suffix: this.content.statsLabels.orders.suffix },
+          { label: this.content.statsLabels.users.title, value: data.totalUsers, icon: this.content.statsLabels.users.icon, color: this.content.statsLabels.users.color, suffix: this.content.statsLabels.users.suffix },
+          { label: this.content.statsLabels.pending.title, value: data.pendingOrders, icon: this.content.statsLabels.pending.icon, color: this.content.statsLabels.pending.color, suffix: this.content.statsLabels.pending.suffix },
         ]);
 
-        this.recentOrders.set(orders.content.slice(0, this.apiConfig.recentOrdersLimit));
-        this.buildChartData(orders.content);
+        this.recentOrders.set(data.recentOrders);
+        this.buildChartData(data.ordersByStatus);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
     });
   }
 
-  private buildChartData(orders: Order[]) {
-    const count: Record<string, number> = {
-      PENDIENTE: 0, PAGADO: 0, ENVIADO: 0,
-      COMPLETADO: 0, CANCELADO: 0
-    };
-    orders.forEach(o => { if (count[o.orderStatus] !== undefined) count[o.orderStatus]++; });
+  private buildChartData(ordersByStatus: Record<string, number>) {
+    const data = [
+      ordersByStatus['PENDIENTE'] || 0,
+      ordersByStatus['PAGADO'] || 0,
+      ordersByStatus['ENVIADO'] || 0,
+      ordersByStatus['COMPLETADO'] || 0,
+      ordersByStatus['CANCELADO'] || 0
+    ];
 
     this.chartData.set({
       labels: this.content.chart.labels,
       datasets: [{
-        data: Object.values(count),
+        data: data,
         backgroundColor: this.content.chart.colors,
         borderWidth: this.content.chart.borderWidth,
       }]

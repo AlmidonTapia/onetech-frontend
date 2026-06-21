@@ -1,0 +1,29 @@
+<div class="addresses-list">
+  @for (addr of addresses(); track addr.idAddress) {
+  <div class="address-card" [class.address-card--default]="addr.isDefault">
+      <div class="addr-body">
+          <div class="addr-row">
+              <i class="pi pi-map-marker"></i>
+              <span class="addr-main">{{ addr.mainAddress }}</span>
+              @if (addr.isDefault) {
+              <span class="default-chip">{{ content().defaultChipLabel }}</span>
+              }
+          </div>
+          <p class="addr-detail">Ubigeo: {{ addr.ubigeoCode }}, {{ addr.country }}</p>
+          @if (addr.reference) {
+          <p class="addr-ref">Ref: {{ addr.reference }}</p>
+          }
+      </div>
+      <button class="delete-btn" (click)="deleteAddress(addr)" [title]="content().deleteTitle">
+          <i class="pi pi-trash"></i>
+      </button>
+  </div>
+  }
+
+  @if (addresses().length === 0) {
+  <div class="addresses-empty">
+      <i class="pi pi-map"></i>
+      <p>{{ content().emptyText }}</p>
+  </div>
+  }
+</div>

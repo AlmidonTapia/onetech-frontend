@@ -60,5 +60,10 @@ export const SHOP_ROUTES: ShopRoutes = [
     path: 'terminos',
     loadComponent: () =>
       import('./pages/terms/terms').then(m => m.TermsComponent)
+  },
+  {
+    path: 'contacto',
+    loadComponent: () =>
+      import('./pages/contact-us/contact-us').then(m => m.ContactUsComponent)
   }
 ];

@@ -47,4 +47,5 @@ export interface ProductFilters {
   search?: string;
   badge?: string;
   sort?: string;
+  status?: string;
 }

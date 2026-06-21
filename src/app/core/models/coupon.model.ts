@@ -3,6 +3,7 @@ export interface Coupon {
   code: string;
   discountType: 'PERCENTAGE' | 'FIXED_AMOUNT';
   discountValue: number;
+  startDate?: string;
   expirationDate: string;
   usageLimit?: number;
   timesUsed?: number;
@@ -14,6 +15,7 @@ export interface CreateCouponRequest {
   code: string;
   discountType: 'PERCENTAGE' | 'FIXED_AMOUNT';
   discountValue: number;
+  startDate?: string;
   expirationDate: string;
   usageLimit?: number;
 }

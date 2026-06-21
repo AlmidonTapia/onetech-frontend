@@ -22,6 +22,7 @@ export class ProductService {
     if (filters.search)     params = params.set('search', filters.search);
     if (filters.badge)      params = params.set('badge', filters.badge);
     if (filters.sort)       params = params.set('sort', filters.sort);
+    if (filters.status)     params = params.set('status', filters.status);
 
 
     const cacheKey = `products_${params.toString()}`;

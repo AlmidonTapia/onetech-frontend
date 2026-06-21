@@ -26,6 +26,7 @@ export class ProductInfoComponent {
 
   content = {
     skuLabel: 'SKU:',
+    newBadge: 'Nuevo',
     financingPrefix: 'o 12 cuotas de ',
     stock: {
       availablePrefix: 'En stock (',
@@ -63,7 +64,6 @@ export class ProductInfoComponent {
     this.adding.set(true);
     this.cartService.addItem({ idProduct: this.product.idProduct, quantity: this.qty() }).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.successTitle, `${this.qty()} × ${this.product.productName}`);
         this.adding.set(false);
       },
       error: () => {

@@ -63,10 +63,11 @@
   </div>
 
   @if (product && product.updatedAt) {
-  <div class="product-metadata">
-    <i class="pi pi-history"></i>
-    <span class="meta-label">Última modificación:</span>
-    <span class="meta-value">{{ product.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+  <div class="modal-footer">
+    <div class="meta-info">
+      <span class="meta-label">{{ content.metaLabel }}</span>
+      <span class="meta-value">{{ product.updatedAt | date:'medium' }}</span>
+    </div>
   </div>
   }
 

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,8 +19,11 @@ export class BrandFormComponent implements OnChanges {
   @Input() brand: Brand | null = null;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() save = new EventEmitter<CreateBrandRequest>();
+  @Output() save = new EventEmitter<{ request: CreateBrandRequest, file?: File }>();
   @Output() cancel = new EventEmitter<void>();
+
+  selectedFile = signal<File | null>(null);
+  previewUrl = signal<string | null>(null);
 
   content = {
     dialogWidth: '400px',
@@ -31,6 +34,11 @@ export class BrandFormComponent implements OnChanges {
       cancelLabel: 'Cancelar',
       saveLabel: 'Guardar',
       saveIcon: 'pi-check'
+    },
+    image: {
+      label: 'Imagen de la marca',
+      changeText: 'Cambiar imagen',
+      selectText: 'Seleccionar imagen'
     }
   };
 
@@ -53,6 +61,18 @@ export class BrandFormComponent implements OnChanges {
 
   ngOnChanges() {
     this.brand ? this.form.patchValue({ brandName: this.brand.brandName }) : this.form.reset();
+    this.selectedFile.set(null);
+    this.previewUrl.set(this.brand?.imageUrl || null);
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile.set(file);
+      const reader = new FileReader();
+      reader.onload = e => this.previewUrl.set(e.target?.result as string);
+      reader.readAsDataURL(file);
+    }
   }
 
   onSave() {
@@ -60,7 +80,10 @@ export class BrandFormComponent implements OnChanges {
       this.form.markAllAsTouched();
       return;
     }
-    this.save.emit(this.form.value as CreateBrandRequest);
+    this.save.emit({
+      request: this.form.value as CreateBrandRequest,
+      file: this.selectedFile() ?? undefined
+    });
   }
 
   onCancel() {

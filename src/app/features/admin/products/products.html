@@ -1,27 +1,31 @@
-<div class="admin-page">
+<div class="page-container">
   <div class="page-header">
-    <div class="page-title">
-      <h1>{{ content.title }}</h1>
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
       <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
     </div>
     <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="openCreate()" />
   </div>
 
-  <app-card [padding]="content.cardPadding">
-    <div card-header class="table-toolbar">
-      <div class="search-box">
-        <i class="pi pi-search"></i>
-        <input pInputText [(ngModel)]="search" (keyup.enter)="loadProducts()"
-          [placeholder]="content.searchPlaceholder" />
-      </div>
-      <app-button variant="ghost" [icon]="content.refreshBtnIcon" [label]="content.refreshBtnLabel"
-        (clicked)="loadProducts()" />
-    </div>
+  <div class="table-toolbar" style="margin-bottom: 16px; display: flex; justify-content: flex-end;">
+    <app-button variant="ghost" [icon]="content.refreshBtnIcon" [label]="content.refreshBtnLabel"
+      (clicked)="loadProducts()" />
+  </div>
 
-    <app-products-table [products]="products()" [totalRecords]="totalRecords()" [loading]="loading()"
-      (lazyLoad)="loadProducts($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)"
-      (manageImages)="openImages($event)" />
-  </app-card>
+    <app-products-table
+      [products]="products()"
+      [totalRecords]="totalRecords()"
+      [loading]="loading()"
+      [categories]="categories()"
+      [brands]="brands()"
+      (lazyLoad)="loadProducts($event)"
+      (editItem)="openEdit($event)"
+      (deleteItem)="onDelete($event)"
+      (manageImages)="openImages($event)"
+      (search)="onSearch($event)"
+      (filterChange)="onFilterChange($event)"
+    />
+
 </div>
 
 <app-product-form [(visible)]="formVisible" [product]="editingProduct()" [saving]="saving()" (save)="onSave($event)"

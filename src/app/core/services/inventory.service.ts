@@ -9,8 +9,10 @@ export class InventoryService {
   private http = inject(HttpClient);
   private url = `${environment.apiUrl}/inventory/movements`;
 
-  getAll(page = 0, size = 10) {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAll(page = 0, size = 10, search?: string, type?: string) {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (search) params = params.set('search', search);
+    if (type) params = params.set('type', type);
     return this.http.get<PageResponse<InventoryMovement>>(this.url, { params });
   }
 

@@ -17,6 +17,7 @@ export class CheckoutSummaryComponent {
   @Input() address: Address | null = null;
   @Input() shipMethod: ShipmentMethod | null = null;
   @Input() payMethod: PaymentMethod | null = null;
+  @Input() discountAmount: number = 0;
 
   content = {
     blocks: {
@@ -35,11 +36,12 @@ export class CheckoutSummaryComponent {
     totals: {
       subtotalLabel: 'Subtotal',
       shippingLabel: 'Envío',
+      discountLabel: 'Descuento',
       grandTotalLabel: 'Total a pagar'
     }
   };
 
   get subtotal() { return this.cart?.totalAmount ?? 0; }
   get shipping() { return this.shipMethod?.basePrice ?? 0; }
-  get grandTotal() { return this.subtotal + this.shipping; }
+  get grandTotal() { return Math.max(0, this.subtotal - this.discountAmount) + this.shipping; }
 }

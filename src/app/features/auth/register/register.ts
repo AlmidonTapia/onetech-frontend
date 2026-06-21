@@ -3,18 +3,13 @@ import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
-import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { CheckboxModule } from 'primeng/checkbox';
-import { AlertComponent } from '../../../shared/components/ui/alert/alert';
+import { RegisterFormComponent } from './components/register-form/register-form';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    ReactiveFormsModule, RouterLink, ButtonComponent,
-    InputTextModule, PasswordModule, CheckboxModule, AlertComponent
+    ReactiveFormsModule, RouterLink, RegisterFormComponent
   ],
   templateUrl: './register.html',
   styleUrl: './register.css'
@@ -64,7 +59,19 @@ export class RegisterComponent implements OnInit {
     privacyText: 'y la',
     privacyLink: 'Política de privacidad',
     termsErrorMsg: 'Debes aceptar los términos para continuar',
-    mismatchErrorMsg: 'Las contraseñas no coinciden'
+    mismatchErrorMsg: 'Las contraseñas no coinciden',
+    errors: {
+      required: 'Campo requerido',
+      email: 'Correo inválido',
+      minLengthPre: 'Mínimo',
+      minLengthPost: 'caracteres'
+    },
+    passwordFeedback: {
+      prompt: 'Escribe una contraseña',
+      weak: 'Débil',
+      medium: 'Media',
+      strong: 'Segura'
+    }
   };
 
   // ── CONFIGURACIÓN DINÁMICA DE CAMPOS ──

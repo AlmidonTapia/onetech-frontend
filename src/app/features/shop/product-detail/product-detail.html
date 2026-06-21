@@ -45,7 +45,17 @@
 
     <!-- Reviews Section -->
     <div class="detail-info-section">
-      <app-product-reviews [productId]="prod.idProduct" />
+      <!-- Usamos una ref para recargar la lista de reseñas desde este componente padre -->
+      <app-product-reviews #reviewsList [productId]="prod.idProduct" />
+      
+      @if (authService.isAuthenticated()) {
+        <app-product-review-form [productId]="prod.idProduct" (reviewAdded)="reviewsList.loadReviews()" />
+      } @else {
+        <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-lg text-sm flex align-items-center gap-2">
+          <i class="pi pi-info-circle"></i>
+          <span>Debes <a routerLink="/auth/login" class="font-bold underline cursor-pointer">iniciar sesión</a> para dejar una reseña sobre este producto.</span>
+        </div>
+      }
     </div>
 
     <app-related-products [products]="related()" />

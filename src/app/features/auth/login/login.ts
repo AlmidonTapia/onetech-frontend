@@ -52,7 +52,13 @@ export class LoginComponent implements OnInit {
     registerText: '¿Aún no tienes cuenta?',
     registerLinkText: 'Regístrate aquí',
     registerRoute: '/auth/register',
-    submitButtonLabel: 'Ingresar'
+    submitButtonLabel: 'Ingresar',
+    forgotPasswordText: '¿Olvidaste tu contraseña?',
+    forgotPasswordRoute: '/auth/forgot-password',
+    errors: {
+      required: 'Campo requerido',
+      email: 'Ingresa un correo válido'
+    }
   };
 
   fields = [

@@ -4,6 +4,8 @@ import { environment } from '../../../environments/environment';
 import { User, UpdateProfileRequest } from '../models/user.model';
 import { Address, CreateAddressRequest } from '../models/address.model';
 import { PageResponse } from '../models/page-response.model';
+import { ApiResponse } from '../models/api-response.model';
+import { map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -15,11 +17,14 @@ export class UserService {
   }
 
   updateProfileDetails(data: UpdateProfileRequest) {
-    return this.http.post<User>(`${this.url}/profile/details`, data);
+    return this.http.post<ApiResponse<string>>(`${this.url}/profile/details`, data);
   }
 
-  getAllUsers(page = 0, size = 10) {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAllUsers(page = 0, size = 10, search?: string, role?: string, status?: string) {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (search) params = params.set('search', search);
+    if (role) params = params.set('role', role);
+    if (status) params = params.set('status', status);
     return this.http.get<PageResponse<User>>(this.url, { params });
   }
 
@@ -28,10 +33,10 @@ export class UserService {
   }
 
   addAddress(data: CreateAddressRequest) {
-    return this.http.post<Address>(`${this.url}/address`, data);
+    return this.http.post<ApiResponse<string>>(`${this.url}/address`, data);
   }
 
   deleteAddress(addressId: string) {
-    return this.http.delete<void>(`${this.url}/address/${addressId}`);
+    return this.http.delete<ApiResponse<string>>(`${this.url}/address/${addressId}`);
   }
 }

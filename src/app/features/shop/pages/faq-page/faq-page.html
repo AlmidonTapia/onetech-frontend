@@ -1,29 +1,19 @@
 <div class="static-page">
   <div class="container page-content">
     <div class="page-header text-center">
-      <h1>Preguntas Frecuentes</h1>
-      <p>Resolvemos tus dudas rápidamente.</p>
+      <h1>{{ content.title }}</h1>
+      <p>{{ content.subtitle }}</p>
     </div>
 
     <div class="page-body">
+      @for (category of content.categories; track category.title) {
       <section>
-        <h2>Envíos y Entregas</h2>
-        <p><strong>¿Hacen envíos a todo el Perú?</strong><br>Sí, realizamos envíos a nivel nacional. Los productos se despachan a través de couriers confiables y el tiempo de entrega depende de la ciudad destino (generalmente 1 a 3 días hábiles).</p>
-        <p><strong>¿Cómo puedo hacer seguimiento de mi pedido?</strong><br>Una vez confirmado tu pedido, recibirás una notificación con el código de seguimiento del courier. También puedes revisar el estado de tu pedido directamente en tu cuenta de OneTech.</p>
+        <h2>{{ category.title }}</h2>
+        @for (faq of category.faqs; track faq.question) {
+        <p><strong>{{ faq.question }}</strong><br>{{ faq.answer }}</p>
+        }
       </section>
-
-      <section>
-        <h2>Garantías y Devoluciones</h2>
-        <p><strong>¿Los productos son originales y nuevos?</strong><br>Todos nuestros productos son nuevos, sellados y 100% originales, con garantía oficial del fabricante. Solo trabajamos con marcas reconocidas en el mercado.</p>
-        <p><strong>¿Cuál es la política de garantía?</strong><br>Todos nuestros productos cuentan con garantía oficial del fabricante. El período varía según el producto y la marca. Si tienes algún inconveniente, contáctanos y gestionaremos la garantía por ti.</p>
-        <p><strong>¿Puedo cambiar o devolver un producto?</strong><br>Aceptamos cambios y devoluciones dentro de los 7 días calendario desde la recepción del producto, siempre que esté en perfectas condiciones, sin uso y en su empaque original.</p>
-      </section>
-
-      <section>
-        <h2>Pagos y Facturación</h2>
-        <p><strong>¿Cuáles son los métodos de pago?</strong><br>Aceptamos tarjetas de crédito y débito, transferencias bancarias, Yape/Plin y pagos en efectivo a través de agencias.</p>
-        <p><strong>¿Emiten boleta o factura?</strong><br>Sí, emitimos comprobante de pago (boleta o factura) por cada compra realizada en nuestra tienda, de manera electrónica. Solo debes indicar tus datos de facturación al momento del checkout.</p>
-      </section>
+      }
     </div>
   </div>
 </div>

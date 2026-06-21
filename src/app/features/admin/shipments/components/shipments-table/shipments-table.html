@@ -2,6 +2,16 @@
     [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="lazyLoad.emit($event)" [rowHover]="true"
     [styleClass]="tableConfig.styleClass">
 
+    <ng-template pTemplate="caption">
+        <div class="table-header-container">
+            <h5 class="table-header-title">{{ content.quickSearchTitle || 'Búsqueda Rápida' }}</h5>
+            <span class="p-input-icon-left search-input-wrapper">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder || 'Tracking o ID...'" class="filter-search-input"/>
+            </span>
+        </div>
+    </ng-template>
+
     <ng-template pTemplate="header">
         <tr>
             <th>{{ content.headers.orderId }}</th>
@@ -32,7 +42,7 @@
             </td>
             <td>
                 <div class="row-actions">
-                    <button class="act-btn" [pTooltip]="content.tooltipEdit" (click)="editItem.emit(s)">
+                    <button class="act-btn" [pTooltip]="content.tooltipEdit" (click)="onEdit.emit(s)">
                         <i [class]="content.icons.edit"></i>
                     </button>
                 </div>
@@ -42,8 +52,9 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="empty-cell">
-                {{ content.emptyMessage }}
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
+                <i class="pi pi-inbox table-empty-icon"></i>
+                <p class="table-empty-text">{{ content.emptyMessage }}</p>
             </td>
         </tr>
     </ng-template>

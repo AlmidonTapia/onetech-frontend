@@ -1,0 +1,35 @@
+<p-dialog [visible]="visible" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false" styleClass="add-to-cart-dialog" (onHide)="close()">
+  @if (addedInfo) {
+    <div class="cart-modal-content">
+      <div class="success-header">
+        <i class="pi pi-check-circle success-icon"></i>
+        <h3>{{ content.title }}</h3>
+      </div>
+      
+      <div class="product-info">
+        <div class="product-image-container">
+          @if (addedInfo.product.images && addedInfo.product.images.length > 0) {
+            <img [src]="addedInfo.product.images[0].imageUrl" [alt]="addedInfo.product.productName" class="product-image" />
+          } @else {
+            <div class="product-placeholder">
+              <i class="pi pi-image"></i>
+            </div>
+          }
+        </div>
+        <div class="product-details">
+          <p class="product-brand">{{ addedInfo.product.brandName }}</p>
+          <p class="product-name">{{ addedInfo.product.productName }}</p>
+          <p class="product-price">S/ {{ addedInfo.product.price | number:'1.2-2' }}</p>
+          <p class="product-quantity">{{ content.quantityLabel }} {{ addedInfo.quantity }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <app-button variant="outline" [label]="content.buttons.continueShopping" (clicked)="continueShopping()"></app-button>
+      <app-button variant="primary" [label]="content.buttons.goToCart" (clicked)="goToCart()"></app-button>
+    </div>
+  </ng-template>
+</p-dialog>

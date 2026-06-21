@@ -1,0 +1,52 @@
+<header class="admin-topbar">
+  <div class="topbar-left">
+    <div class="search-bar hidden md:flex">
+      <i class="pi pi-search"></i>
+      <input type="text" placeholder="Ingrese el módulo..." aria-label="Search" 
+             [formControl]="searchControl" 
+             (focus)="showSearchResults.set(true)" 
+             (blur)="hideSearchResults()" />
+             
+      @if (showSearchResults() && filteredModules().length > 0) {
+        <div class="search-results">
+           @for (mod of filteredModules(); track mod.route) {
+             <div class="search-result-item" (mousedown)="goToModule(mod.route)">
+                <i class="pi text-primary" [ngClass]="mod.icon"></i>
+                <span>{{ mod.label }}</span>
+             </div>
+           }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <app-theme-toggle />
+
+
+    <div class="profile-menu">
+      <button class="profile-btn" (click)="toggleMenu()" aria-expanded="false">
+        <div class="avatar">{{ userProfile.avatarInitials }}</div>
+        <div class="user-info hidden sm:block">
+          <span class="name">{{ userProfile.name }}</span>
+          <span class="role">{{ userProfile.role }}</span>
+        </div>
+        <i class="pi pi-angle-down"></i>
+      </button>
+
+      @if (isDropdownOpen()) {
+        <div class="dropdown-menu animate-fade-in">
+          @for (item of dropdownItems; track item.label) {
+            <button class="dropdown-item" (click)="handleDropdownAction(item.route)">
+              <i class="pi" [ngClass]="item.icon"></i> {{ item.label }}
+            </button>
+          }
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item text-danger" (click)="logout()">
+            <i class="pi pi-sign-out"></i> Cerrar Sesión
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

@@ -11,8 +11,9 @@ export class CategoryService {
   private http = inject(HttpClient);
   private url = `${environment.apiUrl}/categories`;
 
-  getAll(page = 0, size = 50) {
-    const params = new HttpParams().set('page', page).set('size', size);
+  getAll(page = 0, size = 50, search?: string) {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (search) params = params.set('search', search);
     return this.http.get<PageResponse<Category>>(this.url, { params });
   }
 

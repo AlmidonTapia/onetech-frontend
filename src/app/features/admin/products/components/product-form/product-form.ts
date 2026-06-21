@@ -44,6 +44,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
     titleNew: 'Nuevo Producto',
     titleEdit: 'Editar Producto',
     errorRequired: 'Campo requerido',
+    metaLabel: 'Última modificación:',
     styles: {
       selectWidth: '100%',
       appendTo: 'body'

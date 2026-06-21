@@ -1,0 +1,130 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ content.subtitle }}</p>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="profile-card">
+    <div class="profile-avatar">
+      <span class="avatar-circle">{{ userInitials }}</span>
+      <div class="avatar-info">
+        <h2>{{ userName }}</h2>
+        <p>{{ userEmail }}</p>
+      </div>
+    </div>
+
+    <!-- Tab Switcher -->
+    <div class="profile-tabs">
+      <button class="profile-tab" [class.active]="activeTab() === 'info'" (click)="activeTab.set('info')">
+        <i class="pi pi-user"></i> {{ content.tabs.info }}
+      </button>
+      <button class="profile-tab" [class.active]="activeTab() === 'security'" (click)="activeTab.set('security')">
+        <i class="pi pi-lock"></i> {{ content.tabs.security }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Info Tab -->
+  @if (activeTab() === 'info') {
+  <div class="section-card">
+    <div class="section-header">
+      <h3>{{ content.infoSection.title }}</h3>
+      <p>{{ content.infoSection.subtitle }}</p>
+    </div>
+
+    <form [formGroup]="profileForm" class="profile-form">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>{{ content.infoSection.labels.firstName }}</label>
+          <input pInputText formControlName="firstName" />
+          <small class="hint">{{ content.infoSection.hints.nameImmutable }}</small>
+        </div>
+        <div class="form-field">
+          <label>{{ content.infoSection.labels.lastName }}</label>
+          <input pInputText formControlName="lastName" />
+          <small class="hint">{{ content.infoSection.hints.nameImmutable }}</small>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>{{ content.infoSection.labels.email }}</label>
+        <input pInputText formControlName="email" />
+        <small class="hint">{{ content.infoSection.hints.emailImmutable }}</small>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label>{{ content.infoSection.labels.documentType }}</label>
+          <p-select [options]="docTypes" formControlName="documentType" optionLabel="label" optionValue="value"
+            [placeholder]="content.infoSection.placeholders.docTypeSelect" styleClass="w-full" />
+        </div>
+        <div class="form-field">
+          <label>{{ content.infoSection.labels.documentNumber }}</label>
+          <input pInputText formControlName="documentNumber" [placeholder]="content.infoSection.placeholders.docNumber" />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>{{ content.infoSection.labels.phone }}</label>
+        <input pInputText formControlName="phone" [placeholder]="content.infoSection.placeholders.phone" />
+        @if (isInvalid('profile', 'phone')) {
+          <small class="error">{{ content.infoSection.errors.phonePattern }}</small>
+        }
+      </div>
+
+      <div class="form-actions">
+        <app-button [label]="content.infoSection.saveLabel" [icon]="content.infoSection.saveIcon"
+          [loading]="saving()" (clicked)="onSaveProfile()" />
+      </div>
+    </form>
+  </div>
+  }
+
+  <!-- Security Tab -->
+  @if (activeTab() === 'security') {
+  <div class="section-card">
+    <div class="section-header">
+      <h3>{{ content.securitySection.title }}</h3>
+      <p>{{ content.securitySection.subtitle }}</p>
+    </div>
+
+    <form [formGroup]="passwordForm" class="profile-form">
+      <div class="form-field">
+        <label>{{ content.securitySection.labels.currentPassword }}</label>
+        <p-password formControlName="currentPassword" [placeholder]="content.securitySection.placeholders.currentPassword"
+          [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
+        @if (isInvalid('password', 'currentPassword')) {
+          <small class="error">{{ content.securitySection.errors.required }}</small>
+        }
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label>{{ content.securitySection.labels.newPassword }}</label>
+          <p-password formControlName="newPassword" [placeholder]="content.securitySection.placeholders.newPassword"
+            [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
+          @if (isInvalid('password', 'newPassword')) {
+            <small class="error">{{ content.securitySection.errors.minlength }}</small>
+          }
+        </div>
+        <div class="form-field">
+          <label>{{ content.securitySection.labels.confirmPassword }}</label>
+          <p-password formControlName="confirmPassword" [placeholder]="content.securitySection.placeholders.confirmPassword"
+            [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
+          @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched) {
+            <small class="error">{{ content.securitySection.errors.mismatch }}</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <app-button [label]="content.securitySection.saveLabel" [icon]="content.securitySection.saveIcon"
+          [loading]="savingPassword()" (clicked)="onSavePassword()" />
+      </div>
+    </form>
+  </div>
+  }
+</div>

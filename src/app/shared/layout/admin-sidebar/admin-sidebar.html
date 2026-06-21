@@ -10,13 +10,10 @@
             }
         </a>
 
-        @if (!collapsed()) {
-        <app-theme-toggle />
-        }
 
         <button class="collapse-btn" (click)="toggleCollapse()"
             [attr.aria-label]="collapsed() ? content.ariaLabels.expand : content.ariaLabels.collapse">
-            <i class="pi" [class]="collapsed() ? 'pi-angle-right' : 'pi-angle-left'"></i>
+            <i class="pi pi-bars"></i>
         </button>
     </div>
 
@@ -36,26 +33,5 @@
         </ul>
     </nav>
 
-    <div class="sidebar-footer">
-        <div class="user-info" [class.user-info--collapsed]="collapsed()">
-            <div class="user-avatar">
-                {{ (authService.currentUser()?.firstName ?? content.defaultAvatarLetter)[0].toUpperCase() }}
-            </div>
-            @if (!collapsed()) {
-            <div class="user-details">
-                <span class="user-name">
-                    {{ authService.currentUser()?.firstName }}
-                    {{ authService.currentUser()?.lastName }}
-                </span>
-                <span class="user-role">{{ content.userRoleLabel }}</span>
-            </div>
-            }
-        </div>
-
-        <button class="logout-btn" (click)="logout()" [attr.title]="collapsed() ? content.logoutLabel : null">
-            <i class="pi pi-sign-out"></i>
-            @if (!collapsed()) { <span>{{ content.logoutLabel }}</span> }
-        </button>
-    </div>
 
 </aside>

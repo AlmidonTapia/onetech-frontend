@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ShipmentsTableComponent } from './components/shipments-table/shipments-table';
 import { ShipmentFormComponent } from './components/shipment-form/shipment-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { CardComponent } from '../../../shared/components/ui/card/card';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ShipmentService } from '../../../core/services/shipment.service';
 import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod } from '../../../core/models/shipment.model';
@@ -12,7 +11,7 @@ import { Observable, of, switchMap } from 'rxjs';
 @Component({
   selector: 'app-shipments',
   standalone: true,
-  imports: [ShipmentsTableComponent, ShipmentFormComponent, ButtonComponent, CardComponent],
+  imports: [ShipmentsTableComponent, ShipmentFormComponent, ButtonComponent],
   templateUrl: './shipments.html',
   styleUrl: './shipments.css'
 })
@@ -26,6 +25,7 @@ export class ShipmentsComponent implements OnInit {
   loading = signal(false);
   saving = signal(false);
   formVisible = signal(false);
+  searchTerm = signal<string | undefined>(undefined);
   editingShipment = signal<Shipment | null>(null);
 
   apiConfig = {
@@ -63,10 +63,15 @@ export class ShipmentsComponent implements OnInit {
     });
   }
 
+  onSearch(term: string) {
+    this.searchTerm.set(term);
+    this.loadShipments({ first: 0, rows: 10 });
+  }
+
   loadShipments(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.shipmentService.getAll(page, this.apiConfig.pageSize).subscribe({
+    this.shipmentService.getAll(page, this.apiConfig.pageSize, this.searchTerm()).subscribe({
       next: r => {
         const mappedContent = r.content.map(s => {
           const method = this.methods().find(m => m.idShipmentMethod === s.idShipmentMethod);
@@ -112,8 +117,8 @@ export class ShipmentsComponent implements OnInit {
   onUpdateStatus(data: { id: string, status: ShipmentStatus, estimatedArrival?: string, shippingCost?: number, trackingNumber?: string }) {
     this.saving.set(true);
     
-    const arrivalUpdate$: Observable<any> = data.estimatedArrival
-      ? this.shipmentService.updateArrival(data.id, data.estimatedArrival, data.shippingCost, data.trackingNumber)
+    const arrivalUpdate$: Observable<any> = (data.estimatedArrival || data.trackingNumber || data.shippingCost !== undefined)
+      ? this.shipmentService.updateArrival(data.id, data.estimatedArrival || undefined, data.shippingCost, data.trackingNumber)
       : of(null);
 
     const statusUpdate$: Observable<any> = data.status !== this.editingShipment()?.status

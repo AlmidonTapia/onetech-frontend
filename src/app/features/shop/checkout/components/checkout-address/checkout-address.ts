@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, OnInit, inject, signal } from '@angula
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { UserService } from '../../../../../core/services/user.service';
+import { UbigeoService, LocationResponse } from '../../../../../core/services/ubigeo.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { Address, CreateAddressRequest } from '../../../../../core/models/address.model';
 
@@ -14,8 +15,13 @@ import { Address, CreateAddressRequest } from '../../../../../core/models/addres
 })
 export class CheckoutAddressComponent implements OnInit {
   private userService = inject(UserService);
+  private ubigeoService = inject(UbigeoService);
   private alertService = inject(AlertService);
   private fb = inject(FormBuilder);
+
+  departments = signal<LocationResponse[]>([]);
+  provinces = signal<LocationResponse[]>([]);
+  districts = signal<LocationResponse[]>([]);
 
   @Output() selected = new EventEmitter<Address>();
 
@@ -34,10 +40,12 @@ export class CheckoutAddressComponent implements OnInit {
 
     // Configuración dinámica de inputs
     fields: {
-      regionLabel: 'Región *',
-      regionPlaceholder: 'Lima',
+      departmentLabel: 'Departamento *',
+      departmentPlaceholder: 'Seleccione Departamento',
+      provinceLabel: 'Provincia *',
+      provincePlaceholder: 'Seleccione Provincia',
       districtLabel: 'Distrito *',
-      districtPlaceholder: 'Miraflores',
+      districtPlaceholder: 'Seleccione Distrito',
       mainAddressLabel: 'Dirección *',
       mainAddressPlaceholder: 'Av. Principal 123, Dpto 4B',
       referenceLabel: 'Referencia',
@@ -60,8 +68,9 @@ export class CheckoutAddressComponent implements OnInit {
 
   form = this.fb.group({
     country: ['Perú', Validators.required],
-    region: ['', Validators.required],
-    district: ['', Validators.required],
+    department: ['', Validators.required],
+    province: [{ value: '', disabled: true }, Validators.required],
+    district: [{ value: '', disabled: true }, Validators.required],
     mainAddress: ['', Validators.required],
     reference: [''],
     isDefault: [false],
@@ -76,6 +85,32 @@ export class CheckoutAddressComponent implements OnInit {
           this.selectedId.set(def.idAddress);
           this.selected.emit(def);
         }
+      }
+    });
+
+    this.ubigeoService.getDepartments().subscribe(d => this.departments.set(d));
+
+    this.form.get('department')?.valueChanges.subscribe(depId => {
+      this.form.get('province')?.reset();
+      this.form.get('district')?.reset();
+      this.form.get('province')?.disable();
+      this.form.get('district')?.disable();
+      if (depId) {
+        this.ubigeoService.getProvinces(depId).subscribe(p => {
+          this.provinces.set(p);
+          this.form.get('province')?.enable();
+        });
+      }
+    });
+
+    this.form.get('province')?.valueChanges.subscribe(provId => {
+      this.form.get('district')?.reset();
+      this.form.get('district')?.disable();
+      if (provId) {
+        this.ubigeoService.getDistricts(provId).subscribe(d => {
+          this.districts.set(d);
+          this.form.get('district')?.enable();
+        });
       }
     });
   }
@@ -98,7 +133,14 @@ export class CheckoutAddressComponent implements OnInit {
     }
 
     this.saving.set(true);
-    const requestData = this.form.value as CreateAddressRequest;
+    const formData = this.form.getRawValue();
+    const requestData: CreateAddressRequest = {
+      country: formData.country!,
+      ubigeoCode: formData.district!,
+      mainAddress: formData.mainAddress!,
+      reference: formData.reference || '',
+      isDefault: formData.isDefault || false
+    };
 
     this.userService.addAddress(requestData).subscribe({
       next: (res: any) => {
@@ -107,8 +149,7 @@ export class CheckoutAddressComponent implements OnInit {
         const newAddress: Address = {
           idAddress: res?.id || 'addr_' + Date.now(),
           country: requestData.country,
-          region: requestData.region,
-          district: requestData.district,
+          ubigeoCode: requestData.ubigeoCode,
           mainAddress: requestData.mainAddress,
           reference: requestData.reference,
           isDefault: requestData.isDefault

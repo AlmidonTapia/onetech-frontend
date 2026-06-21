@@ -77,7 +77,6 @@ export class ProductCardComponent {
     this.adding = true;
     this.cartService.addItem({ idProduct: this.product.idProduct, quantity: 1 }).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.cartSuccess, this.product.productName);
         this.adding = false;
         this.addedToCart.emit(this.product);
       },
