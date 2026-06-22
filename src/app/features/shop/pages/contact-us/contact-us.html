@@ -7,8 +7,7 @@
     </div>
 
     <div class="contact-grid">
-      <!-- Información -->
-      <div class="contact-info">
+            <div class="contact-info">
         <h3>{{ content.infoTitle }}</h3>
         <div class="info-list">
           @for (item of content.contactDetails; track item.title) {
@@ -23,8 +22,7 @@
         </div>
       </div>
 
-      <!-- Formulario -->
-      <div class="contact-form-panel card p-5 border border-gray-100 rounded-2xl bg-white shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="contact-form-panel card p-5 border border-gray-100 rounded-2xl bg-white shadow-sm dark:bg-gray-800 dark:border-gray-700">
         <h3 class="mb-4 text-xl font-bold">{{ content.formTitle }}</h3>
         
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form flex flex-column gap-3" novalidate>

@@ -50,7 +50,7 @@ export class OrderStatusComponent implements OnInit, OnDestroy {
   startTimer() {
     if (this.order().orderStatus === 'PENDIENTE') {
       const createdAt = new Date(this.order().createdAt).getTime();
-      const expiresAt = createdAt + 15 * 60 * 1000; // 15 minutos
+      const expiresAt = createdAt + 15 * 60 * 1000;
       
       const updateTimer = () => {
         const now = new Date().getTime();

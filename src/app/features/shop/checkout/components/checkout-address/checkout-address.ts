@@ -1,10 +1,11 @@
-import { Component, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { UserService } from '../../../../../core/services/user.service';
 import { UbigeoService, LocationResponse } from '../../../../../core/services/ubigeo.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { Address, CreateAddressRequest } from '../../../../../core/models/address.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-checkout-address',
@@ -18,6 +19,7 @@ export class CheckoutAddressComponent implements OnInit {
   private ubigeoService = inject(UbigeoService);
   private alertService = inject(AlertService);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   departments = signal<LocationResponse[]>([]);
   provinces = signal<LocationResponse[]>([]);
@@ -30,7 +32,6 @@ export class CheckoutAddressComponent implements OnInit {
   showNewForm = signal(false);
   saving = signal(false);
 
-  // ── CONTENIDO ADMINISTRABLE DE TEXTOS, ETIQUETAS Y ALERTAS ──
   content = {
     title: 'Dirección de entrega',
     titleIcon: 'pi pi-map-marker',
@@ -38,7 +39,6 @@ export class CheckoutAddressComponent implements OnInit {
     addAddressBtnText: 'Agregar nueva dirección',
     formTitle: 'Nueva dirección',
 
-    // Configuración dinámica de inputs
     fields: {
       departmentLabel: 'Departamento *',
       departmentPlaceholder: 'Seleccione Departamento',
@@ -53,13 +53,11 @@ export class CheckoutAddressComponent implements OnInit {
       errorRequired: 'Campo requerido'
     },
 
-    // Botones de acción
     actions: {
       cancelLabel: 'Cancelar',
       saveLabel: 'Guardar dirección'
     },
 
-    // Alertas informativas
     alerts: {
       success: 'Dirección guardada',
       error: 'Error al guardar dirección'
@@ -90,9 +88,11 @@ export class CheckoutAddressComponent implements OnInit {
 
     this.ubigeoService.getDepartments().subscribe(d => this.departments.set(d));
 
-    this.form.get('department')?.valueChanges.subscribe(depId => {
-      this.form.get('province')?.reset();
-      this.form.get('district')?.reset();
+    this.form.get('department')?.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(depId => {
+      this.form.get('province')?.setValue('');
+      this.form.get('district')?.setValue('');
       this.form.get('province')?.disable();
       this.form.get('district')?.disable();
       if (depId) {
@@ -103,8 +103,10 @@ export class CheckoutAddressComponent implements OnInit {
       }
     });
 
-    this.form.get('province')?.valueChanges.subscribe(provId => {
-      this.form.get('district')?.reset();
+    this.form.get('province')?.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(provId => {
+      this.form.get('district')?.setValue('');
       this.form.get('district')?.disable();
       if (provId) {
         this.ubigeoService.getDistricts(provId).subscribe(d => {
@@ -115,7 +117,6 @@ export class CheckoutAddressComponent implements OnInit {
     });
   }
 
-  // Método de control unificado para verificar errores en los inputs
   isInvalid(field: string) {
     const control = this.form.get(field);
     return control?.invalid && control?.touched;

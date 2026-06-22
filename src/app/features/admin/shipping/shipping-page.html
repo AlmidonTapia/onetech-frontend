@@ -14,18 +14,27 @@
       <p-tab value="1">
         <i class="pi pi-map mr-2"></i> {{ content.tabs.rates }}
       </p-tab>
+      <p-tab value="2">
+        <i class="pi pi-map-marker mr-2"></i> {{ content.tabs.locations }}
+      </p-tab>
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <div style="padding: 24px;">
-          <app-agencies-table /> 
+        <div style="padding-top: 16px;">
+          <app-agencies-table />
         </div>
       </p-tabpanel>
       <p-tabpanel value="1">
-        <div style="padding: 24px;">
+        <div style="padding-top: 16px;">
           <app-rates-table />
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="2">
+        <div style="padding-top: 16px;">
+          <app-locations-table />
         </div>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
 </div>
+

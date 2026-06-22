@@ -69,7 +69,6 @@ export class WishlistService {
             } else {
                 this.http.delete(`${this.url}/items/${productId}`).subscribe(() => this.getWishlist().subscribe());
             }
-            // Optimistic update
             let next: string[];
             if (isAdding) next = [...current, productId];
             else next = current.filter(id => id !== productId);
@@ -90,7 +89,6 @@ export class WishlistService {
     remove(productId: string) {
         if (this.authService.isAuthenticated()) {
             this.http.delete(`${this.url}/items/${productId}`).subscribe(() => this.getWishlist().subscribe());
-            // Optimistic update
             this._ids.update(ids => ids.filter(id => id !== productId));
         } else {
             const next = this._ids().filter(id => id !== productId);
@@ -105,7 +103,6 @@ export class WishlistService {
                 this._ids.set([]);
                 this.wishlist.set(null);
             });
-            // Optimistic update
             this._ids.set([]);
         } else {
             this._ids.set([]);
@@ -127,7 +124,6 @@ export class WishlistService {
                     this.http.post(`${this.url}/items`, { idProduct }).subscribe({
                         next: () => syncNext(),
                         error: (err) => {
-                            console.error('Error syncing wishlist item', err);
                             syncNext();
                         }
                     });

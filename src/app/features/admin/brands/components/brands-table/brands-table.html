@@ -12,16 +12,14 @@
         </div>
     </ng-template>
 
-    <!-- Encabezados de la Tabla -->
-    <ng-template pTemplate="header">
+        <ng-template pTemplate="header">
         <tr>
             <th>{{ content.headers.brand }}</th>
             <th [style.width]="tableConfig.actionsWidth">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
 
-    <!-- Cuerpo de Datos Dinámicos -->
-    <ng-template pTemplate="body" let-brand>
+        <ng-template pTemplate="body" let-brand>
         <tr>
             <td>
                 <div class="brand-cell" style="display: flex; align-items: center; gap: 12px;">
@@ -37,12 +35,10 @@
             </td>
             <td>
                 <div class="row-actions">
-                    <!-- Botón de Edición -->
-                    <button class="act-btn" [pTooltip]="content.tooltips.edit" (click)="editItem.emit(brand)">
+                                        <button class="act-btn" [pTooltip]="content.tooltips.edit" (click)="editItem.emit(brand)">
                         <i [class]="content.icons.edit"></i>
                     </button>
-                    <!-- Botón de Eliminación -->
-                    <button class="act-btn act-btn--danger" [pTooltip]="content.tooltips.delete"
+                                        <button class="act-btn act-btn--danger" [pTooltip]="content.tooltips.delete"
                         (click)="deleteItem.emit(brand)">
                         <i [class]="content.icons.delete"></i>
                     </button>

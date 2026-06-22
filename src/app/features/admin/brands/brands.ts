@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { BrandsTableComponent } from './components/brands-table/brands-table';
 import { BrandFormComponent } from './components/brand-form/brand-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
@@ -6,6 +6,9 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { BrandService } from '../../../core/services/brand.service';
 import { Brand, CreateBrandRequest } from '../../../core/models/brand.model';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-brands',
@@ -18,6 +21,7 @@ export class BrandsComponent implements OnInit {
   private brandService = inject(BrandService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+  private destroyRef = inject(DestroyRef);
 
   brands = signal<Brand[]>([]);
   totalRecords = signal(0);
@@ -26,13 +30,12 @@ export class BrandsComponent implements OnInit {
   formVisible = signal(false);
   editingBrand = signal<Brand | null>(null);
   searchTerm = signal<string | undefined>(undefined);
+  searchSubject = new Subject<string>();
 
-  // ── REGLAS DE NEGOCIO Y CONFIGURACIÓN DE APIS ──
   apiConfig = {
     pageSize: 10
   };
 
-  // ── CONTENIDO ADMINISTRABLE DE TEXTOS Y CONFIRMACIONES ──
   content = {
     title: 'Marcas',
     countSuffix: 'marcas registradas',
@@ -52,12 +55,19 @@ export class BrandsComponent implements OnInit {
   } as const;;
 
   ngOnInit() {
+    this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(term => {
+      this.searchTerm.set(term);
+      this.loadBrands({ first: 0, rows: this.apiConfig.pageSize });
+    });
     this.loadBrands();
   }
 
   onSearch(term: string) {
-    this.searchTerm.set(term);
-    this.loadBrands({ first: 0, rows: this.apiConfig.pageSize });
+    this.searchSubject.next(term);
   }
 
   loadBrands(event?: any) {

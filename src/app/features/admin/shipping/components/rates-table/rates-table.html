@@ -1,16 +1,62 @@
-<div class="table-toolbar" style="margin: 0 0 16px 0; display: flex; justify-content: space-between; align-items: center;">
+<div class="table-toolbar" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
     <div style="display: flex; align-items: center; gap: 12px; user-select: none; cursor: default;">
-      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--ot-text-main);">Tarifas y Coberturas</h2>
-      <span style="background: var(--ot-bg-surface); border: 1px solid var(--ot-border-color); color: var(--ot-text-muted); padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">{{ rates().length }} tarifas</span>
+      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--ot-text-main);">{{ content.title }}</h2>
+      <span style="background: var(--ot-bg-surface); border: 1px solid var(--ot-border-color); color: var(--ot-text-muted); padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
+        {{ filteredRates().length }} {{ filteredRates().length === rates().length ? 'tarifas' : 'de ' + rates().length + ' tarifas' }}
+      </span>
     </div>
-    <app-button label="Nueva Tarifa" icon="pi pi-plus" (clicked)="openCreate()"></app-button>
+    <app-button [label]="content.newRateBtn" icon="pi pi-plus" (clicked)="openCreate()"></app-button>
 </div>
 
-  <p-table [value]="rates()" [loading]="loading()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
+  <p-table [value]="filteredRates()" [loading]="loading()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
+    
+    <ng-template pTemplate="caption">
+        <div class="table-header-container">
+            <h5 class="table-header-title">{{ content.quickSearch }}</h5>
+            <div class="table-toolbar-filters" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <p-select [options]="agencyFilterOptions()" 
+                          [ngModel]="filterAgency()" 
+                          (ngModelChange)="filterAgency.set($event)"
+                          optionLabel="label" optionValue="value" 
+                          styleClass="filter-dropdown" />
+
+                <p-select [options]="departmentFilterOptions()" 
+                          [ngModel]="filterDepartment()" 
+                          (ngModelChange)="onFilterDepartmentChange($event)"
+                          optionLabel="label" optionValue="value" 
+                          styleClass="filter-dropdown"
+                          [filter]="true" filterPlaceholder="Buscar..." />
+
+                <p-select [options]="provinceFilterOptions()" 
+                          [ngModel]="filterProvince()" 
+                          (ngModelChange)="filterProvince.set($event)"
+                          optionLabel="label" optionValue="value" 
+                          styleClass="filter-dropdown"
+                          [disabled]="filterDepartment() === 'ALL'" />
+
+                <p-select [options]="availabilityFilterOptions" 
+                          [ngModel]="filterAvailability()" 
+                          (ngModelChange)="filterAvailability.set($event)"
+                          optionLabel="label" optionValue="value" 
+                          styleClass="filter-dropdown" />
+
+                <span class="p-input-icon-left search-input-wrapper">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" 
+                           [ngModel]="filterText()" 
+                           (ngModelChange)="filterText.set($event)"
+                           [placeholder]="content.searchPlaceholder" 
+                           class="filter-search-input"/>
+                </span>
+            </div>
+        </div>
+    </ng-template>
+
     <ng-template pTemplate="header">
       <tr>
         <th>Agencia</th>
         <th>Zona / Ubigeo</th>
+        <th>Dirección</th>
         <th>Costo Adicional</th>
         <th>Estado</th>
         <th style="width: 100px">Acciones</th>
@@ -20,6 +66,10 @@
       <tr>
         <td>{{ rate.methodName }}</td>
         <td>{{ getUbigeoDescription(rate) }}</td>
+        <td>
+          <span *ngIf="rate.agencyAddress; else noAddress">{{ rate.agencyAddress }}</span>
+          <ng-template #noAddress><span style="color: var(--ot-text-muted); opacity: 0.5;">—</span></ng-template>
+        </td>
         <td>{{ rate.cost | currencyPen }}</td>
         <td>
           <p-tag [severity]="rate.isAvailable ? 'success' : 'danger'" 
@@ -39,42 +89,54 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="5" class="table-empty-state">
+      <td colspan="6" class="table-empty-state">
         <i class="pi pi-inbox table-empty-icon"></i>
-        <p class="table-empty-text">No hay tarifas registradas aún.</p>
+        <p class="table-empty-text">{{ content.emptyTable }}</p>
       </td>
     </tr>
   </ng-template>
   </p-table>
 
 
-<p-dialog [header]="isEdit() ? 'Editar Tarifa' : 'Nueva Tarifa'" [visible]="showDialog()" (visibleChange)="showDialog.set($event)"
-          [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false">
+<p-dialog [header]="isEdit() ? content.editDialogTitle : content.createDialogTitle"
+          [visible]="showDialog()" (visibleChange)="showDialog.set($event)"
+          [modal]="true" [style]="{width: '600px'}" [contentStyle]="{'overflow': 'visible'}" [draggable]="false" [resizable]="false">
   
   <form [formGroup]="form" class="simple-form mt-4">
     
-    <div class="form-field">
+        <div class="form-field">
       <label>Agencia de Envío *</label>
       <p-select [options]="agencies()" formControlName="idShipmentMethod" optionLabel="methodName" optionValue="idShipmentMethod" placeholder="Seleccione una agencia" styleClass="w-full"></p-select>
       <small class="text-red-500" *ngIf="form.get('idShipmentMethod')?.touched && form.get('idShipmentMethod')?.invalid">Requerido</small>
     </div>
 
-    <div class="form-field">
-      <label>Departamento (Opcional)</label>
-      <p-select [options]="departments()" formControlName="idDepartment" optionLabel="name" optionValue="code" placeholder="Todo el país" [showClear]="true" styleClass="w-full"></p-select>
-    </div>
+        <ng-container *ngIf="isEdit()">
+      <div class="form-field">
+        <label>Departamento (Opcional)</label>
+        <p-select [options]="departments()" formControlName="idDepartment" optionLabel="name" optionValue="id" placeholder="Todo el país" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
+      </div>
+      <div class="form-field">
+        <label>Provincia (Opcional)</label>
+        <p-select [options]="provinces()" formControlName="idProvince" optionLabel="name" optionValue="id" placeholder="Todo el departamento" [showClear]="true" styleClass="w-full"></p-select>
+      </div>
+      <div class="form-field">
+        <label>Distrito (Opcional)</label>
+        <p-select [options]="districts()" formControlName="idDistrict" optionLabel="name" optionValue="id" placeholder="Toda la provincia" [showClear]="true" styleClass="w-full"></p-select>
+      </div>
+      <div class="form-field">
+        <label>Dirección del Local (Opcional)</label>
+        <input type="text" class="p-inputtext" formControlName="agencyAddress" placeholder="Ej: Av. Principal 123" />
+      </div>
+    </ng-container>
 
-    <div class="form-field">
-      <label>Provincia (Opcional)</label>
-      <p-select [options]="provinces()" formControlName="idProvince" optionLabel="name" optionValue="code" placeholder="Todo el departamento" [showClear]="true" styleClass="w-full"></p-select>
-    </div>
+        <ng-container *ngIf="!isEdit()">
+      <app-destination-picker 
+        [destinations]="destinations()" 
+        (destinationsChange)="onDestinationsChange($event)">
+      </app-destination-picker>
+    </ng-container>
 
-    <div class="form-field">
-      <label>Distrito (Opcional)</label>
-      <p-select [options]="districts()" formControlName="idDistrict" optionLabel="name" optionValue="code" placeholder="Toda la provincia" [showClear]="true" styleClass="w-full"></p-select>
-    </div>
-
-    <div class="form-row">
+        <div class="form-row">
       <div class="form-field">
         <label>Costo Adicional *</label>
         <p-inputNumber formControlName="cost" mode="currency" currency="PEN" [min]="0" styleClass="w-full"></p-inputNumber>
@@ -89,9 +151,18 @@
   </form>
 
   <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
-      <app-button label="Cancelar" variant="outline" (clicked)="showDialog.set(false)"></app-button>
-      <app-button label="Guardar" (clicked)="save()" [loading]="submitting()"></app-button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+      <span *ngIf="!isEdit() && destinations().length > 0" class="dest-count-label">
+        {{ destinations().length }} destino(s) seleccionado(s)
+      </span>
+      <span *ngIf="isEdit() || destinations().length === 0"></span>
+      <div style="display: flex; gap: 8px;">
+        <app-button label="Cancelar" variant="outline" (clicked)="showDialog.set(false)"></app-button>
+        <app-button [label]="isEdit() ? 'Guardar' : 'Crear ' + destinations().length + ' Tarifa(s)'" 
+                    (clicked)="save()" [loading]="submitting()"
+                    [disabled]="!isEdit() && destinations().length === 0">
+        </app-button>
+      </div>
     </div>
   </ng-template>
 </p-dialog>

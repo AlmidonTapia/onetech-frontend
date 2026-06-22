@@ -40,7 +40,6 @@ export class OrdersComponent implements OnInit {
     loadingLabel: 'Cargando pedidos...'
   };
 
-  // El breadcrumb se nutre dinámicamente de tu objeto central de contenido
   breadcrumb: BreadcrumbItem[] = [{ label: this.content.breadcrumbLabel }];
 
   ngOnInit() {

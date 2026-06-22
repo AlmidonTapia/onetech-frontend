@@ -48,8 +48,6 @@ export class AdminSettingsComponent implements OnInit {
   });
 
   ngOnInit() {
-    // Aquí se cargarían las configuraciones desde el backend
-    // Por ahora usamos valores quemados por defecto en el formulario
   }
 
   isInvalid(field: string): boolean {
@@ -65,7 +63,6 @@ export class AdminSettingsComponent implements OnInit {
 
     this.saving.set(true);
 
-    // TODO: Llamada al backend real
     setTimeout(() => {
       this.saving.set(false);
       this.alertService.success(this.content.alerts.success);

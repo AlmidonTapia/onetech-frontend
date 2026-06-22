@@ -74,7 +74,6 @@ export class RegisterComponent implements OnInit {
     }
   };
 
-  // ── CONFIGURACIÓN DINÁMICA DE CAMPOS ──
   fields = [
     { name: 'firstName', label: 'Nombre', type: 'text', placeholder: 'Juan' },
     { name: 'lastName', label: 'Apellido', type: 'text', placeholder: 'Pérez' },

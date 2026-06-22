@@ -54,8 +54,7 @@
         <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-text p-button-secondary" (click)="menu.toggle($event)"></button>
       </td>
     </tr>
-    <!-- Row expansion for message body could go here if we used row expansion -->
-    <tr *ngIf="msg.status === 'UNREAD'" class="bg-gray-50 dark:bg-gray-800">
+        <tr *ngIf="msg.status === 'UNREAD'" class="bg-gray-50 dark:bg-gray-800">
       <td colspan="6" class="p-3 text-sm text-gray-600 dark:text-gray-300">
         <em>{{ msg.message }}</em>
       </td>

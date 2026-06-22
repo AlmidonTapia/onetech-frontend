@@ -1,0 +1,33 @@
+.locations-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  min-height: 480px;
+}
+
+/* ---- Form inside dialog ---- */
+.simple-form .form-field {
+  margin-bottom: 16px;
+}
+
+.simple-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--ot-text-main);
+}
+
+.text-help {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: var(--ot-text-muted);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .locations-container {
+    grid-template-columns: 1fr;
+  }
+}

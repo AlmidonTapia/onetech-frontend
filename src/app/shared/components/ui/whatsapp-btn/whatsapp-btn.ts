@@ -52,7 +52,7 @@ import { Component, Input, computed, signal } from '@angular/core';
 export class WhatsappBtnComponent {
   @Input() productName?: string;
   @Input() productUrl?: string;
-  @Input() phone = '51999999999'; // Replace with real number
+  @Input() phone = '51999999999';
 
   readonly ariaLabel = 'Consultar por WhatsApp';
 

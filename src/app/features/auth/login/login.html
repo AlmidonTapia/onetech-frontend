@@ -1,7 +1,6 @@
 <div class="auth-layout">
 
-  <!-- ── Panel izquierdo (branding) ──────────────────────── -->
-  <div class="auth-brand">
+    <div class="auth-brand">
     <div class="brand-inner">
 
       <a routerLink="/" class="brand-logo">
@@ -13,8 +12,7 @@
         <p>{{ brandData.description }}</p>
       </div>
 
-      <!-- Beneficios listados dinámicamente -->
-      <ul class="brand-benefits">
+            <ul class="brand-benefits">
         @for (benefit of brandData.benefits; track benefit.title) {
         <li>
           <div class="benefit-icon"><i [class]="benefit.icon"></i></div>
@@ -29,8 +27,7 @@
     </div>
   </div>
 
-  <!-- ── Panel derecho (formulario) ──────────────────────── -->
-  <div class="auth-form-panel">
+    <div class="auth-form-panel">
     <div class="auth-form-card">
 
       <div class="form-header">

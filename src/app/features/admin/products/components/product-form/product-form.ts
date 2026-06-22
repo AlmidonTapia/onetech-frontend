@@ -12,6 +12,7 @@ import { Category } from '../../../../../core/models/category.model';
 import { Brand } from '../../../../../core/models/brand.model';
 import { CategoryService } from '../../../../../core/services/category.service';
 import { BrandService } from '../../../../../core/services/brand.service';
+import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-product-form',
@@ -107,8 +108,8 @@ export class ProductFormComponent implements OnChanges, OnInit {
   ];
 
   form = this.fb.group({
-    productName: ['', [Validators.required, Validators.minLength(3)]],
-    sku: ['', Validators.required],
+    productName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(3)]],
+    sku: ['', [Validators.required, noWhitespaceValidator()]],
     idCategory: ['', Validators.required],
     idBrand: ['', Validators.required],
     price: [null as number | null, [Validators.required, Validators.min(0.01)]],
@@ -116,7 +117,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
     badge: [null as string | null],
     stockQuantity: [0, [Validators.required, Validators.min(0)]],
     status: ['ACTIVO', Validators.required],
-    description: ['', Validators.required]
+    description: ['', [Validators.required, noWhitespaceValidator()]]
   });
 
   get title() {

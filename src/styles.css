@@ -574,6 +574,7 @@ body .p-paginator .p-paginator-page.p-highlight {
   font-size: 13px !important;
   color: var(--ot-text-main) !important;
   font-weight: 500 !important;
+  min-width: 0 !important;
 }
 
 .p-select-label.p-placeholder {
@@ -596,17 +597,15 @@ body .p-paginator .p-paginator-page.p-highlight {
   box-shadow: var(--ot-shadow-lg) !important;
   padding: 4px !important;
   margin-top: 4px !important;
+  min-width: 220px !important;
 }
 
 .p-select-list {
   padding: 0 !important;
   margin: 0 !important;
-  list-style: none !important;
 }
 
 .p-select-option {
-  font-family: inherit !important;
-  font-size: 13px !important;
   padding: 8px 12px !important;
   color: var(--ot-text-main) !important;
   border-radius: var(--ot-radius-sm) !important;
@@ -628,8 +627,118 @@ body .p-paginator .p-paginator-page.p-highlight {
 }
 
 .dark .p-select-option.p-highlight {
-  background: rgba(14, 165, 233, 0.15) !important;
+  background: rgba(14, 165, 233, 0.1) !important;
+  color: var(--ot-blue) !important;
+}
+
+/* Multiselect Component (PrimeNG p-multiSelect) */
+.p-multiselect {
+  position: relative !important;
+  font-family: inherit !important;
+  background: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-md) !important;
+  transition: all 0.25s ease !important;
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  outline: none !important;
+}
+
+.p-multiselect:hover {
+  border-color: var(--ot-gray-400) !important;
+}
+
+.p-multiselect:focus-within,
+.p-multiselect.p-focus {
+  outline: none !important;
+  border-color: var(--p-primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15) !important;
+  background: var(--ot-bg-surface) !important;
+}
+
+.p-multiselect-label {
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  color: var(--ot-text-main) !important;
+  font-weight: 500 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  display: block !important;
+  min-width: 0 !important;
+}
+
+.p-multiselect-label.p-placeholder {
+  color: var(--ot-text-muted) !important;
+}
+
+.p-multiselect-dropdown {
+  width: 40px !important;
+  color: var(--ot-text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Multiselect Dropdown Overlay Panel */
+.p-multiselect-panel {
+  background: var(--ot-bg-surface) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-md) !important;
+  box-shadow: var(--ot-shadow-lg) !important;
+  padding: 4px !important;
+  margin-top: 4px !important;
+  z-index: 11000 !important; /* Ensure it overlays everything inside dialogs */
+  min-width: 220px !important;
+}
+
+.p-multiselect-list {
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+
+.p-multiselect-item {
+  padding: 8px 12px !important;
+  color: var(--ot-text-main) !important;
+  border-radius: var(--ot-radius-sm) !important;
+  margin: 2px 0 !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.p-multiselect-item:hover,
+.p-multiselect-item.p-highlight:hover {
+  background: var(--ot-bg-body) !important;
   color: var(--p-primary-color) !important;
+}
+
+.p-multiselect-item.p-highlight {
+  background: var(--ot-blue-50) !important;
+  color: var(--ot-blue) !important;
+  font-weight: 600 !important;
+}
+
+.dark .p-multiselect-item.p-highlight {
+  background: rgba(14, 165, 233, 0.1) !important;
+  color: var(--ot-blue) !important;
+}
+
+
+
+
+
+.p-multiselect.p-disabled {
+  opacity: 0.6 !important;
+  background: var(--ot-bg-body) !important;
+  border-color: var(--ot-border-color) !important;
+  cursor: not-allowed !important;
 }
 
 /* ── ESTILOS GLOBALES PARA CABECERAS Y BUSCADORES DE TABLAS ADMIN ── */
@@ -749,4 +858,53 @@ body .p-paginator .p-paginator-page.p-highlight {
 .dark .act-btn--danger:hover { 
   background: rgba(220, 38, 38, 0.15); 
 }
+
+/* Specific overrides to allow full width selects/multiselects in forms without breaking table filter widths */
+.w-full.p-select,
+.w-full.p-multiselect {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Align and center filter icons in dropdowns */
+.p-multiselect-filter-container,
+.p-select-filter-container {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  flex-grow: 1 !important;
+}
+
+.p-multiselect-filter,
+.p-select-filter {
+  width: 100% !important;
+  padding-right: 32px !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+.p-multiselect-filter-icon,
+.p-select-filter-icon {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin-top: 0 !important;
+  pointer-events: none !important;
+  color: var(--ot-text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Space between checkbox and label text inside multiselect header and items */
+.p-multiselect-item .p-checkbox,
+.p-multiselect-header .p-checkbox {
+  margin-right: 12px !important;
+}
+
+
+
 

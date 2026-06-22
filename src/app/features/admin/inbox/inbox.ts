@@ -61,8 +61,6 @@ export class InboxComponent implements OnInit {
       next: (response) => {
         this.messages.set(response.content);
         this.totalRecords.set(response.totalElements);
-        // Calculate unread count globally if needed, or just from current page:
-        // Normally we'd want a separate endpoint for stats, but we can just show total elements for now or a generic label.
         this.loading.set(false);
       },
       error: () => this.loading.set(false)
@@ -76,7 +74,6 @@ export class InboxComponent implements OnInit {
   onStatusChange(event: { id: string, status: 'UNREAD' | 'READ' | 'REPLIED' }) {
     this.contactService.updateStatus(event.id, event.status).subscribe({
       next: () => {
-        // Refresh page
         this.loadMessages({ first: 0, rows: 10 });
       }
     });

@@ -5,6 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Category, CreateCategoryRequest } from '../../../../../core/models/category.model';
+import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-category-form',
@@ -47,7 +48,7 @@ export class CategoryFormComponent implements OnChanges {
   ];
 
   form = this.fb.group({
-    categoryName: ['', [Validators.required, Validators.minLength(2)]],
+    categoryName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(2)]],
     parentIdCategory: [null as string | null],
   });
 

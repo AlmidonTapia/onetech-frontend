@@ -105,7 +105,6 @@ export class ShipmentService {
   deleteMethod(id: string): Observable<any> {
     return this.http.delete<any>(`${this.methodsUrl}/${id}`).pipe(map(res => res.data || res));
   }
-  // --- Shipping Rates API ---
   private ratesUrl = `${environment.apiUrl}/shipping-rates`;
   
   getRates(page = 0, size = 10, idShipmentMethod?: string): Observable<PageResponse<any>> {
@@ -126,7 +125,6 @@ export class ShipmentService {
     return this.http.delete<any>(`${this.ratesUrl}/${id}`).pipe(map(res => res.data || res));
   }
 
-  // --- Ubigeo API ---
   private ubigeoUrl = `${environment.apiUrl}/ubigeo`;
 
   getDepartments(): Observable<any[]> {
@@ -143,5 +141,29 @@ export class ShipmentService {
 
   getRatesByUbigeo(ubigeoCode: string): Observable<any[]> {
     return this.http.get<any>(`${this.ubigeoUrl}/rates/${ubigeoCode}`).pipe(map(res => res.data || res));
+  }
+
+  createDepartment(data: { id: string; name: string }): Observable<any> {
+    return this.http.post<any>(`${this.ubigeoUrl}/departments`, data).pipe(map(res => res.data || res));
+  }
+
+  deleteDepartment(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.ubigeoUrl}/departments/${id}`).pipe(map(res => res.data || res));
+  }
+
+  createProvince(idDepartment: string, data: { id: string; name: string }): Observable<any> {
+    return this.http.post<any>(`${this.ubigeoUrl}/departments/${idDepartment}/provinces`, data).pipe(map(res => res.data || res));
+  }
+
+  deleteProvince(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.ubigeoUrl}/provinces/${id}`).pipe(map(res => res.data || res));
+  }
+
+  createDistrict(idProvince: string, data: { id: string; name: string }): Observable<any> {
+    return this.http.post<any>(`${this.ubigeoUrl}/provinces/${idProvince}/districts`, data).pipe(map(res => res.data || res));
+  }
+
+  deleteDistrict(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.ubigeoUrl}/districts/${id}`).pipe(map(res => res.data || res));
   }
 }

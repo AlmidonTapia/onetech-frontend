@@ -16,7 +16,7 @@ import { PasswordModule } from 'primeng/password';
     ButtonComponent, AlertComponent,
   ],
   templateUrl: './reset-password.html',
-  styleUrl: '../login/login.css' // Reutilizamos estilos del login
+  styleUrl: '../login/login.css'
 })
 export class ResetPasswordComponent implements OnInit {
   private fb = inject(FormBuilder);

@@ -15,8 +15,7 @@
     </app-alert>
     }
 
-    <!-- Form -->
-    <form [formGroup]="formGroup()" (ngSubmit)="submit()" class="form" novalidate>
+        <form [formGroup]="formGroup()" (ngSubmit)="submit()" class="form" novalidate>
 
       @for (field of fields(); track field.name) {
       <div class="form-field">
@@ -66,8 +65,7 @@
       </span>
       }
 
-      <!-- Checkbox de Términos Dinámico -->
-      <div class="form-check" [class.form-check--error]="isInvalid('terms')">
+            <div class="form-check" [class.form-check--error]="isInvalid('terms')">
         <p-checkbox formControlName="terms" inputId="terms" [binary]="true" />
         <label for="terms">
           {{ formData().termsText }}

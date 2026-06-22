@@ -16,11 +16,11 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonComponent, AlertComponent,
   ],
   templateUrl: './forgot-password.html',
-  styleUrl: '../login/login.css' // Reutilizamos estilos del login
+  styleUrl: '../login/login.css'
 })
 export class ForgotPasswordComponent {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService); // Assuming a method exists or will exist
+  private authService = inject(AuthService);
   private alertService = inject(AlertService);
 
   loading = signal(false);

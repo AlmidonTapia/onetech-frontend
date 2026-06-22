@@ -6,8 +6,7 @@
     </div>
   </div>
 
-  <!-- Profile Card -->
-  <div class="profile-card">
+    <div class="profile-card">
     <div class="profile-avatar">
       <span class="avatar-circle">{{ userInitials }}</span>
       <div class="avatar-info">
@@ -16,8 +15,7 @@
       </div>
     </div>
 
-    <!-- Tab Switcher -->
-    <div class="profile-tabs">
+        <div class="profile-tabs">
       <button class="profile-tab" [class.active]="activeTab() === 'info'" (click)="activeTab.set('info')">
         <i class="pi pi-user"></i> {{ content.tabs.info }}
       </button>
@@ -27,8 +25,7 @@
     </div>
   </div>
 
-  <!-- Info Tab -->
-  @if (activeTab() === 'info') {
+    @if (activeTab() === 'info') {
   <div class="section-card">
     <div class="section-header">
       <h3>{{ content.infoSection.title }}</h3>
@@ -83,8 +80,7 @@
   </div>
   }
 
-  <!-- Security Tab -->
-  @if (activeTab() === 'security') {
+    @if (activeTab() === 'security') {
   <div class="section-card">
     <div class="section-header">
       <h3>{{ content.securitySection.title }}</h3>

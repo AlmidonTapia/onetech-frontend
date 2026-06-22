@@ -1,0 +1,80 @@
+<div class="locations-container">
+
+    <app-location-panel
+    [title]="content.deptTitle"
+    icon="pi pi-globe"
+    [items]="departments()"
+    [selectedItem]="selectedDepartment()"
+    [loading]="loadingDepts()"
+    [emptyMessage]="content.deptEmpty"
+    (create)="openCreateDepartment()"
+    (selectItem)="loadProvinces($event)"
+    (delete)="deleteDepartment($event)">
+  </app-location-panel>
+
+    <app-location-panel
+    [title]="content.provTitle"
+    icon="pi pi-map"
+    [items]="provinces()"
+    [selectedItem]="selectedProvince()"
+    [loading]="loadingProvs()"
+    [emptyMessage]="content.provEmpty"
+    [showCreateBtn]="!!selectedDepartment()"
+    [placeholderMessage]="!selectedDepartment() ? content.provPlaceholder : null"
+    (create)="openCreateProvince()"
+    (selectItem)="loadDistricts($event)"
+    (delete)="deleteProvince($event)">
+  </app-location-panel>
+
+    <app-location-panel
+    [title]="content.distTitle"
+    icon="pi pi-map-marker"
+    [items]="districts()"
+    [selectedItem]="null"
+    [loading]="loadingDists()"
+    [emptyMessage]="content.distEmpty"
+    [showCreateBtn]="!!selectedProvince()"
+    [isLeaf]="true"
+    [placeholderMessage]="!selectedProvince() ? content.distPlaceholder : null"
+    (create)="openCreateDistrict()"
+    (delete)="deleteDistrict($event)">
+  </app-location-panel>
+
+</div>
+
+<p-dialog
+  [header]="dialogTitle()"
+  [visible]="showDialog()"
+  (visibleChange)="showDialog.set($event)"
+  [modal]="true"
+  [style]="{width: '420px'}"
+  [draggable]="false"
+  [resizable]="false">
+
+  <form [formGroup]="form" class="simple-form mt-4">
+    <div class="form-field">
+      <label>Código INEI *</label>
+      <input type="text" pInputText formControlName="id"
+             [placeholder]="getCodeHint()"
+             [maxlength]="getCodeMaxLength()"
+             class="w-full" />
+      <small class="text-help">{{ getCodeHint() }}</small>
+      <small class="text-red-500" *ngIf="form.get('id')?.touched && form.get('id')?.invalid">El código es requerido</small>
+    </div>
+
+    <div class="form-field">
+      <label>Nombre *</label>
+      <input type="text" pInputText formControlName="name"
+             placeholder="Ej: Lima"
+             class="w-full" />
+      <small class="text-red-500" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">El nombre es requerido</small>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
+      <app-button label="Cancelar" variant="outline" (clicked)="showDialog.set(false)"></app-button>
+      <app-button label="Guardar" (clicked)="save()" [loading]="submitting()"></app-button>
+    </div>
+  </ng-template>
+</p-dialog>

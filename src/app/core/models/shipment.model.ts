@@ -45,6 +45,7 @@ export interface ShippingRate {
   districtName?: string;
   cost: number;
   isAvailable: boolean;
+  agencyAddress?: string;
 }
 
 export interface CreateShippingRateRequest {
@@ -54,9 +55,10 @@ export interface CreateShippingRateRequest {
   idDistrict?: string;
   cost: number;
   isAvailable: boolean;
+  agencyAddress?: string;
 }
 
 export interface LocationResponse {
-  code: string;
+  id: string;
   name: string;
 }

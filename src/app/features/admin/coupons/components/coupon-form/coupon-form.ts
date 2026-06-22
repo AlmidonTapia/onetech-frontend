@@ -126,7 +126,6 @@ export class CouponFormComponent implements OnChanges {
       expirationDate: new Date(val.expirationDate!).toISOString(),
       usageLimit: val.usageLimit ? val.usageLimit : undefined
     };
-    // Include status in emit since API accepts it on edit/create
     const fullReq = {
       ...req,
       status: val.status

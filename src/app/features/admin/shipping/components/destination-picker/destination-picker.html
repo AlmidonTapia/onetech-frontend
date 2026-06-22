@@ -1,0 +1,76 @@
+<div class="dest-picker-section">
+  <label class="section-label">
+    <i class="pi pi-map-marker"></i> Destinos de cobertura
+  </label>
+  <p class="section-hint">Seleccione una ubicación y haga clic en "Agregar" para añadir destinos.</p>
+
+  <div class="dest-picker-row" style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+    <p-select [options]="departments()" 
+              [ngModel]="pickerDepartment()" 
+              (ngModelChange)="onPickerDepartmentChange($event)"
+              [ngModelOptions]="{standalone: true}"
+              optionLabel="name" optionValue="id" 
+              placeholder="Departamento" [showClear]="true" 
+              styleClass="w-full"
+              [filter]="true" filterPlaceholder="Buscar...">
+    </p-select>
+
+    <p-multiSelect [options]="provinces()" 
+              [ngModel]="pickerProvinces()" 
+              (ngModelChange)="onPickerProvincesChange($event)"
+              [ngModelOptions]="{standalone: true}"
+              optionLabel="name" optionValue="id" 
+              placeholder="Provincias (Múltiple)"
+              styleClass="w-full"
+              [disabled]="!pickerDepartment()"
+              [maxSelectedLabels]="1"
+              [filter]="false"
+              [showHeader]="false"
+              selectedItemsLabel="{0} seleccionados">
+    </p-multiSelect>
+
+    <p-multiSelect [options]="districts()" 
+              [ngModel]="pickerDistricts()" 
+              (ngModelChange)="onPickerDistrictsChange($event)"
+              [ngModelOptions]="{standalone: true}"
+              optionLabel="name" optionValue="id" 
+              placeholder="Distritos (Múltiple)"
+              styleClass="w-full"
+              [disabled]="pickerProvinces().length !== 1"
+              [maxSelectedLabels]="1"
+              [filter]="false"
+              [showHeader]="false"
+              selectedItemsLabel="{0} seleccionados">
+    </p-multiSelect>
+  </div>
+
+  <div class="dest-picker-address-row" style="margin-top: 12px;">
+    <input type="text" 
+           class="p-inputtext w-full"
+           [ngModel]="pickerAddress()" 
+           (ngModelChange)="pickerAddress.set($event)"
+           [ngModelOptions]="{standalone: true}"
+           placeholder="Dirección del Local de la Agencia en este destino (Opcional)" />
+  </div>
+
+  <div class="dest-picker-actions" style="margin-top: 12px;">
+    <app-button label="Agregar Destino" icon="pi pi-plus" size="sm" variant="accent" (clicked)="addDestination()"></app-button>
+  </div>
+
+    <div class="dest-chips" *ngIf="destinations.length > 0" style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+    <div class="dest-chip" *ngFor="let dest of destinations; let i = index" style="background: var(--ot-bg-body); border: 1px solid var(--ot-border-color); padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <i class="pi pi-map-marker" style="color: var(--p-primary-color, #6366f1);"></i>
+        <span style="font-size: 0.85rem; color: var(--ot-text-main);">{{ dest.label }}</span>
+      </div>
+      <button class="chip-remove" (click)="removeDestination(i)" title="Quitar" style="background: none; border: none; color: var(--ot-text-muted); cursor: pointer; padding: 4px; border-radius: 4px;">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="dest-empty" *ngIf="destinations.length === 0" style="margin-top: 16px; display: flex; align-items: center; gap: 8px; color: var(--ot-text-muted); font-size: 0.85rem; background: var(--ot-bg-body); padding: 12px; border-radius: 8px; border: 1px dashed var(--ot-border-color);">
+    <i class="pi pi-info-circle"></i>
+    <span>No hay destinos agregados. Use los selectores de arriba para agregar zonas de cobertura.</span>
+  </div>
+</div>

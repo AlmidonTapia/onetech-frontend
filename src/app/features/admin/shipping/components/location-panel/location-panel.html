@@ -1,0 +1,51 @@
+<div class="location-panel">
+  <div class="panel-header">
+    <div class="panel-title-row">
+      <h3 class="panel-title">
+        <i [class]="icon"></i> {{ title }}
+      </h3>
+      <span class="panel-badge" *ngIf="!placeholderMessage">{{ items.length }}</span>
+    </div>
+    <app-button
+      *ngIf="showCreateBtn && !placeholderMessage"
+      label="Nuevo" icon="pi pi-plus" size="sm"
+      (clicked)="create.emit()">
+    </app-button>
+  </div>
+
+  <div class="panel-body">
+    <div *ngIf="placeholderMessage" class="panel-placeholder">
+      <i class="pi pi-arrow-left"></i>
+      <span>{{ placeholderMessage }}</span>
+    </div>
+
+    <div *ngIf="!placeholderMessage && loading" class="panel-loading">
+      <i class="pi pi-spin pi-spinner"></i> Cargando...
+    </div>
+
+    <div *ngIf="!placeholderMessage && !loading && items.length === 0" class="panel-empty">
+      <i class="pi pi-inbox"></i>
+      <span>{{ emptyMessage }}</span>
+    </div>
+
+    <div class="location-list" *ngIf="!placeholderMessage && !loading && items.length > 0">
+      <div
+        *ngFor="let item of items"
+        class="location-item"
+        [class.active]="selectedItem?.id === item.id"
+        [class.location-item--leaf]="isLeaf"
+        (click)="selectItem.emit(item)">
+        <div class="item-info">
+          <span class="item-code">{{ item.id }}</span>
+          <span class="item-name">{{ item.name }}</span>
+        </div>
+        <div class="item-actions">
+          <button class="delete-btn" (click)="delete.emit(item); $event.stopPropagation()" title="Eliminar">
+            <i class="pi pi-trash"></i>
+          </button>
+          <i *ngIf="!isLeaf" class="pi pi-chevron-right chevron-icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

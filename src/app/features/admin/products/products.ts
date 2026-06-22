@@ -1,10 +1,13 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProductsTableComponent } from './components/products-table/products-table';
 import { ProductFormComponent } from './components/product-form/product-form';
 import { ProductImagesManagerComponent } from './components/product-images-manager/product-images-manager';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
@@ -29,6 +32,7 @@ export class ProductsComponent implements OnInit {
   private brandService = inject(BrandService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+  private destroyRef = inject(DestroyRef);
 
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
@@ -40,6 +44,7 @@ export class ProductsComponent implements OnInit {
   imagesVisible = signal(false);
   editingProduct = signal<Product | null>(null);
   search = '';
+  searchSubject = new Subject<string>();
   filterCategory = signal<string | undefined>(undefined);
   filterBrand = signal<string | undefined>(undefined);
   filterStatus = signal<string | undefined>(undefined);
@@ -71,9 +76,18 @@ export class ProductsComponent implements OnInit {
       severity: 'danger' as const,
       confirmLabel: 'Sí, eliminar'
     }
-  } as const; // Aserto estricto para blindar propiedades como cardPadding
+  } as const;
 
   ngOnInit() {
+    this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(term => {
+      this.search = term;
+      this.loadProducts({ first: 0, rows: this.apiConfig.pageSize });
+    });
+
     this.categoryService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).subscribe(r => this.categories.set(r.content));
     this.brandService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).subscribe(r => this.brands.set(r.content));
     this.loadProducts();
@@ -96,8 +110,7 @@ export class ProductsComponent implements OnInit {
   }
 
   onSearch(term: string) {
-    this.search = term;
-    this.loadProducts({ first: 0, rows: this.apiConfig.pageSize });
+    this.searchSubject.next(term);
   }
 
   onFilterChange(filters: { category: string, brand: string, status: string }) {

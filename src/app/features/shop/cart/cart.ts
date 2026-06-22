@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
-import { Router, RouterLink } from '@angular/router'; // <- Añadido RouterLink si se requiere en el botón dinámico
+import { Router, RouterLink } from '@angular/router';
 import { CartItemsComponent } from './components/cart-items/cart-items';
 import { CartSummaryComponent } from './components/cart-summary/cart-summary';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';

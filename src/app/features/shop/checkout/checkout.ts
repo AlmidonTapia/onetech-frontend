@@ -165,7 +165,6 @@ export class CheckoutComponent {
       try {
         await this.mpBrickController.unmount();
       } catch (e) {
-        console.warn('Error desmontando brick anterior:', e);
       }
     }
 
@@ -213,7 +212,6 @@ export class CheckoutComponent {
           });
         },
         onError: (error: any) => {
-          console.error('Error en Brick:', error);
           this.alertService.error(this.content.alerts.brickError);
         }
       }
@@ -226,7 +224,6 @@ export class CheckoutComponent {
         settings
       );
     } catch (error) {
-      console.error('Error creando el Brick:', error);
     }
   }
 
@@ -278,7 +275,6 @@ export class CheckoutComponent {
         this.router.navigate([this.content.navigation.routeSuccess]);
       },
       error: (err: any) => {
-        console.error('Error al procesar el pago de Mercado Pago:', err);
         const errMsg = err?.error?.message || this.content.alerts.paymentError;
         this.alertService.error(errMsg);
         this.placing.set(false);

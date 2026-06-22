@@ -93,7 +93,6 @@ export class CartService {
 
   updateQuantity(productId: string, quantity: number): Observable<any> {
     if (this.authService.isAuthenticated()) {
-      // Assuming backend has a patch/put for quantity
       return this.http.patch(`${this.url}/items/${productId}`, { quantity }).pipe(
         tap(() => this.getCart().subscribe())
       );
@@ -125,8 +124,6 @@ export class CartService {
           this.getCart().subscribe();
         },
         error: (err) => {
-          console.error('Error al sincronizar carrito en lote', err);
-          // Fallback en caso de error
           localStorage.removeItem(this.GUEST_CART_KEY);
           this.getCart().subscribe();
         }

@@ -22,14 +22,12 @@
       </div>
     </div>
 
-    <!-- Description Section -->
-    <div class="detail-info-section">
+        <div class="detail-info-section">
       <h3 class="section-title">{{ content.tabs.descriptionLabel }}</h3>
       <p class="tab-desc-text">{{ prod.description }}</p>
     </div>
 
-    <!-- Specifications Section -->
-    @if (prod.specifications && (prod.specifications | keyvalue).length > 0) {
+        @if (prod.specifications && (prod.specifications | keyvalue).length > 0) {
     <div class="detail-info-section">
       <h3 class="section-title">{{ content.tabs.specsLabel }}</h3>
       <div class="specs-table">
@@ -43,10 +41,8 @@
     </div>
     }
 
-    <!-- Reviews Section -->
-    <div class="detail-info-section">
-      <!-- Usamos una ref para recargar la lista de reseñas desde este componente padre -->
-      <app-product-reviews #reviewsList [productId]="prod.idProduct" />
+        <div class="detail-info-section">
+            <app-product-reviews #reviewsList [productId]="prod.idProduct" />
       
       @if (authService.isAuthenticated()) {
         <app-product-review-form [productId]="prod.idProduct" (reviewAdded)="reviewsList.loadReviews()" />

@@ -28,7 +28,6 @@ export class FeaturedCategoriesComponent implements OnInit {
     defaultIcon: 'pi pi-box' 
   };
 
-  // ── DICCIONARIO DINÁMICO DE PRIMEICONS ── (por ahora falta revisar e implemenatr logica en el back)
   private iconMap: Record<string, string> = {
     'Laptops & PCs': 'pi pi-desktop',
     'Laptops': 'pi pi-desktop',

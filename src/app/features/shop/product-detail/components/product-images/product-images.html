@@ -17,8 +17,7 @@
       <div class="img-placeholder"><i class="pi pi-image"></i></div>
     }
 
-    <!-- Badges & Buttons inside Main Image Container -->
-    <span class="badge-new">{{ content.newBadge }}</span>
+        <span class="badge-new">{{ content.newBadge }}</span>
 
     <button class="zoom-btn" [attr.aria-label]="content.zoomAriaLabel" (click)="toggleZoom()">
       <i class="pi pi-expand"></i>
@@ -28,7 +27,6 @@
   </div>
 </div>
 
-<!-- Lightbox Zoom Modal -->
 <p-dialog [visible]="zoomVisible()" (visibleChange)="zoomVisible.set($event)" 
           [modal]="true" [dismissableMask]="true" [showHeader]="false" 
           styleClass="zoom-dialog" [style]="{width: 'auto', 'max-width': '90vw'}">

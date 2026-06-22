@@ -4,6 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Brand, CreateBrandRequest } from '../../../../../core/models/brand.model';
+import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-brand-form',
@@ -47,7 +48,7 @@ export class BrandFormComponent implements OnChanges {
   ];
 
   form = this.fb.group({
-    brandName: ['', [Validators.required, Validators.minLength(2)]]
+    brandName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(2)]]
   });
 
   get title() {

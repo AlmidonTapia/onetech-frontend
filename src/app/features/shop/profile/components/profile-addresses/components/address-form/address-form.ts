@@ -1,9 +1,10 @@
-import { Component, OnInit, input, output, inject, signal } from '@angular/core';
+import { Component, OnInit, input, output, inject, signal, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../../../../shared/components/ui/button/button';
 import { UbigeoService, LocationResponse } from '../../../../../../../core/services/ubigeo.service';
 import { CreateAddressRequest } from '../../../../../../../core/models/address.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-address-form',
@@ -15,6 +16,7 @@ import { CreateAddressRequest } from '../../../../../../../core/models/address.m
 export class AddressFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private ubigeoService = inject(UbigeoService);
+  private destroyRef = inject(DestroyRef);
 
   content = input.required<any>();
   saving = input<boolean>(false);
@@ -39,7 +41,9 @@ export class AddressFormComponent implements OnInit {
   ngOnInit() {
     this.ubigeoService.getDepartments().subscribe(d => this.departments.set(d));
 
-    this.form.get('department')?.valueChanges.subscribe(depId => {
+    this.form.get('department')?.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(depId => {
       this.form.get('province')?.reset();
       this.form.get('district')?.reset();
       this.form.get('province')?.disable();
@@ -52,7 +56,9 @@ export class AddressFormComponent implements OnInit {
       }
     });
 
-    this.form.get('province')?.valueChanges.subscribe(provId => {
+    this.form.get('province')?.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(provId => {
       this.form.get('district')?.reset();
       this.form.get('district')?.disable();
       if (provId) {

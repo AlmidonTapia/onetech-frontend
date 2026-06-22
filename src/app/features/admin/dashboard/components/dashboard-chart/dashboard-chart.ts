@@ -30,6 +30,5 @@ export class DashboardChartComponent implements OnChanges {
   };
 
   ngOnChanges() {
-    // El gráfico de PrimeNG se vuelve a renderizar automáticamente al mutar el @Input data
   }
 }
