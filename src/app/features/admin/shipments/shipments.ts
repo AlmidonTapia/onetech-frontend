@@ -4,9 +4,7 @@ import { ShipmentFormComponent } from './components/shipment-form/shipment-form'
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ShipmentService } from '../../../core/services/shipment.service';
-import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod } from '../../../core/models/shipment.model';
-
-import { Observable, of, switchMap } from 'rxjs';
+import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, DispatchShipmentData } from '../../../core/models/shipment.model';
 
 @Component({
   selector: 'app-shipments',
@@ -37,12 +35,13 @@ export class ShipmentsComponent implements OnInit {
     countSuffix: 'envíos registrados',
     createBtnLabel: 'Nuevo envío',
     createBtnIcon: 'pi-plus',
-    cardPadding: 'none',
     alerts: {
-      createSuccess: 'Envío creado',
-      createError: 'Error al crear',
-      updateSuccess: 'Estado y detalles actualizados',
-      updateError: 'Error al actualizar'
+      createSuccess: 'Envío creado exitosamente',
+      createError: 'Error al crear el envío',
+      dispatchSuccess: 'Envío despachado exitosamente',
+      dispatchError: 'Error al despachar el envío',
+      updateSuccess: 'Estado actualizado',
+      updateError: 'Error al actualizar el estado'
     }
   } as const;
 
@@ -114,20 +113,25 @@ export class ShipmentsComponent implements OnInit {
     });
   }
 
-  onUpdateStatus(data: { id: string, status: ShipmentStatus, estimatedArrival?: string, shippingCost?: number, trackingNumber?: string }) {
+  onDispatch(payload: { id: string, data: DispatchShipmentData, file?: File }) {
     this.saving.set(true);
-    
-    const arrivalUpdate$: Observable<any> = (data.estimatedArrival || data.trackingNumber || data.shippingCost !== undefined)
-      ? this.shipmentService.updateArrival(data.id, data.estimatedArrival || undefined, data.shippingCost, data.trackingNumber)
-      : of(null);
+    this.shipmentService.dispatch(payload.id, payload.data, payload.file).subscribe({
+      next: () => {
+        this.alertService.success(this.content.alerts.dispatchSuccess);
+        this.formVisible.set(false);
+        this.saving.set(false);
+        this.loadShipments();
+      },
+      error: () => {
+        this.alertService.error(this.content.alerts.dispatchError);
+        this.saving.set(false);
+      }
+    });
+  }
 
-    const statusUpdate$: Observable<any> = data.status !== this.editingShipment()?.status
-      ? this.shipmentService.updateStatus(data.id, data.status)
-      : of(null);
-
-    arrivalUpdate$.pipe(
-      switchMap(() => statusUpdate$)
-    ).subscribe({
+  onUpdateStatus(data: { id: string, status: ShipmentStatus }) {
+    this.saving.set(true);
+    this.shipmentService.updateStatus(data.id, data.status).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.updateSuccess);
         this.formVisible.set(false);

@@ -28,6 +28,11 @@
   color: var(--ot-success); 
 }
 
+.status-badge.devolucion-pendiente { 
+  background-color: var(--ot-warning-bg); 
+  color: #c2410c; 
+}
+
 .status-badge.devuelto { 
   background-color: var(--ot-error-bg); 
   color: var(--ot-error); 

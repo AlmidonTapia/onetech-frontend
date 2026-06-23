@@ -30,10 +30,11 @@ export class OrdersListComponent {
   };
 
   readonly statusMap: Record<OrderStatus, { label: string; variant: BadgeVariant }> = {
-    PENDIENTE: { label: 'Pendiente', variant: 'warning' },
-    PAGADO: { label: 'Pagado', variant: 'info' },
-    ENVIADO: { label: 'Enviado', variant: 'blue' },
-    COMPLETADO: { label: 'Completado', variant: 'success' },
-    CANCELADO: { label: 'Cancelado', variant: 'error' }
+    'PENDIENTE': { label: 'Pendiente', variant: 'warning' },
+    'PAGADO': { label: 'Pagado', variant: 'info' },
+    'ENVIADO': { label: 'Enviado', variant: 'blue' },
+    'COMPLETADO': { label: 'Completado', variant: 'success' },
+    'CANCELADO': { label: 'Cancelado', variant: 'error' },
+    'EXPIRADO': { label: 'Expirado', variant: 'gray' }
   };
 }

@@ -1,44 +1,50 @@
-import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod } from '../../../../../core/models/shipment.model';
+import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, DispatchShipmentData } from '../../../../../core/models/shipment.model';
 import { ShipmentService } from '../../../../../core/services/shipment.service';
+import { AlertService } from '../../../../../shared/services/alert.service';
+import { FileValidatorUtil } from '../../../../../shared/utils/file-validator.util';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-shipment-form',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent, InputNumberModule],
+  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent, InputNumberModule, DatePipe],
   templateUrl: './shipment-form.html',
   styleUrl: './shipment-form.css'
 })
 export class ShipmentFormComponent implements OnChanges, OnInit {
   private fb = inject(FormBuilder);
   private shipmentService = inject(ShipmentService);
+  private alertService = inject(AlertService);
 
   @Input() visible = false;
   @Input() shipment: Shipment | null = null;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<CreateShipmentRequest>();
+  @Output() dispatch = new EventEmitter<{ id: string, data: DispatchShipmentData, file?: File }>();
   @Output() updateStatus = new EventEmitter<{
     id: string;
     status: ShipmentStatus;
-    estimatedArrival?: string;
-    shippingCost?: number;
-    trackingNumber?: string;
   }>();
   @Output() cancel = new EventEmitter<void>();
+
+  @ViewChild('fileUpload') fileUpload!: ElementRef<HTMLInputElement>;
+  selectedFile: File | null = null;
 
   methods = signal<ShipmentMethod[]>([]);
 
   content = {
-    dialogWidth: '450px',
+    dialogWidth: '500px',
     titleNew: 'Nuevo Envío',
-    titleUpdate: 'Actualizar Estado',
+    titleDispatch: 'Despachar Envío',
+    titleView: 'Detalles del Envío',
     errorRequired: 'Campo requerido',
     apiTimezoneSuffix: 'T00:00:00',
     styles: {
@@ -46,55 +52,33 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
       appendTo: 'body'
     },
     actions: {
-      cancelLabel: 'Cancelar',
+      cancelLabel: 'Cerrar',
       saveLabel: 'Guardar',
+      dispatchLabel: 'Despachar',
+      deliveredLabel: 'Marcar Entregado',
+      returnedLabel: 'Marcar Devuelto',
       saveIcon: 'pi-check'
     }
   } as const;
 
-  statuses = [
-    { label: 'En Preparación', value: 'EN_PREPARACION' },
-    { label: 'En Camino', value: 'EN_CAMINO' },
-    { label: 'Entregado', value: 'ENTREGADO' },
-    { label: 'Devuelto', value: 'DEVUELTO' }
-  ];
-
-  formConfig: any[] = [
-    [{ name: 'idOrder', label: 'ID del Pedido *', type: 'text', placeholder: 'Ej: ord_123' }],
-    [{ name: 'idShipmentMethod', label: 'Método de Envío *', type: 'select', optionsKey: 'methods', optionLabel: 'methodName', optionValue: 'idShipmentMethod', placeholder: 'Seleccione un método' }],
-    [{ name: 'trackingNumber', label: 'Tracking Number *', type: 'text', placeholder: 'Ej: TRK-987' }],
-    [
-      { name: 'shippingCost', label: 'Costo (S/.) *', type: 'number', placeholder: '0.00', min: 0, minFractionDigits: 2 },
-      { name: 'estimatedArrival', label: 'Llegada Estimada *', type: 'date' }
-    ]
-  ];
-
-  statusFormConfig: any[] = [
-    [{ name: 'status', label: 'Estado del Envío *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccione un estado' }],
-    [{ name: 'trackingNumber', label: 'Tracking Number', type: 'text', placeholder: 'Ej: TRK-987' }],
-    [
-      { name: 'shippingCostText', label: 'Costo Pagado', type: 'text', readonly: true },
-      { name: 'estimatedArrival', label: 'Llegada Estimada', type: 'date' }
-    ]
-  ];
-
   form = this.fb.group({
     idOrder: ['', Validators.required],
     idShipmentMethod: ['', Validators.required],
-    trackingNumber: ['', Validators.required],
     shippingCost: [0, [Validators.required, Validators.min(0)]],
     estimatedArrival: ['', Validators.required]
   });
 
-  statusForm = this.fb.group({
-    status: ['', Validators.required],
-    shippingCostText: [{ value: '', disabled: false }],
-    estimatedArrival: [''],
-    trackingNumber: ['']
+  dispatchForm = this.fb.group({
+    trackingNumber: ['', Validators.required],
+    pickupCode: ['', Validators.required],
+    shippedAt: ['', Validators.required],
+    estimatedArrival: ['', Validators.required]
   });
 
   get title() {
-    return this.shipment ? this.content.titleUpdate : this.content.titleNew;
+    if (!this.shipment) return this.content.titleNew;
+    if (this.shipment.status === 'EN_PREPARACION') return this.content.titleDispatch;
+    return this.content.titleView;
   }
 
   ngOnInit() {
@@ -104,84 +88,110 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     });
   }
 
-  getOptions(key: string) {
-    if (key === 'methods') return this.methods();
-    if (key === 'statuses') {
-      if (!this.shipment) return this.statuses;
-      const current = this.shipment.status;
-      
-      if (current === 'ENTREGADO' || current === 'DEVUELTO') {
-        return this.statuses.filter(s => s.value === current);
-      }
-      
-      const allowed: ShipmentStatus[] = [current];
-      if (current === 'EN_PREPARACION') {
-        allowed.push('EN_CAMINO');
-        allowed.push('ENTREGADO');
-        allowed.push('DEVUELTO');
-      } else if (current === 'EN_CAMINO') {
-        allowed.push('ENTREGADO');
-        allowed.push('DEVUELTO');
-      }
-      
-      return this.statuses.filter(s => allowed.includes(s.value as ShipmentStatus));
-    }
-    return [];
-  }
-
   isInvalid(field: string, formGroup: FormGroup) {
     const control = formGroup.get(field);
     return control?.invalid && control?.touched;
   }
 
-  ngOnChanges() {
-    if (this.shipment) {
-      let formattedDate = '';
-      if (this.shipment.estimatedArrival) {
-        formattedDate = this.shipment.estimatedArrival.substring(0, 10);
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      if (!FileValidatorUtil.validateFileType(file, ['image/jpeg', 'image/png', 'image/webp'])) {
+        this.alertService.error('Solo se permiten imágenes (JPG, PNG, WEBP).');
+        if (this.fileUpload?.nativeElement) this.fileUpload.nativeElement.value = '';
+        this.selectedFile = null;
+        return;
       }
-      this.statusForm.patchValue({
-        status: this.shipment.status,
-        shippingCostText: `S/. ${(this.shipment.shippingCost || 0).toFixed(2)}`,
-        estimatedArrival: formattedDate,
-        trackingNumber: this.shipment.trackingNumber || ''
-      });
+      if (!FileValidatorUtil.validateFileSize(file, 5)) {
+        this.alertService.error('La imagen no debe pesar más de 5MB.');
+        if (this.fileUpload?.nativeElement) this.fileUpload.nativeElement.value = '';
+        this.selectedFile = null;
+        return;
+      }
+      this.selectedFile = file;
+    }
+  }
+
+  ngOnChanges() {
+    this.selectedFile = null;
+    if (this.fileUpload?.nativeElement) {
+      this.fileUpload.nativeElement.value = '';
+    }
+
+    if (this.shipment) {
+      if (this.shipment.status === 'EN_PREPARACION') {
+        let estArr = '';
+        if (this.shipment.estimatedArrival) {
+          estArr = this.shipment.estimatedArrival.substring(0, 10);
+        }
+        const now = new Date();
+        const shippedAtStr = now.toISOString().substring(0, 16); 
+        this.dispatchForm.patchValue({
+          trackingNumber: this.shipment.trackingNumber || '',
+          pickupCode: this.shipment.pickupCode || '',
+          shippedAt: shippedAtStr,
+          estimatedArrival: estArr
+        });
+      }
     } else {
       this.form.reset({ shippingCost: 0 });
     }
   }
 
   onSave() {
-    if (this.shipment) {
-      if (this.statusForm.invalid) {
-        this.statusForm.markAllAsTouched();
-        return;
-      }
-      this.updateStatus.emit({
-        id: this.shipment.idShipment,
-        status: this.statusForm.value.status as ShipmentStatus,
-        estimatedArrival: this.statusForm.value.estimatedArrival ? (this.statusForm.value.estimatedArrival + this.content.apiTimezoneSuffix) : undefined,
-        trackingNumber: this.statusForm.value.trackingNumber ?? undefined
-      });
-    } else {
-      if (this.form.invalid) {
-        this.form.markAllAsTouched();
-        return;
-      }
-      const payload: CreateShipmentRequest = {
-        idOrder: this.form.value.idOrder as string,
-        idShipmentMethod: this.form.value.idShipmentMethod as string,
-        trackingNumber: this.form.value.trackingNumber as string,
-        shippingCost: this.form.value.shippingCost as number,
-        estimatedArrival: (this.form.value.estimatedArrival as string) + this.content.apiTimezoneSuffix
-      };
-      this.save.emit(payload);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
+    const payload: CreateShipmentRequest = {
+      idOrder: this.form.value.idOrder as string,
+      idShipmentMethod: this.form.value.idShipmentMethod as string,
+      trackingNumber: '', 
+      shippingCost: this.form.value.shippingCost as number,
+      estimatedArrival: (this.form.value.estimatedArrival as string) + this.content.apiTimezoneSuffix
+    };
+    this.save.emit(payload);
+  }
+
+  onDispatch() {
+    if (this.dispatchForm.invalid || !this.selectedFile) {
+      this.dispatchForm.markAllAsTouched();
+      if (!this.selectedFile) {
+      }
+      return;
+    }
+    
+    let shippedAt = this.dispatchForm.value.shippedAt as string;
+    if (shippedAt.length === 16) {
+      shippedAt += ':00';
+    }
+
+    const data: DispatchShipmentData = {
+      trackingNumber: this.dispatchForm.value.trackingNumber as string,
+      pickupCode: this.dispatchForm.value.pickupCode as string,
+      shippedAt: shippedAt,
+      estimatedArrival: (this.dispatchForm.value.estimatedArrival as string) + this.content.apiTimezoneSuffix
+    };
+
+    this.dispatch.emit({
+      id: this.shipment!.idShipment,
+      data,
+      file: this.selectedFile
+    });
+  }
+
+  onUpdateStatus(status: ShipmentStatus) {
+    if (!this.shipment) return;
+    this.updateStatus.emit({
+      id: this.shipment.idShipment,
+      status
+    });
   }
 
   onCancel() {
     this.form.reset({ shippingCost: 0 });
-    this.statusForm.reset();
+    this.dispatchForm.reset();
+    this.selectedFile = null;
     this.cancel.emit();
     this.visibleChange.emit(false);
   }

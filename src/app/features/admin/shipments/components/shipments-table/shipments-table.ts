@@ -29,7 +29,7 @@ export class ShipmentsTableComponent {
     defaultRows: 10,
     styleClass: 'p-datatable-sm',
     actionsWidth: '80px',
-    colspanEmpty: 7,
+    colspanEmpty: 8,
     currencyCode: 'PEN',
     sliceStart: 0,
     sliceEnd: 8
@@ -43,23 +43,22 @@ export class ShipmentsTableComponent {
       method: 'Método',
       tracking: 'Tracking',
       cost: 'Costo',
+      shippedAt: 'Fecha Envío',
       arrival: 'Llegada Estimada',
       status: 'Estado',
       actions: 'Acciones'
     },
-    tooltipEdit: 'Cambiar Estado',
     emptyMessage: 'No hay envíos registrados.',
     dateFormat: 'mediumDate',
-    icons: {
-      edit: 'pi pi-pencil'
-    }
+    datetimeFormat: 'medium'
   };
 
-  readonly statusConfig: Record<ShipmentStatus, { label: string; class: string }> = {
-    EN_PREPARACION: { label: 'En Preparación', class: 'en-preparacion' },
-    EN_CAMINO: { label: 'En Camino', class: 'en-camino' },
-    ENTREGADO: { label: 'Entregado', class: 'entregado' },
-    DEVUELTO: { label: 'Devuelto', class: 'devuelto' },
+  readonly statusConfig: Record<ShipmentStatus, { label: string; class: string; icon: string; tooltip: string }> = {
+    EN_PREPARACION: { label: 'En Preparación', class: 'en-preparacion', icon: 'pi pi-send', tooltip: 'Despachar Envío' },
+    EN_CAMINO: { label: 'En Camino', class: 'en-camino', icon: 'pi pi-check-square', tooltip: 'Gestionar Entrega' },
+    ENTREGADO: { label: 'Entregado', class: 'entregado', icon: 'pi pi-eye', tooltip: 'Ver Detalles' },
+    DEVOLUCION_PENDIENTE: { label: 'Dev. Pendiente', class: 'devolucion-pendiente', icon: 'pi pi-truck', tooltip: 'Recibir en Almacén' },
+    DEVUELTO: { label: 'Devuelto', class: 'devuelto', icon: 'pi pi-eye', tooltip: 'Ver Detalles' },
   };
 
   getStatusLabel(status: ShipmentStatus): string {
@@ -68,5 +67,13 @@ export class ShipmentsTableComponent {
 
   getStatusClass(status: ShipmentStatus): string {
     return this.statusConfig[status]?.class || '';
+  }
+
+  getActionIcon(status: ShipmentStatus): string {
+    return this.statusConfig[status]?.icon || 'pi pi-pencil';
+  }
+
+  getActionTooltip(status: ShipmentStatus): string {
+    return this.statusConfig[status]?.tooltip || 'Gestionar';
   }
 }

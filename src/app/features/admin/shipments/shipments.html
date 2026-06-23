@@ -8,15 +8,13 @@
     <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="openCreate()" />
   </div>
 
-  
-    <app-shipments-table [shipments]="shipments()" [totalRecords]="totalRecords()"
+  <app-shipments-table [shipments]="shipments()" [totalRecords]="totalRecords()"
     (lazyLoad)="loadShipments($event)"
     (onEdit)="openEdit($event)"
     (search)="onSearch($event)">
   </app-shipments-table>
-  
 
 </div>
 
 <app-shipment-form [(visible)]="formVisible" [shipment]="editingShipment()" [saving]="saving()"
-  (save)="onCreate($event)" (updateStatus)="onUpdateStatus($event)" (cancel)="formVisible.set(false)" />
+  (save)="onCreate($event)" (dispatch)="onDispatch($event)" (updateStatus)="onUpdateStatus($event)" (cancel)="formVisible.set(false)" />

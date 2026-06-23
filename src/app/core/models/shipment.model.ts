@@ -1,4 +1,4 @@
-export type ShipmentStatus = 'EN_PREPARACION' | 'EN_CAMINO' | 'ENTREGADO' | 'DEVUELTO';
+export type ShipmentStatus = 'EN_PREPARACION' | 'EN_CAMINO' | 'ENTREGADO' | 'DEVOLUCION_PENDIENTE' | 'DEVUELTO';
 
 export interface Shipment {
   idShipment: string;
@@ -8,8 +8,12 @@ export interface Shipment {
   trackingNumber: string;
   shippingCost: number;
   estimatedArrival: string;
+  actualArrival?: string;
   status: ShipmentStatus;
   shipmentStatus?: ShipmentStatus;
+  pickupCode?: string;
+  receiptImageUrl?: string;
+  shippedAt?: string;
 }
 
 export interface ShipmentMethod {
@@ -24,6 +28,13 @@ export interface CreateShipmentRequest {
   idShipmentMethod: string;
   trackingNumber: string;
   shippingCost: number;
+  estimatedArrival: string;
+}
+
+export interface DispatchShipmentData {
+  trackingNumber: string;
+  pickupCode: string;
+  shippedAt: string;
   estimatedArrival: string;
 }
 

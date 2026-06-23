@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Shipment, ShipmentMethod, CreateShipmentRequest, ShipmentStatus, CreateShipmentMethodRequest } from '../models/shipment.model';
+import { Shipment, ShipmentMethod, CreateShipmentRequest, ShipmentStatus, CreateShipmentMethodRequest, DispatchShipmentData } from '../models/shipment.model';
 import { PageResponse } from '../models/page-response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -87,6 +87,17 @@ export class ShipmentService {
         const raw = (res && res.data) ? res.data : res;
         return this.mapShipment(raw);
       })
+    );
+  }
+
+  dispatch(id: string, data: DispatchShipmentData, receiptImage?: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+    if (receiptImage) {
+      formData.append('receiptImage', receiptImage, receiptImage.name);
+    }
+    return this.http.post<any>(`${this.url}/${id}/dispatch`, formData).pipe(
+      map(res => res.data || res)
     );
   }
 

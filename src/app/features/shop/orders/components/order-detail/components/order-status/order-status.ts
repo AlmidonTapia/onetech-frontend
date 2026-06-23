@@ -22,7 +22,8 @@ export class OrderStatusComponent implements OnInit, OnDestroy {
     PAGADO: { label: 'Pagado', variant: 'info' },
     ENVIADO: { label: 'Enviado', variant: 'blue' },
     COMPLETADO: { label: 'Completado', variant: 'success' },
-    CANCELADO: { label: 'Cancelado', variant: 'error' }
+    CANCELADO: { label: 'Cancelado', variant: 'error' },
+    EXPIRADO: { label: 'Expirado', variant: 'gray' }
   };
 
   readonly shipmentSteps: { status: ShipmentStatus; label: string; icon: string }[] = [

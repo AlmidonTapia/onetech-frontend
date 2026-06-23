@@ -30,6 +30,7 @@ export class DashboardRecentOrdersComponent {
     ENVIADO: { label: 'Enviado', severity: 'secondary' },
     COMPLETADO: { label: 'Completado', severity: 'success' },
     CANCELADO: { label: 'Cancelado', severity: 'danger' },
+    EXPIRADO: { label: 'Expirado', severity: 'danger' }
   };
 
   getStatusLabel(status: any): string {

@@ -1,4 +1,4 @@
-export type OrderStatus = 'PENDIENTE' | 'PAGADO' | 'ENVIADO' | 'COMPLETADO' | 'CANCELADO';
+export type OrderStatus = 'PENDIENTE' | 'PAGADO' | 'ENVIADO' | 'COMPLETADO' | 'CANCELADO' | 'EXPIRADO';
 
 export interface Order {
   idOrder: string;

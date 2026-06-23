@@ -5,7 +5,7 @@ const targetPath = path.resolve(__dirname, './src/environments/environment.ts');
 
 const isProd = process.env.VERCEL_ENV === 'production';
 const apiUrl = process.env.API_URL || 'http://localhost:8080/api/v1';
-const mpPublicKey = process.env.MP_PUBLIC_KEY || '';
+const mpPublicKey = process.env.MP_PUBLIC_KEY || 'TEST-e5f83105-bcd2-464b-8ab1-79ee7848467c';
 
 const envConfigFile = `export const environment = {
   production: ${isProd},

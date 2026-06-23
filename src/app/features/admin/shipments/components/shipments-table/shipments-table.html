@@ -18,6 +18,7 @@
             <th>{{ content.headers.method }}</th>
             <th>{{ content.headers.tracking }}</th>
             <th>{{ content.headers.cost }}</th>
+            <th>{{ content.headers.shippedAt }}</th>
             <th>{{ content.headers.arrival }}</th>
             <th>{{ content.headers.status }}</th>
             <th [style.width]="tableConfig.actionsWidth">{{ content.headers.actions }}</th>
@@ -32,8 +33,9 @@
                 </span>
             </td>
             <td>{{ s.shipmentMethodName }}</td>
-            <td>{{ s.trackingNumber }}</td>
+            <td>{{ s.trackingNumber || '-' }}</td>
             <td>{{ s.shippingCost | currency: tableConfig.currencyCode }}</td>
+            <td>{{ s.shippedAt ? (s.shippedAt | date: content.datetimeFormat) : '-' }}</td>
             <td>{{ s.estimatedArrival | date: content.dateFormat }}</td>
             <td>
                 <span class="status-badge" [class]="getStatusClass(s.status)">
@@ -42,8 +44,8 @@
             </td>
             <td>
                 <div class="row-actions">
-                    <button class="act-btn" [pTooltip]="content.tooltipEdit" (click)="onEdit.emit(s)">
-                        <i [class]="content.icons.edit"></i>
+                    <button class="act-btn" [pTooltip]="getActionTooltip(s.status)" (click)="onEdit.emit(s)">
+                        <i [class]="getActionIcon(s.status)"></i>
                     </button>
                 </div>
             </td>

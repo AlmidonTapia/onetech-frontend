@@ -48,6 +48,12 @@
                       <code class="tracking-code">{{ shipment()?.trackingNumber }}</code>
                   </div>
               }
+              @if (shipment()?.pickupCode) {
+                  <div class="shipment-info-row">
+                      <span class="info-label">Código de Recojo</span>
+                      <code class="tracking-code">{{ shipment()?.pickupCode }}</code>
+                  </div>
+              }
               @if (shipment()?.estimatedArrival) {
                   <div class="shipment-info-row">
                       <span class="info-label">{{ content().labels.estimatedArrival }}</span>
