@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 export type ButtonVariant = 'primary' | 'accent' | 'outline' | 'ghost' | 'danger';
@@ -9,17 +9,19 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
   standalone: true,
   imports: [NgClass],
   templateUrl: './button.html',
-  styleUrl: './button.css'
+  styleUrl: './button.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonComponent {
-  @Input() variant: ButtonVariant = 'primary';
-  @Input() size: ButtonSize = 'md';
-  @Input() label = '';
-  @Input() icon = '';
-  @Input() iconPos: 'left' | 'right' = 'left';
-  @Input() loading = false;
-  @Input() disabled = false;
-  @Input() fullWidth = false;
-  @Input() type: 'button' | 'submit' = 'button';
-  @Output() clicked = new EventEmitter<Event>();
+  variant = input<ButtonVariant>('primary');
+  size = input<ButtonSize>('md');
+  label = input<string>('');
+  icon = input<string>('');
+  iconPos = input<'left' | 'right'>('left');
+  loading = input<boolean>(false);
+  disabled = input<boolean>(false);
+  fullWidth = input<boolean>(false);
+  type = input<'button' | 'submit'>('button');
+  
+  clicked = output<Event>();
 }

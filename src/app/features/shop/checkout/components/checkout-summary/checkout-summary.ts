@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { Cart } from '../../../../../core/models/cart.model';
-import { Address } from '../../../../../core/models/address.model';
-import { ShipmentMethod } from '../../../../../core/models/shipment.model';
-import { PaymentMethod } from '../../../../../core/models/payment.model';
+import { Cart } from '../../../../../core/domains/shopping/models/cart.model';
+import { Address } from '../../../../../core/domains/shipping/models/address.model';
+import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
+import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
 
 @Component({
   selector: 'app-checkout-summary',

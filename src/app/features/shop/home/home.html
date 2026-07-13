@@ -3,7 +3,13 @@
 
     <app-trust-badges />
 
-  <div class="container sections-container">
+    @if (brands().length > 0) {
+      <div class="container" style="padding-top: 40px; padding-bottom: 20px;">
+        <app-brand-carousel [brands]="brands()" />
+      </div>
+    }
+
+  <div class="container sections-container" style="margin-top: 40px;">
     <app-featured-categories />
     <app-featured-products [title]="content.sections.featured" [products]="featured()" />
     <app-promo-banner />
@@ -13,9 +19,6 @@
     <app-featured-products [title]="content.sections.bestSellers" [products]="bestSellers()" badgeContext="bestseller" />
     }
 
-    @if (brands().length > 0) {
-      <app-brand-carousel [brands]="brands()" />
-    }
   </div>
 
     <app-faq-section />

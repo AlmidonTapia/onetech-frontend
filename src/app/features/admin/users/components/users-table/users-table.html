@@ -23,6 +23,7 @@
             <th>{{ content.headers.fullName }}</th>
             <th>{{ content.headers.email }}</th>
             <th>{{ content.headers.role }}</th>
+            <th>{{ content.headers.status }}</th>
             <th>{{ content.headers.phone }}</th>
             <th>{{ content.headers.regDate }}</th>
         </tr>
@@ -35,6 +36,11 @@
             <td>
                 <span class="role-badge" [class.admin]="user.role === tableConfig.adminRoleKey">
                     {{ user.role | titlecase }}
+                </span>
+            </td>
+            <td>
+                <span class="status-badge" [class.active]="user.status === 'HABILITADO'" [class.inactive]="user.status === 'DESHABILITADO'">
+                    {{ user.status | titlecase }}
                 </span>
             </td>
             <td>{{ user.phone || content.notRegisteredLabel }}</td>

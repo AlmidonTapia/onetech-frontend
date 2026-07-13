@@ -5,7 +5,7 @@
 .checkout-stepper-container {
   background: var(--ot-bg-surface);
   border: 1px solid var(--ot-border-color);
-  border-radius: var(--ot-radius-xl);
+  border-radius: var(--ot-radius-2xl, 24px);
   padding: 24px 40px;
   margin-bottom: 32px;
   box-shadow: var(--ot-shadow-theme);
@@ -66,14 +66,14 @@
 
 /* Active Step */
 .stepper-item--active .stepper-node {
-  border-color: var(--p-primary-color);
-  background: var(--p-primary-color);
+  border-color: var(--ot-blue);
+  background: var(--ot-blue);
   color: #ffffff;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--p-primary-color) 20%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ot-blue) 20%, transparent);
 }
 
 .stepper-item--active .stepper-label {
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
 }
 
 /* Completed Step */
@@ -104,15 +104,15 @@
 }
 
 /* Layout */
-.checkout-layout { display:grid; grid-template-columns:1fr 340px; gap:32px; align-items:start; }
-@media (max-width:992px) { .checkout-layout { grid-template-columns:1fr; gap:24px; } }
+.checkout-layout { display:grid; grid-template-columns:1fr 380px; gap:48px; align-items:start; }
+@media (max-width:1024px) { .checkout-layout { grid-template-columns:1fr; gap:32px; } }
 
 .checkout-main {
   background: var(--ot-bg-surface);
   border: 1px solid var(--ot-border-color);
-  border-radius: var(--ot-radius-xl);
-  padding: 32px;
-  box-shadow: var(--ot-shadow-theme);
+  border-radius: var(--ot-radius-2xl, 24px);
+  padding: 48px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.03);
 }
 
 .checkout-actions {
@@ -138,7 +138,7 @@
 .mini-summary-card {
   background: var(--ot-bg-surface);
   border: 1px solid var(--ot-border-color);
-  border-radius: var(--ot-radius-xl);
+  border-radius: var(--ot-radius-2xl, 24px);
   padding: 24px;
   position: sticky;
   top: 100px;
@@ -158,7 +158,7 @@
 .mini-coupon { margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
 .coupon-input-group { display: flex; gap: 8px; }
 .coupon-input-group input { flex: 1; padding: 10px 14px; border: 1px solid var(--ot-border-color); border-radius: var(--ot-radius-md); background: var(--ot-bg-body); color: var(--ot-text-main); outline: none; transition: var(--ot-transition); font-size:13px; }
-.coupon-input-group input:focus { border-color: var(--p-primary-color); }
+.coupon-input-group input:focus { border-color: var(--ot-blue); }
 .error-text { color: var(--ot-danger); font-size: 12px; }
 .mini-total.discount { color: var(--ot-success); padding-top: 4px; }
 .mini-total.discount strong { color: var(--ot-success); font-size: 15px; }
@@ -172,7 +172,7 @@
   font-size: 15px;
 }
 .mini-total.final strong {
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
   font-size: 20px;
   font-weight: 800;
 }

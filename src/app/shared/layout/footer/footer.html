@@ -3,8 +3,9 @@
     <div class="container footer-grid">
 
         <div class="footer-col footer-brand">
-            <a [routerLink]="content.brandRoute" class="footer-logo" [attr.aria-label]="content.ariaLabelLogo">
-                <span class="logo-one">One</span><span class="logo-tech">Tech</span>
+            <a routerLink="/" class="footer-logo inline-block mb-4" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: 24px; font-weight: bold;">
+                <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 32px; width: auto; object-fit: contain; flex-shrink: 0;" class="opacity-90 hover:opacity-100 transition-opacity">
+                <div style="line-height: 1;"><span class="logo-one">One</span><span class="logo-tech">Tech</span></div>
             </a>
             <p class="footer-tagline">
                 {{ content.tagline }}
@@ -57,6 +58,8 @@
                 }
             </ul>
         </div>
+
+
 
     </div>
 

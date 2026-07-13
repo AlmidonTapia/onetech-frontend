@@ -82,9 +82,9 @@ export class ContactUsComponent {
         this.form.reset();
         this.alertService.success('Mensaje Enviado', 'Hemos recibido tu consulta. Nos pondremos en contacto contigo pronto.');
       },
-      error: () => {
+      error: (err: any) => {
         this.loading.set(false);
-        this.alertService.error('Error', 'No pudimos enviar tu mensaje. Intenta más tarde.');
+        this.alertService.error('Error', err?.error?.message || 'No pudimos enviar tu mensaje. Intenta más tarde.');
       }
     });
   }

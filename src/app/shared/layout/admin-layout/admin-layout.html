@@ -6,8 +6,9 @@
         <button class="mobile-toggle-btn" (click)="isSidebarCollapsed = !isSidebarCollapsed" aria-label="Menu">
             <i class="pi pi-bars"></i>
         </button>
-        <a routerLink="/admin/dashboard" class="mobile-logo">
-            <span class="logo-one">One</span><span class="logo-tech">Tech</span>
+        <a routerLink="/admin/dashboard" class="mobile-logo font-bold text-xl flex items-center gap-1" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+            <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 28px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="line-height: 1;"><span class="logo-one">One</span><span class="logo-tech">Tech</span></div>
             <span class="logo-tag">Admin</span>
         </a>
     </div>

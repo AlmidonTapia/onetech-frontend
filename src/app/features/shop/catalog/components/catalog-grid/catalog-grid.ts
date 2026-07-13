@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ProductCardComponent } from '../../../../../shared/components/product-card/product-card';
-import { Product } from '../../../../../core/models/product.model';
+import { Product } from '../../../../../core/domains/catalog/models/product.model';
 
 @Component({
   selector: 'app-catalog-grid',

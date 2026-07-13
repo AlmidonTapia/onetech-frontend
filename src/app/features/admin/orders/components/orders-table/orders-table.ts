@@ -7,7 +7,7 @@ import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { Order, OrderStatus } from '../../../../../core/models/order.model';
+import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
 
 type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 

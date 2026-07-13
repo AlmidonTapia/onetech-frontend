@@ -1,15 +1,47 @@
-<a [routerLink]="content.cartRoute" class="cart-btn" [attr.aria-label]="content.ariaLabelCart">
+<div class="cart-wrapper" (mouseenter)="cartPanel.toggle($event)" (mouseleave)="cartPanel.hide()">
+    <a [routerLink]="content.cartRoute" class="cart-btn" [attr.aria-label]="content.ariaLabelCart">
+        <div class="cart-icon-wrapper">
+            <i [class]="content.cartIcon"></i>
+            @if (itemCount() > 0) {
+            <span class="cart-badge">{{ itemCount() }}</span>
+            }
+        </div>
+        <div class="cart-text">
+            <span class="cart-label">{{ content.labelText }}</span>
+            <span class="cart-total">{{ totalAmount() | currencyPen }}</span>
+        </div>
+    </a>
 
-    <div class="cart-icon-wrapper">
-        <i [class]="content.cartIcon"></i>
-        @if (itemCount() > 0) {
-        <span class="cart-badge">{{ itemCount() }}</span>
-        }
-    </div>
-
-    <div class="cart-text">
-        <span class="cart-label">{{ content.labelText }}</span>
-        <span class="cart-total">{{ totalAmount() | currencyPen }}</span>
-    </div>
-
-</a>
+    <p-popover #cartPanel styleClass="mini-cart-panel">
+        <div class="mini-cart-content">
+            @if (itemCount() === 0) {
+                <div class="mini-cart-empty">
+                    <i class="pi pi-shopping-cart"></i>
+                    <p>{{ content.emptyTitle }}</p>
+                </div>
+            } @else {
+                <div class="mini-cart-items">
+                    @for (item of cartStore.cart()?.items; track item.idProduct) {
+                        <div class="mini-cart-item">
+                            <img [ngSrc]="item.productImageUrl || '/assets/images/placeholder.png'" width="48" height="48" [alt]="item.productName">
+                            <div class="mini-cart-item-details">
+                                <span class="mini-cart-item-name">{{ item.productName }}</span>
+                                <span class="mini-cart-item-qty">{{ item.quantity }} x {{ item.unitPrice | currencyPen }}</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="mini-cart-footer">
+                    <div class="mini-cart-total">
+                        <span>Total:</span>
+                        <span>{{ totalAmount() | currencyPen }}</span>
+                    </div>
+                    <div class="mini-cart-actions">
+                        <app-button variant="outline" size="sm" [fullWidth]="true" [label]="content.goToCartBtn" [routerLink]="content.cartRoute" (clicked)="cartPanel.hide()"></app-button>
+                        <app-button variant="primary" size="sm" [fullWidth]="true" [label]="content.checkoutBtn" (clicked)="goToCheckout(cartPanel)"></app-button>
+                    </div>
+                </div>
+            }
+        </div>
+    </p-popover>
+</div>

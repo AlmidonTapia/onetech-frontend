@@ -2,8 +2,8 @@ import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { OrdersTableComponent } from './components/orders-table/orders-table';
 import { OrderStatusFormComponent } from './components/order-status-form/order-status-form';
 import { AlertService } from '../../../shared/services/alert.service';
-import { OrderService } from '../../../core/services/order.service';
-import { Order, OrderStatus } from '../../../core/models/order.model';
+import { OrderService } from '../../../core/domains/checkout/services/order.service';
+import { Order, OrderStatus } from '../../../core/domains/checkout/models/order.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -98,8 +98,9 @@ export class OrdersComponent implements OnInit {
         this.saving.set(false);
         this.loadOrders();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.updateError);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.updateError;
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });

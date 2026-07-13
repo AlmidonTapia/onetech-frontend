@@ -1,7 +1,7 @@
-<div class="spinner-wrapper" [class.spinner-fullpage]="fullPage">
-    <p-progressSpinner [style]="{ width: sizeMap[size], height: sizeMap[size] }" strokeWidth="3"
-        animationDuration=".75s" />
-    @if (label) {
-    <span class="spinner-label">{{ label }}</span>
+<div class="spinner-wrapper" [class.spinner-fullpage]="fullPage()" aria-live="assertive">
+    <p-progressSpinner [style]="{ width: spinnerSize(), height: spinnerSize() }" strokeWidth="3"
+        animationDuration=".75s" aria-hidden="true" />
+    @if (label()) {
+    <span class="spinner-label">{{ label() }}</span>
     }
 </div>

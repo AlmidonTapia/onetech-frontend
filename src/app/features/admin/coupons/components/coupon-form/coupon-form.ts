@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { Coupon, CreateCouponRequest } from '../../../../../core/models/coupon.model';
+import { Coupon, CreateCouponRequest } from '../../../../../core/domains/checkout/models/coupon.model';
 
 @Component({
   selector: 'app-coupon-form',

@@ -1,21 +1,28 @@
-<button [type]="type" class="ot-btn" [ngClass]="[
-    'btn-' + variant,
-    'btn-' + size,
-    fullWidth ? 'btn-full' : ''
-  ]" [disabled]="disabled || loading" (click)="clicked.emit($event)">
+<button 
+  [type]="type()" 
+  class="ot-btn" 
+  [ngClass]="[
+    'btn-' + variant(),
+    'btn-' + size(),
+    fullWidth() ? 'btn-full' : ''
+  ]" 
+  [disabled]="disabled() || loading()" 
+  [attr.aria-label]="loading() ? 'Cargando' : label() || 'Botón'"
+  [attr.aria-busy]="loading()"
+  (click)="clicked.emit($event)">
 
-    @if (loading) {
-    <i class="pi pi-spin pi-spinner"></i>
-    } @else if (icon && iconPos === 'left') {
-    <i [class]="'pi ' + icon"></i>
+    @if (loading()) {
+    <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+    } @else if (icon() && iconPos() === 'left') {
+    <i [class]="'pi ' + icon()" aria-hidden="true"></i>
     }
 
-    @if (label) {
-    <span>{{ label }}</span>
+    @if (label()) {
+    <span>{{ label() }}</span>
     }
     <ng-content />
 
-    @if (!loading && icon && iconPos === 'right') {
-    <i [class]="'pi ' + icon"></i>
+    @if (!loading() && icon() && iconPos() === 'right') {
+    <i [class]="'pi ' + icon()" aria-hidden="true"></i>
     }
 </button>

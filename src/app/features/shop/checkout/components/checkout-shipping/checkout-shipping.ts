@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, inject, signal, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { ShipmentMethod } from '../../../../../core/models/shipment.model';
-import { UbigeoService } from '../../../../../core/services/ubigeo.service';
+import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
+import { UbigeoService } from '../../../../../core/domains/shipping/services/ubigeo.service';
 
 @Component({
   selector: 'app-checkout-shipping',

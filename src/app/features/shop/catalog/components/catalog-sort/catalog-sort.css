@@ -14,7 +14,7 @@
 }
 
 .sort-bar:hover {
-  border-color: var(--p-primary-color) !important;
+  border-color: var(--ot-blue) !important;
 }
 
 .results-count { font-size:14px; color:var(--ot-text-muted); }

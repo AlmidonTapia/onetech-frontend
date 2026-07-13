@@ -5,7 +5,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
-import { Coupon } from '../../../../../core/models/coupon.model';
+import { Coupon } from '../../../../../core/domains/checkout/models/coupon.model';
 
 @Component({
   selector: 'app-coupons-table',

@@ -1,11 +1,13 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { PasswordModule } from 'primeng/password';
+import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
+import { handleFormError } from '../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,7 +15,7 @@ import { PasswordModule } from 'primeng/password';
   imports: [
     ReactiveFormsModule, RouterLink,
     PasswordModule,
-    ButtonComponent, AlertComponent,
+    ButtonComponent, AlertComponent, AuthLayoutComponent
   ],
   templateUrl: './reset-password.html',
   styleUrl: '../login/login.css'
@@ -37,6 +39,9 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   brandData = {
+    logoText1: 'One',
+    logoText2: 'Tech',
+    logoRoute: '/',
     title: 'Nueva Contraseña',
     description: 'Estás a un paso de recuperar tu cuenta. Crea una contraseña segura para mantener tu información protegida.'
   };
@@ -99,9 +104,12 @@ export class ResetPasswordComponent implements OnInit {
         this.alertService.success('Contraseña actualizada', 'Tu contraseña ha sido restablecida con éxito. Ya puedes iniciar sesión.');
         this.router.navigate(['/auth/login']);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.errorMsg.set('No se pudo restablecer la contraseña. El enlace puede haber expirado.');
+        const errorMessage = handleFormError(err, this.form);
+        if (errorMessage) {
+          this.errorMsg.set(errorMessage);
+        }
       }
     });
   }

@@ -1,0 +1,78 @@
+<div class="table-container">
+  <p-table 
+    [value]="invoices"
+    [lazy]="true"
+    (onLazyLoad)="lazyLoad.emit($event)"
+    [paginator]="true"
+    [rows]="tableConfig.defaultRows"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [styleClass]="tableConfig.styleClass"
+    [responsiveLayout]="'scroll'">
+    
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ content.headers.invoiceNumber }}</th>
+        <th>{{ content.headers.orderId }}</th>
+        <th>{{ content.headers.client }}</th>
+        <th>{{ content.headers.date }}</th>
+        <th>{{ content.headers.total }}</th>
+        <th>{{ content.headers.status }}</th>
+        <th class="text-center">{{ content.headers.actions }}</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-invoice>
+      <tr>
+        <td class="fw-medium text-primary">{{ invoice.invoiceNumber }}</td>
+        <td class="text-secondary">#{{ invoice.idOrder?.substring(0, 8) }}</td>
+        <td>
+          <div class="client-info">
+            <span class="client-name">{{ invoice.customerName }}</span>
+            <span class="client-email">{{ invoice.customerEmail }}</span>
+          </div>
+        </td>
+        <td>{{ invoice.issuedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="fw-bold">{{ invoice.totalAmount | currencyPen }}</td>
+        <td>
+          <p-tag [value]="getStatusLabel(invoice.status)" [severity]="getStatusSeverity(invoice.status)"></p-tag>
+        </td>
+        <td class="text-center">
+          <div class="action-buttons">
+            <app-button 
+              variant="outline" 
+              size="sm" 
+              [icon]="content.icons.download" 
+              [pTooltip]="content.tooltips.download" 
+              (clicked)="onDownload.emit(invoice)">
+            </app-button>
+            <app-button 
+              variant="outline" 
+              size="sm" 
+              [icon]="content.icons.sendEmail" 
+              [pTooltip]="content.tooltips.sendEmail" 
+              (clicked)="onSendEmail.emit(invoice)">
+            </app-button>
+            @if (invoice.status !== 'ANULADO') {
+              <app-button 
+                variant="danger" 
+                size="sm" 
+                [icon]="content.icons.annul" 
+                [pTooltip]="content.tooltips.annul" 
+                (clicked)="onAnnul.emit(invoice)">
+              </app-button>
+            }
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center p-4">
+          {{ content.emptyMessage }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

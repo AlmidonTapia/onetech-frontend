@@ -1,0 +1,50 @@
+<div class="profile-section">
+    <div class="section-header">
+        <h3>Mis pedidos</h3>
+        <p>Revisa el estado de tus compras recientes.</p>
+    </div>
+
+<div class="orders-list">
+    @if (loading()) {
+        <p>Cargando tus órdenes...</p>
+    } @else if (orders().length === 0) {
+        <p>No tienes órdenes registradas.</p>
+    } @else {
+        @for (order of orders(); track order.idOrder) {
+            <div class="order-card">
+                <div class="order-card-header">
+                    <div class="order-meta">
+                        <span class="order-id">#{{ order.idOrder.substring(0, 8) }}</span>
+                        <span class="order-date">{{ order.createdAt | date:'dd MMM yyyy' }}</span>
+                    </div>
+                    <app-badge [variant]="getStatusBadgeVariant(order.orderStatus)">{{ order.orderStatus }}</app-badge>
+                </div>
+                
+                <div class="order-card-body">
+                    <div class="order-product-info">
+                        <i class="pi pi-box" style="font-size: 2.5rem; color: var(--ot-color-primary-light);"></i>
+                        <div class="order-details">
+                            <h4>{{ order.details.length ? order.details[0].productName : 'Pedido' }}</h4>
+                            <span class="order-items-count">{{ order.details.length }} {{ order.details.length === 1 ? 'producto' : 'productos' }} en este pedido</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-price-action">
+                        <span class="order-total">{{ order.totalAmount | currencyPen }}</span>
+                        <app-button variant="outline" size="sm" label="Ver detalle" (click)="viewDetails(order)"></app-button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+</div>
+
+<app-order-details-modal 
+  [visible]="showDetailsModal()"
+  [order]="selectedOrder()"
+  [shipment]="selectedShipment()"
+  [invoice]="selectedInvoice()"
+  (onClose)="showDetailsModal.set(false)"
+  (onDownloadInvoice)="downloadInvoice($event)">
+</app-order-details-modal>

@@ -1,7 +1,7 @@
 import { Component, inject, signal, Input, Output, EventEmitter } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 
 interface AdminNavItem {
   label: string;
@@ -52,6 +52,7 @@ export class AdminSidebarComponent {
     { label: 'Envíos', route: '/admin/shipments', icon: 'pi-truck' },
     { label: 'Logística / Envíos', route: '/admin/shipping', icon: 'pi-compass' },
     { label: 'Métodos Pago', route: '/admin/payment-methods', icon: 'pi-credit-card' },
+    { label: 'Comprobantes', route: '/admin/invoices', icon: 'pi-file-pdf' },
     { label: 'Usuarios', route: '/admin/users', icon: 'pi-users' },
     { label: 'Reseñas', route: '/admin/reviews', icon: 'pi-comments' },
     { label: 'Bandeja Entrada', route: '/admin/inbox', icon: 'pi-inbox' }

@@ -3,7 +3,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe, CurrencyPipe, SlicePipe } from '@angular/common';
-import { Shipment, ShipmentStatus } from '../../../../../core/models/shipment.model';
+import { Shipment, ShipmentStatus } from '../../../../../core/domains/shipping/models/shipment.model';
 
 @Component({
   selector: 'app-shipments-table',

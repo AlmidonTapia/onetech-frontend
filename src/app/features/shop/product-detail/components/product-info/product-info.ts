@@ -5,18 +5,18 @@ import { StarRatingComponent } from '../../../../../shared/components/ui/star-ra
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { CartService } from '../../../../../core/services/cart.service';
-import { Product } from '../../../../../core/models/product.model';
+import { CartStore } from '../../../../../core/domains/shopping/store/cart.store';
+import { Product } from '../../../../../core/domains/catalog/models/product.model';
 
 @Component({
   selector: 'app-product-info',
   standalone: true,
-  imports: [FormsModule, BadgeComponent, StarRatingComponent, ButtonComponent, CurrencyPenPipe],
+  imports: [FormsModule, BadgeComponent, ButtonComponent, CurrencyPenPipe],
   templateUrl: './product-info.html',
   styleUrl: './product-info.css'
 })
 export class ProductInfoComponent {
-  private cartService = inject(CartService);
+  private cartStore = inject(CartStore);
   private alertService = inject(AlertService);
 
   @Input() product!: Product;
@@ -28,12 +28,19 @@ export class ProductInfoComponent {
     skuLabel: 'SKU:',
     newBadge: 'Nuevo',
     financingPrefix: 'o 12 cuotas de ',
+    badges: {
+      bestseller: 'Más vendido',
+      offer: 'Oferta'
+    },
     stock: {
       availablePrefix: 'En stock (',
       availableSuffix: ' disponibles)',
       availableIcon: 'pi pi-check-circle',
       outLabel: 'Agotado',
-      outIcon: 'pi pi-times-circle'
+      outIcon: 'pi pi-times-circle',
+      unavailableLabel: 'No disponible',
+      onlyLeftPrefix: '¡Solo ',
+      onlyLeftSuffix: ' disponibles!'
     },
     actions: {
       addToCartLabel: 'Añadir al carrito',
@@ -46,7 +53,8 @@ export class ProductInfoComponent {
     ],
     alerts: {
       successTitle: 'Añadido al carrito',
-      errorTitle: 'Error al añadir al carrito'
+      errorTitle: 'Error al añadir al carrito',
+      linkCopied: 'Enlace copiado al portapapeles'
     }
   };
 
@@ -62,14 +70,30 @@ export class ProductInfoComponent {
 
   addToCart() {
     this.adding.set(true);
-    this.cartService.addItem({ idProduct: this.product.idProduct, quantity: this.qty() }).subscribe({
+    this.cartStore.addItem({ idProduct: this.product.idProduct, quantity: this.qty() }).subscribe({
       next: () => {
         this.adding.set(false);
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.errorTitle);
+      error: (err) => {
+        const errMsg = err.error?.message || this.content.alerts.errorTitle;
+        this.alertService.error(this.content.alerts.errorTitle, errMsg);
         this.adding.set(false);
       }
     });
+  }
+
+  share(platform: 'whatsapp' | 'facebook' | 'copy') {
+    const url = window.location.href;
+    const text = `¡Mira este producto en OneTech! ${this.product.productName}`;
+
+    if (platform === 'whatsapp') {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+    } else if (platform === 'facebook') {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'copy') {
+      navigator.clipboard.writeText(url).then(() => {
+        this.alertService.info(this.content.alerts.linkCopied);
+      });
+    }
   }
 }

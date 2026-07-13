@@ -3,9 +3,11 @@ import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@
 import { HttpClient } from '@angular/common/http';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
+import { ChangePasswordRequest } from '../../../../../core/domains/identity/models/user.model';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { environment } from '../../../../../../environments/environment';
+import { UserService } from '../../../../../core/domains/identity/services/user.service';
+import { handleFormError } from '../../../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-profile-security',
@@ -16,7 +18,7 @@ import { environment } from '../../../../../../environments/environment';
 })
 export class ProfileSecurityComponent {
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
+  private userService = inject(UserService);
   private alertService = inject(AlertService);
 
   saving = signal(false);
@@ -24,7 +26,6 @@ export class ProfileSecurityComponent {
   content = {
     title: 'Cambiar contraseña',
     subtitle: 'Usa una contraseña segura de al menos 8 caracteres.',
-    apiEndpoint: `${environment.apiUrl}/users/profile/password`,
     labels: {
       currentPassword: 'Contraseña actual *',
       newPassword: 'Nueva contraseña *',
@@ -76,17 +77,20 @@ export class ProfileSecurityComponent {
 
     this.saving.set(true);
 
-    this.http.post(this.content.apiEndpoint, {
-      currentPassword: this.form.get('currentPassword')?.value,
-      newPassword: this.form.get('newPassword')?.value,
-    }).subscribe({
+    const requestData: ChangePasswordRequest = {
+      currentPassword: this.form.get('currentPassword')?.value || undefined,
+      newPassword: this.form.get('newPassword')?.value || undefined,
+    };
+
+    this.userService.changePassword(requestData).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.successTitle);
         this.form.reset();
         this.saving.set(false);
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.errorTitle, this.content.alerts.errorMsg);
+      error: (err) => {
+        const errorMsg = handleFormError(err, this.form);
+        this.alertService.error(this.content.alerts.errorTitle, errorMsg || this.content.alerts.errorMsg);
         this.saving.set(false);
       },
     });

@@ -3,8 +3,8 @@ import { ShipmentsTableComponent } from './components/shipments-table/shipments-
 import { ShipmentFormComponent } from './components/shipment-form/shipment-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
-import { ShipmentService } from '../../../core/services/shipment.service';
-import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, DispatchShipmentData } from '../../../core/models/shipment.model';
+import { ShipmentService } from '../../../core/domains/shipping/services/shipment.service';
+import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, DispatchShipmentData } from '../../../core/domains/shipping/models/shipment.model';
 
 @Component({
   selector: 'app-shipments',
@@ -72,7 +72,7 @@ export class ShipmentsComponent implements OnInit {
     this.loading.set(true);
     this.shipmentService.getAll(page, this.apiConfig.pageSize, this.searchTerm()).subscribe({
       next: r => {
-        const mappedContent = r.content.map(s => {
+        const mappedContent = r.content.map((s: any) => {
           const method = this.methods().find(m => m.idShipmentMethod === s.idShipmentMethod);
           return {
             ...s,
@@ -106,8 +106,9 @@ export class ShipmentsComponent implements OnInit {
         this.saving.set(false);
         this.loadShipments();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.createError);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.createError;
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });
@@ -122,8 +123,9 @@ export class ShipmentsComponent implements OnInit {
         this.saving.set(false);
         this.loadShipments();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.dispatchError);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.dispatchError;
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });
@@ -138,8 +140,9 @@ export class ShipmentsComponent implements OnInit {
         this.saving.set(false);
         this.loadShipments();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.updateError);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.updateError;
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });

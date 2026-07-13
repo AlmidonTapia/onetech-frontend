@@ -4,8 +4,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { ShipmentService } from '../../../../../core/services/shipment.service';
-import { ShipmentMethod } from '../../../../../core/models/shipment.model';
+import { ShipmentService } from '../../../../../core/domains/shipping/services/shipment.service';
+import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 import { ShipmentsMethodTableComponent } from './components/shipments-method-table/shipments-method-table';
 import { ShipmentMethodFormComponent } from './components/shipment-method-form/shipment-method-form';
 
@@ -144,8 +144,9 @@ export class AgenciesTableComponent implements OnInit {
         this.saving.set(false);
         this.loadMethods();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.saveError);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.saveError;
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });
@@ -163,8 +164,9 @@ export class AgenciesTableComponent implements OnInit {
             this.alertService.success(this.content.alerts.deleteSuccess);
             this.loadMethods();
           },
-          error: () => {
-            this.alertService.error(this.content.alerts.deleteError);
+          error: (err: any) => {
+            const errMsg = err?.error?.message || this.content.alerts.deleteError;
+            this.alertService.error(errMsg);
           }
         });
       }

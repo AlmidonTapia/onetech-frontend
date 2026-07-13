@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { ShipmentMethod } from '../../../../../../../core/models/shipment.model';
+import { ShipmentMethod } from '../../../../../../../core/domains/shipping/models/shipment.model';
 import { CurrencyPenPipe } from '../../../../../../../shared/pipes/currency-pen.pipe';
 
 @Component({

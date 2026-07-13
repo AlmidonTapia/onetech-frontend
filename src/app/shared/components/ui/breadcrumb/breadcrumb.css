@@ -15,13 +15,13 @@
 .bc-link {
   font-size: 13px;
   color: var(--p-primary-color);
-  padding: 4px 6px;
-  border-radius: var(--ot-radius-sm);
-  transition: var(--ot-transition);
+  padding: 4px 8px;
+  border-radius: var(--ot-radius-md);
+  transition: all 0.2s ease;
 }
 
 .bc-link:hover { 
-  background: var(--ot-border-color); 
+  background: var(--ot-bg-body); 
 }
 
 .bc-home { 

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { CartItem } from '../../../../../core/models/cart.model';
+import { CartItem } from '../../../../../core/domains/shopping/models/cart.model';
 
 @Component({
   selector: 'app-cart-items',

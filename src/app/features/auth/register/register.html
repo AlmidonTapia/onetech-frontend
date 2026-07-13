@@ -1,44 +1,13 @@
-<div class="auth-layout">
-
-    <div class="auth-brand">
-    <div class="brand-inner">
-
-      <a routerLink="/" class="brand-logo">
-        <span class="logo-one">One</span><span class="logo-tech">Tech</span>
-      </a>
-
-      <div class="brand-copy">
-        <h2>{{ brandData.title }}</h2>
-        <p>{{ brandData.description }}</p>
-      </div>
-
-      <div class="brand-stats">
-        @for (stat of brandData.stats; track stat.label; let last = $last) {
-        <div class="brand-stat">
-          <strong>{{ stat.value }}</strong>
-          <span>{{ stat.label }}</span>
-        </div>
-        @if (!last) { <div class="stat-divider"></div> }
-        }
-      </div>
-
-      <ul class="brand-perks">
-        @for (perk of brandData.perks; track perk) {
-        <li><i class="pi pi-check-circle"></i> {{ perk }}</li>
-        }
-      </ul>
-
-    </div>
-  </div>
-
+<app-auth-layout [brandData]="brandData">
+  <div class="auth-form-card animate-fade-scale">
     <app-register-form
-    [formData]="formData"
-    [fields]="fields"
-    [formGroup]="form"
-    [errorMsg]="errorMsg()"
-    [loading]="loading()"
-    (onSubmit)="onSubmit()"
-    (onErrorClear)="errorMsg.set('')">
-  </app-register-form>
-
-</div>
+      [formData]="formData"
+      [fields]="fields"
+      [formGroup]="form"
+      [errorMsg]="errorMsg()"
+      [loading]="loading()"
+      (onSubmit)="onSubmit()"
+      (onErrorClear)="errorMsg.set('')">
+    </app-register-form>
+  </div>
+</app-auth-layout>

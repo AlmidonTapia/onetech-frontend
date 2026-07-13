@@ -19,7 +19,7 @@
   border-color: transparent;
 }
 
-.dark-mode .role-badge.admin {
+:host-context(.dark) .role-badge.admin {
   background-color: rgba(77, 136, 255, 0.15);
   color: var(--ot-blue-light);
 }

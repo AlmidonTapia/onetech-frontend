@@ -5,9 +5,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { ShipmentService } from '../../../../../core/services/shipment.service';
+import { ShipmentService } from '../../../../../core/domains/shipping/services/shipment.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { LocationResponse } from '../../../../../core/models/shipment.model';
+import { LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
 import { DestinationChip } from '../rates-table/rates-table';
 
 @Component({

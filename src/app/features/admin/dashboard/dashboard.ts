@@ -1,10 +1,10 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { Order } from '../../../core/models/order.model';
+import { Order } from '../../../core/domains/checkout/models/order.model';
 import { DashboardStatsComponent, StatCard } from './components/dashboard-stats/dashboard-stats';
 import { DashboardChartComponent } from './components/dashboard-chart/dashboard-chart';
 import { DashboardRecentOrdersComponent } from './components/dashboard-recent-orders/dashboard-recent-orders';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
-import { DashboardService } from '../../../core/services/dashboard.service';
+import { DashboardService } from '../../../core/domains/shared/services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',

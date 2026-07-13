@@ -2,16 +2,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--ot-radius-md);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ot-radius-full, 999px);
   color: var(--ot-text-main);
   background: transparent;
-  transition: var(--ot-transition);
+  transition: all 0.3s ease;
 }
 
 .theme-toggle-btn:hover {
-  background: var(--ot-border-color);
+  background: var(--ot-bg-body);
+  transform: translateY(-2px);
+  color: var(--ot-blue);
 }
 
 .theme-toggle-btn i {

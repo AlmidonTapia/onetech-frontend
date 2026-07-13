@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { PaymentMethod } from '../../../../../core/models/payment.model';
+import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
 
 @Component({
   selector: 'app-payment-methods-table',

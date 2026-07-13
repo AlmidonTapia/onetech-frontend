@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, signal, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 export type AlertType = 'success' | 'error' | 'warning' | 'info';
@@ -8,15 +8,17 @@ export type AlertType = 'success' | 'error' | 'warning' | 'info';
   standalone: true,
   imports: [NgClass],
   templateUrl: './alert.html',
-  styleUrl: './alert.css'
+  styleUrl: './alert.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertComponent implements OnChanges {
-  @Input() type: AlertType = 'info';
-  @Input() title = '';
-  @Input() closeable = false;
-  @Output() closed = new EventEmitter<void>();
+export class AlertComponent {
+  type = input<AlertType>('info');
+  title = input<string>('');
+  closeable = input<boolean>(false);
+  
+  closed = output<void>();
 
-  dismissed = false;
+  dismissed = signal(false);
 
   content = {
     closeAriaLabel: 'Cerrar'
@@ -29,18 +31,18 @@ export class AlertComponent implements OnChanges {
     info: 'pi-info-circle',
   };
 
-  get icon(): string {
-    return this.icons[this.type] || this.icons.info;
-  }
+  icon = computed(() => this.icons[this.type()] || this.icons.info);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['title'] || changes['type']) {
-      this.dismissed = false;
-    }
+  constructor() {
+    effect(() => {
+      this.title();
+      this.type();
+      this.dismissed.set(false);
+    }, { allowSignalWrites: true });
   }
 
   dismiss(): void {
-    this.dismissed = true;
+    this.dismissed.set(true);
     this.closed.emit();
   }
 }

@@ -1,13 +1,15 @@
 <aside class="admin-sidebar" [class.sidebar-collapsed]="collapsed()">
 
     <div class="sidebar-header">
-        <a [routerLink]="content.dashboardRoute" class="sidebar-logo">
-            @if (!collapsed()) {
-            <span class="logo-one">One</span><span class="logo-tech">Tech</span>
-            <span class="logo-tag">{{ content.logoTag }}</span>
-            } @else {
-            <span class="logo-tech">{{ content.logoCollapsed }}</span>
-            }
+        <a routerLink="/admin/dashboard" class="flex items-center gap-2 mb-8 px-2 text-2xl font-bold tracking-tight" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+            <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 32px; width: auto; object-fit: contain; flex-shrink: 0;">
+            <div style="line-height: 1;">
+              @if (!collapsed()) {
+              <span class="logo-one">One</span><span class="logo-tech">Tech</span>
+              } @else {
+              <span class="logo-tech">OT</span>
+              }
+            </div>
         </a>
 
 

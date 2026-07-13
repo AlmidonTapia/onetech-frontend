@@ -4,9 +4,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { UserService } from '../../../../../core/services/user.service';
-import { AuthService } from '../../../../../core/services/auth.service';
-import { User, UpdateProfileRequest } from '../../../../../core/models/user.model';
+import { UserService } from '../../../../../core/domains/identity/services/user.service';
+import { AuthService } from '../../../../../core/domains/identity/services/auth.service';
+import { User, UpdateProfileRequest } from '../../../../../core/domains/identity/models/user.model';
+import { handleFormError } from '../../../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-profile-info',
@@ -69,8 +70,8 @@ export class ProfileInfoComponent implements OnInit {
     firstName: [{ value: '', disabled: true }],
     lastName: [{ value: '', disabled: true }],
     email: [{ value: '', disabled: true }],
-    documentType: [''],
-    documentNumber: [''],
+    documentType: ['', Validators.required],
+    documentNumber: ['', Validators.required],
     phone: ['', [Validators.pattern(/^\d{9}$/)]],
   });
 
@@ -115,8 +116,9 @@ export class ProfileInfoComponent implements OnInit {
         this.alertService.success(this.content.alerts.success);
         this.saving.set(false);
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.error);
+      error: (err) => {
+        const errorMsg = handleFormError(err, this.form);
+        this.alertService.error(errorMsg || this.content.alerts.error);
         this.saving.set(false);
       },
     });

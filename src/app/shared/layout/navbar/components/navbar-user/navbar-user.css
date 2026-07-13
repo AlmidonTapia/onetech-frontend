@@ -1,0 +1,163 @@
+.user-dropdown-trigger, .guest-login-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border-radius: var(--ot-radius-lg);
+    color: var(--ot-text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.user-dropdown-trigger:hover, .guest-login-link:hover {
+    background: var(--ot-bg-body);
+}
+
+.user-avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ot-blue-50);
+    color: var(--ot-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.guest-login-link i {
+    font-size: 22px;
+}
+
+.user-text, .guest-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.user-greeting, .guest-label {
+    font-size: 11px;
+    color: var(--ot-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.user-name, .guest-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ot-text-main);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-name i {
+    font-size: 10px;
+    color: var(--ot-text-muted);
+}
+
+/* User Menu Dropdown */
+.user-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid var(--ot-border-color);
+}
+
+.user-avatar-lg {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--ot-blue-50);
+    color: var(--ot-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.user-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-header-info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ot-text-main);
+}
+
+.user-header-info a {
+    font-size: 13px;
+    color: var(--ot-blue);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.user-header-info a:hover {
+    text-decoration: underline;
+}
+
+.user-menu-list {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: var(--ot-text-main);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+.user-menu-item:hover {
+    background: var(--ot-bg-body);
+    color: var(--ot-blue);
+}
+
+.user-menu-item i {
+    font-size: 16px;
+    color: var(--ot-text-muted);
+    transition: color 0.2s ease;
+}
+
+.user-menu-item:hover i {
+    color: var(--ot-blue);
+}
+
+.user-menu-footer {
+    border-top: 1px solid var(--ot-border-color);
+    padding: 8px 0;
+}
+
+.logout-item:hover {
+    color: var(--ot-error);
+}
+.logout-item:hover i {
+    color: var(--ot-error);
+}
+
+@media (max-width: 768px) {
+    .user-text, .guest-text {
+        display: none;
+    }
+}

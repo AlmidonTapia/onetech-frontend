@@ -1,8 +1,50 @@
-<form class="search-form" (ngSubmit)="search()" novalidate>
-    <input type="text" class="search-input" [(ngModel)]="query" name="query" [placeholder]="content.placeholderText"
-        autocomplete="off" [attr.aria-label]="content.ariaLabels.input" />
+<div class="search-form-wrapper">
+    <form class="navbar-search-form" (ngSubmit)="search()">
+        <input 
+            type="text" 
+            [(ngModel)]="query" 
+            name="query"
+            class="search-input" 
+            [placeholder]="content.placeholderText" 
+            [attr.aria-label]="content.ariaLabels.input"
+            #searchInput
+            autocomplete="off"
+            (input)="onInput($event, searchOverlay, searchInput)"
+        />
+        <button type="submit" class="search-btn" [attr.aria-label]="content.ariaLabels.button">
+            <i [class]="content.searchIcon"></i>
+        </button>
+    </form>
 
-    <button type="submit" class="search-btn" [attr.aria-label]="content.ariaLabels.button">
-        <i [class]="content.searchIcon"></i>
-    </button>
-</form>
+    <p-popover #searchOverlay styleClass="search-overlay-panel">
+        <div class="search-results-container">
+            @if (loading()) {
+                <div class="search-loading">
+                    <i class="pi pi-spin pi-spinner"></i>
+                    <span>Buscando...</span>
+                </div>
+            } @else if (results().length > 0) {
+                <div class="search-results-list">
+                    @for (product of results(); track product.idProduct) {
+                        <div class="search-result-item" (click)="goToProduct(product.idProduct, searchOverlay)">
+                            <img [ngSrc]="product.images && product.images.length > 0 ? product.images[0].imageUrl : '/assets/images/placeholder.png'" 
+                                 width="40" height="40" [alt]="product.productName">
+                            <div class="result-details">
+                                <span class="result-name">{{ product.productName }}</span>
+                                <span class="result-price">{{ product.price | currencyPen }}</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="search-view-all" (click)="search(); searchOverlay.hide()">
+                    Ver todos los resultados para "{{ query }}"
+                </div>
+            } @else if (query.trim()) {
+                <div class="search-empty">
+                    <i class="pi pi-search"></i>
+                    <p>No se encontraron resultados para "{{ query }}"</p>
+                </div>
+            }
+        </div>
+    </p-popover>
+</div>

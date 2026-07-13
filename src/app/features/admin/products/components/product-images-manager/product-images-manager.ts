@@ -3,8 +3,8 @@ import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { Product, ProductImage } from '../../../../../core/models/product.model';
-import { ProductService } from '../../../../../core/services/product.service';
+import { Product, ProductImage } from '../../../../../core/domains/catalog/models/product.model';
+import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
 
 @Component({
   selector: 'app-product-images-manager',
@@ -101,8 +101,8 @@ export class ProductImagesManagerComponent implements OnChanges {
         this.images.update((imgs: ProductImage[]) => imgs.filter((img: ProductImage) => img.idProductImage !== idImage));
         this.updated.emit();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.deleteError);
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || this.content.alerts.deleteError);
       }
     });
   }
@@ -121,8 +121,8 @@ export class ProductImagesManagerComponent implements OnChanges {
         );
         this.updated.emit();
       },
-      error: () => {
-        this.alertService.error('Error al establecer la imagen principal');
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al establecer la imagen principal');
       }
     });
   }

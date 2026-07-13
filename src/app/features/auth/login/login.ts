@@ -1,13 +1,15 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
+import { handleFormError } from '../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
   imports: [
     ReactiveFormsModule, RouterLink,
     InputTextModule, PasswordModule, CheckboxModule,
-    ButtonComponent, AlertComponent,
+    ButtonComponent, AlertComponent, AuthLayoutComponent
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'
@@ -36,6 +38,9 @@ export class LoginComponent implements OnInit {
   }
 
   brandData = {
+    logoText1: 'One',
+    logoText2: 'Tech',
+    logoRoute: '/',
     title: 'Bienvenido de vuelta',
     description: 'Accede a tu cuenta y sigue comprando la tecnología que necesitas.',
     benefits: [
@@ -53,6 +58,8 @@ export class LoginComponent implements OnInit {
     registerLinkText: 'Regístrate aquí',
     registerRoute: '/auth/register',
     submitButtonLabel: 'Ingresar',
+    googleButtonLabel: 'Continuar con Google',
+    dividerText: 'O continuar con',
     forgotPasswordText: '¿Olvidaste tu contraseña?',
     forgotPasswordRoute: '/auth/forgot-password',
     errors: {
@@ -97,14 +104,16 @@ export class LoginComponent implements OnInit {
         }
       },
       error: err => {
-        const status = err?.status;
-        this.errorMsg.set(
-          status === 401
-            ? 'Correo o contraseña incorrectos.'
-            : 'Ocurrió un error. Intenta de nuevo.'
-        );
         this.loading.set(false);
+        const errorMsg = handleFormError(err, this.form);
+        if (errorMsg) {
+          this.errorMsg.set(errorMsg);
+        }
       }
     });
+  }
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle();
   }
 }

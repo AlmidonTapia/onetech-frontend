@@ -4,9 +4,9 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 import { StarRatingComponent } from '../../../../../shared/components/ui/star-rating/star-rating';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { AuthService } from '../../../../../core/services/auth.service';
-import { ReviewService } from '../../../../../core/services/review.service';
-import { Review } from '../../../../../core/models/review.model';
+import { AuthService } from '../../../../../core/domains/identity/services/auth.service';
+import { ReviewService } from '../../../../../core/domains/catalog/services/review.service';
+import { Review } from '../../../../../core/domains/catalog/models/review.model';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({

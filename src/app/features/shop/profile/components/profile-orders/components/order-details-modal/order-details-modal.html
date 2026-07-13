@@ -1,0 +1,102 @@
+<p-dialog [visible]="visible()" (visibleChange)="closeModal()" [modal]="true"
+  [style]="{ width: '100%', maxWidth: '600px' }" [draggable]="false" [resizable]="false"
+  [showHeader]="false" styleClass="order-modal">
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="header-titles">
+        <h2>Detalle de Orden</h2>
+        <span class="order-id">#{{ order()?.idOrder?.substring(0, 8) }}</span>
+      </div>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    @if (order()) {
+    <div class="modal-body">
+      <div class="order-summary-box">
+        <div class="summary-item">
+          <span>Fecha</span>
+          <strong>{{ order()?.createdAt | date:'dd MMM yyyy, HH:mm' }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>Total Pagado</span>
+          <strong>{{ order()?.totalAmount | currencyPen }}</strong>
+        </div>
+        <div class="summary-item">
+          <span>Estado de Pago</span>
+          <strong>{{ order()?.orderStatus }}</strong>
+        </div>
+      </div>
+
+      <!-- INVOICE SECTION -->
+      <div class="section-container">
+        <h3>Boleta de Compra</h3>
+        @if (invoice()) {
+          <div class="invoice-box">
+            <div class="invoice-info">
+              <i class="pi pi-file-pdf"></i>
+              <div>
+                <strong>Boleta {{ invoice()?.invoiceNumber }}</strong>
+                <p>Emitida el {{ invoice()?.createdAt | date:'dd MMM yyyy' }}</p>
+              </div>
+            </div>
+            <app-button variant="outline" label="Descargar" icon="pi pi-download" (click)="downloadInvoice(invoice().idInvoice)"></app-button>
+          </div>
+        } @else {
+          <p class="empty-state">La boleta de compra aún no ha sido generada o no está disponible.</p>
+        }
+      </div>
+
+      <!-- SHIPMENT SECTION -->
+      <div class="section-container">
+        <h3>Seguimiento de Envío</h3>
+        @if (shipment()) {
+          <div class="shipment-timeline">
+            
+            <div class="timeline-status">
+              <span class="status-dot"></span>
+              <div class="status-text">
+                <strong>{{ getShipmentStatusLabel(shipment()?.status) }}</strong>
+                @if (shipment()?.trackingNumber) {
+                  <p>Tracking: {{ shipment()?.trackingNumber }}</p>
+                }
+                @if (shipment()?.estimatedArrival) {
+                  <p>Llegada estimada: {{ shipment()?.estimatedArrival | date:'dd MMM yyyy' }}</p>
+                }
+              </div>
+            </div>
+
+            @if (shipment()?.receiptImageUrl) {
+              <div class="receipt-image-container">
+                <h4>Boleta de Envío / Guía</h4>
+                <img [src]="shipment()?.receiptImageUrl" alt="Boleta de envío" class="receipt-image">
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-state">El envío aún no ha sido programado.</p>
+        }
+      </div>
+
+      <div class="section-container">
+        <h3>Productos</h3>
+        <ul class="product-list">
+          @for (item of order()?.details; track item.idOrderDetail) {
+            <li>
+              <div class="prod-info">
+                <strong>{{ item.productName || 'Producto' }}</strong>
+                <span>x{{ item.quantity }}</span>
+              </div>
+              <strong>{{ item.subtotal | currencyPen }}</strong>
+            </li>
+          }
+        </ul>
+      </div>
+
+    </div>
+    }
+
+  </div>
+</p-dialog>

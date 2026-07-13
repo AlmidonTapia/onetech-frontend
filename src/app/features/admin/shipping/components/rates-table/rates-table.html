@@ -54,12 +54,12 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th>Agencia</th>
-        <th>Zona / Ubigeo</th>
-        <th>Dirección</th>
-        <th>Costo Adicional</th>
-        <th>Estado</th>
-        <th style="width: 100px">Acciones</th>
+        <th>{{ content.columns.agency }}</th>
+        <th>{{ content.columns.destination }}</th>
+        <th>{{ content.columns.address }}</th>
+        <th>{{ content.columns.cost }}</th>
+        <th>{{ content.columns.status }}</th>
+        <th style="width: 100px">{{ content.columns.actions }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rate>
@@ -105,27 +105,27 @@
   <form [formGroup]="form" class="simple-form mt-4">
     
         <div class="form-field">
-      <label>Agencia de Envío *</label>
-      <p-select [options]="agencies()" formControlName="idShipmentMethod" optionLabel="methodName" optionValue="idShipmentMethod" placeholder="Seleccione una agencia" styleClass="w-full"></p-select>
+      <label>{{ content.form.agencyLabel }}</label>
+      <p-select [options]="agencies()" formControlName="idShipmentMethod" optionLabel="methodName" optionValue="idShipmentMethod" [placeholder]="content.form.agencyPlaceholder" styleClass="w-full"></p-select>
       <small class="text-red-500" *ngIf="form.get('idShipmentMethod')?.touched && form.get('idShipmentMethod')?.invalid">Requerido</small>
     </div>
 
         <ng-container *ngIf="isEdit()">
       <div class="form-field">
-        <label>Departamento (Opcional)</label>
+        <label>{{ content.form.departmentLabel }}</label>
         <p-select [options]="departments()" formControlName="idDepartment" optionLabel="name" optionValue="id" placeholder="Todo el país" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
       </div>
       <div class="form-field">
-        <label>Provincia (Opcional)</label>
+        <label>{{ content.form.provinceLabel }}</label>
         <p-select [options]="provinces()" formControlName="idProvince" optionLabel="name" optionValue="id" placeholder="Todo el departamento" [showClear]="true" styleClass="w-full"></p-select>
       </div>
       <div class="form-field">
-        <label>Distrito (Opcional)</label>
+        <label>{{ content.form.districtLabel }}</label>
         <p-select [options]="districts()" formControlName="idDistrict" optionLabel="name" optionValue="id" placeholder="Toda la provincia" [showClear]="true" styleClass="w-full"></p-select>
       </div>
       <div class="form-field">
-        <label>Dirección del Local (Opcional)</label>
-        <input type="text" class="p-inputtext" formControlName="agencyAddress" placeholder="Ej: Av. Principal 123" />
+        <label>{{ content.form.addressLabel }}</label>
+        <input type="text" class="p-inputtext" formControlName="agencyAddress" [placeholder]="content.form.addressPlaceholder" />
       </div>
     </ng-container>
 
@@ -138,13 +138,13 @@
 
         <div class="form-row">
       <div class="form-field">
-        <label>Costo Adicional *</label>
+        <label>{{ content.form.costLabel }}</label>
         <p-inputNumber formControlName="cost" mode="currency" currency="PEN" [min]="0" styleClass="w-full"></p-inputNumber>
       </div>
 
       <div class="form-field" style="flex-direction: row !important; align-items: center; justify-content: flex-start; padding-top: 24px;">
         <p-checkbox formControlName="isAvailable" [binary]="true"></p-checkbox>
-        <label style="margin-top: 2px;">Disponible</label>
+        <label style="margin-top: 2px;">{{ content.form.availableLabel }}</label>
       </div>
     </div>
 

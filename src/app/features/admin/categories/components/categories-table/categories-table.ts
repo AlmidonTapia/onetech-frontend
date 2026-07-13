@@ -3,7 +3,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
-import { Category } from '../../../../../core/models/category.model';
+import { Category } from '../../../../../core/domains/catalog/models/category.model';
 
 @Component({
   selector: 'app-categories-table',

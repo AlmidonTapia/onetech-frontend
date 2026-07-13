@@ -4,7 +4,7 @@
       @for (img of images; track img.idProductImage) {
         <button class="thumb-btn" [class.thumb-btn--active]="active() === img.imageUrl"
                 (click)="active.set(img.imageUrl)">
-          <img [src]="img.imageUrl" [alt]="content.thumbImageAlt" />
+          <img [ngSrc]="img.imageUrl" width="72" height="72" [alt]="content.thumbImageAlt" />
         </button>
       }
     </div>
@@ -12,7 +12,7 @@
 
   <div class="main-image-container">
     @if (active()) {
-      <img class="main-img" [src]="active()!" [alt]="content.mainImageAlt" />
+      <img class="main-img" [ngSrc]="active()!" fill priority [alt]="content.mainImageAlt" />
     } @else {
       <div class="img-placeholder"><i class="pi pi-image"></i></div>
     }
@@ -32,6 +32,6 @@
           styleClass="zoom-dialog" [style]="{width: 'auto', 'max-width': '90vw'}">
   <div class="zoom-dialog-content">
     <button class="close-zoom-btn" (click)="toggleZoom()"><i class="pi pi-times"></i></button>
-    <img [src]="active()!" class="zoomed-img" [alt]="content.zoomImageAlt" />
+    <img [ngSrc]="active()!" class="zoomed-img" fill [alt]="content.zoomImageAlt" />
   </div>
 </p-dialog>

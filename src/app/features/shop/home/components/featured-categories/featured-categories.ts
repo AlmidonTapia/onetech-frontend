@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CategoryService } from '../../../../../core/services/category.service';
+import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
 
 interface CategoryTile {
   label: string;

@@ -8,7 +8,7 @@ import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
-import { Review } from '../../../../../core/models/review.model';
+import { Review } from '../../../../../core/domains/catalog/models/review.model';
 
 @Component({
   selector: 'app-reviews-table',

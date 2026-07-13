@@ -4,11 +4,13 @@ import { CategoryFormComponent } from './components/category-form/category-form'
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { Category, CreateCategoryRequest } from '../../../core/models/category.model';
+import { CategoryService } from '../../../core/domains/catalog/services/category.service';
+import { Category, CreateCategoryRequest } from '../../../core/domains/catalog/models/category.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { handleFormError } from '../../../shared/utils/form-error.util';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-categories',
@@ -22,6 +24,8 @@ export class CategoriesComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
+
+  @ViewChild(CategoryFormComponent) categoryForm!: CategoryFormComponent;
 
   categories = signal<Category[]>([]);
   totalRecords = signal(0);
@@ -107,8 +111,9 @@ export class CategoriesComponent implements OnInit {
         this.saving.set(false);
         this.loadCategories();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.saveError);
+      error: (err) => {
+        const errorMsg = handleFormError(err, this.categoryForm.form) || undefined;
+        this.alertService.error(this.content.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -126,8 +131,8 @@ export class CategoriesComponent implements OnInit {
             this.alertService.success('Categoría eliminada exitosamente');
             this.loadCategories();
           },
-          error: () => {
-            this.alertService.error('Error al eliminar la categoría');
+          error: (err: any) => {
+            this.alertService.error(err?.error?.message || 'Error al eliminar la categoría');
           }
         });
       },

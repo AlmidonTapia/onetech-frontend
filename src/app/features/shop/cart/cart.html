@@ -4,8 +4,8 @@
 
     <h1 class="cart-title">
       {{ content.title }}
-      @if (cartService.itemCount() > 0) {
-      <span class="cart-count">({{ cartService.itemCount() }})</span>
+      @if (cartStore.itemCount() > 0) {
+      <span class="cart-count">({{ cartStore.itemCount() }})</span>
       }
     </h1>
 
@@ -13,7 +13,7 @@
     <app-spinner size="md" [label]="content.loadingLabel" />
     }
 
-    @else if (cartService.itemCount() === 0) {
+    @else if (cartStore.itemCount() === 0) {
     <div class="cart-empty">
       <i class="pi pi-shopping-cart"></i>
       <h3>{{ content.emptyTitle }}</h3>
@@ -26,16 +26,22 @@
     <div class="cart-layout">
       <div class="cart-main">
         <div class="cart-items-card">
-          <app-cart-items [items]="cartService.cart()?.items ?? []" (updateQty)="onUpdateQty($event)"
+          <app-cart-items [items]="cartStore.cart()?.items ?? []" (updateQty)="onUpdateQty($event)"
             (removeItem)="onRemove($event)" />
         </div>
       </div>
 
       <div class="cart-aside">
-        <app-cart-summary [totalAmount]="cartService.totalAmount()" [itemCount]="cartService.itemCount()"
+        <app-cart-summary [totalAmount]="cartStore.totalAmount()" [itemCount]="cartStore.itemCount()"
           (checkout)="goCheckout()" />
       </div>
     </div>
+
+    @if (relatedProducts.length > 0) {
+      <div class="cart-cross-sell" style="margin-top: 40px;">
+        <app-related-products [products]="relatedProducts" />
+      </div>
+    }
     }
   </div>
 </div>

@@ -4,8 +4,10 @@ import { MovementFormComponent } from './components/movement-form/movement-form'
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { InventoryService } from '../../../core/services/inventory.service';
-import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core/models/inventory.model';
+import { InventoryService } from '../../../core/domains/inventory/services/inventory.service';
+import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core/domains/inventory/models/inventory.model';
+import { handleFormError } from '../../../shared/utils/form-error.util';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-inventory',
@@ -18,6 +20,8 @@ export class InventoryComponent implements OnInit {
   private inventoryService = inject(InventoryService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+
+  @ViewChild(MovementFormComponent) movementForm!: MovementFormComponent;
 
   movements = signal<InventoryMovement[]>([]);
   totalRecords = signal(0);
@@ -87,8 +91,9 @@ export class InventoryComponent implements OnInit {
         this.saving.set(false);
         this.loadMovements();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.error);
+      error: (err) => {
+        const errorMsg = handleFormError(err, this.movementForm.form) || undefined;
+        this.alertService.error(this.content.alerts.error, errorMsg);
         this.saving.set(false);
       }
     });
@@ -107,8 +112,9 @@ export class InventoryComponent implements OnInit {
             this.alertService.success(this.content.alerts.cancelSuccess);
             this.loadMovements();
           },
-          error: () => {
-            this.alertService.error(this.content.alerts.cancelError);
+          error: (err: any) => {
+            const errMsg = err?.error?.message || this.content.alerts.cancelError;
+            this.alertService.error(errMsg);
             this.loading.set(false);
           }
         });

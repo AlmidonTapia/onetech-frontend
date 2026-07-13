@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { ShipmentService } from '../../../../../core/services/shipment.service';
+import { ShipmentService } from '../../../../../core/domains/shipping/services/shipment.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { InputTextModule } from 'primeng/inputtext';
@@ -163,8 +163,9 @@ export class LocationsTableComponent implements OnInit {
         this.submitting.set(false);
         this.refreshAfterChange(level);
       },
-      error: () => {
-        this.alertService.error('Error al crear. Verifique que el código no esté duplicado.');
+      error: (err: any) => {
+        const errMsg = err?.error?.message || 'Error al crear. Verifique que el código no esté duplicado.';
+        this.alertService.error(errMsg);
         this.submitting.set(false);
       },
     });
@@ -189,7 +190,10 @@ export class LocationsTableComponent implements OnInit {
             }
             this.loadDepartments();
           },
-          error: () => this.alertService.error('Error al eliminar departamento'),
+          error: (err: any) => {
+            const errMsg = err?.error?.message || 'Error al eliminar departamento';
+            this.alertService.error(errMsg);
+          },
         });
       },
     });
@@ -211,7 +215,10 @@ export class LocationsTableComponent implements OnInit {
             }
             this.loadProvinces(this.selectedDepartment()!);
           },
-          error: () => this.alertService.error('Error al eliminar provincia'),
+          error: (err: any) => {
+            const errMsg = err?.error?.message || 'Error al eliminar provincia';
+            this.alertService.error(errMsg);
+          },
         });
       },
     });
@@ -229,7 +236,10 @@ export class LocationsTableComponent implements OnInit {
             this.alertService.success('Distrito eliminado');
             this.loadDistricts(this.selectedProvince()!);
           },
-          error: () => this.alertService.error('Error al eliminar distrito'),
+          error: (err: any) => {
+            const errMsg = err?.error?.message || 'Error al eliminar distrito';
+            this.alertService.error(errMsg);
+          },
         });
       },
     });

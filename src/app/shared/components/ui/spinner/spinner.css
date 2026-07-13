@@ -14,7 +14,7 @@
   z-index: 9998;
 }
 
-.dark-mode .spinner-fullpage {
+:host-context(.dark) .spinner-fullpage {
   background: rgba(15, 23, 42, .75);
 }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReviewsTableComponent } from './components/reviews-table/reviews-table';
-import { ReviewService } from '../../../core/services/review.service';
+import { ReviewService } from '../../../core/domains/catalog/services/review.service';
 import { AlertService } from '../../../shared/services/alert.service';
-import { Review } from '../../../core/models/review.model';
+import { Review } from '../../../core/domains/catalog/models/review.model';
 
 @Component({
   selector: 'app-reviews',
@@ -63,8 +63,8 @@ export class ReviewsComponent implements OnInit {
         this.totalRecords.set(data.totalElements);
         this.loading.set(false);
       },
-      error: () => {
-        this.alertService.error('Error al cargar reseñas');
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al cargar reseñas');
         this.loading.set(false);
       }
     });
@@ -76,7 +76,7 @@ export class ReviewsComponent implements OnInit {
         this.alertService.success('Reseña aprobada');
         this.loadReviews({ first: 0, rows: 10 });
       },
-      error: () => this.alertService.error('Error al aprobar reseña')
+      error: (err: any) => this.alertService.error(err?.error?.message || 'Error al aprobar reseña')
     });
   }
 
@@ -86,7 +86,7 @@ export class ReviewsComponent implements OnInit {
         this.alertService.success('Reseña rechazada');
         this.loadReviews({ first: 0, rows: 10 });
       },
-      error: () => this.alertService.error('Error al rechazar reseña')
+      error: (err: any) => this.alertService.error(err?.error?.message || 'Error al rechazar reseña')
     });
   }
 
@@ -96,7 +96,7 @@ export class ReviewsComponent implements OnInit {
         this.alertService.success('Reseña eliminada');
         this.loadReviews({ first: 0, rows: 10 });
       },
-      error: () => this.alertService.error('Error al eliminar reseña')
+      error: (err: any) => this.alertService.error(err?.error?.message || 'Error al eliminar reseña')
     });
   }
 }

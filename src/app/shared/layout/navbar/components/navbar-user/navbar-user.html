@@ -1,0 +1,49 @@
+@if (authService.isAuthenticated()) {
+<div class="user-dropdown-trigger" (click)="userPanel.toggle($event)">
+    <div class="user-avatar-sm">
+        {{ (authService.currentUser()?.firstName || 'U')[0].toUpperCase() }}
+    </div>
+    <div class="user-text">
+        <span class="user-greeting">{{ content.user.label }}</span>
+        <span class="user-name">{{ authService.currentUser()?.firstName || content.user.defaultName }} <i class="pi pi-angle-down"></i></span>
+    </div>
+</div>
+
+} @else {
+<a [routerLink]="content.guest.route" class="guest-login-link">
+    <i class="pi pi-user"></i>
+    <div class="guest-text">
+        <span class="guest-label">{{ content.guest.label }}</span>
+        <span class="guest-name">{{ content.guest.name }}</span>
+    </div>
+</a>
+}
+
+<p-popover #userPanel styleClass="user-dropdown-panel">
+    <div class="user-menu-header">
+        <div class="user-avatar-lg">
+            {{ (authService.currentUser()?.firstName || 'U')[0].toUpperCase() }}
+        </div>
+        <div class="user-header-info">
+            <h4>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</h4>
+            <a routerLink="/profile" (click)="userPanel.hide()">Mi perfil <i class="pi pi-angle-right"></i></a>
+        </div>
+    </div>
+    
+    <div class="user-menu-list">
+        @for (item of content.user.menu; track item.label) {
+            <a [routerLink]="item.route" class="user-menu-item" (click)="userPanel.hide()">
+                <i [class]="item.icon"></i>
+                <span>{{ item.label }}</span>
+            </a>
+        }
+    </div>
+    
+    <div class="user-menu-footer">
+        <button class="user-menu-item logout-item" (click)="onLogout(userPanel)">
+            <i class="pi pi-sign-out"></i>
+            <span>{{ content.user.logout }}</span>
+        </button>
+    </div>
+</p-popover>
+

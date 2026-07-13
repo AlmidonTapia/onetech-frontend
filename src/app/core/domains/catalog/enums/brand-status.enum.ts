@@ -1,0 +1,4 @@
+export enum BrandStatus {
+  HABILITADO = 'HABILITADO',
+  DESHABILITADO = 'DESHABILITADO'
+}

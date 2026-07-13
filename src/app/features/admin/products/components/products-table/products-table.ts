@@ -6,9 +6,9 @@ import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { Product } from '../../../../../core/models/product.model';
-import { Category } from '../../../../../core/models/category.model';
-import { Brand } from '../../../../../core/models/brand.model';
+import { Product } from '../../../../../core/domains/catalog/models/product.model';
+import { Category } from '../../../../../core/domains/catalog/models/category.model';
+import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 
 @Component({
   selector: 'app-products-table',

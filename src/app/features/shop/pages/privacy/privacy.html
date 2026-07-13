@@ -1,0 +1,17 @@
+<div class="static-page">
+  <div class="container page-content">
+    <div class="page-header text-center">
+      <h1>{{ content.title }}</h1>
+      <p>{{ content.lastUpdated }}</p>
+    </div>
+
+    <div class="page-body">
+      @for (section of content.sections; track section.title) {
+      <section>
+        <h2>{{ section.title }}</h2>
+        <p>{{ section.body }}</p>
+      </section>
+      }
+    </div>
+  </div>
+</div>

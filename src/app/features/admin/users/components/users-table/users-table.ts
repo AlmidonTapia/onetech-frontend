@@ -5,7 +5,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { User } from '../../../../../core/models/user.model';
+import { User } from '../../../../../core/domains/identity/models/user.model';
+import { UserRole } from '../../../../../core/domains/identity/enums/user-role.enum';
+import { UserStatus } from '../../../../../core/domains/identity/enums/user-status.enum';
 
 @Component({
   selector: 'app-users-table',
@@ -24,14 +26,14 @@ export class UsersTableComponent {
 
   roleOptions = [
     { label: 'Todos los roles', value: 'ALL' },
-    { label: 'Admin', value: 'ADMIN' },
-    { label: 'Cliente', value: 'CLIENT' }
+    { label: 'Admin', value: UserRole.ADMIN },
+    { label: 'Cliente', value: UserRole.CLIENT }
   ];
 
   statusOptions = [
     { label: 'Todos los estados', value: 'ALL' },
-    { label: 'Activo', value: 'ACTIVO' },
-    { label: 'Inactivo', value: 'INACTIVO' }
+    { label: 'Habilitado', value: UserStatus.HABILITADO },
+    { label: 'Deshabilitado', value: UserStatus.DESHABILITADO }
   ];
 
   selectedRole = 'ALL';
@@ -49,8 +51,8 @@ export class UsersTableComponent {
   tableConfig = {
     defaultRows: 10,
     styleClass: 'p-datatable-sm',
-    colspanEmpty: 5,
-    adminRoleKey: 'ADMIN'
+    colspanEmpty: 6,
+    adminRoleKey: UserRole.ADMIN
   } as const;
 
   content = {
@@ -58,6 +60,7 @@ export class UsersTableComponent {
       fullName: 'Nombre Completo',
       email: 'Email',
       role: 'Rol',
+      status: 'Estado',
       phone: 'Teléfono',
       regDate: 'Fecha Registro'
     },

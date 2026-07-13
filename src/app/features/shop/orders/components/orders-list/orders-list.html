@@ -1,9 +1,22 @@
 <div class="orders-container">
 
     @if (loading) {
-    <div class="orders-loading">
-        <i class="pi pi-spin pi-spinner animate-spin"></i>
-        <p>{{ content.loadingLabel }}</p>
+    <div class="orders-grid">
+        @for (item of skeletonItems; track $index) {
+        <div class="order-card skeleton-card">
+            <div class="card-header skeleton-header">
+                <div class="skeleton-text skeleton-id"></div>
+                <div class="skeleton-badge"></div>
+            </div>
+            <div class="card-body skeleton-body">
+                <div class="skeleton-text skeleton-count"></div>
+                <div class="skeleton-text skeleton-price"></div>
+            </div>
+            <div class="card-footer skeleton-footer">
+                <div class="skeleton-button"></div>
+            </div>
+        </div>
+        }
     </div>
     }
 

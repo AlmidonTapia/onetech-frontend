@@ -11,12 +11,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { ProductService } from '../../../core/services/product.service';
-import { CategoryService } from '../../../core/services/category.service';
-import { BrandService } from '../../../core/services/brand.service';
-import { Product, CreateProductRequest } from '../../../core/models/product.model';
-import { Category } from '../../../core/models/category.model';
-import { Brand } from '../../../core/models/brand.model';
+import { ProductService } from '../../../core/domains/catalog/services/product.service';
+import { CategoryService } from '../../../core/domains/catalog/services/category.service';
+import { BrandService } from '../../../core/domains/catalog/services/brand.service';
+import { Product, CreateProductRequest, UpdateProductRequest } from '../../../core/domains/catalog/models/product.model';
+import { Category } from '../../../core/domains/catalog/models/category.model';
+import { Brand } from '../../../core/domains/catalog/models/brand.model';
+import { handleFormError } from '../../../shared/utils/form-error.util';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-products',
@@ -33,6 +35,8 @@ export class ProductsComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
+
+  @ViewChild(ProductFormComponent) productForm!: ProductFormComponent;
 
   products = signal<Product[]>([]);
   categories = signal<Category[]>([]);
@@ -124,12 +128,12 @@ export class ProductsComponent implements OnInit {
   openEdit(p: Product) { this.editingProduct.set(p); this.formVisible.set(true); }
   openImages(p: Product) { this.editingProduct.set(p); this.imagesVisible.set(true); }
 
-  onSave(data: CreateProductRequest) {
+  onSave(data: CreateProductRequest | UpdateProductRequest) {
     this.saving.set(true);
     const isEditing = !!this.editingProduct();
-    const op = isEditing
-      ? this.productService.update(this.editingProduct()!.idProduct, data)
-      : this.productService.create(data);
+    const op: any = isEditing
+      ? this.productService.update(this.editingProduct()!.idProduct, data as UpdateProductRequest)
+      : this.productService.create(data as CreateProductRequest);
 
     op.subscribe({
       next: () => {
@@ -138,8 +142,9 @@ export class ProductsComponent implements OnInit {
         this.saving.set(false);
         this.loadProducts();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.saveError);
+      error: (err: any) => {
+        const errorMsg = handleFormError(err, this.productForm.form) || undefined;
+        this.alertService.error(this.content.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });

@@ -9,9 +9,15 @@
   margin: 0 auto;
   background: var(--ot-bg-surface);
   border: 1px solid var(--ot-border-color);
-  border-radius: var(--ot-radius-lg);
+  border-radius: var(--ot-radius-xl);
   padding: 48px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  box-shadow: var(--ot-shadow-theme);
+  transition: var(--ot-transition);
+}
+
+.page-content:hover {
+  border-color: var(--ot-blue);
+  box-shadow: var(--ot-shadow-md);
 }
 
 .page-header {
@@ -21,10 +27,11 @@
 }
 
 .page-header h1 {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 800;
   color: var(--ot-text-main);
   margin: 0 0 8px;
+  letter-spacing: -0.02em;
 }
 
 .page-header p {

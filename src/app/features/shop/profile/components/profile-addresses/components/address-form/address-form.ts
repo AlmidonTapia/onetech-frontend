@@ -2,8 +2,8 @@ import { Component, OnInit, input, output, inject, signal, DestroyRef } from '@a
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../../../../shared/components/ui/button/button';
-import { UbigeoService, LocationResponse } from '../../../../../../../core/services/ubigeo.service';
-import { CreateAddressRequest } from '../../../../../../../core/models/address.model';
+import { UbigeoService, LocationResponse } from '../../../../../../../core/domains/shipping/services/ubigeo.service';
+import { CreateAddressRequest } from '../../../../../../../core/domains/shipping/models/address.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({

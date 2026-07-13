@@ -36,10 +36,16 @@
     </button>
     @if (isBrandOpen) {
     <ul class="filter-options animate-fade-in">
+      <li>
+        <label class="filter-option" [class.filter-option--active]="!localFilters.brandId">
+          <input type="radio" name="brand" [value]="undefined" [(ngModel)]="localFilters.brandId" />
+          <span>Todas</span>
+        </label>
+      </li>
       @for (brand of brands; track brand.idBrand) {
       <li>
-        <label class="filter-option" [class.filter-option--active]="isBrandSelected(brand.idBrand)">
-          <input type="checkbox" [checked]="isBrandSelected(brand.idBrand)" (change)="toggleBrand(brand.idBrand)" />
+        <label class="filter-option" [class.filter-option--active]="localFilters.brandId === brand.idBrand">
+          <input type="radio" name="brand" [value]="brand.idBrand" [(ngModel)]="localFilters.brandId" />
           <span>{{ brand.brandName }}</span>
         </label>
       </li>

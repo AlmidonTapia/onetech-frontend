@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { UsersTableComponent } from './components/users-table/users-table';
-import { UserService } from '../../../core/services/user.service';
-import { User } from '../../../core/models/user.model';
+import { UserService } from '../../../core/domains/identity/services/user.service';
+import { User } from '../../../core/domains/identity/models/user.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

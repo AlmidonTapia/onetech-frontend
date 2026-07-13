@@ -40,7 +40,7 @@
         <app-checkout-payment (selected)="selectedPayMethod.set($event)" />
         }
         @if (currentStep() === 3) {
-        <app-checkout-summary [cart]="cartService.cart()" [address]="selectedAddress()"
+        <app-checkout-summary [cart]="cartStore.cart()" [address]="selectedAddress()"
           [shipMethod]="selectedShipMethod()" [payMethod]="selectedPayMethod()" [discountAmount]="discountAmount()" />
         
         @if (selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
@@ -67,9 +67,9 @@
 
       <div class="checkout-aside">
         <app-checkout-aside 
-          [cart]="cartService.cart()"
-          [itemCount]="cartService.itemCount()"
-          [subtotal]="cartService.totalAmount()"
+          [cart]="cartStore.cart()"
+          [itemCount]="cartStore.itemCount()"
+          [subtotal]="cartStore.totalAmount()"
           [discountAmount]="discountAmount()"
           [shipMethod]="selectedShipMethod()"
           [finalTotal]="finalTotal"

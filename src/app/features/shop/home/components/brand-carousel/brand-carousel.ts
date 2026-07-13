@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
-import { Brand } from '../../../../../core/models/brand.model';
+import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 
 @Component({
   selector: 'app-brand-carousel',

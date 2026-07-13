@@ -1,0 +1,18 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ content.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }}{{ content.badgeSuffix }}</p>
+    </div>
+  </div>
+
+  <app-invoices-table
+    [invoices]="invoices()"
+    [totalRecords]="totalRecords()"
+    [loading]="loading()"
+    (lazyLoad)="loadInvoices($event)"
+    (onDownload)="onDownload($event)"
+    (onSendEmail)="onSendEmail($event)"
+    (onAnnul)="onAnnul($event)">
+  </app-invoices-table>
+</div>

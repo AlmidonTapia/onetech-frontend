@@ -1,16 +1,16 @@
 <a [routerLink]="['/product', product.idProduct]" class="product-card">
   <div class="card-image">
     @if (mainImage) {
-    <img [src]="mainImage" [alt]="product.productName" loading="lazy" />
+    <img [ngSrc]="mainImage" [alt]="product.productName" fill />
     } @else {
     <div class="img-placeholder"><i class="pi pi-image"></i></div>
     }
 
-    <button class="wishlist-btn" [class.wishlist-btn--active]="wishlistService.isInWishlist(product.idProduct)"
+    <button class="wishlist-btn" [class.wishlist-btn--active]="wishlistStore.isInWishlist(product.idProduct)"
       (click)="onToggleWishlist($event)"
-      [attr.aria-label]="wishlistService.isInWishlist(product.idProduct) ? content.ariaLabels.removeWishlist : content.ariaLabels.addWishlist">
+      [attr.aria-label]="wishlistStore.isInWishlist(product.idProduct) ? content.ariaLabels.removeWishlist : content.ariaLabels.addWishlist">
       <i class="pi"
-        [class]="wishlistService.isInWishlist(product.idProduct) ? content.icons.wishlistActive : content.icons.wishlistInactive"></i>
+        [class]="wishlistStore.isInWishlist(product.idProduct) ? content.icons.wishlistActive : content.icons.wishlistInactive"></i>
     </button>
     
         <button class="quick-view-btn" (click)="openQuickView($event)" [attr.aria-label]="content.ariaLabels.quickView">
@@ -43,9 +43,7 @@
     }
     <h3 class="card-name">{{ product.productName }}</h3>
 
-    @if (product.averageRating) {
-    <app-star-rating [value]="product.averageRating" [count]="product.totalReviews" [readonly]="true" />
-    }
+
 
         @if (product.stockQuantity > 0 && product.stockQuantity <= 5) {
     <span class="stock-urgency">

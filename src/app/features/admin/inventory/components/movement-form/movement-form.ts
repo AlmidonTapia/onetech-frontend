@@ -6,9 +6,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { ProductService } from '../../../../../core/services/product.service';
-import { CreateInventoryMovementRequest } from '../../../../../core/models/inventory.model';
-import { Product } from '../../../../../core/models/product.model';
+import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
+import { CreateInventoryMovementRequest } from '../../../../../core/domains/inventory/models/inventory.model';
+import { Product } from '../../../../../core/domains/catalog/models/product.model';
 
 @Component({
   selector: 'app-movement-form',
@@ -72,7 +72,7 @@ export class MovementFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.productService.getAll({ page: 0, size: 100 }).subscribe(r => {
+    this.productService.getAll({ page: 0, size: 100, status: 'ACTIVO' }).subscribe(r => {
       setTimeout(() => {
         this.products = r.content;
       });

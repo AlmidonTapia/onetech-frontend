@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TagModule } from 'primeng/tag';
-import { Order, OrderStatus } from '../../../../../core/models/order.model';
+import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 
 type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';

@@ -6,7 +6,7 @@ import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge'
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
-import { InventoryMovement } from '../../../../../core/models/inventory.model';
+import { InventoryMovement } from '../../../../../core/domains/inventory/models/inventory.model';
 
 @Component({
   selector: 'app-inventory-table',

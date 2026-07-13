@@ -1,6 +1,6 @@
 .step-section { display:flex; flex-direction:column; gap:20px; }
 .step-title { font-size:16px; font-weight:700; color:var(--ot-text-main); display:flex; align-items:center; gap:8px; margin-top:0; margin-bottom:16px; }
-.step-title .pi { color:var(--p-primary-color); }
+.step-title .pi { color:var(--ot-blue); }
 
 .address-list { display:flex; flex-direction:column; gap:12px; }
 
@@ -9,23 +9,23 @@
   gap:16px;
   padding:16px 20px;
   border:2.5px solid var(--ot-border-color);
-  border-radius:var(--ot-radius-xl);
+  border-radius:var(--ot-radius-2xl, 24px);
   background:var(--ot-bg-surface);
   cursor:pointer;
   transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .address-option:hover {
-  border-color: var(--p-primary-color);
+  border-color: var(--ot-blue);
   background: var(--ot-bg-subtle);
   transform: translateY(-1px);
   box-shadow: var(--ot-shadow-sm);
 }
 
 .address-option--selected {
-  border-color:var(--p-primary-color);
-  background:color-mix(in srgb, var(--p-primary-color) 4%, var(--ot-bg-surface));
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--p-primary-color) 8%, transparent);
+  border-color:var(--ot-blue);
+  background:color-mix(in srgb, var(--ot-blue) 4%, var(--ot-bg-surface));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ot-blue) 8%, transparent);
 }
 
 .radio-circle {
@@ -42,8 +42,8 @@
 }
 
 .radio-circle--active {
-  border-color:var(--p-primary-color) !important;
-  background:var(--p-primary-color) !important;
+  border-color:var(--ot-blue) !important;
+  background:var(--ot-blue) !important;
   box-shadow:inset 0 0 0 4px var(--ot-bg-surface) !important;
 }
 
@@ -55,7 +55,7 @@
 .addr-default {
   font-size:11px;
   background:rgba(0, 71, 204, 0.08);
-  color:var(--p-primary-color);
+  color:var(--ot-blue);
   padding:2px 10px;
   border-radius:var(--ot-radius-full);
   font-weight:600;
@@ -63,7 +63,7 @@
   display:inline-block;
   align-self: flex-start;
 }
-.dark-mode .addr-default { background:rgba(77, 136, 255, 0.15); }
+:host-context(.dark) .addr-default { background:rgba(77, 136, 255, 0.15); }
 
 .add-address-btn {
   display: flex !important;
@@ -73,7 +73,7 @@
   width: 100% !important;
   padding: 16px !important;
   border: 2px dashed var(--ot-border-color) !important;
-  border-radius: var(--ot-radius-xl) !important;
+  border-radius: var(--ot-radius-2xl, 24px) !important;
   background: transparent !important;
   color: var(--ot-text-muted) !important;
   font-size: 14px !important;
@@ -84,16 +84,16 @@
 }
 
 .add-address-btn:hover {
-  border-color: var(--p-primary-color) !important;
-  color: var(--p-primary-color) !important;
-  background: color-mix(in srgb, var(--p-primary-color) 4%, transparent) !important;
+  border-color: var(--ot-blue) !important;
+  color: var(--ot-blue) !important;
+  background: color-mix(in srgb, var(--ot-blue) 4%, transparent) !important;
   transform: translateY(-1px) !important;
 }
 
 .new-address-form {
   background: var(--ot-bg-surface) !important;
   border: 1px solid var(--ot-border-color) !important;
-  border-radius: var(--ot-radius-xl) !important;
+  border-radius: var(--ot-radius-2xl, 24px) !important;
   padding: 28px !important;
   display: flex !important;
   flex-direction: column !important;
@@ -112,15 +112,15 @@
   border: 1px solid var(--ot-border-color) !important;
   background: var(--ot-bg-body) !important;
   color: var(--ot-text-main) !important;
-  border-radius: var(--ot-radius-lg) !important;
+  border-radius: var(--ot-radius-xl, 16px) !important;
   outline: none !important;
   transition: all 0.25s ease !important;
   font-size: 14px !important;
 }
 
 .form-field input:focus {
-  border-color:var(--p-primary-color) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--p-primary-color) 15%, transparent) !important;
+  border-color:var(--ot-blue) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ot-blue) 15%, transparent) !important;
 }
 
 .field-error { color: var(--ot-danger); font-size: 12px; margin-top: 2px; }

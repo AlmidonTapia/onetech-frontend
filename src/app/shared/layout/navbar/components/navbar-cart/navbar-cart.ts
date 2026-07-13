@@ -1,25 +1,37 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { CartService } from '../../../../../core/services/cart.service';
+import { RouterLink, Router } from '@angular/router';
+import { CartStore } from '../../../../../core/domains/shopping/store/cart.store';
 import { CurrencyPenPipe } from '../../../../pipes/currency-pen.pipe';
+import { Popover } from 'primeng/popover';
+import { ButtonComponent } from '../../../../components/ui/button/button';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-navbar-cart',
   standalone: true,
-  imports: [RouterLink, CurrencyPenPipe],
+  imports: [RouterLink, CurrencyPenPipe, Popover, ButtonComponent, NgOptimizedImage],
   templateUrl: './navbar-cart.html',
   styleUrl: './navbar-cart.css'
 })
 export class NavbarCartComponent {
-  private cartService = inject(CartService);
+  cartStore = inject(CartStore);
+  private router = inject(Router);
 
-  itemCount = this.cartService.itemCount;
-  totalAmount = this.cartService.totalAmount;
+  itemCount = this.cartStore.itemCount;
+  totalAmount = this.cartStore.totalAmount;
 
   content = {
     cartRoute: '/cart',
     ariaLabelCart: 'Ver carrito',
     cartIcon: 'pi pi-shopping-cart',
-    labelText: 'Carrito'
+    labelText: 'Carrito',
+    emptyTitle: 'Tu carrito está vacío',
+    goToCartBtn: 'Ver carrito completo',
+    checkoutBtn: 'Ir a pagar'
   };
+
+  goToCheckout(op: any) {
+    op.hide();
+    this.router.navigate(['/checkout']);
+  }
 }

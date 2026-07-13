@@ -1,0 +1,128 @@
+.profile-section { display: flex; flex-direction: column; gap: 24px; }
+
+.section-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ot-text-main);
+    margin-bottom: 4px;
+}
+
+.section-header p {
+    color: var(--ot-text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-card {
+    background: var(--ot-bg-surface);
+    border: 1px solid var(--ot-border-color);
+    border-radius: var(--ot-radius-xl);
+    padding: 20px;
+    transition: var(--ot-transition);
+}
+
+.order-card:hover {
+    box-shadow: var(--ot-shadow-md);
+    border-color: var(--ot-gray-300);
+}
+
+:host-context(.dark) .order-card:hover {
+    border-color: var(--ot-gray-600);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--ot-border-color);
+    margin-bottom: 16px;
+}
+
+.order-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-id {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ot-text-main);
+}
+
+.order-date {
+    font-size: 13px;
+    color: var(--ot-text-muted);
+}
+
+.order-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.order-product-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.order-product-info img {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--ot-radius-md);
+    object-fit: cover;
+    background: var(--ot-bg-body);
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.order-details h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ot-text-main);
+}
+
+.order-items-count {
+    font-size: 13px;
+    color: var(--ot-text-muted);
+}
+
+.order-price-action {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.order-total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ot-text-main);
+}
+
+@media (max-width: 640px) {
+    .order-card-body {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .order-price-action {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

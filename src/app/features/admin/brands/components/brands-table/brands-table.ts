@@ -3,7 +3,7 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
-import { Brand } from '../../../../../core/models/brand.model';
+import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 
 @Component({
   selector: 'app-brands-table',

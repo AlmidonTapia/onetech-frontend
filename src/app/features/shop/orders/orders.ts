@@ -4,8 +4,8 @@ import { OrdersListComponent } from './components/orders-list/orders-list';
 import { OrderDetailComponent } from './components/order-detail/order-detail';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
-import { OrderService } from '../../../core/services/order.service';
-import { Order } from '../../../core/models/order.model';
+import { OrderService } from '../../../core/domains/checkout/services/order.service';
+import { Order } from '../../../core/domains/checkout/models/order.model';
 
 @Component({
   selector: 'app-orders',
@@ -14,7 +14,6 @@ import { Order } from '../../../core/models/order.model';
     PaginatorModule,
     OrdersListComponent,
     OrderDetailComponent,
-    SpinnerComponent,
     BreadcrumbComponent
   ],
   templateUrl: './orders.html',

@@ -45,7 +45,7 @@
   flex-shrink: 0;
 }
 
-.dark-mode .info-icon {
+:host-context(.dark) .info-icon {
   background-color: color-mix(in srgb, var(--ot-blue) 15%, transparent);
 }
 

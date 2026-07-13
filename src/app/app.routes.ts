@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/auth/auth.guard';
-import { adminGuard } from './core/auth/admin.guard';
+import { authGuard } from './core/domains/identity/guards/auth.guard';
+import { adminGuard } from './core/domains/identity/guards/admin.guard';
 
 export const routes: Routes = [
     
@@ -34,5 +34,9 @@ export const routes: Routes = [
             }
         ]
     },
-    { path: '**', redirectTo: '' }
+    {
+        path: '**',
+        loadComponent: () =>
+            import('./features/shop/pages/not-found/not-found').then(m => m.NotFoundComponent)
+    }
 ];

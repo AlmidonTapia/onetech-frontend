@@ -4,7 +4,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { Category, CreateCategoryRequest } from '../../../../../core/models/category.model';
+import { Category, CreateCategoryRequest, UpdateCategoryRequest } from '../../../../../core/domains/catalog/models/category.model';
+import { CategoryStatus } from '../../../../../core/domains/catalog/enums/category-status.enum';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
@@ -22,7 +23,7 @@ export class CategoryFormComponent implements OnChanges {
   @Input() categories: Category[] = [];
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() save = new EventEmitter<CreateCategoryRequest>();
+  @Output() save = new EventEmitter<CreateCategoryRequest | UpdateCategoryRequest>();
   @Output() cancel = new EventEmitter<void>();
 
   content = {
@@ -42,6 +43,11 @@ export class CategoryFormComponent implements OnChanges {
     }
   } as const;
 
+  statusOptions = [
+    { label: 'Habilitado', value: CategoryStatus.HABILITADO },
+    { label: 'Deshabilitado', value: CategoryStatus.DESHABILITADO }
+  ];
+
   formConfig: any[] = [
     [{ name: 'categoryName', label: 'Nombre *', type: 'text', placeholder: 'Ej: Laptops & PCs' }],
     [{ name: 'parentIdCategory', label: 'Categoría padre', type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Sin categoría padre', optional: true }]
@@ -50,6 +56,7 @@ export class CategoryFormComponent implements OnChanges {
   form = this.fb.group({
     categoryName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(2)]],
     parentIdCategory: [null as string | null],
+    status: [CategoryStatus.HABILITADO]
   });
 
   get title() {
@@ -72,8 +79,8 @@ export class CategoryFormComponent implements OnChanges {
 
   ngOnChanges() {
     this.category
-      ? this.form.patchValue({ categoryName: this.category.categoryName, parentIdCategory: this.category.parentIdCategory ?? null })
-      : this.form.reset();
+      ? this.form.patchValue({ categoryName: this.category.categoryName, parentIdCategory: this.category.parentIdCategory ?? null, status: this.category.status as CategoryStatus })
+      : this.form.reset({ status: CategoryStatus.HABILITADO });
   }
 
   onSave() {
@@ -81,7 +88,10 @@ export class CategoryFormComponent implements OnChanges {
       this.form.markAllAsTouched();
       return;
     }
-    this.save.emit(this.form.value as CreateCategoryRequest);
+    const req = this.category
+      ? (this.form.value as UpdateCategoryRequest)
+      : ({ categoryName: this.form.value.categoryName, parentIdCategory: this.form.value.parentIdCategory } as CreateCategoryRequest);
+    this.save.emit(req);
   }
 
   onCancel() {

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonComponent } from '../button/button';
-import { CartService } from '../../../../core/services/cart.service';
+import { CartStore } from '../../../../core/domains/shopping/store/cart.store';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   styleUrl: './add-to-cart-modal.css'
 })
 export class AddToCartModalComponent {
-  cartService = inject(CartService);
+  cartStore = inject(CartStore);
   private router = inject(Router);
 
   content = {
@@ -26,15 +26,15 @@ export class AddToCartModalComponent {
   };
 
   get visible() {
-    return this.cartService.addedProductInfo() !== null;
+    return this.cartStore.addedProductInfo() !== null;
   }
 
   get addedInfo() {
-    return this.cartService.addedProductInfo();
+    return this.cartStore.addedProductInfo();
   }
 
   close() {
-    this.cartService.addedProductInfo.set(null);
+    this.cartStore.clearAddedProductInfo();
   }
 
   goToCart() {

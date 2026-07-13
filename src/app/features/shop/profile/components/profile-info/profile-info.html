@@ -28,10 +28,16 @@
                 <p-select formControlName="documentType" [options]="docTypes" optionLabel="label" optionValue="value"
                     [placeholder]="content.placeholders.docTypeSelect"
                     [style]="{ 'width': content.styles.selectWidth }" />
+                @if (isInvalid('documentType') && form.get('documentType')?.errors?.['backend']) {
+                    <span class="field-error">{{ form.get('documentType')?.errors?.['backend'] }}</span>
+                }
             </div>
             <div class="form-field">
                 <label>{{ content.labels.documentNumber }}</label>
                 <input pInputText formControlName="documentNumber" [placeholder]="content.placeholders.docNumber" />
+                @if (isInvalid('documentNumber') && form.get('documentNumber')?.errors?.['backend']) {
+                    <span class="field-error">{{ form.get('documentNumber')?.errors?.['backend'] }}</span>
+                }
             </div>
         </div>
 
@@ -40,6 +46,9 @@
             <input pInputText formControlName="phone" [placeholder]="content.placeholders.phone" maxlength="9" />
             @if (isInvalid('phone') && form.get('phone')?.errors?.['pattern']) {
             <span class="field-error">{{ content.errors.phonePattern }}</span>
+            }
+            @if (isInvalid('phone') && form.get('phone')?.errors?.['backend']) {
+            <span class="field-error">{{ form.get('phone')?.errors?.['backend'] }}</span>
             }
         </div>
 

@@ -7,7 +7,9 @@
     <div class="form-field flex flex-column gap-1">
       <label class="font-medium text-sm">{{ content.fields.rating }} *</label>
       <p-rating formControlName="rating"></p-rating>
-      @if (isInvalid('rating')) {
+      @if (isInvalid('rating') && form.get('rating')?.errors?.['backend']) {
+        <small class="text-red-500">{{ form.get('rating')?.errors?.['backend'] }}</small>
+      } @else if (isInvalid('rating')) {
         <small class="text-red-500">{{ content.errors.ratingRequired }}</small>
       }
     </div>
@@ -16,7 +18,9 @@
       <label for="title" class="font-medium text-sm">{{ content.fields.reviewTitle }} *</label>
       <input pInputText id="title" formControlName="title" class="w-full"
         [class.ng-invalid]="isInvalid('title')" [class.ng-dirty]="isInvalid('title')" />
-      @if (isInvalid('title')) {
+      @if (isInvalid('title') && form.get('title')?.errors?.['backend']) {
+        <small class="text-red-500">{{ form.get('title')?.errors?.['backend'] }}</small>
+      } @else if (isInvalid('title')) {
         <small class="text-red-500">{{ content.errors.required }}</small>
       }
     </div>
@@ -25,7 +29,9 @@
       <label for="comment" class="font-medium text-sm">{{ content.fields.comment }} *</label>
       <textarea pTextarea id="comment" formControlName="comment" rows="4" class="w-full" style="resize: vertical"
         [class.ng-invalid]="isInvalid('comment')" [class.ng-dirty]="isInvalid('comment')"></textarea>
-      @if (isInvalid('comment')) {
+      @if (isInvalid('comment') && form.get('comment')?.errors?.['backend']) {
+        <small class="text-red-500">{{ form.get('comment')?.errors?.['backend'] }}</small>
+      } @else if (isInvalid('comment')) {
         <small class="text-red-500">{{ content.errors.required }}</small>
       }
     </div>

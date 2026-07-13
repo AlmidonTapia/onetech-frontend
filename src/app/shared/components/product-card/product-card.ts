@@ -1,26 +1,27 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CurrencyPenPipe } from '../../pipes/currency-pen.pipe';
 import { StarRatingComponent } from '../ui/star-rating/star-rating';
 import { DialogModule } from 'primeng/dialog';
-import { CartService } from '../../../core/services/cart.service';
+import { CartStore } from '../../../core/domains/shopping/store/cart.store';
 import { AlertService } from '../../services/alert.service';
-import { WishlistService } from '../../services/wishlist.service';
-import { Product } from '../../../core/models/product.model';
+import { WishlistStore } from '../../../core/domains/shopping/store/wishlist.store';
+import { Product } from '../../../core/domains/catalog/models/product.model';
 import { ProductImagesComponent } from '../../../features/shop/product-detail/components/product-images/product-images';
 import { ProductInfoComponent } from '../../../features/shop/product-detail/components/product-info/product-info';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [RouterLink, CurrencyPenPipe, StarRatingComponent, DialogModule, ProductImagesComponent, ProductInfoComponent],
+  imports: [RouterLink, CurrencyPenPipe, DialogModule, ProductImagesComponent, ProductInfoComponent, NgOptimizedImage],
   templateUrl: 'product-card.html',
   styleUrl: 'product-card.css'
 })
 export class ProductCardComponent {
-  private cartService = inject(CartService);
+  private cartStore = inject(CartStore);
   private alertService = inject(AlertService);
-  wishlistService = inject(WishlistService);
+  wishlistStore = inject(WishlistStore);
 
   @Input() product!: Product;
   @Input() showBrand = true;
@@ -75,13 +76,14 @@ export class ProductCardComponent {
     e.preventDefault();
     e.stopPropagation();
     this.adding = true;
-    this.cartService.addItem({ idProduct: this.product.idProduct, quantity: 1 }).subscribe({
+    this.cartStore.addItem({ idProduct: this.product.idProduct, quantity: 1 }).subscribe({
       next: () => {
         this.adding = false;
         this.addedToCart.emit(this.product);
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.cartError);
+      error: (err: any) => {
+        const errMsg = err.error?.message || this.content.alerts.cartError;
+        this.alertService.error(errMsg);
         this.adding = false;
       }
     });
@@ -91,7 +93,7 @@ export class ProductCardComponent {
     e.preventDefault();
     e.stopPropagation();
 
-    const added = this.wishlistService.toggle(this.product.idProduct);
+    const added = this.wishlistStore.toggle(this.product.idProduct);
 
     this.alertService[added ? 'success' : 'info'](
       added ? this.content.alerts.wishlistAdd : this.content.alerts.wishlistRemove,

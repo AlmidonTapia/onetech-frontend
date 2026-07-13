@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, switchMap, of } from 'rxjs';
 
@@ -9,16 +9,16 @@ import { CheckoutShippingComponent } from './components/checkout-shipping/checko
 import { CheckoutPaymentComponent } from './components/checkout-payment/checkout-payment';
 import { CheckoutAsideComponent } from './components/checkout-aside/checkout-aside';
 import { AlertService } from '../../../shared/services/alert.service';
-import { CartService } from '../../../core/services/cart.service';
-import { OrderService } from '../../../core/services/order.service';
-import { PaymentService } from '../../../core/services/payment.service';
-import { ShipmentService } from '../../../core/services/shipment.service';
-import { CouponService } from '../../../core/services/coupon.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { CartStore } from '../../../core/domains/shopping/store/cart.store';
+import { OrderService } from '../../../core/domains/checkout/services/order.service';
+import { PaymentService } from '../../../core/domains/checkout/services/payment.service';
+import { ShipmentService } from '../../../core/domains/shipping/services/shipment.service';
+import { CouponService } from '../../../core/domains/checkout/services/coupon.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { ShipmentMethod } from '../../../core/models/shipment.model';
-import { PaymentMethod } from '../../../core/models/payment.model';
-import { Address } from '../../../core/models/address.model';
+import { ShipmentMethod } from '../../../core/domains/shipping/models/shipment.model';
+import { PaymentMethod } from '../../../core/domains/checkout/models/payment.model';
+import { Address } from '../../../core/domains/shipping/models/address.model';
 import { environment } from '../../../../environments/environment';
 
 declare var MercadoPago: any;
@@ -38,8 +38,8 @@ declare var MercadoPago: any;
   templateUrl: './checkout.html',
   styleUrl: './checkout.css'
 })
-export class CheckoutComponent {
-  cartService = inject(CartService);
+export class CheckoutComponent implements OnInit {
+  cartStore = inject(CartStore);
   private orderService = inject(OrderService);
   private paymentService = inject(PaymentService);
   private shipmentService = inject(ShipmentService);
@@ -114,6 +114,13 @@ export class CheckoutComponent {
     });
   }
 
+  ngOnInit() {
+    if (this.cartStore.itemCount() === 0) {
+      this.alertService.info('Tu carrito está vacío', 'Agrega productos para proceder al pago.');
+      this.router.navigate(['/cart']);
+    }
+  }
+
   onAddressSelected(address: Address) {
     this.selectedAddressId.set(address.idAddress);
     this.selectedAddress.set(address);
@@ -140,13 +147,13 @@ export class CheckoutComponent {
         if (coupon.discountType === 'FIXED_AMOUNT') {
           this.discountAmount.set(coupon.discountValue);
         } else {
-          this.discountAmount.set(this.cartService.totalAmount() * (coupon.discountValue / 100));
+          this.discountAmount.set(this.cartStore.totalAmount() * (coupon.discountValue / 100));
         }
         this.validatingCoupon.set(false);
         this.alertService.success(this.content.alerts.couponApplied, this.content.alerts.couponAppliedMsg);
       },
-      error: () => {
-        this.couponError.set(this.content.alerts.couponInvalid);
+      error: (err: any) => {
+        this.couponError.set(err?.error?.message || this.content.alerts.couponInvalid);
         this.validatingCoupon.set(false);
         this.selectedCouponId.set(null);
         this.discountAmount.set(0);
@@ -155,7 +162,7 @@ export class CheckoutComponent {
   }
 
   get finalTotal() {
-    const subtotal = this.cartService.totalAmount();
+    const subtotal = this.cartStore.totalAmount();
     const shipping = this.selectedShipMethod()?.basePrice ?? 0;
     return Math.max(0, subtotal - this.discountAmount()) + shipping;
   }
@@ -228,7 +235,7 @@ export class CheckoutComponent {
   }
 
   private executeMpPayment(cardFormData: any, resolve: any, reject: any) {
-    const cart = this.cartService.cart();
+    const cart = this.cartStore.cart();
     if (!cart || !this.selectedAddressId() || !this.selectedPayMethod() || !this.selectedShipMethod()) {
       reject();
       return;
@@ -242,37 +249,39 @@ export class CheckoutComponent {
       unitPrice: i.unitPrice
     }));
 
+    const idempotencyKey = crypto.randomUUID();
+
     this.orderService.create({
       idAddress: this.selectedAddressId()!,
       idShipmentMethod: this.selectedShipMethod()!.idShipmentMethod,
       idCoupon: this.selectedCouponId() ?? undefined,
       items
-    }).pipe(
-      switchMap((order: any) => {
+    }, idempotencyKey).pipe(
+      switchMap((orderId: string) => {
         return forkJoin({
-          order: of(order),
+          orderId: of(orderId),
           payment: this.paymentService.processMpPayment({
-            idOrder: order.id,
+            idOrder: orderId,
             internalPaymentMethodId: this.selectedPayMethod()!.idPaymentMethod,
             token: cardFormData.token,
             transactionAmount: cardFormData.transaction_amount,
             installments: cardFormData.installments,
             paymentMethodId: cardFormData.payment_method_id,
             payerEmail: cardFormData.payer.email
-          }),
-          cartClear: this.cartService.clearCart()
+          }, crypto.randomUUID()),
+          cartClear: this.cartStore.clearCart()
         });
       })
     ).subscribe({
       next: (result: any) => {
-        const order = result.order;
+        const orderId = result.orderId;
         this.alertService.success(
           this.content.alerts.successTitle,
-          `Tu pago fue procesado con éxito. Orden #${order.id.substring(0, 8)} confirmada.`
+          `Tu pago fue procesado con éxito. Orden #${orderId.substring(0, 8)} confirmada.`
         );
         this.placing.set(false);
         resolve();
-        this.router.navigate([this.content.navigation.routeSuccess]);
+        this.router.navigate(['/checkout/success', orderId]);
       },
       error: (err: any) => {
         const errMsg = err?.error?.message || this.content.alerts.paymentError;
@@ -284,7 +293,7 @@ export class CheckoutComponent {
   }
 
   placeOrder() {
-    const cart = this.cartService.cart();
+    const cart = this.cartStore.cart();
     if (!cart || !this.selectedAddressId() || !this.selectedPayMethod() || !this.selectedShipMethod()) return;
 
     this.placing.set(true);
@@ -295,41 +304,45 @@ export class CheckoutComponent {
       unitPrice: i.unitPrice
     }));
 
+    const idempotencyKey = crypto.randomUUID();
+
     const createOrder$ = this.orderService.create({
       idAddress: this.selectedAddressId()!,
       idShipmentMethod: this.selectedShipMethod()!.idShipmentMethod,
       idCoupon: this.selectedCouponId() ?? undefined,
       items
-    }) as any;
+    }, idempotencyKey) as any;
 
     createOrder$.pipe(
-      switchMap((order: any) => {
+      switchMap((orderId: string) => {
         return forkJoin({
-          order: of(order),
+          orderId: of(orderId),
           payment: this.paymentService.register({
-            idOrder: order.id,
+            idOrder: orderId,
             idPaymentMethod: this.selectedPayMethod()!.idPaymentMethod,
             transactionId: `${this.content.navigation.txnPrefix}${Date.now()}`,
             amountPaid: this.finalTotal,
-          }) as any,
-          cartClear: this.cartService.clearCart() as any
+          }, crypto.randomUUID()) as any,
+          cartClear: this.cartStore.clearCart() as any
         });
       })
     ).subscribe({
       next: (result: any) => {
-        const order = result.order;
+        const orderId = result.orderId;
  
         this.alertService.success(
           this.content.alerts.successTitle,
-          `${this.content.alerts.successSub}${order.id.substring(0, 8)}${this.content.alerts.successEnd}`
+          `${this.content.alerts.successSub}${orderId.substring(0, 8)}${this.content.alerts.successEnd}`
         );
         this.placing.set(false);
-        this.router.navigate([this.content.navigation.routeSuccess]);
+        this.router.navigate(['/checkout/success', orderId]);
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.error);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.error;
+        this.alertService.error(errMsg);
         this.placing.set(false);
       }
     });
   }
 }
+

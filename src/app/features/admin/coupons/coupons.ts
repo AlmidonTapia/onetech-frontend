@@ -1,11 +1,12 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { CouponsTableComponent } from './components/coupons-table/coupons-table';
 import { CouponFormComponent } from './components/coupon-form/coupon-form';
+import { handleFormError } from '../../../shared/utils/form-error.util';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { CouponService } from '../../../core/services/coupon.service';
-import { Coupon, CreateCouponRequest } from '../../../core/models/coupon.model';
+import { CouponService } from '../../../core/domains/checkout/services/coupon.service';
+import { Coupon, CreateCouponRequest } from '../../../core/domains/checkout/models/coupon.model';
 
 @Component({
   selector: 'app-coupons',
@@ -18,6 +19,8 @@ export class CouponsComponent implements OnInit {
   private couponService = inject(CouponService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+
+  @ViewChild(CouponFormComponent) couponForm!: CouponFormComponent;
 
   coupons = signal<Coupon[]>([]);
   totalRecords = signal(0);
@@ -102,8 +105,9 @@ export class CouponsComponent implements OnInit {
         this.saving.set(false);
         this.loadCoupons();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.saveError);
+      error: (err) => {
+        const errorMsg = handleFormError(err, this.couponForm.form) || undefined;
+        this.alertService.error(this.content.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -121,7 +125,7 @@ export class CouponsComponent implements OnInit {
             this.alertService.success(this.content.alerts.deleteSuccess);
             this.loadCoupons();
           },
-          error: () => this.alertService.error(this.content.alerts.deleteError)
+          error: (err: any) => this.alertService.error(err?.error?.message || this.content.alerts.deleteError)
         });
       },
     });

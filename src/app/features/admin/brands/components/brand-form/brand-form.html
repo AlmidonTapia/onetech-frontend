@@ -13,11 +13,22 @@
           [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" />
         }
 
-        @if (isInvalid(field.name)) {
+        @if (isInvalid(field.name) && form.get(field.name)?.errors?.['backend']) {
+        <span class="field-error">{{ form.get(field.name)?.errors?.['backend'] }}</span>
+        } @else if (isInvalid(field.name)) {
         <span class="field-error">{{ content.errorRequired }}</span>
         }
       </div>
       }
+    </div>
+    }
+    
+    @if (brand) {
+    <div class="form-row">
+      <div class="form-field">
+        <label>Estado</label>
+        <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
+      </div>
     </div>
     }
     <div class="form-row">

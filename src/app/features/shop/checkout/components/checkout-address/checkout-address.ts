@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { UserService } from '../../../../../core/services/user.service';
-import { UbigeoService, LocationResponse } from '../../../../../core/services/ubigeo.service';
+import { UserService } from '../../../../../core/domains/identity/services/user.service';
+import { UbigeoService, LocationResponse } from '../../../../../core/domains/shipping/services/ubigeo.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
-import { Address, CreateAddressRequest } from '../../../../../core/models/address.model';
+import { Address, CreateAddressRequest } from '../../../../../core/domains/shipping/models/address.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -167,8 +167,9 @@ export class CheckoutAddressComponent implements OnInit {
         this.saving.set(false);
         this.form.reset({ country: 'Perú', isDefault: false });
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.error);
+      error: (err: any) => {
+        const errMsg = err?.error?.message || this.content.alerts.error;
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });

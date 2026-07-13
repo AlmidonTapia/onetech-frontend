@@ -45,7 +45,7 @@
 }
 
 .thumb-btn--active {
-  border-color: var(--p-primary-color) !important;
+  border-color: var(--ot-blue) !important;
   box-shadow: 0 0 0 3px rgba(0, 71, 204, 0.15) !important;
 }
 
@@ -58,8 +58,8 @@
   position: relative !important;
   flex: 1 !important;
   aspect-ratio: 4 / 3 !important;
-  background: var(--ot-gray-100) !important;
-  border-radius: var(--ot-radius-xl) !important;
+  background: var(--ot-bg-surface) !important;
+  border-radius: var(--ot-radius-2xl, 24px) !important;
   overflow: hidden !important;
   border: 1px solid var(--ot-border-color) !important;
   display: flex !important;
@@ -68,7 +68,7 @@
   transition: var(--ot-transition) !important;
 }
 
-.dark-mode .main-image-container {
+:host-context(.dark) .main-image-container {
   background: var(--ot-bg-surface) !important;
 }
 
@@ -129,11 +129,11 @@
 
 .zoom-btn:hover {
   background: var(--ot-bg-surface) !important;
-  color: var(--p-primary-color) !important;
+  color: var(--ot-blue) !important;
   transform: scale(1.1) !important;
 }
 
-.dark-mode .zoom-btn {
+:host-context(.dark) .zoom-btn {
   background: var(--ot-bg-surface) !important;
 }
 
@@ -176,7 +176,7 @@
   max-width: 85vw !important;
   max-height: 85vh !important;
   object-fit: contain !important;
-  border-radius: var(--ot-radius-xl) !important;
+  border-radius: var(--ot-radius-2xl, 24px) !important;
   background: var(--ot-bg-surface) !important;
   padding: 24px !important;
   box-shadow: var(--ot-shadow-lg) !important;

@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Order } from '../../../../../../../core/models/order.model';
+import { Order } from '../../../../../../../core/domains/checkout/models/order.model';
 import { CurrencyPenPipe } from '../../../../../../../shared/pipes/currency-pen.pipe';
 
 @Component({

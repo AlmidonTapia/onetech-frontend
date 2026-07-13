@@ -27,7 +27,7 @@
 .reset-btn {
   font-size:13px;
   font-weight:600;
-  color:var(--p-primary-color);
+  color:var(--ot-blue);
   background:none;
   border:none;
   cursor:pointer;
@@ -63,7 +63,10 @@
 }
 
 .filter-title-btn:hover {
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
+}
+:host-context(.dark) .filter-title-btn:hover {
+  color: var(--ot-blue-light);
 }
 
 .animate-fade-in {
@@ -98,13 +101,13 @@
 }
 
 .filter-option--active {
-  background:color-mix(in srgb, var(--p-primary-color) 8%, transparent) !important;
-  color:var(--p-primary-color) !important;
+  background:color-mix(in srgb, var(--ot-blue) 8%, transparent) !important;
+  color:var(--ot-blue) !important;
   font-weight:600 !important;
 }
 
 .filter-option input {
-  accent-color:var(--p-primary-color);
+  accent-color:var(--ot-blue);
   width: 15px;
   height: 15px;
   margin: 0;
@@ -128,8 +131,8 @@
 }
 
 .price-inputs input:focus {
-  border-color:var(--p-primary-color);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--p-primary-color) 15%, transparent);
+  border-color:var(--ot-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ot-blue) 15%, transparent);
 }
 
 .price-sep { color:var(--ot-text-muted); font-size:12px; font-weight:600; }

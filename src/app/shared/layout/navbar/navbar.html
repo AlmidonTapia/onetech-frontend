@@ -19,8 +19,9 @@
     <div class="navbar-main">
         <div class="container main-inner">
 
-            <a [routerLink]="content.homeRoute" class="navbar-logo" [attr.aria-label]="content.ariaLabelLogo">
-                <span class="logo-one">One</span><span class="logo-tech">Tech</span>
+            <a routerLink="/" class="navbar-logo" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 32px; width: auto; object-fit: contain; flex-shrink: 0;">
+                <div style="line-height: 1;"><span class="logo-one">One</span><span class="logo-tech">Tech</span></div>
             </a>
 
             <div class="navbar-search">
@@ -31,28 +32,14 @@
                 
                 <app-theme-toggle />
 
+                <app-navbar-user />
+
                 @if (authService.isAuthenticated()) {
-                <a [routerLink]="content.account.profileRoute" class="action-link">
-                    <i class="pi pi-user"></i>
-                    <div class="action-text">
-                        <span class="action-label">{{ content.account.labelAuthenticated }}</span>
-                        <span class="action-name">{{ authService.currentUser()?.firstName }}</span>
-                    </div>
-                </a>
-                
                 <a *appHasRole="'ADMIN'" [routerLink]="content.admin.route" class="action-link">
                     <i class="pi pi-cog"></i>
                     <div class="action-text">
                         <span class="action-label">{{ content.admin.labelPre }}</span>
                         <span class="action-name">{{ content.admin.labelPost }}</span>
-                    </div>
-                </a>
-                } @else {
-                <a [routerLink]="content.account.loginRoute" class="action-link">
-                    <i class="pi pi-user"></i>
-                    <div class="action-text">
-                        <span class="action-label">{{ content.account.labelGuest }}</span>
-                        <span class="action-name">{{ content.account.defaultName }}</span>
                     </div>
                 </a>
                 }
@@ -61,8 +48,8 @@
                     [attr.title]="content.wishlist.title">
                     <div class="wishlist-icon-wrapper">
                         <i class="pi pi-heart"></i>
-                        @if (wishlistService.count() > 0) {
-                        <span class="wishlist-badge">{{ wishlistService.count() }}</span>
+                        @if (wishlistStore.count() > 0) {
+                        <span class="wishlist-badge">{{ wishlistStore.count() }}</span>
                         }
                     </div>
                     <div class="action-text">

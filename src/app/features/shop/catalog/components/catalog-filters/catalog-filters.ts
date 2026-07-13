@@ -1,14 +1,14 @@
 import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CategoryService } from '../../../../../core/services/category.service';
-import { BrandService } from '../../../../../core/services/brand.service';
-import { Category } from '../../../../../core/models/category.model';
-import { Brand } from '../../../../../core/models/brand.model';
+import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
+import { BrandService } from '../../../../../core/domains/catalog/services/brand.service';
+import { Category } from '../../../../../core/domains/catalog/models/category.model';
+import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 export interface CatalogFilterValues {
   categoryId?: string;
-  brandIds: string[];
+  brandId?: string;
   minPrice?: number;
   maxPrice?: number;
 }
@@ -24,13 +24,13 @@ export class CatalogFiltersComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
 
-  @Input() filters: CatalogFilterValues = { brandIds: [] };
+  @Input() filters: CatalogFilterValues = {};
   @Output() filtersChange = new EventEmitter<CatalogFilterValues>();
   @Output() apply = new EventEmitter<CatalogFilterValues>();
 
   categories: Category[] = [];
   brands: Brand[] = [];
-  localFilters: CatalogFilterValues = { brandIds: [] };
+  localFilters: CatalogFilterValues = {};
 
   apiConfig = {
     categoryPage: 0,
@@ -58,7 +58,7 @@ export class CatalogFiltersComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.localFilters = { ...this.filters, brandIds: [...(this.filters.brandIds ?? [])] };
+    this.localFilters = { ...this.filters };
 
     this.categoryService
       .getAll(this.apiConfig.categoryPage, this.apiConfig.categorySize)
@@ -69,23 +69,14 @@ export class CatalogFiltersComponent implements OnInit {
       .subscribe(r => this.brands = r.content);
   }
 
-  toggleBrand(id: string) {
-    const idx = this.localFilters.brandIds.indexOf(id);
-    idx === -1
-      ? this.localFilters.brandIds.push(id)
-      : this.localFilters.brandIds.splice(idx, 1);
-  }
 
-  isBrandSelected(id: string) {
-    return this.localFilters.brandIds.includes(id);
-  }
 
   onApply() {
     this.apply.emit({ ...this.localFilters });
   }
 
   onReset() {
-    this.localFilters = { brandIds: [] };
+    this.localFilters = {};
     this.apply.emit({ ...this.localFilters });
   }
 }

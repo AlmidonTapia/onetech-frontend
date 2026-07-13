@@ -6,9 +6,9 @@ import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
-import { apiResponseInterceptor } from './core/interceptors/api-response.interceptor';
-import { idempotencyInterceptor } from './core/interceptors/idempotency.interceptor';
+import { authInterceptor } from './core/domains/shared/interceptors/auth.interceptor';
+import { apiResponseInterceptor } from './core/domains/shared/interceptors/api-response.interceptor';
+import { idempotencyInterceptor } from './core/domains/shared/interceptors/idempotency.interceptor';
 
 function initializeTheme() {
   return () => {

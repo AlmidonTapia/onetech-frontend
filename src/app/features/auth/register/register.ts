@@ -1,15 +1,17 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { RegisterFormComponent } from './components/register-form/register-form';
+import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
+import { handleFormError } from '../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
-    ReactiveFormsModule, RouterLink, RegisterFormComponent
+    ReactiveFormsModule, RegisterFormComponent, AuthLayoutComponent
   ],
   templateUrl: './register.html',
   styleUrl: './register.css'
@@ -31,6 +33,9 @@ export class RegisterComponent implements OnInit {
   }
 
   brandData = {
+    logoText1: 'One',
+    logoText2: 'Tech',
+    logoRoute: '/',
     title: 'Únete a OneTech',
     description: 'Crea tu cuenta y empieza a disfrutar de los mejores precios en tecnología para Lima.',
     stats: [
@@ -54,6 +59,8 @@ export class RegisterComponent implements OnInit {
     loginRoute: '/auth/login',
     backToShopText: 'Volver a la tienda sin registrarme',
     submitButtonLabel: 'Crear mi cuenta',
+    googleButtonLabel: 'Continuar con Google',
+    dividerText: 'O continuar con',
     termsText: 'Acepto los',
     termsLink: 'Términos y condiciones',
     privacyText: 'y la',
@@ -75,11 +82,10 @@ export class RegisterComponent implements OnInit {
   };
 
   fields = [
-    { name: 'firstName', label: 'Nombre', type: 'text', placeholder: 'Juan' },
-    { name: 'lastName', label: 'Apellido', type: 'text', placeholder: 'Pérez' },
-    { name: 'email', label: 'Correo electrónico', type: 'email', placeholder: 'tu@correo.com', icon: 'pi pi-envelope' },
-    { name: 'password', label: 'Contraseña', type: 'password', placeholder: 'Mínimo 8 caracteres', feedback: true },
-    { name: 'confirmPassword', label: 'Confirmar contraseña', type: 'password', placeholder: 'Repite tu contraseña', feedback: false }
+    { name: 'firstName', label: 'Nombre *', type: 'text', placeholder: 'Juan' },
+    { name: 'lastName', label: 'Apellido *', type: 'text', placeholder: 'Pérez' },
+    { name: 'email', label: 'Correo electrónico *', type: 'email', placeholder: 'tu@correo.com', icon: 'pi pi-envelope' },
+    { name: 'password', label: 'Contraseña *', type: 'password', placeholder: 'Mínimo 8 caracteres', feedback: true }
   ];
 
   form = this.fb.group({
@@ -87,17 +93,10 @@ export class RegisterComponent implements OnInit {
     lastName: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', Validators.required],
     terms: [false, Validators.requiredTrue]
-  }, { validators: this.matchPasswords });
+  });
 
   get f() { return this.form.controls; }
-
-  matchPasswords(ctrl: AbstractControl) {
-    const pw = ctrl.get('password')?.value;
-    const cpw = ctrl.get('confirmPassword')?.value;
-    return pw === cpw ? null : { mismatch: true };
-  }
 
   isInvalid(field: string) {
     const control = this.form.get(field);
@@ -137,13 +136,11 @@ export class RegisterComponent implements OnInit {
       },
       error: (err) => {
         this.loading.set(false);
-        const status = err?.status;
-        const msg = status === 409
-          ? 'Este correo ya está registrado. Intenta iniciar sesión.'
-          : 'Error al crear la cuenta. Intenta de nuevo.';
-
-        this.errorMsg.set(msg);
-        this.alertService.error('Error', msg);
+        const errorMsg = handleFormError(err, this.form);
+        if (errorMsg) {
+          this.errorMsg.set(errorMsg);
+          this.alertService.error('Error', errorMsg);
+        }
       }
     });
   }

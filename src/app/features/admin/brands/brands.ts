@@ -1,14 +1,16 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { BrandsTableComponent } from './components/brands-table/brands-table';
 import { BrandFormComponent } from './components/brand-form/brand-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { BrandService } from '../../../core/services/brand.service';
-import { Brand, CreateBrandRequest } from '../../../core/models/brand.model';
+import { BrandService } from '../../../core/domains/catalog/services/brand.service';
+import { Brand, CreateBrandRequest } from '../../../core/domains/catalog/models/brand.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { handleFormError } from '../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-brands',
@@ -22,6 +24,8 @@ export class BrandsComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
+
+  @ViewChild(BrandFormComponent) brandForm!: BrandFormComponent;
 
   brands = signal<Brand[]>([]);
   totalRecords = signal(0);
@@ -104,7 +108,7 @@ export class BrandsComponent implements OnInit {
 
     request$.subscribe({
       next: (response: any) => {
-        const brandId = currentBrand ? currentBrand.idBrand : response;
+        const brandId = currentBrand ? currentBrand.idBrand : response.id;
         if (file && brandId) {
           this.brandService.uploadImage(brandId, file).subscribe({
             next: () => {
@@ -127,8 +131,9 @@ export class BrandsComponent implements OnInit {
           this.loadBrands();
         }
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.saveError);
+      error: (err) => {
+        const errorMsg = handleFormError(err, this.brandForm.form) || undefined;
+        this.alertService.error(this.content.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -146,9 +151,7 @@ export class BrandsComponent implements OnInit {
             this.alertService.success('Marca eliminada exitosamente');
             this.loadBrands();
           },
-          error: () => {
-            this.alertService.error('Error al eliminar la marca');
-          }
+          error: (err: any) => this.alertService.error(err?.error?.message || 'Error al eliminar la marca'),
         });
       },
     });

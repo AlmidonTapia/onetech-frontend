@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AlertComponent } from '../../../../../shared/components/ui/alert/alert';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
+import { AuthService } from '../../../../../core/domains/identity/services/auth.service';
 
 @Component({
   selector: 'app-register-form',
@@ -39,5 +40,11 @@ export class RegisterFormComponent {
 
   clearError() {
     this.onErrorClear.emit();
+  }
+
+  private authService = inject(AuthService);
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle();
   }
 }

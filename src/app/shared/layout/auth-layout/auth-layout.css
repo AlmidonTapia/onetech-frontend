@@ -1,0 +1,168 @@
+.auth-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 900px) {
+  .auth-layout { grid-template-columns: 1fr; }
+}
+
+.auth-brand {
+  background: var(--ot-gradient-hero);
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 40px;
+  position: relative; overflow: hidden;
+}
+
+.auth-brand::before,
+.auth-brand::after {
+  content: ''; position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+.auth-brand::before { width: 500px; height: 500px; top: -150px; right: -150px; }
+.auth-brand::after  { width: 300px; height: 300px; bottom: -80px; left: -80px; }
+
+.brand-inner {
+  display: flex; flex-direction: column; gap: 40px;
+  max-width: 440px; position: relative; z-index: 1;
+}
+
+.auth-back-btn {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.auth-back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.brand-logo {
+  font-size: 36px; font-weight: 800; letter-spacing: -.5px; display: inline-flex;
+}
+.brand-logo .logo-one { color: #ffffff; }
+.brand-logo .logo-tech { color: var(--ot-orange); }
+
+.brand-copy h2 {
+  font-size: 32px; font-weight: 800; color: #ffffff; line-height: 1.2; margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.brand-copy p { font-size: 16px; color: rgba(255,255,255,.7); line-height: 1.6; }
+
+.brand-benefits {
+  list-style: none; padding: 0;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.brand-benefits li { display: flex; align-items: flex-start; gap: 16px; }
+
+.benefit-icon {
+  width: 48px; height: 48px; border-radius: var(--ot-radius-md);
+  background: rgba(255,255,255,.08); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--ot-orange);
+  backdrop-filter: blur(8px);
+}
+
+.brand-benefits strong { display: block; font-size: 15px; font-weight: 600; color: #ffffff; margin-bottom: 4px; }
+.brand-benefits span   { font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.4; display: block; }
+
+.brand-stats {
+  display: flex; align-items: center; gap: 24px;
+  background: rgba(255,255,255,.06);
+  border-radius: var(--ot-radius-2xl, 24px); padding: 24px 32px;
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(8px);
+}
+.brand-stat { display: flex; flex-direction: column; align-items: center; }
+.brand-stat strong { font-size: 24px; font-weight: 800; color: var(--ot-orange); line-height: 1.2; }
+.brand-stat span   { font-size: 13px; color: rgba(255,255,255,.6); text-align: center; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+.stat-divider { width: 1px; height: 40px; background: rgba(255,255,255,.1); }
+
+.brand-perks {
+  list-style: none; padding: 0;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.brand-perks li {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px; color: rgba(255,255,255,.8);
+}
+.brand-perks .pi { color: var(--ot-orange); font-size: 18px; flex-shrink: 0; }
+
+@media (max-width: 900px) { .auth-brand { display: none; } }
+
+.auth-form-panel {
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 32px;
+  background: var(--ot-bg-body);
+  transition: background var(--ot-transition);
+}
+
+::ng-deep .auth-form-card {
+  width: 100%; max-width: 460px;
+  display: flex; flex-direction: column; gap: 28px;
+  background: var(--ot-bg-surface);
+  padding: 40px 40px;
+  border-radius: var(--ot-radius-xl, 24px);
+  box-shadow: var(--ot-shadow-lg);
+  border: 1px solid var(--ot-border-color);
+  transition: var(--ot-transition);
+}
+
+@media (max-width: 600px) {
+  ::ng-deep .auth-form-card {
+    padding: 32px 24px;
+    border-radius: var(--ot-radius-lg, 16px);
+  }
+}
+
+::ng-deep .auth-form-card .form-header h1 {
+  font-family: var(--ot-font-family, 'Inter', system-ui, sans-serif);
+  font-size: 32px; 
+  font-weight: 800; 
+  background: var(--ot-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+::ng-deep .auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin: 20px 0;
+}
+::ng-deep .auth-divider::before,
+::ng-deep .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--ot-border-color);
+}
+
+::ng-deep .btn-google {
+  color: var(--ot-text-main) !important;
+  background: var(--ot-bg-surface) !important;
+}
+::ng-deep .btn-google:hover:not(:disabled) {
+  background: var(--ot-gray-100) !important;
+}
+:host-context(.dark) ::ng-deep .btn-google:hover:not(:disabled) {
+  background: var(--ot-gray-800) !important;
+}

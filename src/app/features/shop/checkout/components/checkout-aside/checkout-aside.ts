@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { FormsModule } from '@angular/forms';
-import { Cart } from '../../../../../core/models/cart.model';
-import { ShipmentMethod } from '../../../../../core/models/shipment.model';
+import { Cart } from '../../../../../core/domains/shopping/models/cart.model';
+import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 
 @Component({
   selector: 'app-checkout-aside',

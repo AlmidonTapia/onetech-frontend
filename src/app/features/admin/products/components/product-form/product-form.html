@@ -31,7 +31,9 @@
           [style]="{ 'width': content.styles.selectWidth }" />
         }
 
-        @if (isInvalid(field.name)) {
+        @if (isInvalid(field.name) && form.get(field.name)?.errors?.['backend']) {
+        <span class="field-error">{{ form.get(field.name)?.errors?.['backend'] }}</span>
+        } @else if (isInvalid(field.name)) {
         <span class="field-error">{{ content.errorRequired }}</span>
         }
       </div>

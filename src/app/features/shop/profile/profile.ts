@@ -1,22 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
-import { ProfileInfoComponent } from './components/profile-info/profile-info';
-import { ProfileAddressesComponent } from './components/profile-addresses/profile-addresses';
-import { ProfileSecurityComponent } from './components/profile-security/profile-security';
+import { RouterLink, Router, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
-import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     RouterLink,
-    ProfileInfoComponent,
-    ProfileAddressesComponent,
-    ProfileSecurityComponent,
-    BreadcrumbComponent,
-    ButtonComponent
+    RouterOutlet,
+    RouterLinkActive,
+    BreadcrumbComponent
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
@@ -24,33 +18,19 @@ import { AuthService } from '../../../core/services/auth.service';
 export class ProfileComponent {
   authService = inject(AuthService);
   router = inject(Router);
+  
   content = {
     breadcrumbLabel: 'Mi cuenta',
     defaultAvatarLetter: 'U',
-
-    quickActions: {
-      ordersLabel: 'Mis pedidos',
-      ordersIcon: 'pi-receipt',
-      ordersRoute: '/orders',
-      wishlistLabel: 'Favoritos',
-      wishlistIcon: 'pi-heart',
-      wishlistRoute: '/wishlist',
-      logoutLabel: 'Cerrar sesión'
-    },
-
-    tabs: {
-      infoValue: 'info',
-      infoLabel: 'Información',
-      infoIcon: 'pi pi-user',
-
-      addressesValue: 'addresses',
-      addressesLabel: 'Direcciones',
-      addressesIcon: 'pi pi-map-marker',
-
-      securityValue: 'security',
-      securityLabel: 'Seguridad',
-      securityIcon: 'pi pi-lock'
-    }
+    
+    sidebarMenu: [
+      { label: 'Información personal', route: '/profile/info', icon: 'pi pi-user' },
+      { label: 'Mis pedidos', route: '/profile/orders', icon: 'pi pi-shopping-bag' },
+      { label: 'Direcciones', route: '/profile/addresses', icon: 'pi pi-map-marker' },
+      { label: 'Seguridad', route: '/profile/security', icon: 'pi pi-lock' }
+    ],
+    
+    logoutLabel: 'Cerrar sesión'
   };
 
   breadcrumb: BreadcrumbItem[] = [{ label: this.content.breadcrumbLabel }];

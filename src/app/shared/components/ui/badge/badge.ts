@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 export type BadgeVariant = 'success' | 'error' | 'warning' | 'info' | 'gray' | 'blue';
@@ -8,10 +8,11 @@ export type BadgeVariant = 'success' | 'error' | 'warning' | 'info' | 'gray' | '
   standalone: true,
   imports: [NgClass],
   templateUrl: './badge.html',
-  styleUrl: './badge.css'
+  styleUrl: './badge.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeComponent {
-  @Input() variant: BadgeVariant = 'gray';
-  @Input() dot = false;
-  @Input() pill = true;
+  variant = input<BadgeVariant>('gray');
+  dot = input<boolean>(false);
+  pill = input<boolean>(true);
 }

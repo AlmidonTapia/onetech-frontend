@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, inject, signal, HostListener, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { NgClass } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { map, startWith } from 'rxjs';

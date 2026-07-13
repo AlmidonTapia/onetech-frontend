@@ -1,7 +1,7 @@
 .admin-page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .page-header {
@@ -12,15 +12,16 @@
 }
 
 .page-title h1 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--ot-text-main);
+  letter-spacing: -0.02em;
 }
 
 .page-subtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--ot-text-muted);
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .table-toolbar {

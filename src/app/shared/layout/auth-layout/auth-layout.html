@@ -1,0 +1,60 @@
+<div class="auth-layout">
+
+  <div class="auth-brand">
+    <a routerLink="/" class="auth-back-btn" title="Volver a la tienda">
+      <i class="pi pi-arrow-left"></i>
+    </a>
+    <div class="brand-inner animate-fade-scale">
+      <a [routerLink]="brandData.logoRoute || '/'" class="brand-logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+        <img [src]="brandData.logoImage || '/icono_wbg_small.png'" alt="OneTech Logo" style="height: 48px; width: auto; object-fit: contain; flex-shrink: 0;">
+        <div style="line-height: 1;"><span class="logo-one">{{ brandData.logoText1 || 'One' }}</span><span class="logo-tech">{{ brandData.logoText2 || 'Tech' }}</span></div>
+      </a>
+
+      @if (brandData) {
+        <div class="brand-copy">
+          <h2>{{ brandData.title }}</h2>
+          <p>{{ brandData.description }}</p>
+        </div>
+
+        @if (brandData.stats) {
+          <div class="brand-stats">
+            @for (stat of brandData.stats; track stat.label; let last = $last) {
+            <div class="brand-stat">
+              <strong>{{ stat.value }}</strong>
+              <span>{{ stat.label }}</span>
+            </div>
+            @if (!last) { <div class="stat-divider"></div> }
+            }
+          </div>
+        }
+
+        @if (brandData.benefits) {
+          <ul class="brand-benefits">
+            @for (benefit of brandData.benefits; track benefit.title) {
+              <li>
+                <div class="benefit-icon"><i [class]="benefit.icon"></i></div>
+                <div>
+                  <strong>{{ benefit.title }}</strong>
+                  <span>{{ benefit.desc }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+
+        @if (brandData.perks) {
+          <ul class="brand-perks">
+            @for (perk of brandData.perks; track perk) {
+            <li><i class="pi pi-check-circle"></i> {{ perk }}</li>
+            }
+          </ul>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <ng-content></ng-content>
+  </div>
+
+</div>

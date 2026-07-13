@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { UserService } from '../../../../../core/services/user.service';
-import { Address, CreateAddressRequest } from '../../../../../core/models/address.model';
+import { UserService } from '../../../../../core/domains/identity/services/user.service';
+import { Address, CreateAddressRequest } from '../../../../../core/domains/shipping/models/address.model';
 import { AddressListComponent } from './components/address-list/address-list';
 import { AddressFormComponent } from './components/address-form/address-form';
 
@@ -82,8 +82,8 @@ export class ProfileAddressesComponent implements OnInit {
         this.saving.set(false);
         this.loadAddresses();
       },
-      error: () => {
-        this.alertService.error(this.content.alerts.saveError);
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || this.content.alerts.saveError);
         this.saving.set(false);
       },
     });
@@ -101,7 +101,7 @@ export class ProfileAddressesComponent implements OnInit {
             this.alertService.success(this.content.alerts.deleteSuccess);
             this.loadAddresses();
           },
-          error: () => this.alertService.error(this.content.alerts.deleteError),
+          error: (err: any) => this.alertService.error(err?.error?.message || this.content.alerts.deleteError),
         });
       },
     });

@@ -1,27 +1,28 @@
-.catalog-page { padding: 24px 0 64px; }
-.catalog-breadcrumb { margin-bottom: 24px; display:block; }
+.catalog-page { padding: 40px 0 80px; }
+.catalog-breadcrumb { margin-bottom: 32px; display:block; }
 
 .catalog-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 32px;
+  grid-template-columns: 300px 1fr;
+  gap: 48px;
   align-items: start;
 }
+@media (max-width: 1024px) { .catalog-layout { grid-template-columns: 280px 1fr; gap: 32px; } }
 @media (max-width: 992px) { .catalog-layout { grid-template-columns: 1fr; gap: 24px; } }
 
-.catalog-sidebar { position: sticky; top: 100px; }
+.catalog-sidebar { position: sticky; top: 120px; }
 
 .sidebar-card {
   background: var(--ot-bg-surface);
   border: 1px solid var(--ot-border-color);
-  border-radius: var(--ot-radius-xl);
+  border-radius: var(--ot-radius-2xl, 24px);
   overflow: hidden;
   box-shadow: var(--ot-shadow-theme);
   transition: var(--ot-transition);
 }
 
 .sidebar-card:hover {
-  border-color: var(--p-primary-color);
+  border-color: var(--ot-blue);
   box-shadow: var(--ot-shadow-md);
 }
 
@@ -51,8 +52,8 @@
 }
 
 .mobile-filter-btn:hover {
-  border-color: var(--p-primary-color);
-  color: var(--p-primary-color);
+  border-color: var(--ot-blue);
+  color: var(--ot-blue);
 }
 
 /* Desktop specific hidden classes */

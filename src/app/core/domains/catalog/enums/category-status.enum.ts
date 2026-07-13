@@ -1,0 +1,4 @@
+export enum CategoryStatus {
+  HABILITADO = 'HABILITADO',
+  DESHABILITADO = 'DESHABILITADO'
+}

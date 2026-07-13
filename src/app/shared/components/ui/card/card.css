@@ -1,19 +1,20 @@
 .ot-card {
   background: var(--ot-bg-surface);
-  border-radius: var(--ot-radius-lg);
+  border-radius: var(--ot-radius-2xl, 24px);
   border: 1px solid var(--ot-border-color);
-  box-shadow: var(--ot-shadow-theme);
-  transition: var(--ot-transition);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
 }
 
 .card-hover:hover {
-  box-shadow: var(--ot-shadow-md);
-  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.06);
+  transform: translateY(-4px);
+  border-color: rgba(59, 130, 246, 0.2);
 }
 
-.dark-mode .card-hover:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+:host-context(.dark) .card-hover:hover {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
 }
 
 .card-p-none { padding: 0; }

@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './footer.html',
   styleUrl: './footer.css'
 })
@@ -21,7 +23,14 @@ export class FooterComponent {
       contact: 'Contacto'
     },
     copyPre: '© ',
-    copyPost: ' OneTech. Todos los derechos reservados.'
+    copyPost: ' OneTech. Todos los derechos reservados.',
+    newsletter: {
+      title: 'Suscríbete a nuestro boletín',
+      subtitle: 'Recibe las mejores ofertas y novedades de tecnología.',
+      placeholder: 'Tu correo electrónico',
+      button: 'Suscribirse',
+      successMessage: '¡Gracias por suscribirte!'
+    }
   };
 
   readonly categories = [
@@ -37,7 +46,8 @@ export class FooterComponent {
     { label: 'Quiénes somos', route: '/quienes-somos' },
     { label: 'Preguntas frecuentes', route: '/preguntas-frecuentes' },
     { label: 'Términos y condiciones', route: '/terminos' },
-    { label: 'Seguimiento de envío', route: '/profile' },
+    { label: 'Políticas de privacidad', route: '/privacidad' },
+    { label: 'Contacto', route: '/contacto' },
   ];
 
 
@@ -56,4 +66,17 @@ export class FooterComponent {
   ];
 
   readonly payments = ['Visa', 'Mastercard', 'Yape', 'Plin', 'BCP', 'Interbank'];
+
+  email = signal('');
+  subscribed = signal(false);
+
+  subscribe() {
+    if (this.email() && this.email().includes('@')) {
+      this.subscribed.set(true);
+      setTimeout(() => {
+        this.subscribed.set(false);
+        this.email.set('');
+      }, 3000);
+    }
+  }
 }

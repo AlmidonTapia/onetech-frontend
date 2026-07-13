@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContactService } from '../../../core/services/contact.service';
-import { ContactMessage } from '../../../core/models/contact.model';
+import { ContactService } from '../../../core/domains/contact/services/contact.service';
+import { ContactMessage } from '../../../core/domains/contact/models/contact.model';
 import { InboxTableComponent } from './components/inbox-table/inbox-table';
+import { AlertService } from '../../../shared/services/alert.service';
 
 @Component({
   selector: 'app-inbox',
@@ -12,6 +13,7 @@ import { InboxTableComponent } from './components/inbox-table/inbox-table';
 })
 export class InboxComponent implements OnInit {
   private contactService = inject(ContactService);
+  private alertService = inject(AlertService);
 
   messages = signal<ContactMessage[]>([]);
   totalRecords = signal<number>(0);
@@ -63,7 +65,10 @@ export class InboxComponent implements OnInit {
         this.totalRecords.set(response.totalElements);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al cargar mensajes');
+        this.loading.set(false);
+      }
     });
   }
 
@@ -75,6 +80,9 @@ export class InboxComponent implements OnInit {
     this.contactService.updateStatus(event.id, event.status).subscribe({
       next: () => {
         this.loadMessages({ first: 0, rows: 10 });
+      },
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al actualizar estado');
       }
     });
   }
@@ -82,7 +90,11 @@ export class InboxComponent implements OnInit {
   onDelete(id: string) {
     this.contactService.deleteMessage(id).subscribe({
       next: () => {
+        this.alertService.success('Mensaje eliminado');
         this.loadMessages({ first: 0, rows: 10 });
+      },
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al eliminar mensaje');
       }
     });
   }

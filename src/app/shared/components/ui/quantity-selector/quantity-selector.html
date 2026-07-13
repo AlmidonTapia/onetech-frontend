@@ -1,0 +1,16 @@
+<div class="quantity-selector" 
+     [class.disabled]="disabled()" 
+     role="spinbutton" 
+     [attr.aria-valuenow]="value()" 
+     [attr.aria-valuemin]="min()" 
+     [attr.aria-valuemax]="max()" 
+     tabindex="0"
+     (keydown)="onKeyDown($event)">
+  <button type="button" class="qty-btn" (click)="decrease()" [disabled]="disabled() || value() <= min()" aria-label="Disminuir cantidad" tabindex="-1">
+    <i class="pi pi-minus" aria-hidden="true"></i>
+  </button>
+  <span class="qty-value" aria-hidden="true">{{ value() }}</span>
+  <button type="button" class="qty-btn" (click)="increase()" [disabled]="disabled() || value() >= max()" aria-label="Aumentar cantidad" tabindex="-1">
+    <i class="pi pi-plus" aria-hidden="true"></i>
+  </button>
+</div>

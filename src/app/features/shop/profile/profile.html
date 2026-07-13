@@ -2,65 +2,42 @@
     <div class="container">
         <app-breadcrumb [items]="breadcrumb" />
 
-        <div class="account-header">
-            <div class="account-avatar">
-                {{ (authService.currentUser()?.firstName || content.defaultAvatarLetter)[0].toUpperCase() }}
-            </div>
-
-            <div class="account-info">
-                <h1>
-                    {{ authService.currentUser()?.firstName }}
-                    {{ authService.currentUser()?.lastName }}
-                </h1>
-                <p>{{ authService.currentUser()?.email }}</p>
-            </div>
-
-            <div class="account-actions">
-                <div class="actions-group">
-                    <app-button variant="ghost" size="sm" [label]="content.quickActions.ordersLabel"
-                        [icon]="content.quickActions.ordersIcon" [routerLink]="content.quickActions.ordersRoute" />
-                    <app-button variant="ghost" size="sm" [label]="content.quickActions.wishlistLabel"
-                        [icon]="content.quickActions.wishlistIcon" [routerLink]="content.quickActions.wishlistRoute" />
+        <div class="profile-layout">
+            <!-- Sidebar -->
+            <aside class="profile-sidebar">
+                <div class="account-card">
+                    <div class="account-avatar">
+                        {{ (authService.currentUser()?.firstName || content.defaultAvatarLetter)[0].toUpperCase() }}
+                    </div>
+                    <div class="account-info">
+                        <h1>
+                            {{ authService.currentUser()?.firstName }}
+                            {{ authService.currentUser()?.lastName }}
+                        </h1>
+                        <p>{{ authService.currentUser()?.email }}</p>
+                    </div>
                 </div>
 
-                <button class="profile-logout-btn" (click)="onLogout()">
-                    <i class="pi pi-sign-out"></i>
-                    <span>{{ content.quickActions.logoutLabel }}</span>
-                </button>
-            </div>
+                <nav class="sidebar-nav">
+                    @for (item of content.sidebarMenu; track item.label) {
+                        <a [routerLink]="item.route" routerLinkActive="active" class="sidebar-link">
+                            <i [class]="item.icon"></i>
+                            <span>{{ item.label }}</span>
+                        </a>
+                    }
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button class="profile-logout-btn" (click)="onLogout()">
+                        <i class="pi pi-sign-out"></i>
+                        <span>{{ content.logoutLabel }}</span>
+                    </button>
+                </div>
+            </aside>
+
+            <main class="profile-content">
+                <router-outlet></router-outlet>
+            </main>
         </div>
-
-        <div class="profile-sections-container">
-                        <div class="profile-card-section">
-                <div class="section-header">
-                    <i [class]="content.tabs.infoIcon"></i>
-                    <h2>{{ content.tabs.infoLabel }}</h2>
-                </div>
-                <div class="section-content">
-                    <app-profile-info />
-                </div>
-            </div>
-
-                        <div class="profile-card-section">
-                <div class="section-header">
-                    <i [class]="content.tabs.addressesIcon"></i>
-                    <h2>{{ content.tabs.addressesLabel }}</h2>
-                </div>
-                <div class="section-content">
-                    <app-profile-addresses />
-                </div>
-            </div>
-
-                        <div class="profile-card-section">
-                <div class="section-header">
-                    <i [class]="content.tabs.securityIcon"></i>
-                    <h2>{{ content.tabs.securityLabel }}</h2>
-                </div>
-                <div class="section-content">
-                    <app-profile-security />
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>

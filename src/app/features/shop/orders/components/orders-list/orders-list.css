@@ -31,7 +31,7 @@
 }
 
 .order-card:hover {
-  border-color: var(--p-primary-color);
+  border-color: var(--ot-blue);
   box-shadow: var(--ot-shadow-md);
   transform: translateY(-2px);
 }
@@ -86,7 +86,7 @@
 .price-amount {
   font-size: 16px;
   font-weight: 800;
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
 }
 
 .card-footer {
@@ -123,4 +123,51 @@
   font-size: 14px;
   color: var(--ot-text-muted);
   margin: 0;
+}
+
+/* Skeleton Loaders */
+.skeleton-card {
+  pointer-events: none;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-text {
+  background: var(--ot-border-color);
+  border-radius: var(--ot-radius-sm);
+  height: 14px;
+}
+
+.skeleton-id {
+  width: 120px;
+  height: 18px;
+  margin-bottom: 8px;
+}
+
+.skeleton-badge {
+  width: 80px;
+  height: 24px;
+  border-radius: var(--ot-radius-full);
+  background: var(--ot-border-color);
+}
+
+.skeleton-count {
+  width: 60px;
+}
+
+.skeleton-price {
+  width: 80px;
+  height: 18px;
+}
+
+.skeleton-button {
+  height: 40px;
+  width: 100%;
+  border-radius: var(--ot-radius-md);
+  background: var(--ot-border-color);
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
 }

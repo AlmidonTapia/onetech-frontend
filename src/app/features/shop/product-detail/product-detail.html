@@ -49,14 +49,12 @@
       } @else {
         <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-lg text-sm flex align-items-center gap-2">
           <i class="pi pi-info-circle"></i>
-          <span>Debes <a routerLink="/auth/login" class="font-bold underline cursor-pointer">iniciar sesión</a> para dejar una reseña sobre este producto.</span>
+          <span>{{ content.tabs.reviewsLogin.preLink }}<a routerLink="/auth/login" class="font-bold underline cursor-pointer">{{ content.tabs.reviewsLogin.linkText }}</a>{{ content.tabs.reviewsLogin.postLink }}</span>
         </div>
       }
     </div>
 
     <app-related-products [products]="related()" />
-    
-    <app-whatsapp-btn [productName]="prod.productName" />
     }
 
   </div>

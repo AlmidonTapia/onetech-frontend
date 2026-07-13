@@ -10,8 +10,9 @@
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
   font-weight: 500 !important;
   border: 1px solid transparent !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
 }
-
 .alert-icon { 
   font-size: 16px !important; 
   flex-shrink: 0 !important; 
@@ -59,54 +60,54 @@
   transform: rotate(90deg) !important;
 }
 
-.dark-mode .alert-close:hover {
+:host-context(.dark) .alert-close:hover {
   background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Success style */
 .alert-success {
-  background: var(--ot-success-bg) !important;
+  background: rgba(220, 252, 231, 0.85) !important;
   color: var(--ot-success) !important;
-  border-color: color-mix(in srgb, var(--ot-success) 30%, transparent) !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
 }
-.dark-mode .alert-success {
-  background: color-mix(in srgb, var(--ot-success) 15%, transparent) !important;
+:host-context(.dark) .alert-success {
+  background: rgba(22, 163, 74, 0.15) !important;
   color: var(--ot-success) !important;
-  border-color: color-mix(in srgb, var(--ot-success) 30%, transparent) !important;
+  border-color: rgba(22, 163, 74, 0.3) !important;
 }
 
 /* Error style */
 .alert-error {
-  background: var(--ot-error-bg) !important;
+  background: rgba(254, 226, 226, 0.85) !important;
   color: var(--ot-error) !important;
-  border-color: color-mix(in srgb, var(--ot-error) 30%, transparent) !important;
+  border-color: rgba(220, 38, 38, 0.3) !important;
 }
-.dark-mode .alert-error {
-  background: color-mix(in srgb, var(--ot-error) 15%, transparent) !important;
+:host-context(.dark) .alert-error {
+  background: rgba(220, 38, 38, 0.15) !important;
   color: var(--ot-error) !important;
-  border-color: color-mix(in srgb, var(--ot-error) 30%, transparent) !important;
+  border-color: rgba(220, 38, 38, 0.3) !important;
 }
 
 /* Warning style */
 .alert-warning {
-  background: var(--ot-warning-bg) !important;
+  background: rgba(254, 243, 199, 0.85) !important;
   color: var(--ot-warning) !important;
-  border-color: color-mix(in srgb, var(--ot-warning) 30%, transparent) !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
 }
-.dark-mode .alert-warning {
-  background: color-mix(in srgb, var(--ot-warning) 15%, transparent) !important;
+:host-context(.dark) .alert-warning {
+  background: rgba(217, 119, 6, 0.15) !important;
   color: var(--ot-warning) !important;
-  border-color: color-mix(in srgb, var(--ot-warning) 30%, transparent) !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
 }
 
 /* Info style */
 .alert-info {
-  background: var(--ot-info-bg) !important;
+  background: rgba(224, 242, 254, 0.85) !important;
   color: var(--ot-info) !important;
-  border-color: color-mix(in srgb, var(--ot-info) 30%, transparent) !important;
+  border-color: rgba(2, 132, 199, 0.3) !important;
 }
-.dark-mode .alert-info {
-  background: color-mix(in srgb, var(--ot-info) 15%, transparent) !important;
+:host-context(.dark) .alert-info {
+  background: rgba(2, 132, 199, 0.15) !important;
   color: var(--ot-info) !important;
-  border-color: color-mix(in srgb, var(--ot-info) 30%, transparent) !important;
+  border-color: rgba(2, 132, 199, 0.3) !important;
 }

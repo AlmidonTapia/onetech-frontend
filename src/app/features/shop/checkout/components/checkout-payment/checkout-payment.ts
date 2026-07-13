@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
-import { PaymentService } from '../../../../../core/services/payment.service';
-import { PaymentMethod } from '../../../../../core/models/payment.model';
+import { PaymentService } from '../../../../../core/domains/checkout/services/payment.service';
+import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
 
 @Component({
   selector: 'app-checkout-payment',

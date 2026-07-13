@@ -1,4 +1,4 @@
-<span class="ot-badge" [ngClass]="['badge-' + variant, pill ? 'badge-pill' : '']">
-    @if (dot) { <span class="badge-dot"></span> }
+<span class="ot-badge" [ngClass]="['badge-' + variant(), pill() ? 'badge-pill' : '']">
+    @if (dot()) { <span class="badge-dot" aria-hidden="true"></span> }
     <ng-content />
 </span>

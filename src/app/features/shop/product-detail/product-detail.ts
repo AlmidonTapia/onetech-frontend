@@ -8,10 +8,10 @@ import { ProductReviewFormComponent } from './components/product-review-form/pro
 import { RelatedProductsComponent } from './components/related-products/related-products';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
-import { WhatsappBtnComponent } from '../../../shared/components/ui/whatsapp-btn/whatsapp-btn';
-import { ProductService } from '../../../core/services/product.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { Product } from '../../../core/models/product.model';
+import { ProductService } from '../../../core/domains/catalog/services/product.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
+import { SeoService } from '../../../core/domains/shared/services/seo.service';
+import { Product } from '../../../core/domains/catalog/models/product.model';
 
 @Component({
   selector: 'app-product-detail',
@@ -24,8 +24,7 @@ import { Product } from '../../../core/models/product.model';
     ProductReviewFormComponent,
     RelatedProductsComponent,
     SpinnerComponent,
-    BreadcrumbComponent,
-    WhatsappBtnComponent
+    BreadcrumbComponent
   ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
@@ -34,6 +33,7 @@ export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   authService = inject(AuthService);
+  private seoService = inject(SeoService);
 
   product = signal<Product | null>(null);
   related = signal<Product[]>([]);
@@ -54,7 +54,12 @@ export class ProductDetailComponent implements OnInit {
       descriptionLabel: 'Descripción',
       specsLabel: 'Especificaciones',
       reviewsLabel: 'Reseñas',
-      noSpecsMsg: 'Este producto no cuenta con especificaciones técnicas detalladas.'
+      noSpecsMsg: 'Este producto no cuenta con especificaciones técnicas detalladas.',
+      reviewsLogin: {
+        preLink: 'Debes ',
+        linkText: 'iniciar sesión',
+        postLink: ' para dejar una reseña sobre este producto.'
+      }
     }
   };
 
@@ -62,6 +67,7 @@ export class ProductDetailComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id')!;
       this.loadProduct(id);
+      
     });
   }
 
@@ -71,6 +77,12 @@ export class ProductDetailComponent implements OnInit {
       next: p => {
         this.product.set(p);
         this.loading.set(false);
+
+        this.seoService.setMetaData({
+          title: p.productName,
+          description: p.description || `Compra ${p.productName} en OneTech`,
+          image: p.images?.[0]?.imageUrl
+        });
 
         this.breadcrumb.set([
           { label: this.content.catalogLabel, route: this.content.catalogRoute },
@@ -83,7 +95,7 @@ export class ProductDetailComponent implements OnInit {
           size: this.apiConfig.relatedSize,
           idCategory: p.idCategory
         }).subscribe(r => {
-          this.related.set(r.content.filter(rp => rp.idProduct !== id));
+          this.related.set(r.content.filter((rp: any) => rp.idProduct !== id));
         });
       },
       error: () => this.loading.set(false),

@@ -28,7 +28,7 @@
 
 .item-prices { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .item-unit     { font-size: 12px; color: var(--ot-text-muted); }
-.item-subtotal { font-size: 15px; font-weight: 800; color: var(--p-primary-color); }
+.item-subtotal { font-size: 15px; font-weight: 800; color: var(--ot-blue); }
 
 .detail-totals {
   background: var(--ot-bg-body);
@@ -46,14 +46,14 @@
   padding-top: 12px; border-top: 2px dashed var(--ot-border-color);
   margin-top: 4px;
 }
-.total-row--grand strong { font-size: 22px; color: var(--p-primary-color); font-weight: 800; }
+.total-row--grand strong { font-size: 22px; color: var(--ot-blue); font-weight: 800; }
 
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 480px) { .info-grid { grid-template-columns: 1fr; } }
 .info-item { display: flex; flex-direction: column; gap: 6px; background: var(--ot-bg-body); border: 1px solid var(--ot-border-color); border-radius: var(--ot-radius-lg); padding: 12px 16px; }
 .info-label { font-size: 11px; font-weight: 700; color: var(--ot-text-muted); text-transform: uppercase; letter-spacing: .08em; }
 .info-item span { font-size: 13px; color: var(--ot-text-main); font-weight: 600; }
-.info-item code { font-family: monospace; font-size: 11px; color: var(--p-primary-color); font-weight: 700; word-break: break-all; }
+.info-item code { font-family: monospace; font-size: 11px; color: var(--ot-blue); font-weight: 700; word-break: break-all; }
 
 /* Shipment Tracker */
 .shipment-loading {
@@ -128,14 +128,14 @@
 
 /* Active status */
 .tracker-step--active .step-node {
-  border-color: var(--p-primary-color);
-  background: var(--p-primary-color);
+  border-color: var(--ot-blue);
+  background: var(--ot-blue);
   color: #ffffff;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--p-primary-color) 20%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ot-blue) 20%, transparent);
 }
 
 .tracker-step--active .step-label {
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
 }
 
 /* Completed status */
@@ -191,7 +191,7 @@
 .tracking-code {
   font-family: monospace;
   font-size: 12px;
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
   font-weight: 700;
 }
 
@@ -200,7 +200,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: color-mix(in srgb, var(--p-primary-color) 4%, var(--ot-bg-body));
+  background: color-mix(in srgb, var(--ot-blue) 4%, var(--ot-bg-body));
   border: 1px solid var(--ot-border-color);
   border-radius: var(--ot-radius-xl);
   padding: 16px 20px;
@@ -211,5 +211,5 @@
 
 .shipment-empty-box i {
   font-size: 18px;
-  color: var(--p-primary-color);
+  color: var(--ot-blue);
 }

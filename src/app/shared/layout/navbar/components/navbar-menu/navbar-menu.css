@@ -39,10 +39,10 @@
 }
 
 /* Sincronización de color de texto en barra de categorías para modo oscuro */
-.dark-mode .menu-root-link {
+:host-context(.dark) .menu-root-link {
   color: var(--ot-text-main);
 }
-.dark-mode .menu-root-link:hover {
+:host-context(.dark) .menu-root-link:hover {
   background: var(--ot-bg-body);
   border-bottom-color: var(--p-primary-color);
 }
@@ -51,7 +51,7 @@
   color: #ffcc00;
   font-weight: 700;
 }
-.dark-mode .menu-link-accent {
+:host-context(.dark) .menu-link-accent {
   color: #ffcc00;
 }
 
@@ -73,18 +73,18 @@
   min-width: 220px;
   background: var(--ot-bg-surface); 
   list-style: none;
-  padding: 10px 0;
+  padding: 12px 0;
   margin: 0;
-  box-shadow: var(--ot-shadow-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--ot-border-color);
-  border-radius: 0 0 var(--ot-radius-md) var(--ot-radius-md);
+  border-radius: 0 0 var(--ot-radius-xl) var(--ot-radius-xl);
   z-index: 1010; 
   
   /* Estado inicial para animaciones */
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
-  transition: all var(--ot-transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-top: 2px solid var(--p-primary-color); 
 }
 

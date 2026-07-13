@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProductCardComponent } from '../../../../../shared/components/product-card/product-card';
-import { Product } from '../../../../../core/models/product.model';
+import { Product } from '../../../../../core/domains/catalog/models/product.model';
 
 @Component({
   selector: 'app-featured-products',

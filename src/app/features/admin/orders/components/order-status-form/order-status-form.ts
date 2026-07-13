@@ -5,7 +5,7 @@ import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { Order, OrderStatus } from '../../../../../core/models/order.model';
+import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
 
 @Component({
   selector: 'app-order-status-form',
@@ -72,6 +72,7 @@ export class OrderStatusFormComponent implements OnChanges {
       allowed.push('CANCELADO');
     } else if (current === 'ENVIADO') {
       allowed.push('COMPLETADO');
+      allowed.push('CANCELADO');
     }
     
     return this.statusOptions.filter(o => allowed.includes(o.value));

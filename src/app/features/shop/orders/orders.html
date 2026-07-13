@@ -8,17 +8,13 @@
             <p class="page-sub">{{ content.subtitle }}</p>
         </div>
 
-        @if (loading()) {
-        <app-spinner size="md" [label]="content.loadingLabel" />
-        } @else {
         <app-orders-list [orders]="orders()" [loading]="loading()" (viewDetail)="openDetail($event)" />
 
-        @if (totalRecords() > rows) {
+        @if (totalRecords() > rows && !loading()) {
         <div class="paginator-wrap">
             <p-paginator [rows]="rows" [totalRecords]="totalRecords()" [first]="page() * rows"
                 (onPageChange)="loadOrders($event)" />
         </div>
-        }
         }
 
     </div>

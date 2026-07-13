@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Address } from '../../../../../../../core/models/address.model';
+import { Address } from '../../../../../../../core/domains/shipping/models/address.model';
 
 @Component({
   selector: 'app-address-list',

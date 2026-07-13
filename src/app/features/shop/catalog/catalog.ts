@@ -7,8 +7,9 @@ import { CatalogFiltersComponent, CatalogFilterValues } from './components/catal
 import { CatalogGridComponent }  from './components/catalog-grid/catalog-grid';
 import { CatalogSortComponent }  from './components/catalog-sort/catalog-sort';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
-import { ProductService } from '../../../core/services/product.service';
-import { Product } from '../../../core/models/product.model';
+import { ProductService } from '../../../core/domains/catalog/services/product.service';
+import { Product } from '../../../core/domains/catalog/models/product.model';
+import { SeoService } from '../../../core/domains/shared/services/seo.service';
 
 @Component({
   selector: 'app-catalog',
@@ -23,6 +24,7 @@ export class CatalogComponent implements OnInit {
   private productService = inject(ProductService);
   private route          = inject(ActivatedRoute);
   private router         = inject(Router);
+  private seoService     = inject(SeoService);
 
   products     = signal<Product[]>([]);
   totalRecords = signal(0);
@@ -39,11 +41,16 @@ export class CatalogComponent implements OnInit {
   sort         = signal('relevance');
   search       = signal('');
 
-  filters = signal<CatalogFilterValues>({ brandIds: [] });
+  filters = signal<CatalogFilterValues>({});
 
   breadcrumb: BreadcrumbItem[] = [{ label: 'Catálogo' }];
 
   ngOnInit() {
+    this.seoService.setMetaData({
+      title: 'Catálogo de Productos',
+      description: 'Explora nuestra amplia variedad de productos tecnológicos. Laptops, componentes de PC, smartphones y más.'
+    });
+
     this.route.queryParams.subscribe(p => {
       this.search.set(p['search'] ?? '');
       this.filters.update(f => ({ ...f, categoryId: p['category'] ?? undefined }));
@@ -58,7 +65,7 @@ export class CatalogComponent implements OnInit {
       page: this.page(), size: this.rows,
       search: this.search() || undefined,
       idCategory: f.categoryId,
-      idBrand: f.brandIds && f.brandIds.length > 0 ? f.brandIds[0] : undefined,
+      idBrand: f.brandId,
       minPrice: f.minPrice,
       maxPrice: f.maxPrice,
       sort: this.sort()

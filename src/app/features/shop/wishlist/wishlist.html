@@ -44,10 +44,13 @@
             @for (product of products(); track product.idProduct) {
             <div class="wishlist-item">
                 <app-product-card [product]="product" />
-
-                <button class="remove-btn" (click)="removeProduct(product)" [title]="content.actions.removeTitle">
-                    <i class="pi pi-times"></i> {{ content.actions.removeText }}
-                </button>
+                <div class="wishlist-item-actions">
+                    <app-button variant="outline" [label]="content.actions.moveToCartText" icon="pi-cart-plus"
+                        [title]="content.actions.moveToCartTitle" (clicked)="moveToCart(product)" [disabled]="product.stockQuantity <= 0" />
+                    <button class="remove-btn" (click)="removeProduct(product)" [title]="content.actions.removeTitle">
+                        <i class="pi pi-times"></i>
+                    </button>
+                </div>
             </div>
             }
         </div>

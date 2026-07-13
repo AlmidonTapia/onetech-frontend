@@ -32,7 +32,7 @@
 .faq-item {
   background: var(--ot-bg-surface);
   border: 1px solid var(--ot-border-color);
-  border-radius: var(--ot-radius-lg);
+  border-radius: var(--ot-radius-2xl, 24px);
   overflow: hidden;
   transition: border-color var(--ot-transition), box-shadow var(--ot-transition);
 }

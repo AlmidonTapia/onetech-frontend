@@ -22,7 +22,7 @@
   flex: 1;
   padding: 32px 40px;
   background: var(--ot-bg-body);
-  transition: var(--ot-transition);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: fadeIn .2s ease both;
 }
 
@@ -50,16 +50,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--ot-radius-md);
+  border-radius: var(--ot-radius-full, 999px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .mobile-toggle-btn:hover {
   background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
 }
 
 .mobile-logo {

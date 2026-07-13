@@ -1,12 +1,12 @@
 import { Component, Input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { ProductImage } from '../../../../../core/models/product.model';
+import { ProductImage } from '../../../../../core/domains/catalog/models/product.model';
 
 @Component({
   selector: 'app-product-images',
   standalone: true,
-  imports: [CommonModule, DialogModule],
+  imports: [CommonModule, DialogModule, NgOptimizedImage],
   templateUrl: './product-images.html',
   styleUrl: './product-images.css'
 })

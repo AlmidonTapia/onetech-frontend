@@ -1,17 +1,17 @@
 import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DatePipe } from '@angular/common';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { Product, CreateProductRequest } from '../../../../../core/models/product.model';
-import { Category } from '../../../../../core/models/category.model';
-import { Brand } from '../../../../../core/models/brand.model';
-import { CategoryService } from '../../../../../core/services/category.service';
-import { BrandService } from '../../../../../core/services/brand.service';
+import { Product, CreateProductRequest, UpdateProductRequest } from '../../../../../core/domains/catalog/models/product.model';
+import { Category } from '../../../../../core/domains/catalog/models/category.model';
+import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
+import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
+import { BrandService } from '../../../../../core/domains/catalog/services/brand.service';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
@@ -33,7 +33,7 @@ export class ProductFormComponent implements OnChanges, OnInit {
   @Input() product: Product | null = null;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() save = new EventEmitter<CreateProductRequest>();
+  @Output() save = new EventEmitter<CreateProductRequest | UpdateProductRequest>();
   @Output() cancel = new EventEmitter<void>();
   @Output() manageImages = new EventEmitter<Product>();
 
@@ -194,10 +194,20 @@ export class ProductFormComponent implements OnChanges, OnInit {
       }
     });
 
-    const requestData: CreateProductRequest = {
-      ...(this.form.value as unknown as CreateProductRequest),
-      specifications: specsMap
-    };
+    const requestData = this.product 
+      ? ({ ...(this.form.value as unknown as UpdateProductRequest), specifications: specsMap } as UpdateProductRequest)
+      : ({ 
+          idCategory: this.form.value.idCategory,
+          idBrand: this.form.value.idBrand,
+          productName: this.form.value.productName,
+          sku: this.form.value.sku,
+          description: this.form.value.description,
+          price: this.form.value.price,
+          originalPrice: this.form.value.originalPrice,
+          badge: this.form.value.badge,
+          stockQuantity: this.form.value.stockQuantity,
+          specifications: specsMap 
+        } as CreateProductRequest);
 
     this.save.emit(requestData);
   }

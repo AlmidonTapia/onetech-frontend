@@ -5,9 +5,9 @@ import { SelectModule } from 'primeng/select';
 import { PasswordModule } from 'primeng/password';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
-import { UserService } from '../../../core/services/user.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { User, UpdateProfileRequest } from '../../../core/models/user.model';
+import { UserService } from '../../../core/domains/identity/services/user.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
+import { User, UpdateProfileRequest } from '../../../core/domains/identity/models/user.model';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 

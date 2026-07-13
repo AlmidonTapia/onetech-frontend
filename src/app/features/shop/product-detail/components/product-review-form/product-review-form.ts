@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReviewService } from '../../../../../core/services/review.service';
+import { ReviewService } from '../../../../../core/domains/catalog/services/review.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { RatingModule } from 'primeng/rating';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
+import { handleFormError } from '../../../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-product-review-form',
@@ -79,7 +80,8 @@ export class ProductReviewFormComponent {
       },
       error: (err) => {
         this.loading.set(false);
-        this.alertService.error('Error', err.error?.message || 'No se pudo publicar la reseña.');
+        const backendMsg = handleFormError(err, this.form);
+        this.alertService.error('Error', backendMsg || 'No se pudo publicar la reseña.');
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -6,9 +6,10 @@ import { NgClass } from '@angular/common';
   standalone: true,
   imports: [NgClass],
   templateUrl: './card.html',
-  styleUrl: './card.css'
+  styleUrl: './card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent {
-  @Input() hoverable = false;
-  @Input() padding: 'none' | 'sm' | 'md' | 'lg' = 'md';
+  hoverable = input<boolean>(false);
+  padding = input<'none' | 'sm' | 'md' | 'lg'>('md');
 }

@@ -2,19 +2,13 @@
 
   <div class="info-tags">
     @if (product.badge === 'NEW') { <app-badge variant="blue">{{ content.newBadge }}</app-badge> }
-    @else if (product.badge === 'BESTSELLER') { <app-badge variant="blue">Más vendido</app-badge> }
-    @else if (product.badge === 'OFFER') { <app-badge variant="blue">Oferta</app-badge> }
+    @else if (product.badge === 'BESTSELLER') { <app-badge variant="blue">{{ content.badges.bestseller }}</app-badge> }
+    @else if (product.badge === 'OFFER') { <app-badge variant="blue">{{ content.badges.offer }}</app-badge> }
     <app-badge variant="blue">{{ product.categoryName }}</app-badge>
     <app-badge variant="gray">{{ product.brandName }}</app-badge>
   </div>
 
   <h1 class="info-name">{{ product.productName }}</h1>
-
-  @if (product.averageRating) {
-  <div class="info-rating">
-    <app-star-rating [value]="product.averageRating" [count]="product.totalReviews" [readonly]="true" />
-  </div>
-  }
 
   <div class="info-sku">{{ content.skuLabel }} <code>{{ product.sku }}</code></div>
 
@@ -33,13 +27,13 @@
     @if (product.status === 'INACTIVO') {
     <span class="stock-out" style="color: var(--ot-gray-500, #64748b);">
       <i class="pi pi-ban"></i>
-      No disponible
+      {{ content.stock.unavailableLabel }}
     </span>
     } @else if (product.stockQuantity > 0 && product.status !== 'AGOTADO') {
     @if (product.stockQuantity <= 5) {
       <span class="stock-urgency">
         <i class="pi pi-exclamation-circle"></i>
-        ¡Solo {{ product.stockQuantity }} disponibles!
+        {{ content.stock.onlyLeftPrefix }}{{ product.stockQuantity }}{{ content.stock.onlyLeftSuffix }}
       </span>
     } @else {
       <span class="stock-ok">
@@ -69,6 +63,13 @@
       [icon]="content.actions.addToCartIcon" [loading]="adding()" (clicked)="addToCart()" />
   </div>
   }
+
+  <div class="info-share">
+    <span>Compartir:</span>
+    <button class="share-btn share-wa" (click)="share('whatsapp')" title="Compartir en WhatsApp"><i class="pi pi-whatsapp"></i></button>
+    <button class="share-btn share-fb" (click)="share('facebook')" title="Compartir en Facebook"><i class="pi pi-facebook"></i></button>
+    <button class="share-btn share-link" (click)="share('copy')" title="Copiar enlace"><i class="pi pi-link"></i></button>
+  </div>
 
   <div class="info-shipping">
     @for (perk of content.shippingPerks; track perk.text) {

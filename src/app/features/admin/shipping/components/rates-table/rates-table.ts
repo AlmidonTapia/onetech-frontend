@@ -7,10 +7,10 @@ import { DialogModule } from 'primeng/dialog';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
-import { ShipmentService } from '../../../../../core/services/shipment.service';
+import { ShipmentService } from '../../../../../core/domains/shipping/services/shipment.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
-import { ShippingRate, ShipmentMethod, LocationResponse } from '../../../../../core/models/shipment.model';
+import { ShippingRate, ShipmentMethod, LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { forkJoin } from 'rxjs';
@@ -84,7 +84,8 @@ export class RatesTableComponent implements OnInit {
     columns: {
       agency: 'Agencia / Carrier',
       destination: 'Destino (Ubigeo)',
-      cost: 'Costo',
+      address: 'Dirección',
+      cost: 'Costo Adicional',
       status: 'Estado',
       actions: 'Acciones'
     },
@@ -98,6 +99,17 @@ export class RatesTableComponent implements OnInit {
       agencyPlaceholder: 'Todas las Agencias',
       deptPlaceholder: 'Todos los Deptos.',
       provPlaceholder: 'Todas las Provincias'
+    },
+    form: {
+      agencyLabel: 'Agencia de Envío *',
+      departmentLabel: 'Departamento (Opcional)',
+      provinceLabel: 'Provincia (Opcional)',
+      districtLabel: 'Distrito (Opcional)',
+      addressLabel: 'Dirección del Local (Opcional)',
+      costLabel: 'Costo Adicional *',
+      availableLabel: 'Disponible',
+      agencyPlaceholder: 'Seleccione una agencia',
+      addressPlaceholder: 'Ej: Av. Principal 123'
     }
   };
 
@@ -214,8 +226,8 @@ export class RatesTableComponent implements OnInit {
         this.rates.set(res.content || []);
         this.loading.set(false);
       },
-      error: () => {
-        this.alertService.error('Error al cargar tarifas');
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al cargar tarifas');
         this.loading.set(false);
       }
     });
@@ -316,7 +328,10 @@ export class RatesTableComponent implements OnInit {
             this.alertService.success('Tarifa eliminada');
             this.loadRates();
           },
-          error: () => this.alertService.error('Error al eliminar')
+          error: (err: any) => {
+            const errMsg = err?.error?.message || 'Error al eliminar';
+            this.alertService.error(errMsg);
+          }
         });
       }
     });
@@ -348,8 +363,9 @@ export class RatesTableComponent implements OnInit {
           this.loadRates();
           this.submitting.set(false);
         },
-        error: () => {
-          this.alertService.error('Error al actualizar la tarifa');
+        error: (err: any) => {
+          const errMsg = err?.error?.message || 'Error al actualizar la tarifa';
+          this.alertService.error(errMsg);
           this.submitting.set(false);
         }
       });
@@ -371,8 +387,9 @@ export class RatesTableComponent implements OnInit {
           this.loadRates();
           this.submitting.set(false);
         },
-        error: () => {
-          this.alertService.error('Hubo un error al crear algunas tarifas');
+        error: (err: any) => {
+          const errMsg = err?.error?.message || 'Hubo un error al crear algunas tarifas';
+          this.alertService.error(errMsg);
           this.submitting.set(false);
           this.loadRates();
         }

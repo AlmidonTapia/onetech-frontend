@@ -4,8 +4,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { PaymentService } from '../../../core/services/payment.service';
-import { PaymentMethod } from '../../../core/models/payment.model';
+import { PaymentService } from '../../../core/domains/checkout/services/payment.service';
+import { PaymentMethod } from '../../../core/domains/checkout/models/payment.model';
 import { PaymentMethodsTableComponent } from './components/payment-methods-table/payment-methods-table';
 import { PaymentMethodFormComponent } from './components/payment-method-form/payment-method-form';
 
@@ -107,8 +107,9 @@ export class PaymentMethodsComponent implements OnInit {
         this.saving.set(false);
         this.loadMethods();
       },
-      error: () => {
-        this.alertService.error('Error al guardar método');
+      error: (err: any) => {
+        const errMsg = err?.error?.message || 'Error al guardar método';
+        this.alertService.error(errMsg);
         this.saving.set(false);
       }
     });
@@ -126,8 +127,9 @@ export class PaymentMethodsComponent implements OnInit {
             this.alertService.success('Método de pago eliminado exitosamente');
             this.loadMethods();
           },
-          error: () => {
-            this.alertService.error('Error al eliminar el método de pago');
+          error: (err: any) => {
+            const errMsg = err?.error?.message || 'Error al eliminar el método de pago';
+            this.alertService.error(errMsg);
           }
         });
       }

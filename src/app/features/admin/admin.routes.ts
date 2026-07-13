@@ -77,6 +77,11 @@ export const ADMIN_ROUTES: AdminRoutes = [
       import('./inbox/inbox').then(m => m.InboxComponent)
   },
   {
+    path: 'invoices',
+    loadComponent: () =>
+      import('./invoices/invoices').then(m => m.InvoicesComponent)
+  },
+  {
     path: 'profile',
     loadComponent: () =>
       import('./profile/admin-profile').then(m => m.AdminProfileComponent)

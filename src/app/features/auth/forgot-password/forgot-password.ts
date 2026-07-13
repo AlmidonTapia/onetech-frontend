@@ -1,11 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
+import { handleFormError } from '../../../shared/utils/form-error.util';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
   imports: [
     ReactiveFormsModule, RouterLink,
     InputTextModule,
-    ButtonComponent, AlertComponent,
+    ButtonComponent, AlertComponent, AuthLayoutComponent
   ],
   templateUrl: './forgot-password.html',
   styleUrl: '../login/login.css'
@@ -28,6 +30,9 @@ export class ForgotPasswordComponent {
   successMsg = signal('');
 
   brandData = {
+    logoText1: 'One',
+    logoText2: 'Tech',
+    logoRoute: '/',
     title: 'Recupera tu acceso',
     description: 'No te preocupes, a todos nos pasa. Ingresa tu correo y te ayudaremos a restablecer tu contraseña para que sigas disfrutando de OneTech.'
   };
@@ -75,9 +80,12 @@ export class ForgotPasswordComponent {
         this.successMsg.set('Hemos enviado un enlace de recuperación a tu correo electrónico.');
         this.alertService.success('Correo enviado', 'Revisa tu bandeja de entrada o spam.');
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.errorMsg.set('No pudimos procesar tu solicitud. Verifica si el correo es correcto.');
+        const errorMessage = handleFormError(err, this.form);
+        if (errorMessage) {
+          this.errorMsg.set(errorMessage);
+        }
       }
     });
   }

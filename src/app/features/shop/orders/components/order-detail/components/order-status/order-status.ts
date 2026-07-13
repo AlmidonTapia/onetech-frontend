@@ -1,7 +1,7 @@
 import { Component, input, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Order, OrderStatus } from '../../../../../../../core/models/order.model';
-import { Shipment, ShipmentStatus } from '../../../../../../../core/models/shipment.model';
+import { Order, OrderStatus } from '../../../../../../../core/domains/checkout/models/order.model';
+import { Shipment, ShipmentStatus } from '../../../../../../../core/domains/shipping/models/shipment.model';
 import { BadgeComponent, BadgeVariant } from '../../../../../../../shared/components/ui/badge/badge';
 
 @Component({

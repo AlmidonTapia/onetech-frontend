@@ -1,0 +1,13 @@
+<div class="empty-state animate-fade-scale">
+  <div class="empty-state-icon">
+    <i [class]="'pi ' + icon"></i>
+  </div>
+  <h3 class="empty-state-title">{{ title }}</h3>
+  <p class="empty-state-description">{{ description }}</p>
+  
+  @if (actionLabel) {
+    <div class="empty-state-action">
+      <app-button variant="primary" [label]="actionLabel" [icon]="actionIcon || ''" (clicked)="action.emit()"></app-button>
+    </div>
+  }
+</div>

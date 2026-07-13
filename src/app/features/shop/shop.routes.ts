@@ -1,5 +1,5 @@
 import { Routes as ShopRoutes } from '@angular/router';
-import { authGuard } from '../../core/auth/auth.guard';
+import { authGuard } from '../../core/domains/identity/guards/auth.guard';
 
 export const SHOP_ROUTES: ShopRoutes = [
   {
@@ -29,20 +29,26 @@ export const SHOP_ROUTES: ShopRoutes = [
       import('./checkout/checkout').then(m => m.CheckoutComponent)
   },
   {
-    path: 'orders',
+    path: 'checkout/success/:id',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./orders/orders').then(m => m.OrdersComponent)
+      import('./checkout/success/checkout-success').then(m => m.CheckoutSuccessComponent)
   },
   {
     path: 'profile',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./profile/profile').then(m => m.ProfileComponent)
+      import('./profile/profile').then(m => m.ProfileComponent),
+    children: [
+      { path: '', redirectTo: 'info', pathMatch: 'full' },
+      { path: 'info', loadComponent: () => import('./profile/components/profile-info/profile-info').then(m => m.ProfileInfoComponent) },
+      { path: 'security', loadComponent: () => import('./profile/components/profile-security/profile-security').then(m => m.ProfileSecurityComponent) },
+      { path: 'addresses', loadComponent: () => import('./profile/components/profile-addresses/profile-addresses').then(m => m.ProfileAddressesComponent) },
+      { path: 'orders', loadComponent: () => import('./profile/components/profile-orders/profile-orders').then(m => m.ProfileOrdersComponent) }
+    ]
   },
   {
     path: 'wishlist',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./wishlist/wishlist').then(m => m.WishlistComponent)
   },
@@ -60,6 +66,11 @@ export const SHOP_ROUTES: ShopRoutes = [
     path: 'terminos',
     loadComponent: () =>
       import('./pages/terms/terms').then(m => m.TermsComponent)
+  },
+  {
+    path: 'privacidad',
+    loadComponent: () =>
+      import('./pages/privacy/privacy').then(m => m.PrivacyComponent)
   },
   {
     path: 'contacto',

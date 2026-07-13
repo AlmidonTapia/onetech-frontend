@@ -5,7 +5,7 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
-import { ContactMessage } from '../../../../../core/models/contact.model';
+import { ContactMessage } from '../../../../../core/domains/contact/models/contact.model';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 

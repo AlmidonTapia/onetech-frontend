@@ -3,7 +3,7 @@ import { DatePipe } from '@angular/common';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { BadgeComponent, BadgeVariant } from '../../../../../shared/components/ui/badge/badge';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { Order, OrderStatus } from '../../../../../core/models/order.model';
+import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
 
 @Component({
   selector: 'app-orders-list',
@@ -37,4 +37,6 @@ export class OrdersListComponent {
     'CANCELADO': { label: 'Cancelado', variant: 'error' },
     'EXPIRADO': { label: 'Expirado', variant: 'gray' }
   };
+
+  skeletonItems = Array(3).fill(0);
 }

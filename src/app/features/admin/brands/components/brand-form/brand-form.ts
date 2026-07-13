@@ -2,14 +2,16 @@ import { Component, Input, Output, EventEmitter, OnChanges, inject, signal } fro
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
-import { Brand, CreateBrandRequest } from '../../../../../core/models/brand.model';
+import { Brand, CreateBrandRequest, UpdateBrandRequest } from '../../../../../core/domains/catalog/models/brand.model';
+import { BrandStatus } from '../../../../../core/domains/catalog/enums/brand-status.enum';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-brand-form',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, InputTextModule, ButtonComponent],
+  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent],
   templateUrl: './brand-form.html',
   styleUrl: './brand-form.css'
 })
@@ -20,7 +22,7 @@ export class BrandFormComponent implements OnChanges {
   @Input() brand: Brand | null = null;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() save = new EventEmitter<{ request: CreateBrandRequest, file?: File }>();
+  @Output() save = new EventEmitter<{ request: CreateBrandRequest | UpdateBrandRequest, file?: File }>();
   @Output() cancel = new EventEmitter<void>();
 
   selectedFile = signal<File | null>(null);
@@ -43,12 +45,18 @@ export class BrandFormComponent implements OnChanges {
     }
   };
 
+  statusOptions = [
+    { label: 'Habilitado', value: BrandStatus.HABILITADO },
+    { label: 'Deshabilitado', value: BrandStatus.DESHABILITADO }
+  ];
+
   formConfig: any[] = [
     [{ name: 'brandName', label: 'Nombre de la marca *', type: 'text', placeholder: 'Ej: HP, Lenovo, Samsung' }]
   ];
 
   form = this.fb.group({
-    brandName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(2)]]
+    brandName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(2)]],
+    status: [BrandStatus.HABILITADO]
   });
 
   get title() {
@@ -61,7 +69,7 @@ export class BrandFormComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.brand ? this.form.patchValue({ brandName: this.brand.brandName }) : this.form.reset();
+    this.brand ? this.form.patchValue({ brandName: this.brand.brandName, status: this.brand.status as BrandStatus }) : this.form.reset({ status: BrandStatus.HABILITADO });
     this.selectedFile.set(null);
     this.previewUrl.set(this.brand?.imageUrl || null);
   }
@@ -81,8 +89,12 @@ export class BrandFormComponent implements OnChanges {
       this.form.markAllAsTouched();
       return;
     }
+    const req = this.brand 
+      ? (this.form.value as UpdateBrandRequest) 
+      : ({ brandName: this.form.value.brandName } as CreateBrandRequest);
+      
     this.save.emit({
-      request: this.form.value as CreateBrandRequest,
+      request: req,
       file: this.selectedFile() ?? undefined
     });
   }

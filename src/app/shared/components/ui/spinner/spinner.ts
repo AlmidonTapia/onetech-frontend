@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, computed } from '@angular/core';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -6,12 +6,14 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   standalone: true,
   imports: [ProgressSpinnerModule],
   templateUrl: './spinner.html',
-  styleUrl: './spinner.css'
+  styleUrl: './spinner.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpinnerComponent {
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
-  @Input() fullPage = false;
-  @Input() label = '';
+  size = input<'sm' | 'md' | 'lg'>('md');
+  fullPage = input<boolean>(false);
+  label = input<string>('');
 
   readonly sizeMap = { sm: '24px', md: '40px', lg: '64px' };
+  spinnerSize = computed(() => this.sizeMap[this.size()]);
 }
