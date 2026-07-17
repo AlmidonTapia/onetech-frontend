@@ -12,6 +12,7 @@ import { Category } from '../../../../../core/domains/catalog/models/category.mo
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
 import { BrandService } from '../../../../../core/domains/catalog/services/brand.service';
+import { TranslationService } from '../../../../../core/services/translation.service';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
@@ -28,6 +29,8 @@ export class ProductFormComponent implements OnChanges, OnInit {
   private fb = inject(FormBuilder);
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @Input() visible = false;
   @Input() product: Product | null = null;
@@ -40,72 +43,80 @@ export class ProductFormComponent implements OnChanges, OnInit {
   categories = signal<Category[]>([]);
   brands = signal<Brand[]>([]);
 
-  content = {
-    dialogWidth: '600px',
-    titleNew: 'Nuevo Producto',
-    titleEdit: 'Editar Producto',
-    errorRequired: 'Campo requerido',
-    metaLabel: 'Última modificación:',
-    styles: {
-      selectWidth: '100%',
-      appendTo: 'body'
-    },
-    actions: {
-      cancelLabel: 'Cancelar',
-      saveLabel: 'Guardar',
-      saveIcon: 'pi-check'
-    },
-    specs: {
-      title: 'Especificaciones Técnicas',
-      addLabel: 'Añadir Propiedad',
-      addIcon: 'pi-plus',
-      keyPlaceholder: 'Propiedad (Ej: RAM, Procesador)',
-      valuePlaceholder: 'Valor (Ej: 16GB, Intel i7)',
-      deleteTitle: 'Eliminar propiedad',
-      emptyMessage: 'No hay especificaciones añadidas para este producto.'
-    },
-    imagesInfo: {
-      newProductMsg: 'Podrá subir imágenes una vez que guarde el producto por primera vez.',
-      manageBtnLabel: 'Gestionar Imágenes',
-      manageBtnIcon: 'pi pi-images'
-    }
-  } as const;
+  get content() {
+    return {
+      dialogWidth: '600px',
+      titleNew: this.t().adminProducts.form.titleNew,
+      titleEdit: this.t().adminProducts.form.titleEdit,
+      errorRequired: this.t().adminProducts.form.errorRequired,
+      metaLabel: this.t().adminProducts.form.metaLabel,
+      styles: {
+        selectWidth: '100%',
+        appendTo: 'body'
+      },
+      actions: {
+        cancelLabel: this.t().adminProducts.form.cancelLabel,
+        saveLabel: this.t().adminProducts.form.saveLabel,
+        saveIcon: 'pi-check'
+      },
+      specs: {
+        title: this.t().adminProducts.form.specs.title,
+        addLabel: this.t().adminProducts.form.specs.addLabel,
+        addIcon: 'pi-plus',
+        keyPlaceholder: this.t().adminProducts.form.specs.keyPlaceholder,
+        valuePlaceholder: this.t().adminProducts.form.specs.valuePlaceholder,
+        deleteTitle: this.t().adminProducts.form.specs.deleteTitle,
+        emptyMessage: this.t().adminProducts.form.specs.emptyMessage
+      },
+      imagesInfo: {
+        newProductMsg: this.t().adminProducts.form.imagesInfo.newProductMsg,
+        manageBtnLabel: this.t().adminProducts.form.imagesInfo.manageBtnLabel,
+        manageBtnIcon: 'pi pi-images'
+      }
+    };
+  }
 
-  statuses = [
-    { label: 'Activo', value: 'ACTIVO' },
-    { label: 'Inactivo', value: 'INACTIVO' },
-    { label: 'Agotado', value: 'AGOTADO' }
-  ];
+  get statuses() {
+    return [
+      { label: this.t().adminProducts.table.status.active, value: 'ACTIVO' },
+      { label: this.t().adminProducts.table.status.inactive, value: 'INACTIVO' },
+      { label: this.t().adminProducts.table.status.outOfStock, value: 'AGOTADO' }
+    ];
+  }
 
-  badges = [
-    { label: 'Ninguno', value: null },
-    { label: 'Nuevo', value: 'NEW' },
-    { label: 'Más vendido', value: 'BESTSELLER' },
-    { label: 'Oferta', value: 'OFFER' }
-  ];
+  get badges() {
+    return [
+      { label: this.t().adminProducts.form.badges.none, value: null },
+      { label: this.t().adminProducts.form.badges.new, value: 'NEW' },
+      { label: this.t().adminProducts.form.badges.bestseller, value: 'BESTSELLER' },
+      { label: this.t().adminProducts.form.badges.offer, value: 'OFFER' }
+    ];
+  }
 
-  formConfig: any[] = [
-    [
-      { name: 'productName', label: 'Nombre del producto *', type: 'text', placeholder: 'Ej: Laptop Asus ROG' },
-      { name: 'sku', label: 'SKU *', type: 'text', placeholder: 'Ej: LAP-ASUS-01' }
-    ],
-    [
-      { name: 'idCategory', label: 'Categoría *', type: 'select', optionsKey: 'categories', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Seleccionar categoría' },
-      { name: 'idBrand', label: 'Marca *', type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'idBrand', placeholder: 'Seleccionar marca' }
-    ],
-    [
-      { name: 'price', label: 'Precio (S/.) *', type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
-      { name: 'originalPrice', label: 'Precio Original (Opcional)', type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
-    ],
-    [
-      { name: 'stockQuantity', label: 'Stock Inicial *', type: 'number', mode: 'decimal', min: 0 },
-      { name: 'status', label: 'Estado *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccionar estado' },
-      { name: 'badge', label: 'Insignia', type: 'select', optionsKey: 'badges', optionLabel: 'label', optionValue: 'value', placeholder: 'Sin insignia' }
-    ],
-    [
-      { name: 'description', label: 'Descripción del producto *', type: 'textarea', placeholder: 'Ingresa las especificaciones y características principales...' }
-    ]
-  ];
+  get formConfig(): any[] {
+    return [
+      [
+        { name: 'productName', label: this.t().adminProducts.form.fields.name, type: 'text', placeholder: this.t().adminProducts.form.fields.namePlaceholder },
+        { name: 'sku', label: this.t().adminProducts.form.fields.sku, type: 'text', placeholder: this.t().adminProducts.form.fields.skuPlaceholder }
+      ],
+      [
+        { name: 'idCategory', label: this.t().adminProducts.form.fields.category, type: 'select', optionsKey: 'categories', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: this.t().adminProducts.form.fields.categoryPlaceholder },
+        { name: 'idBrand', label: this.t().adminProducts.form.fields.brand, type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'idBrand', placeholder: this.t().adminProducts.form.fields.brandPlaceholder }
+      ],
+      [
+        { name: 'price', label: this.t().adminProducts.form.fields.price, type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
+        { name: 'originalPrice', label: this.t().adminProducts.form.fields.originalPrice, type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
+      ],
+      [
+        { name: 'stockQuantity', label: this.t().adminProducts.form.fields.stock, type: 'number', mode: 'decimal', min: 0 },
+        { name: 'status', label: this.t().adminProducts.form.fields.status, type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: this.t().adminProducts.form.fields.statusPlaceholder },
+        { name: 'badge', label: this.t().adminProducts.form.fields.badge, type: 'select', optionsKey: 'badges', optionLabel: 'label', optionValue: 'value', placeholder: this.t().adminProducts.form.fields.badgePlaceholder }
+      ],
+      [
+        { name: 'description', label: this.t().adminProducts.form.fields.description, type: 'textarea', placeholder: this.t().adminProducts.form.fields.descriptionPlaceholder }
+      ]
+    ];
+  }
 
   form = this.fb.group({
     productName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(3)]],

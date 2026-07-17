@@ -1,0 +1,53 @@
+<div class="consignee-section">
+  <h3>{{ t().checkout.consignee.title }}</h3>
+  <p class="section-subtitle">{{ t().checkout.consignee.subtitle }}</p>
+
+  <div class="toggle-container">
+    <div class="toggle-wrapper">
+      <p-toggleswitch [ngModel]="isSelf()" (ngModelChange)="onToggleChange($event)"></p-toggleswitch>
+    </div>
+    <label class="toggle-label">{{ t().checkout.consignee.selfLabel }}</label>
+  </div>
+
+  <div class="shipping-disclaimer">
+    <i class="pi pi-info-circle"></i>
+    <div class="disclaimer-text">
+      <strong>{{ t().checkout.consignee.disclaimerTitle }}</strong>
+      <p>{{ t().checkout.consignee.disclaimerText }}</p>
+    </div>
+  </div>
+
+  <div class="others-container">
+    <h4>{{ isSelf() ? t().checkout.consignee.selfFillLabel : t().checkout.consignee.othersLabel }}</h4>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>{{ t().checkout.consignee.fullNameLabel }}</label>
+        <input pInputText type="text" [ngModel]="fullName()" (ngModelChange)="fullName.set($event); emitChange()" placeholder="Ej. Juan Pérez">
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>{{ t().checkout.consignee.docNumberLabel }}</label>
+          <input pInputText type="text" [ngModel]="docNumber()" (ngModelChange)="docNumber.set($event); emitChange()" placeholder="Ej. 76543210">
+        </div>
+        <div class="form-field">
+          <label>{{ t().checkout.consignee.phoneLabel }}</label>
+          <input pInputText type="text" [ngModel]="phone()" (ngModelChange)="phone.set($event); emitChange()" placeholder="Ej. 987654321">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="policies-section">
+    <div class="policies-info">
+      <i class="pi pi-shield"></i>
+      <p>
+        {{ t().checkout.consignee.policiesInfoPre }}
+        <a routerLink="/policies/shipping" target="_blank">{{ t().checkout.consignee.policiesInfoLink }}</a>{{ t().checkout.consignee.policiesInfoPost }}
+      </p>
+    </div>
+    <div class="policies-checkbox">
+      <p-checkbox [binary]="true" [ngModel]="acceptedPolicies()" (ngModelChange)="acceptedPolicies.set($event); emitChange()" inputId="acceptPolicies"></p-checkbox>
+      <label for="acceptPolicies">{{ t().checkout.consignee.policiesAccept }}</label>
+    </div>
+  </div>
+</div>

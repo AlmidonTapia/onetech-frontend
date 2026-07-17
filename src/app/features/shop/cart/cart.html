@@ -3,22 +3,22 @@
         <app-breadcrumb [items]="breadcrumb" class="cart-breadcrumb" />
 
     <h1 class="cart-title">
-      {{ content.title }}
+      {{ t().cart.title }}
       @if (cartStore.itemCount() > 0) {
       <span class="cart-count">({{ cartStore.itemCount() }})</span>
       }
     </h1>
 
     @if (loading) {
-    <app-spinner size="md" [label]="content.loadingLabel" />
+    <app-spinner size="md" [label]="t().cart.loadingLabel" />
     }
 
     @else if (cartStore.itemCount() === 0) {
     <div class="cart-empty">
       <i class="pi pi-shopping-cart"></i>
-      <h3>{{ content.emptyTitle }}</h3>
-      <p>{{ content.emptyDescription }}</p>
-      <app-button variant="primary" [label]="content.exploreBtnLabel" [routerLink]="routes.catalog" />
+      <h3>{{ t().cart.emptyTitle }}</h3>
+      <p>{{ t().cart.emptyDescription }}</p>
+      <app-button variant="primary" [label]="t().cart.exploreBtnLabel" [routerLink]="routes.catalog" />
     </div>
     }
 
@@ -33,6 +33,7 @@
 
       <div class="cart-aside">
         <app-cart-summary [totalAmount]="cartStore.totalAmount()" [itemCount]="cartStore.itemCount()"
+          [paymentMethods]="paymentMethods"
           (checkout)="goCheckout()" />
       </div>
     </div>

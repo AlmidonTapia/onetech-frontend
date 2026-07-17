@@ -6,6 +6,7 @@ import { TagModule } from 'primeng/tag';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-order-status-form',
@@ -24,36 +25,43 @@ export class OrderStatusFormComponent implements OnChanges {
   @Output() save = new EventEmitter<OrderStatus>();
   @Output() cancel = new EventEmitter<void>();
 
-  content = {
-    dialogWidth: '440px',
-    headerTitle: 'Cambiar estado de orden',
-    idPrefix: '#',
-    labels: {
-      order: 'Orden:',
-      client: 'Cliente:',
-      total: 'Total:',
-      newStatus: 'Nuevo estado *'
-    },
-    placeholderSelect: 'Seleccionar estado',
-    styles: {
-      selectWidth: '100%'
-    },
-    actions: {
-      cancelLabel: 'Cancelar',
-      saveLabel: 'Actualizar estado',
-      saveIcon: 'pi-check'
-    }
-  } as const;
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
+  get content() {
+    return {
+      dialogWidth: '440px',
+      headerTitle: this.t().adminOrders.form.headerTitle,
+      idPrefix: '#',
+      labels: {
+        order: this.t().adminOrders.form.labels.order,
+        client: this.t().adminOrders.form.labels.client,
+        total: this.t().adminOrders.form.labels.total,
+        newStatus: this.t().adminOrders.form.labels.newStatus
+      },
+      placeholderSelect: this.t().adminOrders.form.placeholderSelect,
+      styles: {
+        selectWidth: '100%'
+      },
+      actions: {
+        cancelLabel: this.t().adminOrders.form.actions.cancelLabel,
+        saveLabel: this.t().adminOrders.form.actions.saveLabel,
+        saveIcon: 'pi-check'
+      }
+    };
+  }
 
   form = this.fb.group({ status: ['' as OrderStatus, Validators.required] });
 
-  readonly statusOptions: { label: string; value: OrderStatus }[] = [
-    { label: 'Pendiente', value: 'PENDIENTE' },
-    { label: 'Pagado', value: 'PAGADO' },
-    { label: 'Enviado', value: 'ENVIADO' },
-    { label: 'Completado', value: 'COMPLETADO' },
-    { label: 'Cancelado', value: 'CANCELADO' },
-  ];
+  get statusOptions(): { label: string; value: OrderStatus }[] {
+    return [
+      { label: this.t().orders.status.PENDIENTE, value: 'PENDIENTE' },
+      { label: this.t().orders.status.PAGADO, value: 'PAGADO' },
+      { label: this.t().orders.status.ENVIADO, value: 'ENVIADO' },
+      { label: this.t().orders.status.COMPLETADO, value: 'COMPLETADO' },
+      { label: this.t().orders.status.CANCELADO, value: 'CANCELADO' },
+    ];
+  }
 
   get filteredOptions() {
     if (!this.order) return [];

@@ -1,21 +1,21 @@
 <div class="page-container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">{{ content.title }}</h1>
-      <p class="page-subtitle">{{ content.description }}</p>
+      <h1 class="page-title">{{ t().adminShipping.title }}</h1>
+      <p class="page-subtitle">{{ t().adminShipping.description }}</p>
     </div>
   </div>
 
   <p-tabs value="0">
     <p-tablist>
       <p-tab value="0">
-        <i class="pi pi-compass mr-2"></i> {{ content.tabs.agencies }}
+        <i class="pi pi-compass mr-2"></i> {{ t().adminShipping.tabs.agencies }}
       </p-tab>
       <p-tab value="1">
-        <i class="pi pi-map mr-2"></i> {{ content.tabs.rates }}
+        <i class="pi pi-map mr-2"></i> {{ t().adminShipping.tabs.rates }}
       </p-tab>
       <p-tab value="2">
-        <i class="pi pi-map-marker mr-2"></i> {{ content.tabs.locations }}
+        <i class="pi pi-map-marker mr-2"></i> {{ t().adminShipping.tabs.locations }}
       </p-tab>
     </p-tablist>
     <p-tabpanels>

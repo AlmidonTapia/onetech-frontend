@@ -1,47 +1,58 @@
+:host {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .images-wrapper {
   display: flex !important;
-  gap: 20px !important;
+  flex-direction: column !important;
+  gap: 16px !important;
   width: 100% !important;
   max-width: 100% !important;
-  align-items: flex-start !important;
+  align-items: stretch !important;
 }
 
-/* Vertical Thumbnails Container */
-.thumbnails-container {
+.thumbnails-horizontal-container {
   display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  flex-shrink: 0 !important;
-  max-height: 450px !important;
-  overflow-y: auto !important;
-  padding-right: 4px !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  padding: 4px 2px 8px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  scrollbar-width: thin !important;
 }
 
-.thumbnails-container::-webkit-scrollbar {
-  width: 4px !important;
+.thumbnails-horizontal-container::-webkit-scrollbar {
+  height: 4px !important;
 }
-.thumbnails-container::-webkit-scrollbar-thumb {
+.thumbnails-horizontal-container::-webkit-scrollbar-thumb {
   background: var(--ot-border-color) !important;
   border-radius: 4px !important;
 }
 
 .thumb-btn {
-  width: 72px !important;
-  height: 72px !important;
-  border-radius: var(--ot-radius-md) !important;
+  width: 76px !important;
+  height: 76px !important;
+  flex-shrink: 0 !important;
+  border-radius: 18px !important;
   overflow: hidden !important;
-  border: 2px solid var(--ot-border-color) !important;
+  border: 1px solid var(--ot-border-color) !important;
   padding: 0 !important;
   transition: all 0.25s ease !important;
   background: var(--ot-bg-surface) !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06) !important;
   cursor: pointer !important;
 }
 
 .thumb-btn img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
-  padding: 4px !important;
+  object-fit: cover !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .thumb-btn--active {
@@ -53,19 +64,22 @@
   border-color: var(--ot-blue-light) !important;
 }
 
-/* Main Image Container on the Right */
 .main-image-container {
   position: relative !important;
-  flex: 1 !important;
-  aspect-ratio: 4 / 3 !important;
-  background: var(--ot-bg-surface) !important;
-  border-radius: var(--ot-radius-2xl, 24px) !important;
+  width: 100% !important;
+  min-height: 500px !important;
+  max-height: 700px !important;
+  aspect-ratio: 1 / 1.08 !important;
+  background: linear-gradient(145deg, var(--ot-bg-surface), var(--ot-bg-body)) !important;
+  border-radius: 28px !important;
   overflow: hidden !important;
-  border: 1px solid var(--ot-border-color) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.08) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   transition: var(--ot-transition) !important;
+  padding: 18px !important;
 }
 
 :host-context(.dark) .main-image-container {
@@ -73,10 +87,13 @@
 }
 
 .main-img {
-  width: 90% !important;
-  height: 90% !important;
-  object-fit: contain !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
   transition: transform 0.5s ease !important;
+  border-radius: 20px !important;
 }
 
 .main-image-container:hover .main-img {
@@ -88,12 +105,11 @@
   color: var(--ot-text-muted) !important;
 }
 
-/* New Badge - Top Right */
 .badge-new {
   position: absolute !important;
   top: 16px !important;
   right: 16px !important;
-  background: var(--ot-success) !important; 
+  background: var(--ot-success) !important;
   color: #ffffff !important;
   font-weight: 700 !important;
   font-size: 11px !important;
@@ -106,9 +122,9 @@
   align-items: center !important;
   justify-content: center !important;
   box-shadow: var(--ot-shadow-sm) !important;
+  z-index: 10 !important;
 }
 
-/* Zoom/Expand Button - Bottom Left */
 .zoom-btn {
   position: absolute !important;
   bottom: 16px !important;
@@ -125,6 +141,7 @@
   cursor: pointer !important;
   transition: all 0.25s ease !important;
   box-shadow: var(--ot-shadow-sm) !important;
+  z-index: 10 !important;
 }
 
 .zoom-btn:hover {
@@ -137,12 +154,11 @@
   background: var(--ot-bg-surface) !important;
 }
 
-/* Referential Image Label - Bottom Right */
 .label-referential {
   position: absolute !important;
   bottom: 16px !important;
   right: 16px !important;
-  background: rgba(15, 23, 42, 0.8) !important; /* Semi-transparent dark gray */
+  background: rgba(15, 23, 42, 0.8) !important; 
   color: #ffffff !important;
   font-size: 10px !important;
   font-weight: 700 !important;
@@ -152,7 +168,6 @@
   backdrop-filter: blur(4px) !important;
 }
 
-/* Zoom dialog structure */
 ::ng-deep .zoom-dialog {
   border: none !important;
   background: transparent !important;
@@ -169,25 +184,29 @@
 
 .zoom-dialog-content {
   position: relative !important;
-  display: inline-block !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
 }
 
 .zoomed-img {
-  max-width: 85vw !important;
-  max-height: 85vh !important;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain !important;
   border-radius: var(--ot-radius-2xl, 24px) !important;
   background: var(--ot-bg-surface) !important;
   padding: 24px !important;
   box-shadow: var(--ot-shadow-lg) !important;
+  box-sizing: border-box !important;
 }
 
 .close-zoom-btn {
   position: absolute !important;
-  top: -12px !important;
-  right: -12px !important;
-  width: 32px !important;
-  height: 32px !important;
+  top: 16px !important;
+  right: 16px !important;
+  width: 44px !important;
+  height: 44px !important;
   border-radius: 50% !important;
   background: var(--ot-bg-surface) !important;
   border: 1px solid var(--ot-border-color) !important;
@@ -195,9 +214,9 @@
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  box-shadow: var(--ot-shadow-md) !important;
+  box-shadow: var(--ot-shadow-lg) !important;
   color: var(--ot-text-main) !important;
-  z-index: 10 !important;
+  z-index: 9999 !important;
   transition: all 0.2s ease !important;
 }
 
@@ -206,16 +225,24 @@
   color: var(--ot-error) !important;
 }
 
-/* Responsiveness */
 @media (max-width: 768px) {
   .images-wrapper {
-    flex-direction: column-reverse !important;
     gap: 12px !important;
   }
-  .thumbnails-container {
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    width: 100% !important;
-    padding-bottom: 4px !important;
+
+  .main-image-container {
+    min-height: 360px !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
+  }
+
+  .thumbnails-horizontal-container {
+    padding: 4px 2px 6px !important;
+  }
+
+  .thumb-btn {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 14px !important;
   }
 }

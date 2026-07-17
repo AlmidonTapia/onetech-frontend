@@ -2,7 +2,7 @@
   <div class="topbar-left">
     <div class="search-bar hidden md:flex">
       <i class="pi pi-search"></i>
-      <input type="text" placeholder="Ingrese el módulo..." aria-label="Search" 
+      <input type="text" [placeholder]="t().adminLayout.topbar.searchPlaceholder" [attr.aria-label]="t().adminLayout.topbar.searchAriaLabel" 
              [formControl]="searchControl" 
              (focus)="showSearchResults.set(true)" 
              (blur)="hideSearchResults()" />
@@ -43,7 +43,7 @@
           }
           <div class="dropdown-divider"></div>
           <button class="dropdown-item text-danger" (click)="logout()">
-            <i class="pi pi-sign-out"></i> Cerrar Sesión
+            <i class="pi pi-sign-out"></i> {{ t().adminLayout.topbar.logout }}
           </button>
         </div>
       }

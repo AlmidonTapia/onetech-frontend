@@ -4,6 +4,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
 import { Category } from '../../../../../core/domains/catalog/models/category.model';
+import { inject } from '@angular/core';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-categories-table',
@@ -21,6 +23,9 @@ export class CategoriesTableComponent {
   @Output() deleteItem = new EventEmitter<Category>();
   @Output() search = new EventEmitter<string>();
 
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     this.search.emit(target.value);
@@ -33,23 +38,25 @@ export class CategoriesTableComponent {
     colspanEmpty: 3
   } as const;
 
-  content = {
-    quickSearchTitle: 'Búsqueda Rápida',
-    searchPlaceholder: 'Buscar categorías...',
-    headers: {
-      name: 'Nombre',
-      parent: 'Categoría padre',
-      actions: 'Acciones'
-    },
-    rootCategoryLabel: 'Categoría raíz',
-    tooltips: {
-      edit: 'Editar',
-      delete: 'Eliminar'
-    },
-    emptyMessage: 'No hay categorías registradas.',
-    icons: {
-      edit: 'pi pi-pencil',
-      delete: 'pi pi-trash'
-    }
-  };
+  get content() {
+    return {
+      quickSearchTitle: this.t().adminCategories.table.quickSearchTitle,
+      searchPlaceholder: this.t().adminCategories.table.searchPlaceholder,
+      headers: {
+        name: this.t().adminCategories.table.headers.name,
+        parent: this.t().adminCategories.table.headers.parent,
+        actions: this.t().adminCategories.table.headers.actions
+      },
+      rootCategoryLabel: this.t().adminCategories.table.rootCategoryLabel,
+      tooltips: {
+        edit: this.t().adminCategories.table.tooltips.edit,
+        delete: this.t().adminCategories.table.tooltips.delete
+      },
+      emptyMessage: this.t().adminCategories.table.emptyMessage,
+      icons: {
+        edit: 'pi pi-pencil',
+        delete: 'pi pi-trash'
+      }
+    };
+  }
 }

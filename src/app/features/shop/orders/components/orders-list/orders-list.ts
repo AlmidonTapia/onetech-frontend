@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { TranslationService } from '../../../../../core/services/translation.service';
 import { DatePipe } from '@angular/common';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { BadgeComponent, BadgeVariant } from '../../../../../shared/components/ui/badge/badge';
@@ -16,27 +17,19 @@ export class OrdersListComponent {
   @Input() orders: Order[] = [];
   @Input() loading = false;
   @Output() viewDetail = new EventEmitter<Order>();
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
-  content = {
-    orderPrefix: 'Pedido #',
-    dateFormat: 'dd/MM/yyyy',
-    productSuffixSingular: 'producto',
-    productSuffixPlural: 'productos',
-    actionBtnLabel: 'Ver detalle',
-    actionBtnIcon: 'pi-eye',
-    loadingLabel: 'Cargando tus pedidos...',
-    emptyTitle: 'No tienes pedidos aún',
-    emptyDescription: 'Historial de compras vacío. Explora la tienda para comenzar.'
-  };
-
-  readonly statusMap: Record<OrderStatus, { label: string; variant: BadgeVariant }> = {
-    'PENDIENTE': { label: 'Pendiente', variant: 'warning' },
-    'PAGADO': { label: 'Pagado', variant: 'info' },
-    'ENVIADO': { label: 'Enviado', variant: 'blue' },
-    'COMPLETADO': { label: 'Completado', variant: 'success' },
-    'CANCELADO': { label: 'Cancelado', variant: 'error' },
-    'EXPIRADO': { label: 'Expirado', variant: 'gray' }
-  };
+  get statusMap(): Record<OrderStatus, { label: string; variant: BadgeVariant }> {
+    return {
+      'PENDIENTE': { label: this.t().orders.status.PENDIENTE, variant: 'warning' },
+      'PAGADO': { label: this.t().orders.status.PAGADO, variant: 'info' },
+      'ENVIADO': { label: this.t().orders.status.ENVIADO, variant: 'blue' },
+      'COMPLETADO': { label: this.t().orders.status.COMPLETADO, variant: 'success' },
+      'CANCELADO': { label: this.t().orders.status.CANCELADO, variant: 'error' },
+      'EXPIRADO': { label: this.t().orders.status.EXPIRADO, variant: 'gray' }
+    };
+  }
 
   skeletonItems = Array(3).fill(0);
 }

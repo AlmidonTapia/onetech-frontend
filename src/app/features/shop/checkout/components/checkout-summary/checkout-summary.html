@@ -26,15 +26,30 @@
         <h4 class="block-title">
             <i [class]="content.blocks.addressIcon"></i> {{ content.blocks.addressTitle }}
         </h4>
-        @if (address) {
+        @if (ubigeoCode) {
         <p class="block-detail">
-            {{ address.mainAddress }}, Ubigeo: {{ address.ubigeoCode }}, {{ address.country }}
+            Destino - Ubigeo: {{ ubigeoCode }}
         </p>
-        @if (address.reference) {
-        <p class="block-sub">Ref: {{ address.reference }}</p>
-        }
         } @else {
         <p class="block-empty">{{ content.blocks.addressEmpty }}</p>
+        }
+    </div>
+
+    <div class="summary-block">
+        <h4 class="block-title">
+            <i class="pi pi-user"></i> Quien recibe
+        </h4>
+        @if (consignee) {
+        <div class="block-detail">
+            @if (consignee.isSelf) {
+              <p>Yo mismo recibiré el pedido</p>
+            } @else {
+              <p>{{ consignee.fullName }}</p>
+              <p style="font-size: 13px; color: var(--ot-text-muted);">Doc: {{ consignee.docNumber }} | Cel: {{ consignee.phone }}</p>
+            }
+        </div>
+        } @else {
+        <p class="block-empty">Falta llenar los datos de entrega</p>
         }
     </div>
 

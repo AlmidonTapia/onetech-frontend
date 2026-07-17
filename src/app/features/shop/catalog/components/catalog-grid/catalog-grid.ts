@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
+import { TranslationService } from '../../../../../core/services/translation.service';
 import { ProductCardComponent } from '../../../../../shared/components/product-card/product-card';
 import { Product } from '../../../../../core/domains/catalog/models/product.model';
 
@@ -17,9 +18,6 @@ export class CatalogGridComponent {
     items: Array(8).fill(0)
   };
 
-  content = {
-    emptyIcon: 'pi pi-search',
-    emptyTitle: 'Sin resultados',
-    emptyDescription: 'Prueba con otros filtros o términos de búsqueda.'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 }

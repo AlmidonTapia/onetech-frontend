@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
+import { inject } from '@angular/core';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 
@@ -28,14 +30,19 @@ export class OrdersTableComponent {
   @Output() search = new EventEmitter<string>();
   @Output() filterStatus = new EventEmitter<string>();
 
-  statusOptions = [
-    { label: 'Todos', value: 'ALL' },
-    { label: 'Pendientes', value: 'PENDIENTE' },
-    { label: 'Pagados', value: 'PAGADO' },
-    { label: 'Enviados', value: 'ENVIADO' },
-    { label: 'Completados', value: 'COMPLETADO' },
-    { label: 'Cancelados', value: 'CANCELADO' }
-  ];
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
+  get statusOptions() {
+    return [
+      { label: this.t().adminOrders.table.allStatuses, value: 'ALL' },
+      { label: this.t().orders.status.PENDIENTE, value: 'PENDIENTE' },
+      { label: this.t().orders.status.PAGADO, value: 'PAGADO' },
+      { label: this.t().orders.status.ENVIADO, value: 'ENVIADO' },
+      { label: this.t().orders.status.COMPLETADO, value: 'COMPLETADO' },
+      { label: this.t().orders.status.CANCELADO, value: 'CANCELADO' }
+    ];
+  }
 
   selectedStatus = 'ALL';
 
@@ -55,38 +62,43 @@ export class OrdersTableComponent {
     colspanEmpty: 6
   } as const;
 
-  content = {
-    quickSearchTitle: 'Búsqueda Rápida',
-    searchPlaceholder: 'ID de Orden, Cliente...',
-    idPrefix: '#',
-    dateFormat: 'dd/MM/yyyy HH:mm',
-    emptyMessage: 'No hay órdenes registradas.',
-    headers: {
-      orderId: 'ID Orden',
-      client: 'Cliente',
-      date: 'Fecha',
-      total: 'Total',
-      status: 'Estado',
-      actions: 'Acciones'
-    },
-    tooltips: {
-      viewDetail: 'Ver detalle',
-      changeStatus: 'Cambiar estado'
-    },
-    icons: {
-      viewDetail: 'pi pi-eye',
-      changeStatus: 'pi pi-sync'
-    }
-  };
+  get content() {
+    return {
+      quickSearchTitle: this.t().adminOrders.table.quickSearchTitle,
+      searchPlaceholder: this.t().adminOrders.table.searchPlaceholder,
+      idPrefix: '#',
+      dateFormat: 'dd/MM/yyyy HH:mm',
+      emptyMessage: this.t().adminOrders.table.emptyMessage,
+      headers: {
+        orderId: this.t().adminOrders.table.headers.orderId,
+        client: this.t().adminOrders.table.headers.client,
+        date: this.t().adminOrders.table.headers.date,
+        total: this.t().adminOrders.table.headers.total,
+        status: this.t().adminOrders.table.headers.status,
+        actions: this.t().adminOrders.table.headers.actions
+      },
+      tooltips: {
+        viewDetail: this.t().adminOrders.table.tooltips.viewDetail,
+        changeStatus: this.t().adminOrders.table.tooltips.changeStatus,
+        automatedStatus: this.t().adminOrders.table.tooltips.automatedStatus
+      },
+      icons: {
+        viewDetail: 'pi pi-eye',
+        changeStatus: 'pi pi-sync'
+      }
+    };
+  }
 
-  readonly statusConfig: Record<OrderStatus, { label: string; severity: SeverityType }> = {
-    PENDIENTE: { label: 'Pendiente', severity: 'warn' },
-    PAGADO: { label: 'Pagado', severity: 'info' },
-    ENVIADO: { label: 'Enviado', severity: 'secondary' },
-    COMPLETADO: { label: 'Completado', severity: 'success' },
-    CANCELADO: { label: 'Cancelado', severity: 'danger' },
-    EXPIRADO: { label: 'Expirado', severity: 'danger' }
-  };
+  get statusConfig(): Record<OrderStatus, { label: string; severity: SeverityType }> {
+    return {
+      PENDIENTE: { label: this.t().orders.status.PENDIENTE, severity: 'warn' },
+      PAGADO: { label: this.t().orders.status.PAGADO, severity: 'info' },
+      ENVIADO: { label: this.t().orders.status.ENVIADO, severity: 'secondary' },
+      COMPLETADO: { label: this.t().orders.status.COMPLETADO, severity: 'success' },
+      CANCELADO: { label: this.t().orders.status.CANCELADO, severity: 'danger' },
+      EXPIRADO: { label: this.t().orders.status.EXPIRADO, severity: 'danger' }
+    };
+  }
 
   getStatusLabel(status: any): string {
     return this.statusConfig[status as OrderStatus]?.label || status;

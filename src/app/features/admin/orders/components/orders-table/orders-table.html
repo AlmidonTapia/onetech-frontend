@@ -46,7 +46,7 @@
                         <i [class]="content.icons.viewDetail"></i>
                     </button>
                                         <button class="act-btn" 
-                        [pTooltip]="order.orderStatus !== 'PENDIENTE' ? 'Estado automatizado por pago/envío' : content.tooltips.changeStatus"
+                        [pTooltip]="order.orderStatus !== 'PENDIENTE' ? content.tooltips.automatedStatus : content.tooltips.changeStatus"
                         [disabled]="order.orderStatus !== 'PENDIENTE'"
                         (click)="changeStatus.emit(order)">
                         <i [class]="content.icons.changeStatus"></i>

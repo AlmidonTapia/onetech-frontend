@@ -10,7 +10,6 @@ export interface StoreConfiguration {
   supportEmail: string;
   supportPhone: string;
   logoUrl: string;
-  igvPercentage: number;
   freeShippingThreshold: number;
   orderExpirationMinutes: number;
   updatedAt?: string;

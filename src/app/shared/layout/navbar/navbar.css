@@ -38,7 +38,6 @@
   color: rgba(255,255,255,.8);
 }
 
-/* ── Main bar ───────────────────────────────── */
 .navbar-main {
   background: transparent; 
   height: var(--ot-nav-main-height);
@@ -53,7 +52,6 @@
   gap: 24px;
 }
 
-/* Logo */
 .navbar-logo {
   font-size: 26px;
   font-weight: 800;
@@ -64,13 +62,11 @@
 .logo-one  { color: var(--ot-text-main); } 
 .logo-tech { color: var(--ot-orange); }
 
-/* Search */
 .navbar-search {
   flex: 1;
   max-width: 600px;
 }
 
-/* Actions */
 .navbar-actions {
   display: flex;
   align-items: center;
@@ -117,7 +113,6 @@
   color: var(--ot-text-main);
 }
 
-/* Soporte para la burbuja indicadora de favoritos */
 .wishlist-icon-wrapper {
   position: relative;
   display: flex;
@@ -144,7 +139,6 @@
   animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ── Category nav ───────────────────────────── */
 .navbar-categories {
   background: var(--ot-gradient-primary); 
   height: var(--ot-nav-cat-height);
@@ -158,13 +152,11 @@
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Animations */
 @keyframes scaleIn {
   from { transform: scale(0); }
   to { transform: scale(1); }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .navbar-topbar {
     height: auto !important;

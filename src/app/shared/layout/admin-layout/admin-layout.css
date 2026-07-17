@@ -26,7 +26,6 @@
   animation: fadeIn .2s ease both;
 }
 
-/* ── Mobile Header Styling ── */
 .admin-mobile-header {
   display: none;
   align-items: center;

@@ -26,7 +26,7 @@
     @if (brand) {
     <div class="form-row">
       <div class="form-field">
-        <label>Estado</label>
+        <label>{{ content.status.label }}</label>
         <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
       </div>
     </div>
@@ -35,7 +35,7 @@
       <div class="form-field" style="flex: 1">
         <label>{{ content.image.label }}</label>
         <div class="image-upload-container">
-          <input type="file" accept="image/*" (change)="onFileSelected($event)" #fileInput style="display: none;" />
+          <input type="file" accept="image/*, image/webp, .webp" (change)="onFileSelected($event)" #fileInput style="display: none;" />
           
           @if (previewUrl()) {
             <div class="image-preview" (click)="fileInput.click()">

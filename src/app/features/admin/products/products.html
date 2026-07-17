@@ -1,14 +1,14 @@
 <div class="page-container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">{{ content.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
+      <h1 class="page-title">{{ t().adminProducts.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminProducts.countSuffix }}</p>
     </div>
-    <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="openCreate()" />
+    <app-button [label]="t().adminProducts.createBtnLabel" icon="pi pi-plus" (clicked)="openCreate()" />
   </div>
 
   <div class="table-toolbar" style="display: flex; justify-content: flex-end;">
-    <app-button variant="ghost" [icon]="content.refreshBtnIcon" [label]="content.refreshBtnLabel"
+    <app-button variant="ghost" icon="pi pi-refresh" [label]="t().adminProducts.refreshBtnLabel"
       (clicked)="loadProducts()" />
   </div>
 

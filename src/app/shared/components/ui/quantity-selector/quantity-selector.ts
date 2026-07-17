@@ -57,7 +57,6 @@ export class QuantitySelectorComponent implements ControlValueAccessor {
     this.quantityChange.emit(this.value());
   }
 
-  // ControlValueAccessor methods
   writeValue(val: any): void {
     if (val !== undefined && val !== null) {
       this.value.set(val);

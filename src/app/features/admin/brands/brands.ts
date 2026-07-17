@@ -5,6 +5,7 @@ import { BrandFormComponent } from './components/brand-form/brand-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { BrandService } from '../../../core/domains/catalog/services/brand.service';
 import { Brand, CreateBrandRequest } from '../../../core/domains/catalog/models/brand.model';
 import { Subject } from 'rxjs';
@@ -24,6 +25,8 @@ export class BrandsComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @ViewChild(BrandFormComponent) brandForm!: BrandFormComponent;
 
@@ -39,24 +42,6 @@ export class BrandsComponent implements OnInit {
   apiConfig = {
     pageSize: 10
   };
-
-  content = {
-    title: 'Marcas',
-    countSuffix: 'marcas registradas',
-    createBtnLabel: 'Nueva marca',
-    createBtnIcon: 'pi-plus',
-    cardPadding: 'none',
-    alerts: {
-      saveSuccess: 'Marca guardada',
-      saveError: 'Error al guardar',
-      deleteNotImplemented: 'Eliminar marcas no implementado en el backend aún'
-    },
-    confirmModal: {
-      title: '¿Eliminar marca?',
-      severity: 'danger',
-      confirmLabel: 'Sí, eliminar'
-    }
-  } as const;;
 
   ngOnInit() {
     this.searchSubject.pipe(
@@ -112,20 +97,20 @@ export class BrandsComponent implements OnInit {
         if (file && brandId) {
           this.brandService.uploadImage(brandId, file).subscribe({
             next: () => {
-              this.alertService.success(this.content.alerts.saveSuccess);
+              this.alertService.success(this.t().adminBrands.alerts.saveSuccess);
               this.formVisible.set(false);
               this.saving.set(false);
               this.loadBrands();
             },
             error: () => {
-              this.alertService.error('Marca guardada, pero ocurrió un error al subir la imagen');
+              this.alertService.error(this.t().adminBrands.alerts.uploadError);
               this.saving.set(false);
               this.formVisible.set(false);
               this.loadBrands();
             }
           });
         } else {
-          this.alertService.success(this.content.alerts.saveSuccess);
+          this.alertService.success(this.t().adminBrands.alerts.saveSuccess);
           this.formVisible.set(false);
           this.saving.set(false);
           this.loadBrands();
@@ -133,7 +118,7 @@ export class BrandsComponent implements OnInit {
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.brandForm.form) || undefined;
-        this.alertService.error(this.content.alerts.saveError, errorMsg);
+        this.alertService.error(this.t().adminBrands.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -141,17 +126,17 @@ export class BrandsComponent implements OnInit {
 
   onDelete(b: Brand) {
     this.modalService.open({
-      title: this.content.confirmModal.title,
-      message: `"${b.brandName}" será eliminada.`,
-      severity: this.content.confirmModal.severity as any,
-      confirmLabel: this.content.confirmModal.confirmLabel,
+      title: this.t().adminBrands.confirmModal.title,
+      message: `"${b.brandName}" ${this.t().adminBrands.confirmModal.messageText}`,
+      severity: 'danger',
+      confirmLabel: this.t().adminBrands.confirmModal.confirmLabel,
       onConfirm: () => {
         this.brandService.delete(b.idBrand).subscribe({
           next: () => {
-            this.alertService.success('Marca eliminada exitosamente');
+            this.alertService.success(this.t().adminBrands.alerts.deleteSuccess);
             this.loadBrands();
           },
-          error: (err: any) => this.alertService.error(err?.error?.message || 'Error al eliminar la marca'),
+          error: (err: any) => this.alertService.error(err?.error?.message || this.t().adminBrands.alerts.deleteError),
         });
       },
     });

@@ -1,0 +1,39 @@
+<div class="destination-section">
+  <div class="destination-header">
+    <div class="destination-title-area">
+      <h3>{{ t().checkout.destination.title }}</h3>
+      <p class="destination-subtitle">{{ t().checkout.destination.subtitle }}</p>
+    </div>
+    <div class="destination-icon-area">
+      <div class="icon-circle">
+        <i class="pi pi-map-marker"></i>
+      </div>
+    </div>
+  </div>
+  
+  <div class="destination-grid">
+    <div class="form-field">
+      <label>{{ t().checkout.destination.deptLabel }}</label>
+      <p-select [ngModel]="selectedDepartment()" (ngModelChange)="onDepartmentChange($event)" 
+        [options]="departments()" optionLabel="name" optionValue="id" 
+        [disabled]="loadingDepts()" [placeholder]="t().checkout.destination.deptPlaceholder"
+        [style]="{ width: '100%' }" appendTo="body"></p-select>
+    </div>
+
+    <div class="form-field">
+      <label>{{ t().checkout.destination.provLabel }}</label>
+      <p-select [ngModel]="selectedProvince()" (ngModelChange)="onProvinceChange($event)" 
+        [options]="provinces()" optionLabel="name" optionValue="id" 
+        [disabled]="loadingProvs() || !selectedDepartment()" [placeholder]="t().checkout.destination.provPlaceholder"
+        [style]="{ width: '100%' }" appendTo="body"></p-select>
+    </div>
+
+    <div class="form-field">
+      <label>{{ t().checkout.destination.distLabel }}</label>
+      <p-select [ngModel]="selectedDistrict()" (ngModelChange)="onDistrictChange($event)" 
+        [options]="districts()" optionLabel="name" optionValue="id" 
+        [disabled]="loadingDists() || !selectedProvince()" [placeholder]="t().checkout.destination.distPlaceholder"
+        [style]="{ width: '100%' }" appendTo="body"></p-select>
+    </div>
+  </div>
+</div>

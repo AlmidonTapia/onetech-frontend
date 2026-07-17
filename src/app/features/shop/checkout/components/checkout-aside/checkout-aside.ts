@@ -4,11 +4,14 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
 import { FormsModule } from '@angular/forms';
 import { Cart } from '../../../../../core/domains/shopping/models/cart.model';
 import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
+import { ConsigneeInfo } from '../checkout-consignee/checkout-consignee';
+import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-checkout-aside',
   standalone: true,
-  imports: [CurrencyPenPipe, ButtonComponent, FormsModule],
+  imports: [CurrencyPenPipe, FormsModule],
   templateUrl: './checkout-aside.html',
   styleUrl: './checkout-aside.css'
 })
@@ -18,32 +21,12 @@ export class CheckoutAsideComponent {
   @Input() subtotal: number = 0;
   @Input() discountAmount: number = 0;
   @Input() shipMethod: ShipmentMethod | null = null;
+  @Input() consignee: ConsigneeInfo | null = null;
+  @Input() ubigeoCode: string | null = null;
+  @Input() locationName: string | null = null;
+  @Input() payMethod: PaymentMethod | null = null;
   @Input() finalTotal: number = 0;
-  @Input() selectedCouponId: string | null = null;
-  @Input() validatingCoupon: boolean = false;
-  @Input() couponError: string = '';
-  
-  @Output() applyCoupon = new EventEmitter<string>();
 
-  couponCode = '';
-
-  content = {
-    summaryTitle: 'Tu pedido',
-    totalLabel: 'Total',
-    labels: {
-      subtotal: 'Subtotal',
-      discount: 'Descuento',
-      shipping: 'Envío',
-      couponPlaceholder: 'Código de descuento'
-    },
-    buttons: {
-      apply: 'Aplicar'
-    }
-  };
-
-  onApplyCoupon() {
-    if (this.couponCode.trim()) {
-      this.applyCoupon.emit(this.couponCode);
-    }
-  }
+  ts = inject(TranslationService);
+  t = this.ts.t;
 }

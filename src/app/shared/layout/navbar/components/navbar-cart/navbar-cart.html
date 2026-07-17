@@ -1,13 +1,13 @@
 <div class="cart-wrapper" (mouseenter)="cartPanel.toggle($event)" (mouseleave)="cartPanel.hide()">
-    <a [routerLink]="content.cartRoute" class="cart-btn" [attr.aria-label]="content.ariaLabelCart">
+    <a routerLink="/cart" class="cart-btn" [attr.aria-label]="t().navbar.cart.ariaLabelCart">
         <div class="cart-icon-wrapper">
-            <i [class]="content.cartIcon"></i>
+            <i class="pi pi-shopping-cart"></i>
             @if (itemCount() > 0) {
             <span class="cart-badge">{{ itemCount() }}</span>
             }
         </div>
         <div class="cart-text">
-            <span class="cart-label">{{ content.labelText }}</span>
+            <span class="cart-label">{{ t().navbar.cart.labelText }}</span>
             <span class="cart-total">{{ totalAmount() | currencyPen }}</span>
         </div>
     </a>
@@ -17,7 +17,7 @@
             @if (itemCount() === 0) {
                 <div class="mini-cart-empty">
                     <i class="pi pi-shopping-cart"></i>
-                    <p>{{ content.emptyTitle }}</p>
+                    <p>{{ t().navbar.cart.emptyTitle }}</p>
                 </div>
             } @else {
                 <div class="mini-cart-items">
@@ -33,12 +33,12 @@
                 </div>
                 <div class="mini-cart-footer">
                     <div class="mini-cart-total">
-                        <span>Total:</span>
+                        <span>{{ t().navbar.cart.totalLabel }}</span>
                         <span>{{ totalAmount() | currencyPen }}</span>
                     </div>
                     <div class="mini-cart-actions">
-                        <app-button variant="outline" size="sm" [fullWidth]="true" [label]="content.goToCartBtn" [routerLink]="content.cartRoute" (clicked)="cartPanel.hide()"></app-button>
-                        <app-button variant="primary" size="sm" [fullWidth]="true" [label]="content.checkoutBtn" (clicked)="goToCheckout(cartPanel)"></app-button>
+                        <app-button variant="outline" size="sm" [fullWidth]="true" [label]="t().navbar.cart.goToCartBtn" routerLink="/cart" (clicked)="cartPanel.hide()"></app-button>
+                        <app-button variant="primary" size="sm" [fullWidth]="true" [label]="t().navbar.cart.checkoutBtn" (clicked)="goToCheckout(cartPanel)"></app-button>
                     </div>
                 </div>
             }

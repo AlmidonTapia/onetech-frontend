@@ -5,6 +5,7 @@ import { User } from '../../../core/domains/identity/models/user.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-users',
@@ -16,6 +17,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class UsersComponent implements OnInit {
   private userService = inject(UserService);
   private destroyRef = inject(DestroyRef);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   users = signal<User[]>([]);
   totalRecords = signal(0);
@@ -28,14 +31,6 @@ export class UsersComponent implements OnInit {
   apiConfig = {
     pageSize: 10
   };
-
-  content = {
-    title: 'Usuarios',
-    countSuffix: 'usuarios registrados',
-    cardPadding: 'none',
-    quickSearchTitle: 'Búsqueda Rápida',
-    searchPlaceholder: 'Nombre, email, DNI...'
-  } as const; 
 
   ngOnInit() {
     this.searchSubject.pipe(

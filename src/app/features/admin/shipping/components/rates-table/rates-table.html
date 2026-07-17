@@ -2,10 +2,10 @@
     <div style="display: flex; align-items: center; gap: 12px; user-select: none; cursor: default;">
       <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--ot-text-main);">{{ content.title }}</h2>
       <span style="background: var(--ot-bg-surface); border: 1px solid var(--ot-border-color); color: var(--ot-text-muted); padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
-        {{ filteredRates().length }} {{ filteredRates().length === rates().length ? 'tarifas' : 'de ' + rates().length + ' tarifas' }}
+        {{ rates().length }} {{ content.title }}
       </span>
     </div>
-    <app-button [label]="content.newRateBtn" icon="pi pi-plus" (clicked)="openCreate()"></app-button>
+    <app-button variant="primary" [label]="content.newRateBtn" icon="pi pi-plus" (clicked)="openCreate()"></app-button>
 </div>
 
   <p-table [value]="filteredRates()" [loading]="loading()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
@@ -18,7 +18,8 @@
                           [ngModel]="filterAgency()" 
                           (ngModelChange)="filterAgency.set($event)"
                           optionLabel="label" optionValue="value" 
-                          styleClass="filter-dropdown" />
+                          [placeholder]="content.filter.agencyPlaceholder"
+                          styleClass="w-full" />
 
                 <p-select [options]="departmentFilterOptions()" 
                           [ngModel]="filterDepartment()" 
@@ -31,7 +32,8 @@
                           [ngModel]="filterProvince()" 
                           (ngModelChange)="filterProvince.set($event)"
                           optionLabel="label" optionValue="value" 
-                          styleClass="filter-dropdown"
+                          [placeholder]="content.filter.provPlaceholder"
+                          styleClass="w-full"
                           [disabled]="filterDepartment() === 'ALL'" />
 
                 <p-select [options]="availabilityFilterOptions" 
@@ -40,13 +42,13 @@
                           optionLabel="label" optionValue="value" 
                           styleClass="filter-dropdown" />
 
-                <span class="p-input-icon-left search-input-wrapper">
+                <span class="p-input-icon-left w-full">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" 
                            [ngModel]="filterText()" 
                            (ngModelChange)="filterText.set($event)"
                            [placeholder]="content.searchPlaceholder" 
-                           class="filter-search-input"/>
+                           class="p-inputtext w-full"/>
                 </span>
             </div>
         </div>
@@ -59,7 +61,7 @@
         <th>{{ content.columns.address }}</th>
         <th>{{ content.columns.cost }}</th>
         <th>{{ content.columns.status }}</th>
-        <th style="width: 100px">{{ content.columns.actions }}</th>
+        <th style="width: 100px; text-align: center;">{{ content.columns.actions }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rate>
@@ -98,71 +100,64 @@
   </p-table>
 
 
-<p-dialog [header]="isEdit() ? content.editDialogTitle : content.createDialogTitle"
-          [visible]="showDialog()" (visibleChange)="showDialog.set($event)"
-          [modal]="true" [style]="{width: '600px'}" [contentStyle]="{'overflow': 'visible'}" [draggable]="false" [resizable]="false">
+<p-dialog [(visible)]="showDialog" [header]="isEdit() ? content.modal.editTitle : content.modal.createTitle"
+          [modal]="true" styleClass="ot-dialog p-fluid" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }" [style]="{ width: '600px' }">
   
   <form [formGroup]="form" class="simple-form mt-4">
     
-        <div class="form-field">
-      <label>{{ content.form.agencyLabel }}</label>
+    <div class="field mb-4">
+      <label class="font-semibold mb-2 block">{{ content.form.agencyLabel }}</label>
       <p-select [options]="agencies()" formControlName="idShipmentMethod" optionLabel="methodName" optionValue="idShipmentMethod" [placeholder]="content.form.agencyPlaceholder" styleClass="w-full"></p-select>
       <small class="text-red-500" *ngIf="form.get('idShipmentMethod')?.touched && form.get('idShipmentMethod')?.invalid">Requerido</small>
     </div>
 
-        <ng-container *ngIf="isEdit()">
-      <div class="form-field">
-        <label>{{ content.form.departmentLabel }}</label>
-        <p-select [options]="departments()" formControlName="idDepartment" optionLabel="name" optionValue="id" placeholder="Todo el país" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
+    <ng-container *ngIf="isEdit()">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="field">
+          <label class="font-semibold mb-2 block">{{ content.form.departmentLabel }}</label>
+          <p-select [options]="departments()" formControlName="idDepartment" optionLabel="name" optionValue="id" placeholder="Nacional" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
+        </div>
+        <div class="field">
+          <label class="font-semibold mb-2 block">{{ content.form.provinceLabel }}</label>
+          <p-select [options]="provinces()" formControlName="idProvince" optionLabel="name" optionValue="id" placeholder="Todos" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
+        </div>
+        <div class="field">
+          <label class="font-semibold mb-2 block">{{ content.form.districtLabel }}</label>
+          <p-select [options]="districts()" formControlName="idDistrict" optionLabel="name" optionValue="id" placeholder="Todos" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
+        </div>
       </div>
-      <div class="form-field">
-        <label>{{ content.form.provinceLabel }}</label>
-        <p-select [options]="provinces()" formControlName="idProvince" optionLabel="name" optionValue="id" placeholder="Todo el departamento" [showClear]="true" styleClass="w-full"></p-select>
-      </div>
-      <div class="form-field">
-        <label>{{ content.form.districtLabel }}</label>
-        <p-select [options]="districts()" formControlName="idDistrict" optionLabel="name" optionValue="id" placeholder="Toda la provincia" [showClear]="true" styleClass="w-full"></p-select>
-      </div>
-      <div class="form-field">
-        <label>{{ content.form.addressLabel }}</label>
-        <input type="text" class="p-inputtext" formControlName="agencyAddress" [placeholder]="content.form.addressPlaceholder" />
+      <div class="field mb-4">
+        <label class="font-semibold mb-2 block">{{ content.form.addressLabel }}</label>
+        <input type="text" pInputText class="p-inputtext w-full" formControlName="agencyAddress" [placeholder]="content.form.addressPlaceholder" />
       </div>
     </ng-container>
 
-        <ng-container *ngIf="!isEdit()">
+    <ng-container *ngIf="!isEdit()">
       <app-destination-picker 
         [destinations]="destinations()" 
         (destinationsChange)="onDestinationsChange($event)">
       </app-destination-picker>
     </ng-container>
 
-        <div class="form-row">
-      <div class="form-field">
-        <label>{{ content.form.costLabel }}</label>
-        <p-inputNumber formControlName="cost" mode="currency" currency="PEN" [min]="0" styleClass="w-full"></p-inputNumber>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="field mb-4">
+        <label class="font-semibold mb-2 block">{{ content.form.costLabel }}</label>
+        <p-inputNumber formControlName="cost" mode="currency" currency="PEN" [min]="0" styleClass="w-full" [showButtons]="true"></p-inputNumber>
       </div>
 
-      <div class="form-field" style="flex-direction: row !important; align-items: center; justify-content: flex-start; padding-top: 24px;">
-        <p-checkbox formControlName="isAvailable" [binary]="true"></p-checkbox>
-        <label style="margin-top: 2px;">{{ content.form.availableLabel }}</label>
+      <div class="field mb-4 flex align-items-end pb-3">
+        <div class="flex align-items-center" style="gap: 8px;">
+          <p-checkbox formControlName="isAvailable" [binary]="true" inputId="available"></p-checkbox>
+          <label for="available" class="font-semibold mb-0" style="margin: 0; cursor: pointer;">{{ content.form.availableLabel }}</label>
+        </div>
       </div>
     </div>
-
   </form>
 
   <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-      <span *ngIf="!isEdit() && destinations().length > 0" class="dest-count-label">
-        {{ destinations().length }} destino(s) seleccionado(s)
-      </span>
-      <span *ngIf="isEdit() || destinations().length === 0"></span>
-      <div style="display: flex; gap: 8px;">
-        <app-button label="Cancelar" variant="outline" (clicked)="showDialog.set(false)"></app-button>
-        <app-button [label]="isEdit() ? 'Guardar' : 'Crear ' + destinations().length + ' Tarifa(s)'" 
-                    (clicked)="save()" [loading]="submitting()"
-                    [disabled]="!isEdit() && destinations().length === 0">
-        </app-button>
-      </div>
+    <div class="flex justify-content-end gap-2">
+      <app-button variant="outline" [label]="content.modal.cancelBtn" (clicked)="showDialog.set(false)"></app-button>
+      <app-button variant="primary" [label]="content.modal.saveBtn" [loading]="submitting()" (clicked)="save()"></app-button>
     </div>
   </ng-template>
 </p-dialog>

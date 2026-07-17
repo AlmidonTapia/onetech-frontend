@@ -9,7 +9,16 @@ export interface Order {
   shippingCost: number;
   discountAmount: number;
   orderStatus: OrderStatus;
-  idAddress: string;
+  snapDepartmentName?: string;
+  snapProvinceName?: string;
+  snapDistrictName?: string;
+  snapAgencyAddress?: string;
+  snapShipmentMethodName?: string;
+  snapShippingCost?: number;
+  snapConsigneeIsSelf?: boolean;
+  snapConsigneeName?: string;
+  snapConsigneeDoc?: string;
+  snapConsigneePhone?: string;
   idCoupon?: string;
   createdAt: string;
   updatedAt?: string;
@@ -25,7 +34,17 @@ export interface OrderItem {
 }
 
 export interface CreateOrderRequest {
-  idAddress: string;
+  shippingDestination: {
+    mode: 'SAVED_ADDRESS' | 'NEW_ADDRESS';
+    ubigeoCode: string;
+    idAddress?: string;
+    consignee?: {
+      isSelf: boolean;
+      fullName?: string;
+      docNumber?: string;
+      phone?: string;
+    }
+  };
   idShipmentMethod: string;
   idCoupon?: string;
   items: { idProduct: string; quantity: number; unitPrice: number }[];

@@ -8,6 +8,7 @@ import { AlertService } from '../../../../../shared/services/alert.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { LocationPanelComponent, UbigeoItem } from '../location-panel/location-panel';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-locations-table',
@@ -21,6 +22,8 @@ export class LocationsTableComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   departments = signal<UbigeoItem[]>([]);
   provinces = signal<UbigeoItem[]>([]);
@@ -38,16 +41,18 @@ export class LocationsTableComponent implements OnInit {
   dialogLevel = signal<'department' | 'province' | 'district'>('department');
   submitting = signal(false);
 
-  content = {
-    deptTitle: 'Departamentos',
-    provTitle: 'Provincias',
-    distTitle: 'Distritos',
-    deptEmpty: 'No hay departamentos',
-    provEmpty: 'No hay provincias',
-    distEmpty: 'No hay distritos',
-    provPlaceholder: 'Seleccione un departamento',
-    distPlaceholder: 'Seleccione una provincia'
-  };
+  get content() {
+    return {
+      deptTitle: this.t().adminShipping.locations.deptTitle,
+      provTitle: this.t().adminShipping.locations.provTitle,
+      distTitle: this.t().adminShipping.locations.distTitle,
+      deptEmpty: this.t().adminShipping.locations.deptEmpty,
+      provEmpty: this.t().adminShipping.locations.provEmpty,
+      distEmpty: this.t().adminShipping.locations.distEmpty,
+      provPlaceholder: this.t().adminShipping.locations.provPlaceholder,
+      distPlaceholder: this.t().adminShipping.locations.distPlaceholder
+    };
+  }
 
   form: FormGroup;
 
@@ -71,7 +76,7 @@ export class LocationsTableComponent implements OnInit {
         this.loadingDepts.set(false);
       },
       error: () => {
-        this.alertService.error('Error al cargar departamentos');
+        this.alertService.error(this.t().adminShipping.locations.alerts.loadDeptError);
         this.loadingDepts.set(false);
       },
     });
@@ -88,7 +93,7 @@ export class LocationsTableComponent implements OnInit {
         this.loadingProvs.set(false);
       },
       error: () => {
-        this.alertService.error('Error al cargar provincias');
+        this.alertService.error(this.t().adminShipping.locations.alerts.loadProvError);
         this.loadingProvs.set(false);
       },
     });
@@ -103,7 +108,7 @@ export class LocationsTableComponent implements OnInit {
         this.loadingDists.set(false);
       },
       error: () => {
-        this.alertService.error('Error al cargar distritos');
+        this.alertService.error(this.t().adminShipping.locations.alerts.loadDistError);
         this.loadingDists.set(false);
       },
     });
@@ -112,21 +117,21 @@ export class LocationsTableComponent implements OnInit {
 
   openCreateDepartment() {
     this.dialogLevel.set('department');
-    this.dialogTitle.set('Nuevo Departamento');
+    this.dialogTitle.set(this.t().adminShipping.locations.dialogs.department);
     this.form.reset();
     this.showDialog.set(true);
   }
 
   openCreateProvince() {
     this.dialogLevel.set('province');
-    this.dialogTitle.set('Nueva Provincia');
+    this.dialogTitle.set(this.t().adminShipping.locations.dialogs.province);
     this.form.reset();
     this.showDialog.set(true);
   }
 
   openCreateDistrict() {
     this.dialogLevel.set('district');
-    this.dialogTitle.set('Nuevo Distrito');
+    this.dialogTitle.set(this.t().adminShipping.locations.dialogs.district);
     this.form.reset();
     this.showDialog.set(true);
   }
@@ -154,9 +159,9 @@ export class LocationsTableComponent implements OnInit {
     request$.subscribe({
       next: () => {
         const labels: Record<string, string> = {
-          department: 'Departamento creado',
-          province: 'Provincia creada',
-          district: 'Distrito creado',
+          department: this.t().adminShipping.locations.alerts.createDeptSuccess,
+          province: this.t().adminShipping.locations.alerts.createProvSuccess,
+          district: this.t().adminShipping.locations.alerts.createDistSuccess,
         };
         this.alertService.success(labels[level]);
         this.showDialog.set(false);
@@ -164,7 +169,7 @@ export class LocationsTableComponent implements OnInit {
         this.refreshAfterChange(level);
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || 'Error al crear. Verifique que el código no esté duplicado.';
+        const errMsg = err?.error?.message || this.t().adminShipping.locations.alerts.createError;
         this.alertService.error(errMsg);
         this.submitting.set(false);
       },
@@ -174,14 +179,14 @@ export class LocationsTableComponent implements OnInit {
 
   deleteDepartment(dept: UbigeoItem) {
     this.modalService.open({
-      title: '¿Eliminar departamento?',
-      message: `Se eliminará "${dept.name}" y todas sus provincias y distritos asociados.`,
+      title: this.t().adminShipping.locations.confirmDelete.departmentTitle,
+      message: this.t().adminShipping.locations.confirmDelete.departmentMsg.replace('{name}', dept.name),
       severity: 'danger',
-      confirmLabel: 'Sí, eliminar',
+      confirmLabel: this.t().adminShipping.locations.confirmDelete.confirmLabel,
       onConfirm: () => {
         this.shipmentService.deleteDepartment(dept.id).subscribe({
           next: () => {
-            this.alertService.success('Departamento eliminado');
+            this.alertService.success(this.t().adminShipping.locations.alerts.deleteDeptSuccess);
             if (this.selectedDepartment()?.id === dept.id) {
               this.selectedDepartment.set(null);
               this.provinces.set([]);
@@ -191,7 +196,7 @@ export class LocationsTableComponent implements OnInit {
             this.loadDepartments();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || 'Error al eliminar departamento';
+            const errMsg = err?.error?.message || this.t().adminShipping.locations.alerts.deleteDeptError;
             this.alertService.error(errMsg);
           },
         });
@@ -201,14 +206,14 @@ export class LocationsTableComponent implements OnInit {
 
   deleteProvince(prov: UbigeoItem) {
     this.modalService.open({
-      title: '¿Eliminar provincia?',
-      message: `Se eliminará "${prov.name}" y todos sus distritos asociados.`,
+      title: this.t().adminShipping.locations.confirmDelete.provinceTitle,
+      message: this.t().adminShipping.locations.confirmDelete.provinceMsg.replace('{name}', prov.name),
       severity: 'danger',
-      confirmLabel: 'Sí, eliminar',
+      confirmLabel: this.t().adminShipping.locations.confirmDelete.confirmLabel,
       onConfirm: () => {
         this.shipmentService.deleteProvince(prov.id).subscribe({
           next: () => {
-            this.alertService.success('Provincia eliminada');
+            this.alertService.success(this.t().adminShipping.locations.alerts.deleteProvSuccess);
             if (this.selectedProvince()?.id === prov.id) {
               this.selectedProvince.set(null);
               this.districts.set([]);
@@ -216,7 +221,7 @@ export class LocationsTableComponent implements OnInit {
             this.loadProvinces(this.selectedDepartment()!);
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || 'Error al eliminar provincia';
+            const errMsg = err?.error?.message || this.t().adminShipping.locations.alerts.deleteProvError;
             this.alertService.error(errMsg);
           },
         });
@@ -226,18 +231,18 @@ export class LocationsTableComponent implements OnInit {
 
   deleteDistrict(dist: UbigeoItem) {
     this.modalService.open({
-      title: '¿Eliminar distrito?',
-      message: `Se eliminará "${dist.name}" de forma permanente.`,
+      title: this.t().adminShipping.locations.confirmDelete.districtTitle,
+      message: this.t().adminShipping.locations.confirmDelete.districtMsg.replace('{name}', dist.name),
       severity: 'danger',
-      confirmLabel: 'Sí, eliminar',
+      confirmLabel: this.t().adminShipping.locations.confirmDelete.confirmLabel,
       onConfirm: () => {
         this.shipmentService.deleteDistrict(dist.id).subscribe({
           next: () => {
-            this.alertService.success('Distrito eliminado');
+            this.alertService.success(this.t().adminShipping.locations.alerts.deleteDistSuccess);
             this.loadDistricts(this.selectedProvince()!);
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || 'Error al eliminar distrito';
+            const errMsg = err?.error?.message || this.t().adminShipping.locations.alerts.deleteDistError;
             this.alertService.error(errMsg);
           },
         });
@@ -258,9 +263,9 @@ export class LocationsTableComponent implements OnInit {
 
   getCodeHint(): string {
     const level = this.dialogLevel();
-    if (level === 'department') return 'Código de 2 dígitos (ej: 15)';
-    if (level === 'province') return 'Código de 4 dígitos (ej: 1501)';
-    return 'Código de 6 dígitos (ej: 150101)';
+    if (level === 'department') return this.t().adminShipping.locations.hints.department;
+    if (level === 'province') return this.t().adminShipping.locations.hints.province;
+    return this.t().adminShipping.locations.hints.district;
   }
 
   getCodeMaxLength(): number {

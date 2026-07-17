@@ -10,6 +10,8 @@ import { CartStore } from '../../../core/domains/shopping/store/cart.store';
 import { ProductService } from '../../../core/domains/catalog/services/product.service';
 import { Product } from '../../../core/domains/catalog/models/product.model';
 import { RelatedProductsComponent } from '../product-detail/components/related-products/related-products';
+import { PaymentService } from '../../../core/domains/checkout/services/payment.service';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-cart',
@@ -41,22 +43,23 @@ export class CartComponent implements OnInit {
     catalog: '/catalog'
   };
 
-  content = {
-    title: 'Mi carrito',
-    breadcrumbLabel: 'Carrito de compras',
-    loadingLabel: 'Cargando carrito...',
-    emptyTitle: 'Tu carrito está vacío',
-    emptyDescription: 'Agrega productos para empezar tu compra.',
-    exploreBtnLabel: 'Explorar productos',
-    alertRemoved: 'Producto eliminado del carrito',
-    alertRemoveError: 'Error al eliminar',
-    alertUpdateError: 'Error al actualizar cantidad'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
-  breadcrumb: BreadcrumbItem[] = [{ label: this.content.breadcrumbLabel }];
+  breadcrumb: BreadcrumbItem[] = [{ label: this.t().cart.breadcrumbLabel }];
 
+  private paymentService = inject(PaymentService);
+  paymentMethods: any[] = [];
+  
   ngOnInit() {
     this.loading = true;
+    
+    this.paymentService.getMethods().subscribe({
+      next: (methods) => {
+        this.paymentMethods = methods.filter(m => m.status === 'ACTIVO' || m.status === 'HABILITADO');
+      }
+    });
+    
     this.cartStore.getCart().subscribe({
       next: (cart) => {
         this.loading = false;
@@ -88,7 +91,7 @@ export class CartComponent implements OnInit {
         this.cd.detectChanges();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.content.alertUpdateError);
+        this.alertService.error(err?.error?.message || this.t().cart.alertUpdateError);
         this.cd.detectChanges();
       }
     });
@@ -98,11 +101,11 @@ export class CartComponent implements OnInit {
   onRemove(id: string) {
     this.cartStore.removeItem(id).subscribe({
         next: () => {
-          this.alertService.info(this.content.alertRemoved);
+          this.alertService.info(this.t().cart.alertRemoved);
           this.cd.detectChanges();
         },
         error: (err: any) => {
-          this.alertService.error(err?.error?.message || this.content.alertRemoveError);
+          this.alertService.error(err?.error?.message || this.t().cart.alertRemoveError);
           this.cd.detectChanges();
         }
     });

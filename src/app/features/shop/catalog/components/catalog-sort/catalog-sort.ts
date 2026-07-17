@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 export interface SortOption { label: string; value: string; }
 
@@ -16,17 +17,16 @@ export class CatalogSortComponent {
   @Input() sort = 'relevance';
   @Output() sortChange = new EventEmitter<string>();
 
-  content = {
-    resultsSuffix: 'productos encontrados',
-    sortLabelText: 'Ordenar por:',
-    selectWidth: '220px'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
-  options: SortOption[] = [
-    { label: 'Relevancia', value: 'relevance' },
-    { label: 'Precio: menor a mayor', value: 'price_asc' },
-    { label: 'Precio: mayor a menor', value: 'price_desc' },
-    { label: 'Nombre A-Z', value: 'name_asc' },
-    { label: 'Más nuevos primero', value: 'newest' },
-  ];
+  get options(): SortOption[] {
+    return [
+      { label: this.t().catalog.sort.options.relevance, value: 'relevance' },
+      { label: this.t().catalog.sort.options.price_asc, value: 'price_asc' },
+      { label: this.t().catalog.sort.options.price_desc, value: 'price_desc' },
+      { label: this.t().catalog.sort.options.name_asc, value: 'name_asc' },
+      { label: this.t().catalog.sort.options.newest, value: 'newest' },
+    ];
+  }
 }

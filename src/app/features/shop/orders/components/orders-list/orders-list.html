@@ -23,8 +23,8 @@
     @else if (orders.length === 0) {
     <div class="orders-empty animate-fade-in">
         <i class="pi pi-box"></i>
-        <h3>{{ content.emptyTitle }}</h3>
-        <p>{{ content.emptyDescription }}</p>
+        <h3>{{ t().orders.list.emptyTitle }}</h3>
+        <p>{{ t().orders.list.emptyDescription }}</p>
     </div>
     }
 
@@ -36,10 +36,10 @@
             <div class="card-header">
                 <div class="header-info">
                     <span class="order-id">
-                        {{ content.orderPrefix }}{{ order.idOrder.substring(0, 8).toUpperCase() }}
+                        {{ t().orders.list.orderPrefix }}{{ order.idOrder.substring(0, 8).toUpperCase() }}
                     </span>
                     <span class="order-date">
-                        {{ order.createdAt | date: content.dateFormat }}
+                        {{ order.createdAt | date: 'dd/MM/yyyy' }}
                     </span>
                 </div>
                 <app-badge [variant]="statusMap[order.orderStatus].variant" [dot]="true">
@@ -50,7 +50,7 @@
             <div class="card-body">
                 <span class="order-summary-text">
                     {{ order.details.length }}
-                    {{ order.details.length === 1 ? content.productSuffixSingular : content.productSuffixPlural }}
+                    {{ order.details.length === 1 ? t().orders.list.productSuffixSingular : t().orders.list.productSuffixPlural }}
                 </span>
                 <div class="order-price-block">
                     <span class="price-amount">{{ order.totalAmount | currencyPen }}</span>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="card-footer">
-                <app-button variant="outline" [label]="content.actionBtnLabel" [icon]="content.actionBtnIcon"
+                <app-button variant="outline" [label]="t().orders.list.actionBtnLabel" icon="pi-eye"
                     [fullWidth]="true" (clicked)="viewDetail.emit(order)" />
             </div>
 

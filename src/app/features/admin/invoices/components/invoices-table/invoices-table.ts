@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
@@ -17,14 +17,15 @@ type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'cont
   styleUrl: './invoices-table.css'
 })
 export class InvoicesTableComponent {
-  @Input() invoices: Invoice[] = [];
-  @Input() totalRecords = 0;
-  @Input() loading = false;
+  invoices = input.required<Invoice[]>();
+  totalRecords = input<number>(0);
+  loading = input<boolean>(false);
+  content = input.required<any>();
   
-  @Output() lazyLoad = new EventEmitter<any>();
-  @Output() onDownload = new EventEmitter<Invoice>();
-  @Output() onSendEmail = new EventEmitter<Invoice>();
-  @Output() onAnnul = new EventEmitter<Invoice>();
+  lazyLoad = output<any>();
+  onDownload = output<Invoice>();
+  onSendEmail = output<Invoice>();
+  onAnnul = output<Invoice>();
 
   tableConfig = {
     defaultRows: 10,
@@ -33,33 +34,11 @@ export class InvoicesTableComponent {
     colspanEmpty: 7
   } as const;
 
-  content = {
-    emptyMessage: 'No hay comprobantes registrados.',
-    headers: {
-      invoiceNumber: 'Nro Comprobante',
-      orderId: 'ID Orden',
-      client: 'Cliente / Correo',
-      date: 'Fecha de Emisión',
-      total: 'Monto Total',
-      status: 'Estado',
-      actions: 'Acciones'
-    },
-    tooltips: {
-      download: 'Descargar PDF',
-      sendEmail: 'Reenviar Correo',
-      annul: 'Anular Boleta'
-    },
-    icons: {
-      download: 'pi pi-download',
-      sendEmail: 'pi pi-envelope',
-      annul: 'pi pi-times-circle'
-    }
-  };
 
   getStatusLabel(status: string): string {
     switch(status) {
-      case 'EMITIDO': return 'Emitido';
-      case 'ANULADO': return 'Anulado';
+      case 'EMITIDO': return this.content().status.issued;
+      case 'ANULADO': return this.content().status.annulled;
       default: return status;
     }
   }

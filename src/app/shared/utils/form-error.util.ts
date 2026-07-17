@@ -13,7 +13,6 @@ export function handleFormError(err: any, form: FormGroup): string | null {
 
   const errorResponse = err.error;
 
-  // Si hay errores de validación (fieldErrors map) - HTTP 400
   if (errorResponse.fieldErrors && Object.keys(errorResponse.fieldErrors).length > 0) {
     for (const [field, message] of Object.entries(errorResponse.fieldErrors)) {
       const control = form.get(field);
@@ -25,7 +24,6 @@ export function handleFormError(err: any, form: FormGroup): string | null {
     return errorResponse.message || 'Verifique los campos marcados en rojo.';
   }
 
-  // Errores de negocio (HTTP 401, 403, 404, 409, etc.)
   if (errorResponse.message) {
     return errorResponse.message;
   }

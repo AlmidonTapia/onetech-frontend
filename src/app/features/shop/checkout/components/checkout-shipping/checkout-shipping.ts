@@ -2,28 +2,28 @@ import { Component, Output, EventEmitter, inject, signal, Input, OnChanges, Simp
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 import { UbigeoService } from '../../../../../core/domains/shipping/services/ubigeo.service';
+import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/spinner';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-checkout-shipping',
   standalone: true,
-  imports: [CurrencyPenPipe],
+  imports: [CurrencyPenPipe, SpinnerComponent],
   templateUrl: './checkout-shipping.html',
   styleUrl: './checkout-shipping.css'
 })
 export class CheckoutShippingComponent implements OnChanges {
   @Input() ubigeoCode?: string;
-  @Output() selected = new EventEmitter<ShipmentMethod>();
+  @Output() selected = new EventEmitter<ShipmentMethod | null>();
 
   private ubigeoService = inject(UbigeoService);
 
   methods = signal<ShipmentMethod[]>([]);
   selectedId = signal<string | null>(null);
+  loading = signal(false);
 
-  content = {
-    title: 'Método de envío',
-    titleIcon: 'pi pi-truck',
-    noAvailable: 'No hay métodos de envío disponibles para esta zona.'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['ubigeoCode'] && this.ubigeoCode) {
@@ -32,6 +32,8 @@ export class CheckoutShippingComponent implements OnChanges {
   }
 
   loadRates(ubigeoCode: string) {
+    this.loading.set(true);
+    this.methods.set([]);
     this.ubigeoService.getRates(ubigeoCode).subscribe(rates => {
       const availableRates = rates.filter(r => r.isAvailable);
       const mappedMethods: ShipmentMethod[] = availableRates.map(r => ({
@@ -41,12 +43,13 @@ export class CheckoutShippingComponent implements OnChanges {
       }));
 
       this.methods.set(mappedMethods);
+      this.loading.set(false);
       if (mappedMethods.length) {
         this.selectedId.set(mappedMethods[0].idShipmentMethod);
         this.selected.emit(mappedMethods[0]);
       } else {
         this.selectedId.set(null);
-        this.selected.emit(undefined as any);
+        this.selected.emit(null);
       }
     });
   }

@@ -191,7 +191,6 @@
   padding-top: 8px;
 }
 
-/* Customize PrimeNG FileUpload Buttonbar with View Encapsulation Bypass */
 :host ::ng-deep .upload-area .p-fileupload-buttonbar {
   background: transparent !important;
   border: none !important;
@@ -202,7 +201,6 @@
   margin-bottom: 14px !important;
 }
 
-/* Base button overrides for PrimeNG upload buttons */
 :host ::ng-deep .upload-area .p-fileupload-buttonbar .p-button,
 :host ::ng-deep .upload-area .p-fileupload-buttonbar .p-fileupload-choose {
   font-family: inherit !important;
@@ -223,7 +221,6 @@
   text-decoration: none !important;
 }
 
-/* 1. Choose Button ("Elegir imágenes") */
 :host ::ng-deep .upload-area .p-fileupload-choose {
   background: var(--p-primary-50, #eff6ff) !important;
   border-color: var(--p-primary-200, #bfdbfe) !important;
@@ -238,7 +235,6 @@
   box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1) !important;
 }
 
-/* 2. Upload Button ("Subir") */
 :host ::ng-deep .upload-area .p-fileupload-buttonbar button[icon*="upload"],
 :host ::ng-deep .upload-area .p-fileupload-buttonbar .p-button-success,
 :host ::ng-deep .upload-area .p-fileupload-buttonbar .p-fileupload-upload {
@@ -256,7 +252,6 @@
   box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2) !important;
 }
 
-/* Disabled state */
 :host ::ng-deep .upload-area .p-fileupload-buttonbar button:disabled {
   background: #f1f5f9 !important;
   border-color: #e2e8f0 !important;
@@ -266,7 +261,6 @@
   box-shadow: none !important;
 }
 
-/* 3. Cancel Button ("Limpiar") */
 :host ::ng-deep .upload-area .p-fileupload-buttonbar button[icon*="times"],
 :host ::ng-deep .upload-area .p-fileupload-buttonbar .p-button-secondary,
 :host ::ng-deep .upload-area .p-fileupload-buttonbar .p-fileupload-cancel {
@@ -284,7 +278,6 @@
   transform: translateY(-1px) !important;
 }
 
-/* Customize PrimeNG FileUpload Content Area */
 :host ::ng-deep .upload-area .p-fileupload-content {
   background: var(--ot-bg-body-secondary, #f8fafc) !important;
   border: 2px dashed var(--ot-border-color, #e2e8f0) !important;
@@ -298,7 +291,6 @@
   justify-content: center !important;
 }
 
-/* File list inside upload area */
 :host ::ng-deep .upload-area .p-fileupload-files {
   width: 100% !important;
 }
@@ -319,14 +311,12 @@
   padding: 0 !important;
 }
 
-/* Image preview in row */
 :host ::ng-deep .upload-area .p-fileupload-row img {
   border-radius: 4px !important;
   object-fit: cover !important;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
 }
 
-/* Filename text */
 :host ::ng-deep .upload-area .p-fileupload-filename {
   font-size: 13px !important;
   font-weight: 500 !important;
@@ -337,13 +327,11 @@
   text-overflow: ellipsis !important;
 }
 
-/* File size text */
 :host ::ng-deep .upload-area .p-fileupload-files div:nth-child(3) {
   font-size: 12px !important;
   color: #64748b !important;
 }
 
-/* Remove button in upload list */
 :host ::ng-deep .upload-area .p-fileupload-row .p-button-icon-only {
   width: 30px !important;
   height: 30px !important;

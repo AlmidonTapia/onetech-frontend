@@ -1,54 +1,50 @@
 <div class="page-container">
   <div class="page-header">
     <div>
-      <h1 class="page-title">{{ content.title }}</h1>
-      <p class="page-subtitle">{{ content.subtitle }}</p>
+      <h1 class="page-title">{{ content().title }}</h1>
+      <p class="page-subtitle">{{ content().subtitle }}</p>
     </div>
   </div>
 
   <div class="section-card">
     <div class="section-header">
-      <h3>{{ content.generalSection.title }}</h3>
+      <h3>{{ content().generalSection.title }}</h3>
     </div>
 
     <form [formGroup]="form" class="settings-form">
       <div class="form-grid">
         <div class="form-field">
-          <label>{{ content.generalSection.labels.companyName }}</label>
+          <label>{{ content().generalSection.labels.companyName }}</label>
           <input pInputText formControlName="companyName" [class.ng-invalid]="isInvalid('companyName')" [class.ng-dirty]="isInvalid('companyName')" />
         </div>
         <div class="form-field">
-          <label>{{ content.generalSection.labels.taxId }}</label>
+          <label>{{ content().generalSection.labels.taxId }}</label>
           <input pInputText formControlName="taxId" [class.ng-invalid]="isInvalid('taxId')" [class.ng-dirty]="isInvalid('taxId')" />
         </div>
         <div class="form-field">
-          <label>{{ content.generalSection.labels.address }}</label>
+          <label>{{ content().generalSection.labels.address }}</label>
           <input pInputText formControlName="address" [class.ng-invalid]="isInvalid('address')" [class.ng-dirty]="isInvalid('address')" />
         </div>
         <div class="form-field">
-          <label>{{ content.generalSection.labels.supportEmail }}</label>
+          <label>{{ content().generalSection.labels.supportEmail }}</label>
           <input pInputText formControlName="supportEmail" [class.ng-invalid]="isInvalid('supportEmail')" [class.ng-dirty]="isInvalid('supportEmail')" />
         </div>
         <div class="form-field">
-          <label>{{ content.generalSection.labels.supportPhone }}</label>
+          <label>{{ content().generalSection.labels.supportPhone }}</label>
           <input pInputText formControlName="supportPhone" [class.ng-invalid]="isInvalid('supportPhone')" [class.ng-dirty]="isInvalid('supportPhone')" />
         </div>
         <div class="form-field">
-          <label>{{ content.generalSection.labels.igvPercentage }}</label>
-          <p-inputNumber formControlName="igvPercentage" suffix="%" [min]="0" [max]="100" [class.ng-invalid]="isInvalid('igvPercentage')" [class.ng-dirty]="isInvalid('igvPercentage')"></p-inputNumber>
-        </div>
-        <div class="form-field">
-          <label>{{ content.generalSection.labels.freeShippingThreshold }}</label>
+          <label>{{ content().generalSection.labels.freeShippingThreshold }}</label>
           <p-inputNumber formControlName="freeShippingThreshold" mode="currency" currency="PEN" [min]="0" [class.ng-invalid]="isInvalid('freeShippingThreshold')" [class.ng-dirty]="isInvalid('freeShippingThreshold')"></p-inputNumber>
         </div>
         <div class="form-field">
-          <label>{{ content.generalSection.labels.orderExpirationMinutes }}</label>
+          <label>{{ content().generalSection.labels.orderExpirationMinutes }}</label>
           <p-inputNumber formControlName="orderExpirationMinutes" [min]="5" [class.ng-invalid]="isInvalid('orderExpirationMinutes')" [class.ng-dirty]="isInvalid('orderExpirationMinutes')"></p-inputNumber>
         </div>
       </div>
 
       <div class="form-actions">
-        <app-button [label]="content.generalSection.saveLabel" [icon]="content.generalSection.saveIcon"
+        <app-button [label]="content().generalSection.saveLabel" icon="pi pi-save"
           [loading]="saving()" (clicked)="onSave()" />
       </div>
     </form>

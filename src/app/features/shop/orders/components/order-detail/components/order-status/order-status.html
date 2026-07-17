@@ -4,9 +4,9 @@
         {{ statusMap[order().orderStatus].label }}
     </app-badge>
     @if (order().orderStatus === 'PENDIENTE' && timeLeft()) {
-      <div class="expiration-timer" [class.expired]="timeLeft() === 'Expirado'">
+      <div class="expiration-timer" [class.expired]="timeLeft() === t().orders.status.expiredLabel">
         <i class="pi pi-clock"></i>
-        <span>Vence en: {{ timeLeft() }}</span>
+        <span>{{ content().labels.expiresIn }}{{ timeLeft() }}</span>
       </div>
     }
   </div>
@@ -18,8 +18,7 @@
   
   @if (loadingShipment()) {
       <div class="shipment-loading">
-          <i class="pi pi-spin pi-spinner animate-spin"></i>
-          <span>{{ content().labels.loadingShipment }}</span>
+          <app-spinner [label]="content().labels.loadingShipment" size="sm" />
       </div>
   } @else if (shipment()) {
       <div class="shipment-tracker">
@@ -50,7 +49,7 @@
               }
               @if (shipment()?.pickupCode) {
                   <div class="shipment-info-row">
-                      <span class="info-label">Código de Recojo</span>
+                      <span class="info-label">{{ content().labels.pickupCode }}</span>
                       <code class="tracking-code">{{ shipment()?.pickupCode }}</code>
                   </div>
               }

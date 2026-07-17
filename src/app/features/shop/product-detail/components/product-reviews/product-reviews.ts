@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, inject, signal, computed } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe, DecimalPipe, CommonModule } from '@angular/common';
 import { StarRatingComponent } from '../../../../../shared/components/ui/star-rating/star-rating';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
@@ -8,11 +8,12 @@ import { AuthService } from '../../../../../core/domains/identity/services/auth.
 import { ReviewService } from '../../../../../core/domains/catalog/services/review.service';
 import { Review } from '../../../../../core/domains/catalog/models/review.model';
 import { InputTextModule } from 'primeng/inputtext';
+import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/spinner';
 
 @Component({
   selector: 'app-product-reviews',
   standalone: true,
-  imports: [FormsModule, StarRatingComponent, ButtonComponent, DatePipe, DecimalPipe, InputTextModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, StarRatingComponent, ButtonComponent, DatePipe, DecimalPipe, InputTextModule, SpinnerComponent],
   templateUrl: './product-reviews.html',
   styleUrl: './product-reviews.css'
 })

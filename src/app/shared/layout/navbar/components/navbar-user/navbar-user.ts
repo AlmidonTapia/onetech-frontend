@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../../../core/domains/identity/services/auth.service';
 import { Popover } from 'primeng/popover';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-navbar-user',
@@ -14,23 +15,20 @@ export class NavbarUserComponent {
   authService = inject(AuthService);
   private router = inject(Router);
 
-  content = {
-    guest: {
-      label: 'Bienvenido',
-      name: 'Inicia sesión',
-      route: '/auth/login'
-    },
-    user: {
-      label: 'MI CUENTA',
-      defaultName: 'Usuario',
-      menu: [
-        { label: 'Mi perfil', route: '/profile', icon: 'pi pi-user' },
-        { label: 'Mis compras', route: '/profile/orders', icon: 'pi pi-shopping-bag' },
-        { label: 'Favoritos', route: '/wishlist', icon: 'pi pi-heart' }
-      ],
-      logout: 'Cerrar sesión'
-    }
-  };
+  get currentUrl() {
+    return this.router.url;
+  }
+
+  ts = inject(TranslationService);
+  t = this.ts.t;
+
+  get menu() {
+    return [
+      { label: this.t().navbar.user.menu.profile, route: '/profile', icon: 'pi pi-user' },
+      { label: this.t().navbar.user.menu.orders, route: '/profile/orders', icon: 'pi pi-shopping-bag' },
+      { label: this.t().navbar.user.menu.wishlist, route: '/wishlist', icon: 'pi pi-heart' }
+    ];
+  }
 
   onLogout(op: any) {
     op.hide();

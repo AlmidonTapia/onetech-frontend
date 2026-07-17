@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
@@ -18,10 +18,10 @@ import { ConfirmationService } from 'primeng/api';
   styleUrl: './inbox-table.css'
 })
 export class InboxTableComponent {
-  @Input() messages: ContactMessage[] = [];
-  @Input() totalRecords = 0;
-  @Input() loading = false;
-  @Input() content: any;
+  messages = input.required<ContactMessage[]>();
+  totalRecords = input<number>(0);
+  loading = input<boolean>(false);
+  content = input.required<any>();
   
   @Output() lazyLoad = new EventEmitter<any>();
   @Output() search = new EventEmitter<string>();
@@ -38,20 +38,20 @@ export class InboxTableComponent {
   getMenuItems(message: ContactMessage): MenuItem[] {
     return [
       {
-        label: 'Marcar como Leído',
-        icon: 'pi pi-eye',
+        label: this.content().actions.markRead,
+        icon: this.content().icons.view,
         visible: message.status !== 'READ',
         command: () => this.statusChange.emit({ id: message.idContactMessage, status: 'READ' })
       },
       {
-        label: 'Marcar como No Leído',
+        label: this.content().actions.markUnread,
         icon: 'pi pi-eye-slash',
         visible: message.status === 'READ',
         command: () => this.statusChange.emit({ id: message.idContactMessage, status: 'UNREAD' })
       },
       {
-        label: 'Marcar como Respondido',
-        icon: 'pi pi-reply',
+        label: this.content().actions.markReplied,
+        icon: this.content().icons.reply,
         visible: message.status !== 'REPLIED',
         command: () => this.statusChange.emit({ id: message.idContactMessage, status: 'REPLIED' })
       },
@@ -59,8 +59,8 @@ export class InboxTableComponent {
         separator: true
       },
       {
-        label: 'Eliminar',
-        icon: 'pi pi-trash',
+        label: this.content().actions.delete,
+        icon: this.content().icons.delete,
         styleClass: 'text-red-500',
         command: () => this.confirmDelete(message)
       }
@@ -69,11 +69,11 @@ export class InboxTableComponent {
 
   confirmDelete(message: ContactMessage) {
     this.confirmationService.confirm({
-      message: `¿Estás seguro de que quieres eliminar el mensaje de ${message.name}?`,
-      header: 'Confirmar Eliminación',
+      message: this.content().confirmDelete.message.replace('{name}', message.name),
+      header: this.content().confirmDelete.title,
       icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sí, Eliminar',
-      rejectLabel: 'Cancelar',
+      acceptLabel: this.content().confirmDelete.acceptLabel,
+      rejectLabel: this.content().confirmDelete.rejectLabel,
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.delete.emit(message.idContactMessage);

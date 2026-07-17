@@ -13,6 +13,7 @@ import { ModalService } from '../../../../../shared/services/modal.service';
 import { ShippingRate, ShipmentMethod, LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
+import { TranslationService } from '../../../../../core/services/translation.service';
 import { forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestinationPickerComponent } from '../destination-picker/destination-picker';
@@ -44,6 +45,8 @@ export class RatesTableComponent implements OnInit {
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   rates = signal<ShippingRate[]>([]);
   agencies = signal<ShipmentMethod[]>([]);
@@ -71,71 +74,75 @@ export class RatesTableComponent implements OnInit {
 
   destinations = signal<DestinationChip[]>([]);
 
-  content = {
-    title: 'Tarifas de Envío',
-    newRateBtn: 'Nueva Tarifa',
-    createBtnLabel: 'Nueva Tarifa',
-    createBtnIcon: 'pi pi-plus',
-    quickSearch: 'Búsqueda rápida',
-    searchPlaceholder: 'Buscar agencia o ubigeo...',
-    emptyTable: 'No se encontraron tarifas que coincidan con los filtros aplicados.',
-    createDialogTitle: 'Configurar Nueva Tarifa',
-    editDialogTitle: 'Editar Tarifa Existente',
-    columns: {
-      agency: 'Agencia / Carrier',
-      destination: 'Destino (Ubigeo)',
-      address: 'Dirección',
-      cost: 'Costo Adicional',
-      status: 'Estado',
-      actions: 'Acciones'
-    },
-    modal: {
-      createTitle: 'Configurar Nueva Tarifa',
-      editTitle: 'Editar Tarifa Existente',
-      cancelBtn: 'Cancelar',
-      saveBtn: 'Guardar Tarifa'
-    },
-    filter: {
-      agencyPlaceholder: 'Todas las Agencias',
-      deptPlaceholder: 'Todos los Deptos.',
-      provPlaceholder: 'Todas las Provincias'
-    },
-    form: {
-      agencyLabel: 'Agencia de Envío *',
-      departmentLabel: 'Departamento (Opcional)',
-      provinceLabel: 'Provincia (Opcional)',
-      districtLabel: 'Distrito (Opcional)',
-      addressLabel: 'Dirección del Local (Opcional)',
-      costLabel: 'Costo Adicional *',
-      availableLabel: 'Disponible',
-      agencyPlaceholder: 'Seleccione una agencia',
-      addressPlaceholder: 'Ej: Av. Principal 123'
-    }
-  };
+  get content() {
+    return {
+      title: this.t().adminShipping.rates.title,
+      newRateBtn: this.t().adminShipping.rates.newRateBtn,
+      createBtnLabel: this.t().adminShipping.rates.newRateBtn,
+      createBtnIcon: 'pi pi-plus',
+      quickSearch: this.t().adminShipping.rates.quickSearch,
+      searchPlaceholder: this.t().adminShipping.rates.searchPlaceholder,
+      emptyTable: this.t().adminShipping.rates.emptyTable,
+      createDialogTitle: this.t().adminShipping.rates.modal.createTitle,
+      editDialogTitle: this.t().adminShipping.rates.modal.editTitle,
+      columns: {
+        agency: this.t().adminShipping.rates.columns.agency,
+        destination: this.t().adminShipping.rates.columns.destination,
+        address: this.t().adminShipping.rates.columns.address,
+        cost: this.t().adminShipping.rates.columns.cost,
+        status: this.t().adminShipping.rates.columns.status,
+        actions: this.t().adminShipping.rates.columns.actions
+      },
+      modal: {
+        createTitle: this.t().adminShipping.rates.modal.createTitle,
+        editTitle: this.t().adminShipping.rates.modal.editTitle,
+        cancelBtn: this.t().adminShipping.rates.modal.cancelBtn,
+        saveBtn: this.t().adminShipping.rates.modal.saveBtn
+      },
+      filter: {
+        agencyPlaceholder: this.t().adminShipping.rates.filter.agencyPlaceholder,
+        deptPlaceholder: this.t().adminShipping.rates.filter.deptPlaceholder,
+        provPlaceholder: this.t().adminShipping.rates.filter.provPlaceholder
+      },
+      form: {
+        agencyLabel: this.t().adminShipping.rates.form.agencyLabel,
+        departmentLabel: this.t().adminShipping.rates.form.departmentLabel,
+        provinceLabel: this.t().adminShipping.rates.form.provinceLabel,
+        districtLabel: this.t().adminShipping.rates.form.districtLabel,
+        addressLabel: this.t().adminShipping.rates.form.addressLabel,
+        costLabel: this.t().adminShipping.rates.form.costLabel,
+        availableLabel: this.t().adminShipping.rates.form.availableLabel,
+        agencyPlaceholder: this.t().adminShipping.rates.form.agencyPlaceholder,
+        addressPlaceholder: this.t().adminShipping.rates.form.addressPlaceholder
+      }
+    };
+  }
 
-  availabilityFilterOptions = [
-    { label: 'Todos los estados', value: 'ALL' },
-    { label: 'Disponible', value: 'AVAILABLE' },
-    { label: 'No Disponible', value: 'UNAVAILABLE' }
-  ];
+  get availabilityFilterOptions() {
+    return [
+      { label: this.t().adminShipping.rates.filters.allStatuses, value: 'ALL' },
+      { label: this.t().adminShipping.rates.filters.available, value: 'AVAILABLE' },
+      { label: this.t().adminShipping.rates.filters.unavailable, value: 'UNAVAILABLE' }
+    ];
+  }
 
   agencyFilterOptions = computed(() => {
     return [
-      { label: 'Todas las Agencias', value: 'ALL' },
+      { label: this.t().adminShipping.rates.filters.allAgencies, value: 'ALL' },
       ...this.agencies().map(a => ({ label: a.methodName, value: a.idShipmentMethod }))
     ];
   });
 
   departmentFilterOptions = computed(() => {
     return [
-      { label: 'Todos los Departamentos', value: 'ALL' },
+      { label: this.t().adminShipping.rates.filters.allDepartments, value: 'ALL' },
       ...this.filterDepartments().map(d => ({ label: d.name, value: d.id }))
     ];
   });
 
   provinceFilterOptions = computed(() => {
     return [
-      { label: 'Todas las Provincias', value: 'ALL' },
+      { label: this.t().adminShipping.rates.filters.allProvinces, value: 'ALL' },
       ...this.filterProvinces().map(p => ({ label: p.name, value: p.id }))
     ];
   });
@@ -227,7 +234,7 @@ export class RatesTableComponent implements OnInit {
         this.loading.set(false);
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || 'Error al cargar tarifas');
+        this.alertService.error(err?.error?.message || this.t().adminShipping.rates.alerts.loadError);
         this.loading.set(false);
       }
     });
@@ -272,7 +279,7 @@ export class RatesTableComponent implements OnInit {
     if (rate.departmentName) parts.push(rate.departmentName);
     if (rate.provinceName) parts.push(rate.provinceName);
     if (rate.districtName) parts.push(rate.districtName);
-    return parts.length > 0 ? parts.join(' / ') : 'Nacional (Todos)';
+    return parts.length > 0 ? parts.join(' / ') : this.t().adminShipping.rates.values.national;
   }
 
   openCreate() {
@@ -318,18 +325,18 @@ export class RatesTableComponent implements OnInit {
 
   delete(rate: ShippingRate) {
     this.modalService.open({
-      title: '¿Eliminar tarifa?',
-      message: `¿Estás seguro de que deseas eliminar esta tarifa de ${rate.methodName}?`,
+      title: this.t().adminShipping.rates.confirmDelete.title,
+      message: this.t().adminShipping.rates.confirmDelete.message.replace('{agency}', rate.methodName),
       severity: 'danger',
-      confirmLabel: 'Sí, eliminar',
+      confirmLabel: this.t().adminShipping.rates.confirmDelete.confirmLabel,
       onConfirm: () => {
         this.shipmentService.deleteRate(rate.idRate).subscribe({
           next: () => {
-            this.alertService.success('Tarifa eliminada');
+            this.alertService.success(this.t().adminShipping.rates.alerts.deleteSuccess);
             this.loadRates();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || 'Error al eliminar';
+            const errMsg = err?.error?.message || this.t().adminShipping.rates.alerts.deleteError;
             this.alertService.error(errMsg);
           }
         });
@@ -348,7 +355,7 @@ export class RatesTableComponent implements OnInit {
     }
     
     if (!this.isEdit() && this.destinations().length === 0) {
-      this.alertService.warn('Añade al menos un destino para la tarifa.');
+      this.alertService.warn(this.t().adminShipping.rates.alerts.requireDestination);
       return;
     }
 
@@ -358,13 +365,13 @@ export class RatesTableComponent implements OnInit {
     if (this.isEdit()) {
       this.shipmentService.updateRate(this.currentRateId!, data).subscribe({
         next: () => {
-          this.alertService.success('Tarifa actualizada');
+          this.alertService.success(this.t().adminShipping.rates.alerts.saveSuccess);
           this.showDialog.set(false);
           this.loadRates();
           this.submitting.set(false);
         },
         error: (err: any) => {
-          const errMsg = err?.error?.message || 'Error al actualizar la tarifa';
+          const errMsg = err?.error?.message || this.t().adminShipping.rates.alerts.saveError;
           this.alertService.error(errMsg);
           this.submitting.set(false);
         }
@@ -382,13 +389,13 @@ export class RatesTableComponent implements OnInit {
 
       forkJoin(requests).subscribe({
         next: () => {
-          this.alertService.success(`${requests.length} tarifa(s) creada(s) correctamente`);
+          this.alertService.success(this.t().adminShipping.rates.alerts.createSuccess.replace('{count}', requests.length.toString()));
           this.showDialog.set(false);
           this.loadRates();
           this.submitting.set(false);
         },
         error: (err: any) => {
-          const errMsg = err?.error?.message || 'Hubo un error al crear algunas tarifas';
+          const errMsg = err?.error?.message || this.t().adminShipping.rates.alerts.createError;
           this.alertService.error(errMsg);
           this.submitting.set(false);
           this.loadRates();

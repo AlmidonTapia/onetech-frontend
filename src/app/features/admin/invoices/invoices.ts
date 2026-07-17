@@ -4,6 +4,7 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { InvoiceService, Invoice } from '../../../core/domains/checkout/services/invoice.service';
 import { InvoicesTableComponent } from './components/invoices-table/invoices-table';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-invoices',
@@ -16,6 +17,8 @@ export class InvoicesComponent implements OnInit {
   private invoiceService = inject(InvoiceService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   invoices = signal<Invoice[]>([]);
   loading = signal(false);
@@ -23,10 +26,12 @@ export class InvoicesComponent implements OnInit {
   
   apiConfig = { pageSize: 10 };
 
-  content = {
-    title: 'Comprobantes de Pago',
-    badgeSuffix: ' boletas en total',
-  };
+  get content() {
+    return {
+      title: this.t().adminInvoices.title,
+      badgeSuffix: this.t().adminInvoices.badgeSuffix,
+    };
+  }
 
   ngOnInit() {
     this.loadInvoices();
@@ -50,23 +55,23 @@ export class InvoicesComponent implements OnInit {
     if (invoice.pdfUrl) {
       window.open(invoice.pdfUrl, '_blank');
     } else {
-      this.alertService.error('El enlace al PDF no está disponible.');
+      this.alertService.error(this.t().adminInvoices.alerts.pdfError);
     }
   }
 
   onSendEmail(invoice: Invoice) {
     this.modalService.open({
-      title: '¿Reenviar comprobante por correo?',
-      message: `Se reenviará la boleta ${invoice.invoiceNumber} al correo registrado.`,
+      title: this.t().adminInvoices.actions.sendEmail.title,
+      message: this.t().adminInvoices.actions.sendEmail.message.replace('{invoiceNumber}', invoice.invoiceNumber),
       severity: 'info',
-      confirmLabel: 'Sí, enviar',
+      confirmLabel: this.t().adminInvoices.actions.sendEmail.confirmLabel,
       onConfirm: () => {
         this.invoiceService.sendEmail(invoice.idInvoice).subscribe({
           next: () => {
-            this.alertService.success('Correo enviado exitosamente.');
+            this.alertService.success(this.t().adminInvoices.alerts.emailSuccess);
           },
           error: (err: any) => {
-            this.alertService.error(err?.error?.message || 'Error al enviar correo.');
+            this.alertService.error(err?.error?.message || this.t().adminInvoices.alerts.emailError);
           }
         });
       }
@@ -75,18 +80,18 @@ export class InvoicesComponent implements OnInit {
 
   onAnnul(invoice: Invoice) {
     this.modalService.open({
-      title: '¿Anular comprobante de pago?',
-      message: `La boleta ${invoice.invoiceNumber} será anulada permanentemente.`,
+      title: this.t().adminInvoices.actions.annul.title,
+      message: this.t().adminInvoices.actions.annul.message.replace('{invoiceNumber}', invoice.invoiceNumber),
       severity: 'danger',
-      confirmLabel: 'Sí, anular',
+      confirmLabel: this.t().adminInvoices.actions.annul.confirmLabel,
       onConfirm: () => {
         this.invoiceService.annul(invoice.idInvoice).subscribe({
           next: () => {
-            this.alertService.success('Comprobante anulado exitosamente.');
+            this.alertService.success(this.t().adminInvoices.alerts.annulSuccess);
             this.loadInvoices();
           },
           error: (err: any) => {
-            this.alertService.error(err?.error?.message || 'Error al anular comprobante.');
+            this.alertService.error(err?.error?.message || this.t().adminInvoices.alerts.annulError);
           }
         });
       }

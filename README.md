@@ -2,7 +2,7 @@
 
 Plataforma de E-commerce desarrollada en Angular 18+, diseñada para ofrecer una experiencia de usuario rápida, fluida y altamente reactiva.
 
-## 🚀 Funcionalidades y Módulos Recientes
+##  Funcionalidades y Módulos Recientes
 
 Se han implementado y refinado múltiples módulos administrativos y de cliente para mejorar la experiencia operativa y de compras:
 
@@ -17,6 +17,7 @@ Se han implementado y refinado múltiples módulos administrativos y de cliente 
 - **Experiencia de Usuario (UX/UI):**
   - Tablas dinámicas (PrimeNG/Tailwind) con paginación optimizada desde servidor.
   - Componentes de estados visuales mediante *badges* y paletas de color modernas.
+  - **Soporte Multi-idioma (i18n):** Sistema de internacionalización dinámico y reactivo basado en Angular Signals (ES/EN) sin recargas, utilizando un diccionario estrictamente tipado.
 
 ## 🛠️ Stack Tecnológico
 

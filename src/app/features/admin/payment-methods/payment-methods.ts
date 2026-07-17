@@ -8,6 +8,7 @@ import { PaymentService } from '../../../core/domains/checkout/services/payment.
 import { PaymentMethod } from '../../../core/domains/checkout/models/payment.model';
 import { PaymentMethodsTableComponent } from './components/payment-methods-table/payment-methods-table';
 import { PaymentMethodFormComponent } from './components/payment-method-form/payment-method-form';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-payment-methods',
@@ -21,6 +22,8 @@ export class PaymentMethodsComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   methods = signal<PaymentMethod[]>([]);
   loading = signal(false);
@@ -29,21 +32,23 @@ export class PaymentMethodsComponent implements OnInit {
   editingMethod = signal<PaymentMethod | null>(null);
   searchTerm = signal<string | undefined>(undefined);
 
-  content = {
-    title: 'Métodos de Pago',
-    badgeSuffix: ' métodos',
-    newBtnLabel: 'Nuevo Método',
-    table: {
-      quickSearchTitle: 'Búsqueda Rápida',
-      searchPlaceholder: 'Nombre del método...',
-      headers: {
-        name: 'Nombre del Método',
-        status: 'Estado',
-        actions: 'Acciones'
-      },
-      emptyMsg: 'No hay métodos de pago registrados.'
-    }
-  };
+  get content() {
+    return {
+      title: this.t().adminPaymentMethods.title,
+      badgeSuffix: this.t().adminPaymentMethods.badgeSuffix,
+      newBtnLabel: this.t().adminPaymentMethods.newBtnLabel,
+      table: {
+        quickSearchTitle: this.t().adminPaymentMethods.table.quickSearchTitle,
+        searchPlaceholder: this.t().adminPaymentMethods.table.searchPlaceholder,
+        headers: {
+          name: this.t().adminPaymentMethods.table.headers.name,
+          status: this.t().adminPaymentMethods.table.headers.status,
+          actions: this.t().adminPaymentMethods.table.headers.actions
+        },
+        emptyMsg: this.t().adminPaymentMethods.table.emptyMessage
+      }
+    };
+  }
 
   form = this.fb.group({
     methodName: ['', Validators.required],
@@ -102,13 +107,13 @@ export class PaymentMethodsComponent implements OnInit {
 
     req$.subscribe({
       next: () => {
-        this.alertService.success('Método de pago guardado');
+        this.alertService.success(this.t().adminPaymentMethods.alerts.saveSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadMethods();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || 'Error al guardar método';
+        const errMsg = err?.error?.message || this.t().adminPaymentMethods.alerts.saveError;
         this.alertService.error(errMsg);
         this.saving.set(false);
       }
@@ -117,18 +122,18 @@ export class PaymentMethodsComponent implements OnInit {
 
   onDelete(m: PaymentMethod) {
     this.modalService.open({
-      title: '¿Eliminar método de pago?',
-      message: `El método de pago "${m.methodName}" será eliminado de forma permanente.`,
+      title: this.t().adminPaymentMethods.confirmDelete.title,
+      message: this.t().adminPaymentMethods.confirmDelete.message.replace('{name}', m.methodName),
       severity: 'danger',
-      confirmLabel: 'Sí, eliminar',
+      confirmLabel: this.t().adminPaymentMethods.confirmDelete.confirmLabel,
       onConfirm: () => {
         this.paymentService.deleteMethod(m.idPaymentMethod).subscribe({
           next: () => {
-            this.alertService.success('Método de pago eliminado exitosamente');
+            this.alertService.success(this.t().adminPaymentMethods.alerts.deleteSuccess);
             this.loadMethods();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || 'Error al eliminar el método de pago';
+            const errMsg = err?.error?.message || this.t().adminPaymentMethods.alerts.deleteError;
             this.alertService.error(errMsg);
           }
         });

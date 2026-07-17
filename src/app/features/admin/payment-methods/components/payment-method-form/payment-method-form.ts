@@ -20,25 +20,8 @@ export class PaymentMethodFormComponent {
   onClose = output<void>();
   onSave = output<void>();
 
-  content = {
-    titleNew: 'Nuevo Método de Pago',
-    titleEdit: 'Editar Método de Pago',
-    labels: {
-      name: 'Nombre del Método',
-      status: 'Estado'
-    },
-    statusOptions: {
-      active: 'Activo',
-      inactive: 'Inactivo'
-    },
-    placeholders: {
-      name: 'Ej: Tarjeta de Crédito, PayPal'
-    },
-    buttons: {
-      cancel: 'Cancelar',
-      save: 'Guardar'
-    }
-  };
+  // We will pass content from parent now
+  content = input.required<any>();
 
   close() {
     this.onClose.emit();

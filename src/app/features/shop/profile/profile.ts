@@ -26,7 +26,6 @@ export class ProfileComponent {
     sidebarMenu: [
       { label: 'Información personal', route: '/profile/info', icon: 'pi pi-user' },
       { label: 'Mis pedidos', route: '/profile/orders', icon: 'pi pi-shopping-bag' },
-      { label: 'Direcciones', route: '/profile/addresses', icon: 'pi pi-map-marker' },
       { label: 'Seguridad', route: '/profile/security', icon: 'pi pi-lock' }
     ],
     

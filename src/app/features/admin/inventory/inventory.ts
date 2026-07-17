@@ -4,6 +4,7 @@ import { MovementFormComponent } from './components/movement-form/movement-form'
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { InventoryService } from '../../../core/domains/inventory/services/inventory.service';
 import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core/domains/inventory/models/inventory.model';
 import { handleFormError } from '../../../shared/utils/form-error.util';
@@ -20,6 +21,8 @@ export class InventoryComponent implements OnInit {
   private inventoryService = inject(InventoryService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @ViewChild(MovementFormComponent) movementForm!: MovementFormComponent;
 
@@ -34,26 +37,6 @@ export class InventoryComponent implements OnInit {
   apiConfig = {
     pageSize: 10
   };
-
-  content = {
-    title: 'Inventario',
-    countSuffix: 'movimientos registrados',
-    createBtnLabel: 'Registrar movimiento',
-    createBtnIcon: 'pi-plus',
-    cardPadding: 'none',
-    alerts: {
-      success: 'Movimiento registrado correctamente',
-      error: 'Error al registrar movimiento',
-      cancelSuccess: 'Movimiento de inventario anulado correctamente',
-      cancelError: 'Error al anular el movimiento de inventario'
-    },
-    confirmModal: {
-      title: '¿Anular movimiento?',
-      message: 'Esta acción anulará el movimiento seleccionado y revertirá el stock afectado del producto de forma permanente.',
-      severity: 'danger' as const,
-      confirmLabel: 'Sí, anular'
-    }
-  } as const;
 
   ngOnInit() {
     this.loadMovements();
@@ -86,14 +69,14 @@ export class InventoryComponent implements OnInit {
     this.saving.set(true);
     this.inventoryService.register(data).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.success);
+        this.alertService.success(this.t().adminInventory.alerts.success);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadMovements();
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.movementForm.form) || undefined;
-        this.alertService.error(this.content.alerts.error, errorMsg);
+        this.alertService.error(this.t().adminInventory.alerts.error, errorMsg);
         this.saving.set(false);
       }
     });
@@ -101,19 +84,19 @@ export class InventoryComponent implements OnInit {
 
   onCancel(id: string) {
     this.modalService.open({
-      title: this.content.confirmModal.title,
-      message: this.content.confirmModal.message,
-      severity: this.content.confirmModal.severity,
-      confirmLabel: this.content.confirmModal.confirmLabel,
+      title: this.t().adminInventory.confirmModal.title,
+      message: this.t().adminInventory.confirmModal.message,
+      severity: 'danger',
+      confirmLabel: this.t().adminInventory.confirmModal.confirmLabel,
       onConfirm: () => {
         this.loading.set(true);
         this.inventoryService.cancel(id).subscribe({
           next: () => {
-            this.alertService.success(this.content.alerts.cancelSuccess);
+            this.alertService.success(this.t().adminInventory.alerts.cancelSuccess);
             this.loadMovements();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || this.content.alerts.cancelError;
+            const errMsg = err?.error?.message || this.t().adminInventory.alerts.cancelError;
             this.alertService.error(errMsg);
             this.loading.set(false);
           }

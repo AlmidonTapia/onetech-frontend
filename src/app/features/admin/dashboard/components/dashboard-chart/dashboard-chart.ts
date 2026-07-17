@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, inject } from '@angular/core';
+import { TranslationService } from '../../../../../core/services/translation.service';
 import { ChartModule } from 'primeng/chart';
 
 @Component({
@@ -11,13 +12,18 @@ import { ChartModule } from 'primeng/chart';
 export class DashboardChartComponent implements OnChanges {
   @Input() data: any = null;
 
-  content = {
-    title: 'Órdenes por estado',
-    subtitle: 'últimas 10 órdenes',
-    emptyMessage: 'Sin datos disponibles',
-    chartType: 'doughnut',
-    chartHeight: '240'
-  } as const;
+  ts = inject(TranslationService);
+  t = this.ts.t;
+
+  get content() {
+    return {
+      title: this.t().adminDashboard.chart.title,
+      subtitle: this.t().adminDashboard.chart.subtitle,
+      emptyMessage: this.t().adminDashboard.chart.emptyMessage,
+      chartType: 'doughnut' as const,
+      chartHeight: '240'
+    };
+  }
 
   chartOptions = {
     plugins: {

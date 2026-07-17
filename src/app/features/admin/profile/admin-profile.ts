@@ -10,6 +10,7 @@ import { AuthService } from '../../../core/domains/identity/services/auth.servic
 import { User, UpdateProfileRequest } from '../../../core/domains/identity/models/user.model';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-admin-profile',
@@ -24,78 +25,17 @@ export class AdminProfileComponent implements OnInit {
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   authService = inject(AuthService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   saving = signal(false);
   savingPassword = signal(false);
   loading = signal(true);
   activeTab = signal<'info' | 'security'>('info');
 
-  content = {
-    title: 'Mi Perfil',
-    subtitle: 'Administra tu información personal y seguridad',
-
-    tabs: {
-      info: 'Información Personal',
-      security: 'Seguridad'
-    },
-
-    infoSection: {
-      title: 'Datos del administrador',
-      subtitle: 'Actualiza tus datos de contacto.',
-      labels: {
-        firstName: 'Nombre',
-        lastName: 'Apellido',
-        email: 'Correo electrónico',
-        documentType: 'Tipo de documento',
-        documentNumber: 'Número de documento',
-        phone: 'Teléfono / Celular'
-      },
-      hints: {
-        emailImmutable: 'El correo no puede modificarse.',
-        nameImmutable: 'El nombre se establece al registrarse.'
-      },
-      placeholders: {
-        docTypeSelect: 'Seleccionar',
-        docNumber: '12345678',
-        phone: '987654321'
-      },
-      errors: {
-        phonePattern: 'Ingresa un número de 9 dígitos.'
-      },
-      saveLabel: 'Guardar cambios',
-      saveIcon: 'pi-check'
-    },
-
-    securitySection: {
-      title: 'Cambiar contraseña',
-      subtitle: 'Usa una contraseña segura de al menos 8 caracteres.',
-      labels: {
-        currentPassword: 'Contraseña actual *',
-        newPassword: 'Nueva contraseña *',
-        confirmPassword: 'Confirmar nueva contraseña *'
-      },
-      placeholders: {
-        currentPassword: 'Tu contraseña actual',
-        newPassword: 'Mínimo 8 caracteres',
-        confirmPassword: 'Repite la nueva contraseña'
-      },
-      errors: {
-        required: 'Campo requerido',
-        minlength: 'Mínimo 8 caracteres',
-        mismatch: 'Las contraseñas no coinciden'
-      },
-      saveLabel: 'Actualizar contraseña',
-      saveIcon: 'pi-lock'
-    },
-
-    alerts: {
-      profileSuccess: 'Perfil actualizado correctamente',
-      profileError: 'Error al actualizar el perfil',
-      passwordSuccess: 'Contraseña actualizada correctamente',
-      passwordError: 'Error al cambiar contraseña',
-      passwordErrorMsg: 'Verifica tu contraseña actual.'
-    }
-  } as const;
+  get content() {
+    return this.t().adminProfile;
+  }
 
   readonly docTypes = [
     { label: 'DNI', value: 'DNI' },
@@ -159,7 +99,7 @@ export class AdminProfileComponent implements OnInit {
 
   get userName(): string {
     const user = this.authService.currentUser();
-    return user ? `${user.firstName} ${user.lastName}` : 'Administrador';
+    return user ? `${user.firstName} ${user.lastName}` : 'Admin';
   }
 
   get userEmail(): string {

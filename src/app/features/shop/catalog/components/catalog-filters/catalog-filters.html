@@ -1,28 +1,47 @@
 <aside class="filters-panel">
   <div class="filters-header">
-    <h3>{{ content.mainTitle }}</h3>
-    <button class="reset-btn" (click)="onReset()">{{ content.resetBtnText }}</button>
+    <h3>{{ t().catalog.filters.mainTitle }}</h3>
+    <button class="reset-btn" (click)="onReset()">{{ t().catalog.filters.resetBtnText }}</button>
   </div>
 
   <div class="filter-group">
     <button class="filter-title-btn" (click)="isCategoryOpen = !isCategoryOpen">
-      {{ content.categoryTitle }}
+      {{ t().catalog.filters.categoryTitle }}
       <i class="pi" [class.pi-angle-up]="isCategoryOpen" [class.pi-angle-down]="!isCategoryOpen"></i>
     </button>
     @if (isCategoryOpen) {
-    <ul class="filter-options animate-fade-in">
+    <ul class="filter-options animate-fade-in filter-scrollable">
       <li>
         <label class="filter-option" [class.filter-option--active]="!localFilters.categoryId">
-          <input type="radio" name="category" [value]="undefined" [(ngModel)]="localFilters.categoryId" />
-          <span>{{ content.allCategoriesOption }}</span>
+          <input type="radio" name="category" [value]="''" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" />
+          <span>{{ t().catalog.filters.allCategoriesOption }}</span>
         </label>
       </li>
-      @for (cat of categories; track cat.idCategory) {
-      <li>
-        <label class="filter-option" [class.filter-option--active]="localFilters.categoryId === cat.idCategory">
-          <input type="radio" name="category" [value]="cat.idCategory" [(ngModel)]="localFilters.categoryId" />
-          <span>{{ cat.categoryName }}</span>
-        </label>
+      @for (node of categoryTree; track node.parent.idCategory) {
+      <li class="category-node">
+        <div class="category-node-header">
+          <label class="filter-option" [class.filter-option--active]="localFilters.categoryId === node.parent.idCategory">
+            <input type="radio" name="category" [value]="node.parent.idCategory" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" />
+            <span>{{ node.parent.categoryName }}</span>
+          </label>
+          @if (node.children.length > 0) {
+            <button class="category-toggle-btn" (click)="toggleCategoryNode(node, $event)">
+              <i class="pi" [class.pi-chevron-up]="node.isOpen" [class.pi-chevron-down]="!node.isOpen"></i>
+            </button>
+          }
+        </div>
+        @if (node.isOpen && node.children.length > 0) {
+        <ul class="filter-options filter-subcategories animate-fade-in">
+          @for (child of node.children; track child.idCategory) {
+          <li>
+            <label class="filter-option" [class.filter-option--active]="localFilters.categoryId === child.idCategory">
+              <input type="radio" name="category" [value]="child.idCategory" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" />
+              <span>{{ child.categoryName }}</span>
+            </label>
+          </li>
+          }
+        </ul>
+        }
       </li>
       }
     </ul>
@@ -31,21 +50,21 @@
 
   <div class="filter-group">
     <button class="filter-title-btn" (click)="isBrandOpen = !isBrandOpen">
-      {{ content.brandTitle }}
+      {{ t().catalog.filters.brandTitle }}
       <i class="pi" [class.pi-angle-up]="isBrandOpen" [class.pi-angle-down]="!isBrandOpen"></i>
     </button>
     @if (isBrandOpen) {
-    <ul class="filter-options animate-fade-in">
+    <ul class="filter-options animate-fade-in filter-scrollable">
       <li>
         <label class="filter-option" [class.filter-option--active]="!localFilters.brandId">
-          <input type="radio" name="brand" [value]="undefined" [(ngModel)]="localFilters.brandId" />
-          <span>Todas</span>
+          <input type="radio" name="brand" [value]="''" [(ngModel)]="localFilters.brandId" (ngModelChange)="onApply()" />
+          <span>{{ t().catalog.filters.allBrandsOption }}</span>
         </label>
       </li>
       @for (brand of brands; track brand.idBrand) {
       <li>
         <label class="filter-option" [class.filter-option--active]="localFilters.brandId === brand.idBrand">
-          <input type="radio" name="brand" [value]="brand.idBrand" [(ngModel)]="localFilters.brandId" />
+          <input type="radio" name="brand" [value]="brand.idBrand" [(ngModel)]="localFilters.brandId" (ngModelChange)="onApply()" />
           <span>{{ brand.brandName }}</span>
         </label>
       </li>
@@ -56,18 +75,18 @@
 
   <div class="filter-group">
     <button class="filter-title-btn" (click)="isPriceOpen = !isPriceOpen">
-      {{ content.priceTitle }}
+      {{ t().catalog.filters.priceTitle }}
       <i class="pi" [class.pi-angle-up]="isPriceOpen" [class.pi-angle-down]="!isPriceOpen"></i>
     </button>
     @if (isPriceOpen) {
     <div class="price-inputs animate-fade-in">
-      <input type="number" [(ngModel)]="localFilters.minPrice" [placeholder]="content.minPricePlaceholder" min="0" />
+      <input type="number" [(ngModel)]="localFilters.minPrice" (change)="onApply()" (keydown.enter)="onApply()" [placeholder]="t().catalog.filters.minPricePlaceholder" min="0" />
       <span class="price-sep">—</span>
-      <input type="number" [(ngModel)]="localFilters.maxPrice" [placeholder]="content.maxPricePlaceholder" min="0" />
+      <input type="number" [(ngModel)]="localFilters.maxPrice" (change)="onApply()" (keydown.enter)="onApply()" [placeholder]="t().catalog.filters.maxPricePlaceholder" min="0" />
     </div>
     }
   </div>
 
-  <app-button variant="primary" [label]="content.applyBtnLabel" [icon]="content.applyBtnIcon" [fullWidth]="true"
+  <app-button variant="primary" [label]="t().catalog.filters.applyBtnLabel" icon="pi-filter" [fullWidth]="true"
     (clicked)="onApply()" />
 </aside>

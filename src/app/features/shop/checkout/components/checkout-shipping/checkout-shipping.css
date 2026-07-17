@@ -52,3 +52,17 @@
 .method-name { font-size:14px; font-weight:700; color:var(--ot-text-main); }
 .method-price { font-size:15px; font-weight:800; color:var(--ot-blue); }
 .no-methods-available { color: var(--ot-status-error); font-weight: 500; font-size: 14px; text-align: center; padding: 10px; }
+
+.shipping-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 16px;
+  color: var(--ot-text-muted);
+  font-size: 14px;
+}
+
+.shipping-loading i {
+  font-size: 20px;
+  color: var(--ot-primary);
+}

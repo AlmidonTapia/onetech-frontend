@@ -5,6 +5,7 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { Product, ProductImage } from '../../../../../core/domains/catalog/models/product.model';
 import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-product-images-manager',
@@ -16,6 +17,8 @@ import { ProductService } from '../../../../../core/domains/catalog/services/pro
 export class ProductImagesManagerComponent implements OnChanges { 
   private productService = inject(ProductService);
   private alertService = inject(AlertService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @Input() visible = false;
   @Input() product: Product | null = null;
@@ -25,32 +28,32 @@ export class ProductImagesManagerComponent implements OnChanges {
   images = signal<ProductImage[]>([]);
   uploading = signal(false);
 
-  content = {
-    headerPrefix: 'Imágenes — ',
-    dialogWidth: '620px',
-    altText: 'Imagen del producto',
-    mainBadgeLabel: 'Principal',
-    emptyMessage: 'Sin imágenes. Sube la primera imagen abajo.',
-    uploadConfig: {
-      mode: 'advanced' as const,
-      accept: 'image/*',
-      chooseLabel: 'Elegir imágenes',
-      uploadLabel: 'Subir',
-      cancelLabel: 'Limpiar',
-      maxFileSize: 10000000,
-      styleClass: 'upload-area',
-      uploadNote: 'Soporta múltiples archivos. Límite de 5 imágenes en total. Tamaño máx: 10MB.'
-    },
-    actions: {
-      closeLabel: 'Cerrar'
-    },
-    alerts: {
-      uploadSuccess: 'Imágenes subidas con éxito',
-      uploadError: 'Error al subir imágenes',
-      deleteSuccess: 'Imagen eliminada',
-      deleteError: 'Error al eliminar la imagen'
-    }
-  } as const;
+  get content() {
+    return {
+      headerPrefix: this.t().adminProducts.images.headerPrefix,
+      dialogWidth: '620px',
+      altText: this.t().adminProducts.images.altText,
+      mainBadgeLabel: this.t().adminProducts.images.mainBadgeLabel,
+      emptyMessage: this.t().adminProducts.images.emptyMessage,
+      uploadedImages: this.t().adminProducts.images.uploadedImages,
+      setMainTooltip: this.t().adminProducts.images.setMainTooltip,
+      deleteTooltip: this.t().adminProducts.images.deleteTooltip,
+      uploadNewTitle: this.t().adminProducts.images.uploadNewTitle,
+      uploadConfig: {
+        mode: 'advanced' as const,
+        accept: 'image/*, image/webp, .webp',
+        chooseLabel: this.t().adminProducts.images.upload.chooseLabel,
+        uploadLabel: this.t().adminProducts.images.upload.uploadLabel,
+        cancelLabel: this.t().adminProducts.images.upload.cancelLabel,
+        maxFileSize: 10000000,
+        styleClass: 'upload-area',
+        uploadNote: this.t().adminProducts.images.upload.note
+      },
+      actions: {
+        closeLabel: this.t().adminProducts.images.closeLabel
+      }
+    };
+  }
 
   ngOnChanges() {
     if (this.product) {
@@ -69,7 +72,7 @@ export class ProductImagesManagerComponent implements OnChanges {
 
     this.productService.uploadImages(this.product.idProduct, files, 0).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.uploadSuccess);
+        this.alertService.success(this.t().adminProducts.alerts.imageUploadSuccess);
         this.productService.getImages(this.product!.idProduct).subscribe({
           next: (imgs) => {
             this.images.set(imgs || []);
@@ -85,7 +88,7 @@ export class ProductImagesManagerComponent implements OnChanges {
         });
       },
       error: (err: any) => {
-        const errorMsg = err?.error?.message || this.content.alerts.uploadError;
+        const errorMsg = err?.error?.message || this.t().adminProducts.alerts.imageUploadError;
         this.alertService.error(errorMsg);
         this.uploading.set(false);
       }
@@ -97,12 +100,12 @@ export class ProductImagesManagerComponent implements OnChanges {
 
     this.productService.deleteImage(this.product.idProduct, idImage).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.deleteSuccess);
+        this.alertService.success(this.t().adminProducts.alerts.imageDeleteSuccess);
         this.images.update((imgs: ProductImage[]) => imgs.filter((img: ProductImage) => img.idProductImage !== idImage));
         this.updated.emit();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.content.alerts.deleteError);
+        this.alertService.error(err?.error?.message || this.t().adminProducts.alerts.imageDeleteError);
       }
     });
   }
@@ -112,7 +115,7 @@ export class ProductImagesManagerComponent implements OnChanges {
 
     this.productService.setPrincipalImage(this.product.idProduct, idImage).subscribe({
       next: () => {
-        this.alertService.success('Imagen establecida como principal');
+        this.alertService.success(this.t().adminProducts.alerts.imageMainSuccess);
         this.images.update((imgs: ProductImage[]) =>
           imgs.map((img: ProductImage) => ({
             ...img,
@@ -122,7 +125,7 @@ export class ProductImagesManagerComponent implements OnChanges {
         this.updated.emit();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || 'Error al establecer la imagen principal');
+        this.alertService.error(err?.error?.message || this.t().adminProducts.alerts.imageMainError);
       }
     });
   }

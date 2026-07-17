@@ -9,6 +9,10 @@ export const idempotencyInterceptor: HttpInterceptorFn = (req, next) => {
         return next(req);
     }
 
+    if (req.headers.has('Idempotency-Key')) {
+        return next(req);
+    }
+
     const body = req.body ? JSON.stringify(req.body) : '';
     const fingerprint = req.urlWithParams + '|' + body;
 

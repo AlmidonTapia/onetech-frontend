@@ -1,11 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button';
+import { OrderService } from '../../../../core/domains/checkout/services/order.service';
+import { Order } from '../../../../core/domains/checkout/models/order.model';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { SpinnerComponent } from '../../../../shared/components/ui/spinner/spinner';
 
 @Component({
   selector: 'app-checkout-success',
   standalone: true,
-  imports: [ButtonComponent, RouterLink],
+  imports: [ButtonComponent, RouterLink, CurrencyPipe, DatePipe, SpinnerComponent],
   template: `
     <div class="success-container">
       <div class="success-card">
@@ -19,11 +23,39 @@ import { ButtonComponent } from '../../../../shared/components/ui/button/button'
           <span class="order-label">{{ content.orderLabel }}</span>
           <span class="order-id">#{{ orderId }}</span>
         </div>
+
+        @if (isLoading()) {
+          <div class="skeleton-wrapper">
+            <app-spinner label="Cargando detalles de tu compra..." />
+          </div>
+        } @else if (orderData()) {
+          <div class="order-details-card">
+            <div class="detail-row">
+              <span class="detail-label">Fecha:</span>
+              <span class="detail-value">{{ orderData()!.createdAt | date:'medium' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Total pagado:</span>
+              <span class="detail-value total-highlight">{{ orderData()!.totalAmount | currency:'PEN':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Método de envío:</span>
+              <span class="detail-value">{{ orderData()!.snapShipmentMethodName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Destino:</span>
+              <span class="detail-value">
+                {{ orderData()!.snapDepartmentName }}, {{ orderData()!.snapProvinceName }}<br>
+                <small>{{ orderData()!.snapDistrictName }}</small>
+              </span>
+            </div>
+          </div>
+        }
         
         <p class="success-desc">{{ content.description }}</p>
         
         <div class="success-actions">
-          <app-button variant="outline" [label]="content.trackBtn" [routerLink]="['/orders']" />
+          <app-button variant="outline" [label]="content.trackBtn" [routerLink]="['/profile/orders']" />
           <app-button variant="primary" [label]="content.continueBtn" [routerLink]="['/catalog']" />
         </div>
       </div>
@@ -67,7 +99,7 @@ import { ButtonComponent } from '../../../../shared/components/ui/button/button'
       background: var(--ot-bg-body);
       padding: 1rem;
       border-radius: var(--ot-radius-md);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -84,6 +116,51 @@ import { ButtonComponent } from '../../../../shared/components/ui/button/button'
       font-weight: 700;
       color: var(--ot-primary);
     }
+    .loading-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--ot-text-muted);
+      padding: 1rem 0;
+      margin-bottom: 1.5rem;
+    }
+    .order-details-card {
+      text-align: left;
+      background: var(--ot-bg-body);
+      border-radius: var(--ot-radius-md);
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--ot-border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--ot-border-color);
+      padding-bottom: 0.5rem;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .detail-label {
+      color: var(--ot-text-muted);
+      font-size: 0.9rem;
+    }
+    .detail-value {
+      color: var(--ot-text-main);
+      font-weight: 500;
+      text-align: right;
+    }
+    .total-highlight {
+      color: var(--ot-primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
     .success-desc {
       color: var(--ot-text-main);
       line-height: 1.5;
@@ -97,10 +174,14 @@ import { ButtonComponent } from '../../../../shared/components/ui/button/button'
     }
   `]
 })
-export class CheckoutSuccessComponent {
+export class CheckoutSuccessComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private orderService = inject(OrderService);
 
   orderId = this.route.snapshot.paramMap.get('id') || 'N/A';
+  
+  isLoading = signal<boolean>(false);
+  orderData = signal<Order | null>(null);
 
   content = {
     title: '¡Gracias por tu compra!',
@@ -110,4 +191,19 @@ export class CheckoutSuccessComponent {
     trackBtn: 'Ver mis pedidos',
     continueBtn: 'Seguir comprando'
   };
+
+  ngOnInit() {
+    if (this.orderId && this.orderId !== 'N/A') {
+      this.isLoading.set(true);
+      this.orderService.getById(this.orderId).subscribe({
+        next: (order) => {
+          this.orderData.set(order);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        }
+      });
+    }
+  }
 }

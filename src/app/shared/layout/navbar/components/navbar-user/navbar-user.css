@@ -58,7 +58,6 @@
     color: var(--ot-text-muted);
 }
 
-/* User Menu Dropdown */
 .user-menu-header {
     display: flex;
     align-items: center;

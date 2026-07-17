@@ -1,9 +1,14 @@
 <div class="step-section">
   <h3 class="step-title">
-    <i [class]="content.titleIcon"></i> {{ content.title }}
+    <i class="pi pi-truck"></i> {{ t().checkout.shipping.title }}
   </h3>
 
   <div class="shipping-list">
+    @if (loading()) {
+      <div class="shipping-loading">
+        <app-spinner [label]="t().checkout.shipping.loading" size="sm" />
+      </div>
+    } @else {
     @for (method of methods(); track method.idShipmentMethod) {
     <div class="shipping-option" [class.shipping-option--selected]="selectedId() === method.idShipmentMethod"
       (click)="select(method)">
@@ -15,7 +20,8 @@
     </div>
     }
     @if (methods().length === 0) {
-      <p class="no-methods-available">{{ content.noAvailable }}</p>
+        <p class="no-methods-available">{{ t().checkout.shipping.noAvailable }}</p>
+      }
     }
   </div>
 </div>

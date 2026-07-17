@@ -7,6 +7,7 @@ import { Product } from '../../../../../core/domains/catalog/models/product.mode
 import { Popover } from 'primeng/popover';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { NgOptimizedImage } from '@angular/common';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-navbar-search',
@@ -26,22 +27,14 @@ export class NavbarSearchComponent implements OnInit, OnDestroy {
   results = signal<Product[]>([]);
   loading = signal(false);
 
-  content = {
-    catalogRoute: '/catalog',
-    searchParamKey: 'search',
-    placeholderText: 'Buscar laptops, celulares, componentes...',
-    ariaLabels: {
-      input: 'Buscar productos',
-      button: 'Buscar'
-    },
-    searchIcon: 'pi pi-search'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   search() {
     const q = this.query.trim();
     if (q) {
-      this.router.navigate([this.content.catalogRoute], {
-        queryParams: { [this.content.searchParamKey]: q }
+      this.router.navigate(['/catalog'], {
+        queryParams: { search: q }
       });
     }
   }

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { ButtonComponent } from '../../../../shared/components/ui/button/button'
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
+import { StoreConfigService } from '../../../../shared/services/store-config.service';
 
 @Component({
   selector: 'app-contact-us',
@@ -25,6 +26,7 @@ export class ContactUsComponent {
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);
   private http = inject(HttpClient);
+  private storeConfigService = inject(StoreConfigService);
 
   loading = signal(false);
 
@@ -34,9 +36,9 @@ export class ContactUsComponent {
     infoTitle: 'Información de Contacto',
     formTitle: 'Envíanos un mensaje',
     contactDetails: [
-      { icon: 'pi pi-map-marker', title: 'Ubicación', desc: 'Av. Javier Prado 1234, San Isidro, Lima' },
-      { icon: 'pi pi-phone', title: 'Teléfono', desc: '+51 (01) 234-5678' },
-      { icon: 'pi pi-envelope', title: 'Correo', desc: 'soporte@onetech.pe' },
+      { icon: 'pi pi-map-marker', title: 'Ubicación', desc: 'Cargando...' },
+      { icon: 'pi pi-phone', title: 'Teléfono', desc: 'Cargando...' },
+      { icon: 'pi pi-envelope', title: 'Correo', desc: 'Cargando...' },
       { icon: 'pi pi-clock', title: 'Horario', desc: 'Lunes a Sábado: 9:00 AM - 6:00 PM' }
     ],
     fields: {
@@ -68,6 +70,17 @@ export class ContactUsComponent {
   isInvalid(field: string) {
     const ctrl = this.form.get(field);
     return ctrl?.invalid && ctrl?.touched;
+  }
+
+  ngOnInit() {
+    this.storeConfigService.getConfiguration().subscribe({
+      next: (config) => {
+        this.content.contactDetails[0].desc = config.address || 'No disponible';
+        this.content.contactDetails[1].desc = config.supportPhone || 'No disponible';
+        this.content.contactDetails[2].desc = config.supportEmail || 'No disponible';
+      },
+      error: () => {}
+    });
   }
 
   onSubmit() {

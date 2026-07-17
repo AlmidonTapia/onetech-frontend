@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { ProductService } from '../../../core/domains/catalog/services/product.service';
 import { CategoryService } from '../../../core/domains/catalog/services/category.service';
 import { BrandService } from '../../../core/domains/catalog/services/brand.service';
@@ -35,6 +36,8 @@ export class ProductsComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @ViewChild(ProductFormComponent) productForm!: ProductFormComponent;
 
@@ -58,29 +61,6 @@ export class ProductsComponent implements OnInit {
     lookupPage: 0,
     lookupSize: 100
   };
-
-  content = {
-    title: 'Productos',
-    countSuffix: 'productos registrados',
-    createBtnLabel: 'Nuevo producto',
-    createBtnIcon: 'pi-plus',
-    cardPadding: 'none',
-    searchPlaceholder: 'Buscar por nombre o SKU...',
-    refreshBtnLabel: 'Actualizar',
-    refreshBtnIcon: 'pi-refresh',
-    alerts: {
-      createSuccess: 'Producto creado',
-      updateSuccess: 'Producto actualizado',
-      saveError: 'Error al guardar',
-      deleteSuccess: 'Producto eliminado',
-      deleteError: 'Error al eliminar'
-    },
-    confirmModal: {
-      title: '¿Eliminar producto?',
-      severity: 'danger' as const,
-      confirmLabel: 'Sí, eliminar'
-    }
-  } as const;
 
   ngOnInit() {
     this.searchSubject.pipe(
@@ -137,14 +117,14 @@ export class ProductsComponent implements OnInit {
 
     op.subscribe({
       next: () => {
-        this.alertService.success(isEditing ? this.content.alerts.updateSuccess : this.content.alerts.createSuccess);
+        this.alertService.success(isEditing ? this.t().adminProducts.alerts.updateSuccess : this.t().adminProducts.alerts.createSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadProducts();
       },
       error: (err: any) => {
         const errorMsg = handleFormError(err, this.productForm.form) || undefined;
-        this.alertService.error(this.content.alerts.saveError, errorMsg);
+        this.alertService.error(this.t().adminProducts.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -152,16 +132,16 @@ export class ProductsComponent implements OnInit {
 
   onDelete(p: Product) {
     this.modalService.open({
-      title: this.content.confirmModal.title,
-      message: `"${p.productName}" será eliminado permanentemente.`,
-      severity: this.content.confirmModal.severity,
-      confirmLabel: this.content.confirmModal.confirmLabel,
+      title: this.t().adminProducts.confirmModal.title,
+      message: `"${p.productName}" ${this.t().adminProducts.confirmModal.messageText}`,
+      severity: 'danger',
+      confirmLabel: this.t().adminProducts.confirmModal.confirmLabel,
       onConfirm: () => this.productService.delete(p.idProduct).subscribe({
         next: () => {
-          this.alertService.success(this.content.alerts.deleteSuccess);
+          this.alertService.success(this.t().adminProducts.alerts.deleteSuccess);
           this.loadProducts();
         },
-        error: () => this.alertService.error(this.content.alerts.deleteError),
+        error: () => this.alertService.error(this.t().adminProducts.alerts.deleteError),
       }),
     });
   }

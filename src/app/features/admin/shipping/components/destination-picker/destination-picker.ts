@@ -9,6 +9,7 @@ import { ShipmentService } from '../../../../../core/domains/shipping/services/s
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
 import { DestinationChip } from '../rates-table/rates-table';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-destination-picker',
@@ -20,6 +21,8 @@ import { DestinationChip } from '../rates-table/rates-table';
 export class DestinationPickerComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @Input() destinations: DestinationChip[] = [];
   @Output() destinationsChange = new EventEmitter<DestinationChip[]>();
@@ -91,7 +94,7 @@ export class DestinationPickerComponent implements OnInit {
     const address = this.pickerAddress().trim();
 
     if (!deptId && provIds.length === 0 && distIds.length === 0) {
-      this.alertService.warn('Seleccione al menos un nivel de ubicación');
+      this.alertService.warn(this.t().adminShipping.destinationPicker.alerts.requireLevel);
       return;
     }
 
@@ -134,7 +137,7 @@ export class DestinationPickerComponent implements OnInit {
         idDepartment: deptId,
         idProvince: undefined,
         idDistrict: undefined,
-        label: address ? `${dept.name} (Dirección: ${address})` : `${dept.name}`,
+        label: address ? `${dept.name} (${this.t().adminShipping.destinationPicker.addressLabel.replace('{address}', address)})` : `${dept.name}`,
         agencyAddress: address || undefined
       });
     }
@@ -155,7 +158,7 @@ export class DestinationPickerComponent implements OnInit {
     }
 
     if (addedCount === 0 && chipsToAdd.length > 0) {
-      this.alertService.warn('Los destinos seleccionados ya fueron agregados');
+      this.alertService.warn(this.t().adminShipping.destinationPicker.alerts.duplicates);
       return;
     }
 

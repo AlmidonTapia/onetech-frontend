@@ -7,6 +7,7 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { CouponService } from '../../../core/domains/checkout/services/coupon.service';
 import { Coupon, CreateCouponRequest } from '../../../core/domains/checkout/models/coupon.model';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-coupons',
@@ -19,6 +20,8 @@ export class CouponsComponent implements OnInit {
   private couponService = inject(CouponService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @ViewChild(CouponFormComponent) couponForm!: CouponFormComponent;
 
@@ -32,25 +35,9 @@ export class CouponsComponent implements OnInit {
   filterType = signal<string | undefined>(undefined);
   filterStatus = signal<string | undefined>(undefined);
 
-  content = {
-    title: 'Cupones',
-    countSuffix: 'cupones registrados',
-    createBtnLabel: 'Nuevo Cupón',
-    createBtnIcon: 'pi-plus',
-    cardPadding: 'none',
-    alerts: {
-      createSuccess: 'Cupón creado',
-      updateSuccess: 'Cupón actualizado',
-      saveError: 'Error al guardar cupón',
-      deleteSuccess: 'Cupón eliminado',
-      deleteError: 'Error al eliminar cupón'
-    },
-    confirmModal: {
-      title: '¿Eliminar cupón?',
-      severity: 'danger' as const,
-      confirmLabel: 'Sí, eliminar'
-    }
-  } as const;
+  apiConfig = {
+    pageSize: 10
+  };
 
   ngOnInit() {
     this.loadCoupons();
@@ -100,14 +87,14 @@ export class CouponsComponent implements OnInit {
 
     req$.subscribe({
       next: () => {
-        this.alertService.success(isEditing ? this.content.alerts.updateSuccess : this.content.alerts.createSuccess);
+        this.alertService.success(isEditing ? this.t().adminCoupons.alerts.updateSuccess : this.t().adminCoupons.alerts.createSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadCoupons();
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.couponForm.form) || undefined;
-        this.alertService.error(this.content.alerts.saveError, errorMsg);
+        this.alertService.error(this.t().adminCoupons.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -115,17 +102,17 @@ export class CouponsComponent implements OnInit {
 
   onDelete(c: Coupon) {
     this.modalService.open({
-      title: this.content.confirmModal.title,
-      message: `El cupón "${c.code}" será eliminado permanentemente.`,
-      severity: this.content.confirmModal.severity,
-      confirmLabel: this.content.confirmModal.confirmLabel,
+      title: this.t().adminCoupons.confirmModal.title,
+      message: this.t().adminCoupons.confirmModal.deleteMessage.replace('{code}', c.code),
+      severity: 'danger',
+      confirmLabel: this.t().adminCoupons.confirmModal.confirmLabel,
       onConfirm: () => {
         this.couponService.delete(c.idCoupon).subscribe({
           next: () => {
-            this.alertService.success(this.content.alerts.deleteSuccess);
+            this.alertService.success(this.t().adminCoupons.alerts.deleteSuccess);
             this.loadCoupons();
           },
-          error: (err: any) => this.alertService.error(err?.error?.message || this.content.alerts.deleteError)
+          error: (err: any) => this.alertService.error(err?.error?.message || this.t().adminCoupons.alerts.deleteError)
         });
       },
     });

@@ -55,7 +55,6 @@
   max-height: 420px;
 }
 
-/* ---- Location items ---- */
 .location-list {
   padding: 4px;
 }
@@ -152,7 +151,6 @@
   opacity: 0.5;
 }
 
-/* ---- Empty/placeholder states ---- */
 .panel-empty,
 .panel-placeholder,
 .panel-loading {

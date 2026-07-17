@@ -8,11 +8,12 @@ import { ShipmentService } from '../../../../../core/domains/shipping/services/s
 import { InvoiceService } from '../../../../../core/domains/checkout/services/invoice.service';
 import { Order } from '../../../../../core/domains/checkout/models/order.model';
 import { OrderDetailsModalComponent } from './components/order-details-modal/order-details-modal';
+import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/spinner';
 
 @Component({
   selector: 'app-profile-orders',
   standalone: true,
-  imports: [DatePipe, CurrencyPenPipe, BadgeComponent, ButtonComponent, OrderDetailsModalComponent],
+  imports: [DatePipe, CurrencyPenPipe, BadgeComponent, ButtonComponent, OrderDetailsModalComponent, SpinnerComponent],
   templateUrl: './profile-orders.html',
   styleUrl: './profile-orders.css'
 })

@@ -43,7 +43,6 @@ export const SHOP_ROUTES: ShopRoutes = [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
       { path: 'info', loadComponent: () => import('./profile/components/profile-info/profile-info').then(m => m.ProfileInfoComponent) },
       { path: 'security', loadComponent: () => import('./profile/components/profile-security/profile-security').then(m => m.ProfileSecurityComponent) },
-      { path: 'addresses', loadComponent: () => import('./profile/components/profile-addresses/profile-addresses').then(m => m.ProfileAddressesComponent) },
       { path: 'orders', loadComponent: () => import('./profile/components/profile-orders/profile-orders').then(m => m.ProfileOrdersComponent) }
     ]
   },

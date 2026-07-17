@@ -72,9 +72,9 @@
   </form>
 
   <ng-template pTemplate="footer">
-    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
-      <app-button label="Cancelar" variant="outline" (clicked)="showDialog.set(false)"></app-button>
-      <app-button label="Guardar" (clicked)="save()" [loading]="submitting()"></app-button>
+    <div class="flex justify-content-end gap-2">
+      <app-button variant="outline" label="Cancelar" (clicked)="showDialog.set(false)"></app-button>
+      <app-button variant="primary" label="Guardar" [loading]="submitting()" (clicked)="save()"></app-button>
     </div>
   </ng-template>
 </p-dialog>

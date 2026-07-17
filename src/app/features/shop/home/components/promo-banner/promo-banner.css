@@ -1,6 +1,7 @@
 .promo-section { padding: 40px 0 80px; }
 .promo-grid { display:grid; grid-template-columns:1.8fr 1fr; gap:32px; }
 @media (max-width:992px) { .promo-grid { grid-template-columns:1fr; gap:24px; } }
+@media (max-width:480px) { .promo-grid { gap:16px; } }
 
 .promo-card {
   border-radius: var(--ot-radius-2xl, 24px); 
@@ -10,6 +11,13 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .promo-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px rgba(0,0,0,0.12); }
+
+@media (max-width: 640px) {
+  .promo-card {
+    padding: 32px 24px;
+    border-radius: var(--ot-radius-xl);
+  }
+}
 
 .promo-main {
   background: linear-gradient(135deg, var(--ot-blue) 0%, #2563eb 50%, #1e40af 100%);
@@ -46,6 +54,12 @@
 }
 .promo-content h3 { font-size:36px; font-weight:900; line-height:1.1; letter-spacing: -0.02em; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .promo-content p { font-size:16px; opacity:.9; line-height:1.6; max-width: 320px; }
+
+@media (max-width: 640px) {
+  .promo-content h3 { font-size: 24px; }
+  .promo-content p { font-size: 14px; }
+  .promo-icon { font-size: 100px; }
+}
 
 .promo-icon {
   font-size: 140px; opacity: 0.1; position: absolute; right: 24px; bottom: -20px;

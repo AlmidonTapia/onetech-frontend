@@ -47,9 +47,9 @@ export class ProductInfoComponent {
       addToCartIcon: 'pi-cart-plus'
     },
     shippingPerks: [
-      { icon: 'pi pi-truck', text: 'Envío gratis desde S/ 199' },
-      { icon: 'pi pi-shield', text: 'Garantía de 1 año' },
-      { icon: 'pi pi-refresh', text: '30 días para devoluciones' }
+      { icon: 'pi pi-truck', text: 'Envíos a domicilio' },
+      { icon: 'pi pi-shield', text: 'Garantía de productos' },
+      { icon: 'pi pi-refresh', text: 'Políticas de devolución' }
     ],
     alerts: {
       successTitle: 'Añadido al carrito',

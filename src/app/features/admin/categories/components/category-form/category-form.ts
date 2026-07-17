@@ -6,6 +6,7 @@ import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Category, CreateCategoryRequest, UpdateCategoryRequest } from '../../../../../core/domains/catalog/models/category.model';
 import { CategoryStatus } from '../../../../../core/domains/catalog/enums/category-status.enum';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
@@ -26,32 +27,44 @@ export class CategoryFormComponent implements OnChanges {
   @Output() save = new EventEmitter<CreateCategoryRequest | UpdateCategoryRequest>();
   @Output() cancel = new EventEmitter<void>();
 
-  content = {
-    dialogWidth: '460px',
-    titleNew: 'Nueva Categoría',
-    titleEdit: 'Editar Categoría',
-    optionalText: '(opcional)',
-    errorRequired: 'Campo requerido',
-    styles: {
-      selectWidth: '100%',
-      appendTo: 'body'
-    },
-    actions: {
-      cancelLabel: 'Cancelar',
-      saveLabel: 'Guardar',
-      saveIcon: 'pi-check'
-    }
-  } as const;
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
 
-  statusOptions = [
-    { label: 'Habilitado', value: CategoryStatus.HABILITADO },
-    { label: 'Deshabilitado', value: CategoryStatus.DESHABILITADO }
-  ];
+  get content() {
+    return {
+      dialogWidth: '460px',
+      titleNew: this.t().adminCategories.form.titleNew,
+      titleEdit: this.t().adminCategories.form.titleEdit,
+      optionalText: this.t().adminCategories.form.optionalText,
+      errorRequired: this.t().adminCategories.form.errorRequired,
+      styles: {
+        selectWidth: '100%',
+        appendTo: 'body'
+      },
+      actions: {
+        cancelLabel: this.t().adminCategories.form.actions.cancelLabel,
+        saveLabel: this.t().adminCategories.form.actions.saveLabel,
+        saveIcon: 'pi-check'
+      },
+      status: {
+        label: this.t().adminCategories.form.status.label
+      }
+    };
+  }
 
-  formConfig: any[] = [
-    [{ name: 'categoryName', label: 'Nombre *', type: 'text', placeholder: 'Ej: Laptops & PCs' }],
-    [{ name: 'parentIdCategory', label: 'Categoría padre', type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Sin categoría padre', optional: true }]
-  ];
+  get statusOptions() {
+    return [
+      { label: this.t().adminCategories.form.status.enabled, value: CategoryStatus.HABILITADO },
+      { label: this.t().adminCategories.form.status.disabled, value: CategoryStatus.DESHABILITADO }
+    ];
+  }
+
+  get formConfig(): any[] {
+    return [
+      [{ name: 'categoryName', label: this.t().adminCategories.form.fields.name, type: 'text', placeholder: this.t().adminCategories.form.fields.namePlaceholder }],
+      [{ name: 'parentIdCategory', label: this.t().adminCategories.form.fields.parent, type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: this.t().adminCategories.form.fields.parentPlaceholder, optional: true }]
+    ];
+  }
 
   form = this.fb.group({
     categoryName: ['', [Validators.required, noWhitespaceValidator(), Validators.minLength(2)]],

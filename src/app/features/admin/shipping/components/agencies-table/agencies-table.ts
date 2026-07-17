@@ -8,6 +8,7 @@ import { ShipmentService } from '../../../../../core/domains/shipping/services/s
 import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 import { ShipmentsMethodTableComponent } from './components/shipments-method-table/shipments-method-table';
 import { ShipmentMethodFormComponent } from './components/shipment-method-form/shipment-method-form';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-agencies-table',
@@ -21,6 +22,8 @@ export class AgenciesTableComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   methods = signal<ShipmentMethod[]>([]);
   loading = signal(false);
@@ -29,55 +32,47 @@ export class AgenciesTableComponent implements OnInit {
   editingMethod = signal<ShipmentMethod | null>(null);
   searchTerm = signal<string | undefined>(undefined);
 
-  statuses = [
-    { label: 'Activo', value: 'ACTIVO' },
-    { label: 'Inactivo', value: 'INACTIVO' }
-  ];
+  get statuses() {
+    return [
+      { label: this.t().adminShipping.agencies.statuses.active, value: 'ACTIVO' },
+      { label: this.t().adminShipping.agencies.statuses.inactive, value: 'INACTIVO' }
+    ];
+  }
 
-  content = {
-    title: 'Métodos de Envío',
-    badgeSuffix: ' métodos',
-    newBtnLabel: 'Nuevo Método',
-    newBtnIcon: 'pi-plus',
-    table: {
-      quickSearchTitle: 'Búsqueda Rápida',
-      searchPlaceholder: 'Buscar agencia...',
-      headers: {
-        name: 'Nombre del Método',
-        price: 'Precio Base',
-        status: 'Estado',
-        actions: 'Acciones'
+  get content() {
+    return {
+      title: this.t().adminShipping.agencies.title,
+      badgeSuffix: this.t().adminShipping.agencies.badgeSuffix,
+      newBtnLabel: this.t().adminShipping.agencies.newBtnLabel,
+      newBtnIcon: 'pi-plus',
+      table: {
+        quickSearchTitle: this.t().adminShipping.agencies.table.quickSearchTitle,
+        searchPlaceholder: this.t().adminShipping.agencies.table.searchPlaceholder,
+        headers: {
+          name: this.t().adminShipping.agencies.table.headers.name,
+          price: this.t().adminShipping.agencies.table.headers.price,
+          status: this.t().adminShipping.agencies.table.headers.status,
+          actions: this.t().adminShipping.agencies.table.headers.actions
+        },
+        emptyMsg: this.t().adminShipping.agencies.table.emptyMsg
       },
-      emptyMsg: 'No hay métodos de envío registrados.'
-    },
-    dialog: {
-      createTitle: 'Nuevo Método de Envío',
-      editTitle: 'Editar Método de Envío',
-      fields: {
-        name: 'Nombre del Método',
-        namePlaceholder: 'Ej: Express',
-        price: 'Precio Base (S/)',
-        status: 'Estado',
-        statusPlaceholder: 'Seleccione un estado'
-      },
-      actions: {
-        cancel: 'Cancelar',
-        save: 'Guardar'
+      dialog: {
+        createTitle: this.t().adminShipping.agencies.dialog.createTitle,
+        editTitle: this.t().adminShipping.agencies.dialog.editTitle,
+        fields: {
+          name: this.t().adminShipping.agencies.dialog.fields.name,
+          namePlaceholder: this.t().adminShipping.agencies.dialog.fields.namePlaceholder,
+          price: this.t().adminShipping.agencies.dialog.fields.price,
+          status: this.t().adminShipping.agencies.dialog.fields.status,
+          statusPlaceholder: this.t().adminShipping.agencies.dialog.fields.statusPlaceholder
+        },
+        actions: {
+          cancel: this.t().adminShipping.agencies.dialog.actions.cancel,
+          save: this.t().adminShipping.agencies.dialog.actions.save
+        }
       }
-    },
-    confirmDelete: {
-      title: '¿Eliminar método de envío?',
-      message: (name: string) => `El método de envío "${name}" será eliminado de forma permanente.`,
-      confirmLabel: 'Sí, eliminar',
-      severity: 'danger'
-    },
-    alerts: {
-      saveSuccess: 'Método de envío guardado',
-      saveError: 'Error al guardar método',
-      deleteSuccess: 'Método de envío eliminado exitosamente',
-      deleteError: 'Error al eliminar el método de envío'
-    }
-  };
+    };
+  }
 
   form = this.fb.group({
     methodName: ['', Validators.required],
@@ -139,13 +134,13 @@ export class AgenciesTableComponent implements OnInit {
 
     req$.subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.saveSuccess);
+        this.alertService.success(this.t().adminShipping.agencies.alerts.saveSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadMethods();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.content.alerts.saveError;
+        const errMsg = err?.error?.message || this.t().adminShipping.agencies.alerts.saveError;
         this.alertService.error(errMsg);
         this.saving.set(false);
       }
@@ -154,18 +149,18 @@ export class AgenciesTableComponent implements OnInit {
 
   onDelete(m: ShipmentMethod) {
     this.modalService.open({
-      title: this.content.confirmDelete.title,
-      message: this.content.confirmDelete.message(m.methodName),
-      severity: this.content.confirmDelete.severity as any,
-      confirmLabel: this.content.confirmDelete.confirmLabel,
+      title: this.t().adminShipping.agencies.confirmDelete.title,
+      message: this.t().adminShipping.agencies.confirmDelete.message.replace('{name}', m.methodName),
+      severity: 'danger',
+      confirmLabel: this.t().adminShipping.agencies.confirmDelete.confirmLabel,
       onConfirm: () => {
         this.shipmentService.deleteMethod(m.idShipmentMethod).subscribe({
           next: () => {
-            this.alertService.success(this.content.alerts.deleteSuccess);
+            this.alertService.success(this.t().adminShipping.agencies.alerts.deleteSuccess);
             this.loadMethods();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || this.content.alerts.deleteError;
+            const errMsg = err?.error?.message || this.t().adminShipping.agencies.alerts.deleteError;
             this.alertService.error(errMsg);
           }
         });

@@ -17,7 +17,9 @@ export class AuthService {
   private readonly TOKEN_KEY = 'onetech_token';
   private readonly USER_KEY  = 'onetech_user';
 
-  currentUser = signal<AuthResponse | null>(this.getUserFromStorage());
+  currentUser = signal<AuthResponse | null>(
+    this.isTokenExpiredStatic() ? null : this.getUserFromStorage()
+  );
 
   login(credentials: LoginRequest) {
     return this.http.post<{ token: string }>(`${environment.apiUrl}/users/login`, credentials).pipe(
@@ -89,8 +91,9 @@ export class AuthService {
     const wishlistStore = this.injector.get(WishlistStore);
     cartStore.syncGuestCart();
     wishlistStore.syncGuestWishlist();
-    
-    this.router.navigate(['/profile']);
+    const targetUrl = sessionStorage.getItem('returnUrl') || '/';
+    sessionStorage.removeItem('returnUrl');
+    this.router.navigateByUrl(targetUrl);
   }
 
   getToken(): string | null {
@@ -98,6 +101,10 @@ export class AuthService {
   }
 
   isTokenExpired(): boolean {
+    return this.isTokenExpiredStatic();
+  }
+
+  private isTokenExpiredStatic(): boolean {
     const token = this.getToken();
     if (!token) return true;
     try {

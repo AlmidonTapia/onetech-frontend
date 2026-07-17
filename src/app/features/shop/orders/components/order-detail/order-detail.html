@@ -1,5 +1,5 @@
-<p-dialog [visible]="visible" [header]="content.headerPrefix + (order?.idOrder?.substring(0,8)?.toUpperCase() ?? '')"
-  [modal]="true" [closable]="true" [draggable]="false" [style]="{ width: content.dialogWidth }" (onHide)="close()">
+<p-dialog [visible]="visible" [header]="t().orders.detail.headerPrefix + (order?.idOrder?.substring(0,8)?.toUpperCase() ?? '')"
+  [modal]="true" [closable]="true" [draggable]="false" [style]="{ width: '600px' }" (onHide)="close()">
 
   @if (order) {
   <div class="order-detail">
@@ -7,22 +7,22 @@
           [order]="order" 
           [shipment]="shipment()" 
           [loadingShipment]="loadingShipment()" 
-          [content]="content">
+          [content]="t().orders.detail">
       </app-order-status>
 
       <app-order-items 
           [order]="order" 
-          [content]="content">
+          [content]="t().orders.detail">
       </app-order-items>
 
       <app-order-summary 
           [order]="order" 
-          [content]="content">
+          [content]="t().orders.detail">
       </app-order-summary>
   </div>
   }
 
   <ng-template pTemplate="footer">
-      <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
+      <app-button variant="ghost" [label]="t().orders.detail.actions.closeLabel" (clicked)="close()" />
   </ng-template>
 </p-dialog>

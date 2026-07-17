@@ -19,7 +19,7 @@
     <div class="navbar-main">
         <div class="container main-inner">
 
-            <a routerLink="/" class="navbar-logo" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+            <a routerLink="/" class="navbar-logo" style="display: flex; align-items: center; gap: 8px; text-decoration: none;" [attr.aria-label]="t().navbar.ariaLabelLogo">
                 <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 32px; width: auto; object-fit: contain; flex-shrink: 0;">
                 <div style="line-height: 1;"><span class="logo-one">One</span><span class="logo-tech">Tech</span></div>
             </a>
@@ -35,17 +35,17 @@
                 <app-navbar-user />
 
                 @if (authService.isAuthenticated()) {
-                <a *appHasRole="'ADMIN'" [routerLink]="content.admin.route" class="action-link">
+                <a *appHasRole="'ADMIN'" routerLink="/admin" class="action-link">
                     <i class="pi pi-cog"></i>
                     <div class="action-text">
-                        <span class="action-label">{{ content.admin.labelPre }}</span>
-                        <span class="action-name">{{ content.admin.labelPost }}</span>
+                        <span class="action-label">{{ t().navbar.admin.labelPre }}</span>
+                        <span class="action-name">{{ t().navbar.admin.labelPost }}</span>
                     </div>
                 </a>
                 }
 
-                <a [routerLink]="content.wishlist.route" class="action-link wishlist-action"
-                    [attr.title]="content.wishlist.title">
+                <a routerLink="/wishlist" class="action-link wishlist-action"
+                    [attr.title]="t().navbar.wishlist.title">
                     <div class="wishlist-icon-wrapper">
                         <i class="pi pi-heart"></i>
                         @if (wishlistStore.count() > 0) {
@@ -53,8 +53,8 @@
                         }
                     </div>
                     <div class="action-text">
-                        <span class="action-label">{{ content.wishlist.labelPre }}</span>
-                        <span class="action-name">{{ content.wishlist.labelPost }}</span>
+                        <span class="action-label">{{ t().navbar.wishlist.labelPre }}</span>
+                        <span class="action-name">{{ t().navbar.wishlist.labelPost }}</span>
                     </div>
                 </a>
 
@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <nav class="navbar-categories" [attr.aria-label]="content.ariaLabelNav">
+    <nav class="navbar-categories" [attr.aria-label]="t().navbar.ariaLabelNav">
         <div class="container">
             <app-navbar-menu />
         </div>

@@ -2,8 +2,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
-import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
+import { inject } from '@angular/core';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-brands-table',
@@ -22,6 +23,9 @@ export class BrandsTableComponent {
   @Output() deleteItem = new EventEmitter<Brand>();
   @Output() search = new EventEmitter<string>();
 
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     this.search.emit(target.value);
@@ -34,21 +38,23 @@ export class BrandsTableComponent {
     colspanEmpty: 2
   };
 
-  content = {
-    quickSearchTitle: 'Búsqueda Rápida',
-    searchPlaceholder: 'Buscar marcas...',
-    headers: {
-      brand: 'Marca',
-      actions: 'Acciones'
-    },
-    tooltips: {
-      edit: 'Editar',
-      delete: 'Eliminar'
-    },
-    emptyMessage: 'No hay marcas registradas.',
-    icons: {
-      edit: 'pi pi-pencil',
-      delete: 'pi pi-trash'
-    }
-  };
+  get content() {
+    return {
+      quickSearchTitle: this.t().adminBrands.table.quickSearchTitle,
+      searchPlaceholder: this.t().adminBrands.table.searchPlaceholder,
+      headers: {
+        brand: this.t().adminBrands.table.headers.brand,
+        actions: this.t().adminBrands.table.headers.actions
+      },
+      tooltips: {
+        edit: this.t().adminBrands.table.tooltips.edit,
+        delete: this.t().adminBrands.table.tooltips.delete
+      },
+      emptyMessage: this.t().adminBrands.table.emptyMessage,
+      icons: {
+        edit: 'pi pi-pencil',
+        delete: 'pi pi-trash'
+      }
+    };
+  }
 }

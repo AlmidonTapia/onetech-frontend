@@ -3,7 +3,7 @@
 
     <div class="images-container">
         <h3 class="manager-subtitle">
-            <i class="pi pi-images"></i> Imágenes cargadas ({{ images().length }}/5)
+            <i class="pi pi-images"></i> {{ content.uploadedImages }} ({{ images().length }}/5)
         </h3>
         
         <div class="images-grid">
@@ -15,19 +15,19 @@
 
                 @if (img.isPrincipal) {
                 <span class="main-badge">
-                    <i class="pi pi-star-fill"></i> Principal
+                    <i class="pi pi-star-fill"></i> {{ content.mainBadgeLabel }}
                 </span>
                 }
 
                 <div class="img-actions">
                     @if (!img.isPrincipal) {
                     <button class="action-btn action-btn--star" (click)="setAsPrincipal(img.idProductImage)" 
-                            title="Establecer como principal">
+                            [title]="content.setMainTooltip">
                         <i class="pi pi-star"></i>
                     </button>
                     }
                     <button class="action-btn action-btn--del" (click)="deleteImage(img.idProductImage)" 
-                            title="Eliminar imagen">
+                            [title]="content.deleteTooltip">
                         <i class="pi pi-trash"></i>
                     </button>
                 </div>
@@ -44,7 +44,7 @@
 
         <div class="upload-section">
             <h3 class="manager-subtitle">
-                <i class="pi pi-cloud-upload"></i> Subir nuevas imágenes
+                <i class="pi pi-cloud-upload"></i> {{ content.uploadNewTitle }}
             </h3>
             <ng-template pTemplate="content">
             <p class="upload-note">{{ content.uploadConfig.uploadNote }}</p>

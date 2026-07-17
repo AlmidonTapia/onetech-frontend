@@ -31,35 +31,60 @@
     <div class="checkout-layout">
       <div class="checkout-main">
         @if (currentStep() === 0) {
-        <app-checkout-address (selected)="onAddressSelected($event)" />
+        <app-checkout-destination (selected)="onUbigeoSelected($event)" />
         }
         @if (currentStep() === 1) {
-        <app-checkout-shipping [ubigeoCode]="selectedAddress()?.ubigeoCode" (selected)="selectedShipMethod.set($event)" />
+        <app-checkout-shipping [ubigeoCode]="selectedUbigeoCode() || undefined" (selected)="onShipMethodSelected($event)" />
         }
         @if (currentStep() === 2) {
-        <app-checkout-payment (selected)="selectedPayMethod.set($event)" />
+        <app-checkout-consignee (selected)="onConsigneeSelected($event)" />
         }
         @if (currentStep() === 3) {
-        <app-checkout-summary [cart]="cartStore.cart()" [address]="selectedAddress()"
-          [shipMethod]="selectedShipMethod()" [payMethod]="selectedPayMethod()" [discountAmount]="discountAmount()" />
-        
-        @if (selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
-          <div class="mp-brick-container card mt-4 p-4 border border-gray-100 rounded-lg bg-gray-50/50">
-            <div id="paymentBrick_container"></div>
-          </div>
+        <app-checkout-payment (selected)="selectedPayMethod.set($event)" 
+          [selectedCouponId]="selectedCouponId()"
+          [validatingCoupon]="validatingCoupon()"
+          [couponError]="couponError()"
+          [discountAmount]="discountAmount()"
+          (applyCoupon)="couponCode.set($event); applyCoupon()" />
         }
+        @if (currentStep() === 4) {
+          @if (selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
+            <div class="payment-step-info">
+              <h3><i class="pi pi-shield"></i> {{ t().checkout.securePayment.title }}</h3>
+              <div class="secure-alert">
+                <i class="pi pi-exclamation-circle"></i>
+                <p>{{ t().checkout.securePayment.description }}<strong>{{ finalTotal | currencyPen }}</strong>.</p>
+              </div>
+            </div>
+            
+            <div class="mp-brick-wrapper">
+              <div class="mp-brick-header">
+                <i class="pi pi-credit-card"></i>
+                <span>{{ t().checkout.securePayment.header }}</span>
+              </div>
+              <div id="paymentBrick_container"></div>
+            </div>
+          } @else {
+            <div class="confirm-review">
+              <div class="confirm-icon">
+                <i class="pi pi-check-circle"></i>
+              </div>
+              <h3>{{ t().checkout.confirmReview.title }}</h3>
+              <p>{{ t().checkout.confirmReview.descriptionPre }} <strong>{{ t().checkout.buttons.confirmAndPay }}</strong>{{ t().checkout.confirmReview.descriptionPost }}</p>
+            </div>
+          }
         }
 
         <div class="checkout-actions">
           @if (currentStep() > 0) {
-          <app-button variant="outline" [label]="content.buttons.back" (clicked)="prev()" />
+          <app-button variant="outline" [label]="t().checkout.buttons.back" (clicked)="prevStep()" />
           }
 
-          @if (currentStep() < 3) {
-            <app-button variant="primary" [label]="content.buttons.continue" [disabled]="!canGoNext()" (clicked)="next()" />
+          @if (currentStep() < 4) {
+            <app-button variant="primary" [label]="t().checkout.buttons.continue" [disabled]="!canGoNext()" (clicked)="nextStep()" />
           } @else {
             @if (!selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
-              <app-button variant="accent" [label]="content.buttons.confirmAndPay" [loading]="placing()" (clicked)="placeOrder()" />
+              <app-button variant="accent" [label]="t().checkout.buttons.confirmAndPay" [loading]="placing()" (clicked)="placeOrder()" />
             }
           }
         </div>
@@ -67,19 +92,19 @@
 
       <div class="checkout-aside">
         <app-checkout-aside 
-          [cart]="cartStore.cart()"
+          [cart]="cartStore.cart()" 
           [itemCount]="cartStore.itemCount()"
           [subtotal]="cartStore.totalAmount()"
           [discountAmount]="discountAmount()"
+          [ubigeoCode]="selectedUbigeoCode()"
+          [locationName]="selectedLocationName()"
           [shipMethod]="selectedShipMethod()"
-          [finalTotal]="finalTotal"
-          [selectedCouponId]="selectedCouponId()"
-          [validatingCoupon]="validatingCoupon()"
-          [couponError]="couponError()"
-          (applyCoupon)="couponCode.set($event); applyCoupon()"
-        />
-      </div>
+          [consignee]="selectedConsignee()"
+          [payMethod]="selectedPayMethod()"
+          [finalTotal]="finalTotal">
+        </app-checkout-aside>
 
     </div>
   </div>
+</div>
 </div>

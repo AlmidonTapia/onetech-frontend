@@ -1,5 +1,5 @@
 <div class="mini-summary-card">
-  <h4>{{ content.summaryTitle }} ({{ itemCount }})</h4>
+  <h4>{{ t().checkout.summaryTitle }} ({{ itemCount }})</h4>
 
   <div class="mini-items-list">
     @for (item of cart?.items ?? []; track item.idProduct) {
@@ -11,37 +11,63 @@
     }
   </div>
 
-  <div class="mini-total">
-    <span>{{ content.labels.subtotal }}</span>
+  <div class="mini-total subtotal">
+    <span>{{ t().checkout.labels.subtotal }}</span>
     <strong>{{ subtotal | currencyPen }}</strong>
   </div>
 
-  <div class="mini-coupon">
-    <div class="coupon-input-group">
-      <input type="text" [(ngModel)]="couponCode" [placeholder]="content.labels.couponPlaceholder" [disabled]="!!selectedCouponId">
-      <app-button variant="outline" [label]="content.buttons.apply" [loading]="validatingCoupon" [disabled]="!couponCode || !!selectedCouponId" (clicked)="onApplyCoupon()" />
+  @if (ubigeoCode) {
+    <div class="mini-selected-info">
+      <strong>{{ t().checkout.aside.deliveryAddress }}</strong>
+      <span>{{ locationName || ('Ubigeo: ' + ubigeoCode) }}</span>
     </div>
-    @if (couponError) {
-      <small class="error-text">{{ couponError }}</small>
-    }
-  </div>
+  }
+
+  @if (shipMethod) {
+    <div class="mini-selected-info">
+      <strong>{{ t().checkout.aside.shippingAgency }}</strong>
+      <span>{{ shipMethod.methodName }}</span>
+    </div>
+  }
+
+  @if (consignee) {
+    <div class="mini-selected-info">
+      <strong>{{ t().checkout.aside.receiver }}</strong>
+      @if (consignee.isSelf) {
+        <span>{{ consignee.fullName || t().checkout.aside.myself }}</span>
+      } @else {
+        <span>{{ consignee.fullName }}</span>
+      }
+      <span class="text-xs text-gray-500 block">DNI: {{ consignee.docNumber }}</span>
+      <span class="text-xs text-gray-500 block">Cel: {{ consignee.phone }}</span>
+    </div>
+  }
+
+  @if (payMethod) {
+    <div class="mini-selected-info">
+      <strong>{{ t().checkout.aside.paymentMethod }}</strong>
+      <span>{{ payMethod.methodName }}</span>
+    </div>
+  }
+
+
 
   @if (discountAmount > 0) {
     <div class="mini-total discount">
-      <span>{{ content.labels.discount }}</span>
+      <span>{{ t().checkout.labels.discount }}</span>
       <strong>- {{ discountAmount | currencyPen }}</strong>
     </div>
   }
 
   @if (shipMethod) {
     <div class="mini-total shipping">
-      <span>{{ content.labels.shipping }}</span>
+      <span>{{ t().checkout.labels.shipping }}</span>
       <strong>{{ shipMethod.basePrice | currencyPen }}</strong>
     </div>
   }
 
   <div class="mini-total final">
-    <span>{{ content.totalLabel }}</span>
+    <span>{{ t().checkout.totalLabel }}</span>
     <strong>{{ finalTotal | currencyPen }}</strong>
   </div>
 </div>

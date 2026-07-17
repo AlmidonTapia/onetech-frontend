@@ -57,7 +57,6 @@
   --ot-shadow-theme: var(--ot-shadow-sm);
   --ot-transition:   background-color 250ms ease, color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
 
-  /* Nuevos Tokens Design System */
   --ot-gradient-primary: linear-gradient(135deg, var(--ot-blue) 0%, #3b82f6 100%);
   --ot-gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
   --ot-card-hover-transform: translateY(-6px);
@@ -316,7 +315,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
 }
 
-/* ── GLOBALLY STYLED POPOVERS (E.G. MINI CART, USER MENU) ── */
 .mini-cart-panel, .user-dropdown-panel {
     background: var(--ot-bg-surface) !important;
     border: 1px solid var(--ot-border-color) !important;
@@ -412,7 +410,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
   gap: 12px !important;
 }
 
-/* ── PASADA DE AJUSTES MAESTRA PARA TABLAS ADMINISTRATIVAS ── */
 body .p-datatable {
   border: 1px solid var(--ot-border-color) !important;
   border-radius: var(--ot-radius-xl) !important;
@@ -547,7 +544,6 @@ body .p-paginator .p-paginator-page.p-highlight {
 }
 
 
-/* Text inputs, number inputs, textareas */
 .p-inputtext, 
 .p-textarea, 
 .p-password input,
@@ -720,7 +716,6 @@ body .p-paginator .p-paginator-page.p-highlight {
   color: var(--ot-blue) !important;
 }
 
-/* Multiselect Component (PrimeNG p-multiSelect) */
 .p-multiselect {
   position: relative !important;
   font-family: inherit !important;
@@ -772,7 +767,6 @@ body .p-paginator .p-paginator-page.p-highlight {
   justify-content: center !important;
 }
 
-/* Multiselect Dropdown Overlay Panel */
 .p-multiselect-panel {
   background: var(--ot-bg-surface) !important;
   border: 1px solid var(--ot-border-color) !important;
@@ -780,7 +774,7 @@ body .p-paginator .p-paginator-page.p-highlight {
   box-shadow: var(--ot-shadow-lg) !important;
   padding: 4px !important;
   margin-top: 4px !important;
-  z-index: 11000 !important; /* Ensure it overlays everything inside dialogs */
+  z-index: 11000 !important;
   min-width: 220px !important;
 }
 
@@ -830,7 +824,6 @@ body .p-paginator .p-paginator-page.p-highlight {
   cursor: not-allowed !important;
 }
 
-/* ── ESTILOS GLOBALES PARA CABECERAS Y BUSCADORES DE TABLAS ADMIN ── */
 .table-header-container {
   display: flex;
   flex-direction: column;
@@ -855,7 +848,6 @@ body .p-paginator .p-paginator-page.p-highlight {
   cursor: default;
 }
 
-/* ── TABLE EMPTY STATE ── */
 .table-empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -917,7 +909,6 @@ body .p-paginator .p-paginator-page.p-highlight {
   }
 }
 
-/* ── BOTONES DE ACCIÓN PARA TABLAS ADMIN ── */
 .row-actions {
   display: flex;
   gap: 4px;
@@ -948,14 +939,12 @@ body .p-paginator .p-paginator-page.p-highlight {
   background: rgba(220, 38, 38, 0.15); 
 }
 
-/* Specific overrides to allow full width selects/multiselects in forms without breaking table filter widths */
 .w-full.p-select,
 .w-full.p-multiselect {
   width: 100% !important;
   min-width: 0 !important;
 }
 
-/* Align and center filter icons in dropdowns */
 .p-multiselect-filter-container,
 .p-select-filter-container {
   position: relative !important;
@@ -988,13 +977,11 @@ body .p-paginator .p-paginator-page.p-highlight {
   justify-content: center !important;
 }
 
-/* Space between checkbox and label text inside multiselect header and items */
 .p-multiselect-item .p-checkbox,
 .p-multiselect-header .p-checkbox {
   margin-right: 12px !important;
 }
 
-/* ── ANIMACIONES GLOBALES ── */
 @keyframes slideInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1020,7 +1007,6 @@ body .p-paginator .p-paginator-page.p-highlight {
 .animate-fade-scale { animation: fadeInScale 0.3s ease-out forwards; }
 .animate-pulse-glow { animation: pulseGlow 2s infinite; }
 
-/* ── CLASES UTILITARIAS COMUNES ── */
 .section-title {
   font-size: var(--ot-font-size-2xl);
   font-weight: 700;
@@ -1054,7 +1040,6 @@ body .p-paginator .p-paginator-page.p-highlight {
   font-weight: 500;
 }
 
-/* ── SKELETON LOADING UTILS ── */
 .skeleton {
   background: var(--ot-skeleton-base);
   background-image: linear-gradient(90deg, var(--ot-skeleton-base) 0px, var(--ot-skeleton-highlight) 40px, var(--ot-skeleton-base) 80px);

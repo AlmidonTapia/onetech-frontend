@@ -9,6 +9,8 @@ import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { Product } from '../../../../../core/domains/catalog/models/product.model';
 import { Category } from '../../../../../core/domains/catalog/models/category.model';
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
+import { inject } from '@angular/core';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-products-table',
@@ -32,11 +34,16 @@ export class ProductsTableComponent {
   @Output() search = new EventEmitter<string>();
   @Output() filterChange = new EventEmitter<{ category: string, brand: string, status: string }>();
 
-  statusOptions = [
-    { label: 'Todos los estados', value: 'ALL' },
-    { label: 'Activo', value: 'ACTIVO' },
-    { label: 'Inactivo', value: 'INACTIVO' }
-  ];
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
+  get statusOptions() {
+    return [
+      { label: this.t().adminProducts.table.allStatuses, value: 'ALL' },
+      { label: this.t().adminProducts.table.status.active, value: 'ACTIVO' },
+      { label: this.t().adminProducts.table.status.inactive, value: 'INACTIVO' }
+    ];
+  }
 
   selectedCategory = 'ALL';
   selectedBrand = 'ALL';
@@ -44,14 +51,14 @@ export class ProductsTableComponent {
 
   get categoryOptions() {
     return [
-      { label: 'Todas las categorías', idCategory: 'ALL' }, 
+      { label: this.t().adminProducts.table.allCategories, idCategory: 'ALL' }, 
       ...this.categories.map(c => ({ label: c.categoryName, idCategory: c.idCategory }))
     ];
   }
 
   get brandOptions() {
     return [
-      { label: 'Todas las marcas', idBrand: 'ALL' }, 
+      { label: this.t().adminProducts.table.allBrands, idBrand: 'ALL' }, 
       ...this.brands.map(b => ({ label: b.brandName, idBrand: b.idBrand }))
     ];
   }
@@ -77,36 +84,38 @@ export class ProductsTableComponent {
     badgeError: 'error' as const
   } as const;
 
-  content = {
-    quickSearchTitle: 'Catálogo de Productos',
-    searchPlaceholder: 'Buscar producto...',
-    headers: {
-      img: 'Img',
-      product: 'Producto',
-      sku: 'SKU',
-      category: 'Categoría',
-      brand: 'Marca',
-      price: 'Precio',
-      stock: 'Stock',
-      status: 'Estado',
-      actions: 'Acciones'
-    },
-    tooltips: {
-      images: 'Imágenes',
-      edit: 'Editar',
-      delete: 'Eliminar'
-    },
-    emptyMessage: 'No se encontraron productos.',
-    icons: {
-      images: 'pi pi-image',
-      edit: 'pi pi-pencil',
-      delete: 'pi pi-trash',
-      deleteLabel: 'Eliminar'
-    },
-    statusLabels: {
-      active: 'Activo',
-      inactive: 'Inactivo',
-      outOfStock: 'Agotado'
-    }
-  } as const;
+  get content() {
+    return {
+      quickSearchTitle: this.t().adminProducts.table.quickSearchTitle,
+      searchPlaceholder: this.t().adminProducts.table.searchPlaceholder,
+      headers: {
+        img: this.t().adminProducts.table.headers.img,
+        product: this.t().adminProducts.table.headers.product,
+        sku: this.t().adminProducts.table.headers.sku,
+        category: this.t().adminProducts.table.headers.category,
+        brand: this.t().adminProducts.table.headers.brand,
+        price: this.t().adminProducts.table.headers.price,
+        stock: this.t().adminProducts.table.headers.stock,
+        status: this.t().adminProducts.table.headers.status,
+        actions: this.t().adminProducts.table.headers.actions
+      },
+      tooltips: {
+        images: this.t().adminProducts.table.tooltips.images,
+        edit: this.t().adminProducts.table.tooltips.edit,
+        delete: this.t().adminProducts.table.tooltips.delete
+      },
+      emptyMessage: this.t().adminProducts.table.emptyMessage,
+      icons: {
+        images: 'pi pi-image',
+        edit: 'pi pi-pencil',
+        delete: 'pi pi-trash',
+        deleteLabel: this.t().adminProducts.table.deleteLabel
+      },
+      statusLabels: {
+        active: this.t().adminProducts.table.status.active,
+        inactive: this.t().adminProducts.table.status.inactive,
+        outOfStock: this.t().adminProducts.table.status.outOfStock
+      }
+    };
+  }
 }

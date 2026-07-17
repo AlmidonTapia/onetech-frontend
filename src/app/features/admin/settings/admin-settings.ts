@@ -5,6 +5,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { StoreConfigService, StoreConfiguration } from '../../../shared/services/store-config.service';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-admin-settings',
@@ -17,32 +18,14 @@ export class AdminSettingsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);
   private storeConfigService = inject(StoreConfigService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   saving = signal(false);
 
-  content = {
-    title: 'Configuración de la Tienda',
-    subtitle: 'Administra los ajustes generales y de contacto',
-    generalSection: {
-      title: 'Información de la Tienda',
-      labels: {
-        companyName: 'Nombre de la Empresa (Razón Social)',
-        taxId: 'RUC / Tax ID',
-        address: 'Dirección Fiscal',
-        supportEmail: 'Email de Soporte',
-        supportPhone: 'Teléfono de Soporte',
-        igvPercentage: 'Porcentaje de IGV (%)',
-        freeShippingThreshold: 'Monto Envío Gratis (S/)',
-        orderExpirationMinutes: 'Tiempo Expiración Reserva (Minutos)'
-      },
-      saveLabel: 'Guardar ajustes',
-      saveIcon: 'pi-save'
-    },
-    alerts: {
-      success: 'Configuración actualizada',
-      error: 'Error al actualizar configuración'
-    }
-  } as const;
+  get content() {
+    return this.t().adminSettings;
+  }
 
   form = this.fb.group({
     companyName: ['', Validators.required],
@@ -50,7 +33,7 @@ export class AdminSettingsComponent implements OnInit {
     address: ['', Validators.required],
     supportEmail: ['', [Validators.required, Validators.email]],
     supportPhone: ['', Validators.required],
-    igvPercentage: [18, [Validators.required, Validators.min(0), Validators.max(100)]],
+    logoUrl: [''],
     freeShippingThreshold: [0, [Validators.required, Validators.min(0)]],
     orderExpirationMinutes: [30, [Validators.required, Validators.min(5)]]
   });
@@ -64,7 +47,7 @@ export class AdminSettingsComponent implements OnInit {
       next: (config) => {
         this.form.patchValue(config);
       },
-      error: () => this.alertService.error('Error al cargar la configuración de la tienda.')
+      error: () => this.alertService.error(this.content.alerts.loadError)
     });
   }
 

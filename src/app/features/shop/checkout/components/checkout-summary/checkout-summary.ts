@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { Cart } from '../../../../../core/domains/shopping/models/cart.model';
-import { Address } from '../../../../../core/domains/shipping/models/address.model';
+
 import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
 
@@ -14,10 +14,11 @@ import { PaymentMethod } from '../../../../../core/domains/checkout/models/payme
 })
 export class CheckoutSummaryComponent {
   @Input() cart: Cart | null = null;
-  @Input() address: Address | null = null;
+  @Input() ubigeoCode: string | null = null;
   @Input() shipMethod: ShipmentMethod | null = null;
   @Input() payMethod: PaymentMethod | null = null;
   @Input() discountAmount: number = 0;
+  @Input() consignee: any | null = null;
 
   content = {
     blocks: {

@@ -75,6 +75,26 @@
   gap: 1rem;
 }
 
+.destination-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--ot-surface-ground);
+  border-radius: var(--ot-radius-lg);
+  border: 1px solid var(--ot-border-color);
+}
+
+.destination-box p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ot-text-secondary);
+}
+
+.destination-box p strong {
+  color: var(--ot-text-primary);
+}
+
 .section-container h3 {
   margin: 0;
   font-size: 1.125rem;
@@ -223,3 +243,4 @@
     grid-template-columns: 1fr;
   }
 }
+.divider { height: 1px; background: var(--ot-border-color); margin: 12px 0; }

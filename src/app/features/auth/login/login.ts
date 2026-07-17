@@ -114,6 +114,9 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle() {
+    if (this.returnUrl()) {
+      sessionStorage.setItem('returnUrl', this.returnUrl()!);
+    }
     this.authService.loginWithGoogle();
   }
 }

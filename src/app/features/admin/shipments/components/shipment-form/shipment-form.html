@@ -6,25 +6,25 @@
       <form [formGroup]="dispatchForm" class="simple-form" novalidate>
         <div class="form-row">
           <div class="form-field">
-            <label>Tracking Number *</label>
-            <input pInputText formControlName="trackingNumber" placeholder="Ej: TRK-987" [class.ng-invalid]="isInvalid('trackingNumber', dispatchForm)" />
+            <label>{{ content.fields.trackingNumber }}</label>
+            <input pInputText formControlName="trackingNumber" [placeholder]="content.fields.trackingPlaceholder" [class.ng-invalid]="isInvalid('trackingNumber', dispatchForm)" />
             @if (isInvalid('trackingNumber', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
           </div>
           <div class="form-field">
-            <label>Código de Recojo *</label>
-            <input pInputText formControlName="pickupCode" placeholder="Ej: REC-123" [class.ng-invalid]="isInvalid('pickupCode', dispatchForm)" />
+            <label>{{ content.fields.pickupCode }}</label>
+            <input pInputText formControlName="pickupCode" [placeholder]="content.fields.pickupCodePlaceholder" [class.ng-invalid]="isInvalid('pickupCode', dispatchForm)" />
             @if (isInvalid('pickupCode', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label>Fecha y Hora de Envío *</label>
+            <label>{{ content.fields.shippedAt }}</label>
             <input pInputText type="datetime-local" formControlName="shippedAt" [class.ng-invalid]="isInvalid('shippedAt', dispatchForm)" />
             @if (isInvalid('shippedAt', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
           </div>
           <div class="form-field">
-            <label>Llegada Estimada *</label>
+            <label>{{ content.fields.estimatedArrival }}</label>
             <input pInputText type="date" formControlName="estimatedArrival" [class.ng-invalid]="isInvalid('estimatedArrival', dispatchForm)" />
             @if (isInvalid('estimatedArrival', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
           </div>
@@ -32,48 +32,47 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label>Foto Boleta de Envío *</label>
-            <input type="file" #fileUpload (change)="onFileSelected($event)" accept="image/*" class="file-input" />
-            @if (!selectedFile) { <span class="field-error">Debe seleccionar una imagen.</span> }
+            <label>{{ content.fields.receiptImage }}</label>
+            <input type="file" #fileUpload (change)="onFileSelected($event)" accept="image/*, image/webp, .webp" class="file-input" />
+            @if (!selectedFile) { <span class="field-error">{{ content.fields.errorImageRequired }}</span> }
           </div>
         </div>
       </form>
     } @else {
-      <!-- Readonly View -->
       <div class="readonly-view">
         <div class="detail-row">
-          <span class="detail-label">Estado:</span>
+          <span class="detail-label">{{ content.details.status }}</span>
           <span class="status-badge" [class]="shipment.status.toLowerCase()">{{ shipment.status }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">ID Orden:</span>
+          <span class="detail-label">{{ content.details.orderId }}</span>
           <span>{{ shipment.idOrder }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Tracking Number:</span>
+          <span class="detail-label">{{ content.details.trackingNumber }}</span>
           <span>{{ shipment.trackingNumber }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Código de Recojo:</span>
+          <span class="detail-label">{{ content.details.pickupCode }}</span>
           <span>{{ shipment.pickupCode || '-' }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Fecha de Envío:</span>
+          <span class="detail-label">{{ content.details.shippedAt }}</span>
           <span>{{ shipment.shippedAt ? (shipment.shippedAt | date:'medium') : '-' }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Llegada Estimada:</span>
+          <span class="detail-label">{{ content.details.estimatedArrival }}</span>
           <span>{{ shipment.estimatedArrival | date:'mediumDate' }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label">Llegada Real:</span>
+          <span class="detail-label">{{ content.details.actualArrival }}</span>
           <span>{{ shipment.actualArrival ? (shipment.actualArrival | date:'medium') : '-' }}</span>
         </div>
         @if (shipment.receiptImageUrl) {
           <div class="detail-row image-row">
-            <span class="detail-label">Boleta de Envío:</span>
+            <span class="detail-label">{{ content.details.receiptImage }}</span>
             <a [href]="shipment.receiptImageUrl" target="_blank" class="receipt-link">
-              <i class="pi pi-external-link"></i> Ver Boleta
+              <i class="pi pi-external-link"></i> {{ content.details.viewReceipt }}
             </a>
           </div>
         }
@@ -85,24 +84,24 @@
     <form [formGroup]="form" class="simple-form" novalidate>
       <div class="form-row">
         <div class="form-field">
-          <label>ID del Pedido *</label>
-          <input pInputText formControlName="idOrder" placeholder="Ej: ord_123" [class.ng-invalid]="isInvalid('idOrder', form)" />
+          <label>{{ content.fields.orderId }}</label>
+          <input pInputText formControlName="idOrder" [placeholder]="content.fields.orderIdPlaceholder" [class.ng-invalid]="isInvalid('idOrder', form)" />
           @if (isInvalid('idOrder', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
         </div>
         <div class="form-field">
-          <label>Método de Envío *</label>
-          <p-select formControlName="idShipmentMethod" [options]="methods()" optionLabel="methodName" optionValue="idShipmentMethod" placeholder="Seleccione método" [appendTo]="content.styles.appendTo" [style]="{ 'width': content.styles.selectWidth }"></p-select>
+          <label>{{ content.fields.method }}</label>
+          <p-select formControlName="idShipmentMethod" [options]="methods()" optionLabel="methodName" optionValue="idShipmentMethod" [placeholder]="content.fields.methodPlaceholder" [appendTo]="content.styles.appendTo" [style]="{ 'width': content.styles.selectWidth }"></p-select>
           @if (isInvalid('idShipmentMethod', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
         </div>
       </div>
       <div class="form-row">
         <div class="form-field">
-          <label>Costo (S/.) *</label>
+          <label>{{ content.fields.cost }}</label>
           <p-inputNumber formControlName="shippingCost" mode="decimal" [minFractionDigits]="2" [style]="{ 'width': content.styles.selectWidth }"></p-inputNumber>
           @if (isInvalid('shippingCost', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
         </div>
         <div class="form-field">
-          <label>Llegada Estimada *</label>
+          <label>{{ content.fields.estimatedArrival }}</label>
           <input pInputText type="date" formControlName="estimatedArrival" [class.ng-invalid]="isInvalid('estimatedArrival', form)" />
           @if (isInvalid('estimatedArrival', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
         </div>
@@ -120,11 +119,11 @@
         <app-button variant="primary" [label]="content.actions.dispatchLabel" icon="pi-send" [loading]="saving" (clicked)="onDispatch()" />
       } @else if (shipment.status === 'EN_CAMINO') {
         <div class="action-buttons">
-          <app-button variant="danger" label="Devolución Pendiente" icon="pi-reply" [loading]="saving" (clicked)="onUpdateStatus('DEVOLUCION_PENDIENTE')" />
+          <app-button variant="danger" [label]="content.actions.pendingReturn" icon="pi-reply" [loading]="saving" (clicked)="onUpdateStatus('DEVOLUCION_PENDIENTE')" />
           <app-button variant="primary" [label]="content.actions.deliveredLabel" icon="pi-check-circle" [loading]="saving" (clicked)="onUpdateStatus('ENTREGADO')" />
         </div>
       } @else if (shipment.status === 'DEVOLUCION_PENDIENTE') {
-        <app-button variant="danger" label="Recibir en Almacén" icon="pi-inbox" [loading]="saving" (clicked)="onUpdateStatus('DEVUELTO')" />
+        <app-button variant="danger" [label]="content.actions.receiveWarehouse" icon="pi-inbox" [loading]="saving" (clicked)="onUpdateStatus('DEVUELTO')" />
       }
     </div>
   </ng-template>

@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { signal } from '@angular/core';
+import { signal, OnInit, inject } from '@angular/core';
+import { StoreConfigService } from '../../../shared/services/store-config.service';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-footer',
@@ -10,46 +12,22 @@ import { signal } from '@angular/core';
   templateUrl: './footer.html',
   styleUrl: './footer.css'
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
+  private storeConfigService = inject(StoreConfigService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
+  
   readonly year = new Date().getFullYear();
 
-  content = {
-    brandRoute: '/',
-    ariaLabelLogo: 'OneTech',
-    tagline: 'Tu tienda de tecnología de confianza en Lima, Perú. Los mejores precios en laptops, celulares y componentes.',
-    headings: {
-      categories: 'Categorías',
-      help: 'Ayuda',
-      contact: 'Contacto'
-    },
-    copyPre: '© ',
-    copyPost: ' OneTech. Todos los derechos reservados.',
-    newsletter: {
-      title: 'Suscríbete a nuestro boletín',
-      subtitle: 'Recibe las mejores ofertas y novedades de tecnología.',
-      placeholder: 'Tu correo electrónico',
-      button: 'Suscribirse',
-      successMessage: '¡Gracias por suscribirte!'
-    }
-  };
-
-  readonly categories = [
-    { label: 'Laptops & PCs', route: '/catalog', queryParams: { category: 'laptops' } },
-    { label: 'Componentes', route: '/catalog', queryParams: { category: 'componentes' } },
-    { label: 'Gaming', route: '/catalog', queryParams: { category: 'gaming' } },
-    { label: 'Monitores', route: '/catalog', queryParams: { category: 'monitores' } },
-    { label: 'Celulares', route: '/catalog', queryParams: { category: 'celulares' } },
-    { label: 'Accesorios', route: '/catalog', queryParams: { category: 'accesorios' } },
-  ];
-
-  readonly helpLinks = [
-    { label: 'Quiénes somos', route: '/quienes-somos' },
-    { label: 'Preguntas frecuentes', route: '/preguntas-frecuentes' },
-    { label: 'Términos y condiciones', route: '/terminos' },
-    { label: 'Políticas de privacidad', route: '/privacidad' },
-    { label: 'Contacto', route: '/contacto' },
-  ];
-
+  get helpLinks() {
+    return [
+      { label: this.t().navbar.menu.aboutItems.whoWeAre, route: '/quienes-somos' },
+      { label: this.t().navbar.menu.aboutItems.faq, route: '/preguntas-frecuentes' },
+      { label: this.t().navbar.menu.aboutItems.terms, route: '/terminos' },
+      { label: this.t().navbar.menu.aboutItems.privacy, route: '/privacidad' },
+      { label: this.t().navbar.menu.aboutItems.contact, route: '/contacto' },
+    ];
+  }
 
   readonly social = [
     { icon: 'pi-instagram', href: 'https://instagram.com', label: 'Instagram' },
@@ -58,14 +36,13 @@ export class FooterComponent {
     { icon: 'pi-youtube', href: 'https://youtube.com', label: 'YouTube' },
   ];
 
-  readonly contactInfo = [
-    { icon: 'pi-map-marker', text: 'Av. Javier Prado 1234, San Isidro, Lima' },
-    { icon: 'pi-phone', text: '+51 (01) 234-5678', link: 'tel:+5101234567' },
-    { icon: 'pi-envelope', text: 'soporte@onetech.pe', link: 'mailto:soporte@onetech.pe' },
-    { icon: 'pi-clock', text: 'Lun–Sab 9:00am – 6:00pm' }
-  ];
+  contactInfo = signal([
+    { icon: 'pi-map-marker', text: '...', link: undefined as string | undefined },
+    { icon: 'pi-phone', text: '...', link: undefined as string | undefined },
+    { icon: 'pi-envelope', text: '...', link: undefined as string | undefined },
+    { icon: 'pi-clock', text: '...', link: undefined as string | undefined }
+  ]);
 
-  readonly payments = ['Visa', 'Mastercard', 'Yape', 'Plin', 'BCP', 'Interbank'];
 
   email = signal('');
   subscribed = signal(false);
@@ -78,5 +55,19 @@ export class FooterComponent {
         this.email.set('');
       }, 3000);
     }
+  }
+
+  ngOnInit() {
+    this.storeConfigService.getConfiguration().subscribe({
+      next: (config) => {
+        this.contactInfo.set([
+          { icon: 'pi-map-marker', text: config.address || this.t().footer.contact.unavailable, link: undefined },
+          { icon: 'pi-phone', text: config.supportPhone || this.t().footer.contact.unavailable, link: `tel:${config.supportPhone}` },
+          { icon: 'pi-envelope', text: config.supportEmail || this.t().footer.contact.unavailable, link: `mailto:${config.supportEmail}` },
+          { icon: 'pi-clock', text: this.t().footer.contact.hours, link: undefined }
+        ]);
+      },
+      error: () => {}
+    });
   }
 }

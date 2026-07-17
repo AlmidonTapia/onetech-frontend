@@ -4,6 +4,7 @@ import { CategoryFormComponent } from './components/category-form/category-form'
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { CategoryService } from '../../../core/domains/catalog/services/category.service';
 import { Category, CreateCategoryRequest } from '../../../core/domains/catalog/models/category.model';
 import { Subject } from 'rxjs';
@@ -24,6 +25,8 @@ export class CategoriesComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   @ViewChild(CategoryFormComponent) categoryForm!: CategoryFormComponent;
 
@@ -39,24 +42,6 @@ export class CategoriesComponent implements OnInit {
   apiConfig = {
     pageSize: 10
   };
-
-  content = {
-    title: 'Categorías',
-    countSuffix: 'categorías registradas',
-    createBtnLabel: 'Nueva categoría',
-    createBtnIcon: 'pi-plus',
-    cardPadding: 'none',
-    alerts: {
-      saveSuccess: 'Categoría guardada',
-      saveError: 'Error al guardar',
-      deleteNotImplemented: 'Eliminar categorías no implementado aún'
-    },
-    confirmModal: {
-      title: '¿Eliminar categoría?',
-      severity: 'danger',
-      confirmLabel: 'Sí, eliminar'
-    }
-  } as const;
 
   ngOnInit() {
     this.searchSubject.pipe(
@@ -106,14 +91,14 @@ export class CategoriesComponent implements OnInit {
 
     request$.subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.saveSuccess);
+        this.alertService.success(this.t().adminCategories.alerts.saveSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadCategories();
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.categoryForm.form) || undefined;
-        this.alertService.error(this.content.alerts.saveError, errorMsg);
+        this.alertService.error(this.t().adminCategories.alerts.saveError, errorMsg);
         this.saving.set(false);
       }
     });
@@ -121,18 +106,18 @@ export class CategoriesComponent implements OnInit {
 
   onDelete(c: Category) {
     this.modalService.open({
-      title: this.content.confirmModal.title,
-      message: `"${c.categoryName}" será eliminada.`,
-      severity: this.content.confirmModal.severity as any,
-      confirmLabel: this.content.confirmModal.confirmLabel,
+      title: this.t().adminCategories.confirmModal.title,
+      message: `"${c.categoryName}" ${this.t().adminCategories.confirmModal.messageText}`,
+      severity: 'danger',
+      confirmLabel: this.t().adminCategories.confirmModal.confirmLabel,
       onConfirm: () => {
         this.categoryService.delete(c.idCategory).subscribe({
           next: () => {
-            this.alertService.success('Categoría eliminada exitosamente');
+            this.alertService.success(this.t().adminCategories.alerts.deleteSuccess);
             this.loadCategories();
           },
           error: (err: any) => {
-            this.alertService.error(err?.error?.message || 'Error al eliminar la categoría');
+            this.alertService.error(err?.error?.message || this.t().adminCategories.alerts.deleteError);
           }
         });
       },

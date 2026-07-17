@@ -14,8 +14,15 @@
 
 .orders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+}
+
+@media (max-width: 480px) {
+  .orders-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 .order-card {
@@ -93,7 +100,6 @@
   margin-top: auto;
 }
 
-/* Empty State */
 .orders-empty {
   display: flex;
   flex-direction: column;
@@ -125,7 +131,6 @@
   margin: 0;
 }
 
-/* Skeleton Loaders */
 .skeleton-card {
   pointer-events: none;
   animation: pulse 1.5s infinite ease-in-out;

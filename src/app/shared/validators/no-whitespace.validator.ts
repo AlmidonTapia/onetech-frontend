@@ -1,9 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-/**
- * Validator that requires the control to have a non-whitespace value.
- * Fails if the string is empty or contains only spaces.
- */
 export function noWhitespaceValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (control.value == null || control.value === '') {

@@ -6,7 +6,7 @@
 
 <div class="orders-list">
     @if (loading()) {
-        <p>Cargando tus órdenes...</p>
+        <app-spinner label="Cargando tus órdenes..." />
     } @else if (orders().length === 0) {
         <p>No tienes órdenes registradas.</p>
     } @else {

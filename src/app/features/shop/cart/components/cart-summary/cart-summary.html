@@ -1,44 +1,38 @@
 <div class="summary-card">
-  <h3 class="summary-title">{{ content.title }}</h3>
+  <h3 class="summary-title">{{ t().cart.summary.title }}</h3>
 
   <div class="summary-rows">
     <div class="summary-row">
       <span>
-        {{ content.subtotalLabel }} ({{ itemCount }} {{ itemCount === 1 ? content.singularProduct :
-        content.pluralProduct }})
+        {{ t().cart.summary.subtotalLabel }} ({{ itemCount }} {{ itemCount === 1 ? t().cart.summary.singularProduct :
+        t().cart.summary.pluralProduct }})
       </span>
       <span>{{ totalAmount | currencyPen }}</span>
     </div>
 
     <div class="summary-row">
-      <span>{{ content.shippingLabel }}</span>
-      @if (totalAmount >= shippingConfig.freeThreshold) {
-      <span class="free-shipping">
-        <i class="pi pi-check-circle"></i> {{ shippingConfig.freeLabel }}
-      </span>
-      } @else {
-      <span class="shipping-cost">{{ shippingConfig.calculatingLabel }}</span>
-      }
+      <span>{{ t().cart.summary.shippingLabel }}</span>
+      <span class="shipping-cost">{{ t().cart.summary.calculatingLabel }}</span>
     </div>
   </div>
 
   <div class="summary-total">
-    <span>{{ content.totalLabel }}</span>
+    <span>{{ t().cart.summary.totalLabel }}</span>
     <span class="total-amount">{{ totalAmount | currencyPen }}</span>
   </div>
 
-  <app-button variant="accent" size="lg" [label]="content.checkoutBtnLabel" [icon]="content.checkoutBtnIcon"
+  <app-button variant="accent" size="lg" [label]="t().cart.summary.checkoutBtnLabel" icon="pi-lock"
     [fullWidth]="true" (clicked)="checkout.emit()" />
 
-  <a [routerLink]="content.continueShoppingRoute" class="continue-shopping">
-    <i class="pi pi-arrow-left"></i> {{ content.continueShoppingText }}
+  <a routerLink="/catalog" class="continue-shopping">
+    <i class="pi pi-arrow-left"></i> {{ t().cart.summary.continueShoppingText }}
   </a>
 
   <div class="payment-methods">
-    <span>{{ content.paymentMethodsTitle }}</span>
+    <span>{{ t().cart.summary.paymentMethodsTitle }}</span>
     <div class="methods-grid">
-      @for (method of content.paymentMethods; track method) {
-      <span class="method-chip">{{ method }}</span>
+      @for (method of paymentMethods; track method.idPaymentMethod) {
+      <span class="method-chip">{{ method.methodName }}</span>
       }
     </div>
   </div>

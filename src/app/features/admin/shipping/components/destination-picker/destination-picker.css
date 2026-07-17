@@ -1,4 +1,3 @@
-/* ---- Destination picker section ---- */
 .dest-picker-section {
   margin: 8px 0 16px 0;
   padding: 16px;
@@ -53,7 +52,6 @@
   }
 }
 
-/* ---- Destination chips ---- */
 .dest-chips {
   display: flex;
   flex-wrap: wrap;
@@ -114,7 +112,6 @@
   color: var(--ot-danger, #ef4444);
 }
 
-/* ---- Empty state ---- */
 .dest-empty {
   display: flex;
   align-items: center;

@@ -2,8 +2,12 @@ import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { OrdersTableComponent } from './components/orders-table/orders-table';
 import { OrderStatusFormComponent } from './components/order-status-form/order-status-form';
 import { AlertService } from '../../../shared/services/alert.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { OrderService } from '../../../core/domains/checkout/services/order.service';
 import { Order, OrderStatus } from '../../../core/domains/checkout/models/order.model';
+import { ShipmentService } from '../../../core/domains/shipping/services/shipment.service';
+import { InvoiceService } from '../../../core/domains/checkout/services/invoice.service';
+import { OrderDetailsModalComponent } from '../../shop/profile/components/profile-orders/components/order-details-modal/order-details-modal';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,14 +15,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [OrdersTableComponent, OrderStatusFormComponent],
+  imports: [OrdersTableComponent, OrderStatusFormComponent, OrderDetailsModalComponent],
   templateUrl: './orders.html',
   styleUrl: './orders.css'
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
   private alertService = inject(AlertService);
+  private shipmentService = inject(ShipmentService);
+  private invoiceService = inject(InvoiceService);
   private destroyRef = inject(DestroyRef);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   orders = signal<Order[]>([]);
   totalRecords = signal(0);
@@ -29,19 +37,15 @@ export class OrdersComponent implements OnInit {
   saving = signal(false);
   statusVisible = signal(false);
   editingOrder = signal<Order | null>(null);
+  
+  selectedOrder = signal<Order | null>(null);
+  selectedShipment = signal<any>(null);
+  selectedInvoice = signal<any>(null);
+  showDetailsModal = signal(false);
 
   apiConfig = {
     pageSize: 10
   };
-  content = {
-    title: 'Órdenes',
-    countSuffix: 'órdenes en total',
-    cardPadding: 'none',
-    alerts: {
-      updateSuccess: 'Estado actualizado correctamente',
-      updateError: 'Error al actualizar estado'
-    }
-  } as const; 
 
   ngOnInit() {
     this.searchSubject.pipe(
@@ -84,7 +88,28 @@ export class OrdersComponent implements OnInit {
   }
 
   openDetail(o: Order) {
-    this.alertService.info('Próximamente', 'La vista de detalle de la orden estará disponible en una futura versión.');
+    this.selectedOrder.set(o);
+    this.selectedShipment.set(null);
+    this.selectedInvoice.set(null);
+    this.showDetailsModal.set(true);
+
+    this.shipmentService.getByOrder(o.idOrder).subscribe({
+      next: (shipment) => this.selectedShipment.set(shipment),
+      error: () => {}
+    });
+
+    this.invoiceService.getByOrder(o.idOrder).subscribe({
+      next: (invoice) => this.selectedInvoice.set(invoice),
+      error: () => {}
+    });
+  }
+
+  downloadInvoice(idInvoice: string) {
+    if (this.selectedInvoice()?.pdfUrl) {
+      window.open(this.selectedInvoice().pdfUrl, '_blank');
+    } else {
+      window.location.href = this.invoiceService.downloadInvoiceUrl(idInvoice);
+    }
   }
 
   onStatusSave(newStatus: OrderStatus) {
@@ -93,13 +118,13 @@ export class OrdersComponent implements OnInit {
 
     this.orderService.updateStatus(this.editingOrder()!.idOrder, newStatus).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.updateSuccess);
+        this.alertService.success(this.t().adminOrders.alerts.updateSuccess);
         this.statusVisible.set(false);
         this.saving.set(false);
         this.loadOrders();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.content.alerts.updateError;
+        const errMsg = err?.error?.message || this.t().adminOrders.alerts.updateError;
         this.alertService.error(errMsg);
         this.saving.set(false);
       }

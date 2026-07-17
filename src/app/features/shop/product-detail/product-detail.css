@@ -1,5 +1,10 @@
-.detail-page { padding: 40px 0 80px; }
-.detail-breadcrumb { display:block; margin-bottom: 32px; }
+.detail-page {
+  padding: 40px 0 80px;
+}
+.detail-breadcrumb {
+  display: block;
+  margin-bottom: 32px;
+}
 
 .detail-layout {
   display: grid;
@@ -8,14 +13,30 @@
   align-items: start;
   margin-bottom: 64px;
 }
+
+.detail-main-info {
+  position: sticky;
+  top: 100px;
+}
 @media (max-width: 992px) {
   .detail-layout {
     grid-template-columns: 1fr;
     gap: 40px;
   }
 }
+@media (max-width: 560px) {
+  .detail-page {
+    padding: 20px 0 60px;
+  }
+  .detail-breadcrumb {
+    margin-bottom: 20px;
+  }
+  .detail-layout {
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+}
 
-/* Custom Sequential Sections Styling for Product Detail */
 .detail-info-section {
   margin-top: 64px !important;
   margin-bottom: 64px !important;
@@ -23,7 +44,16 @@
   border: 1px solid var(--ot-border-color) !important;
   border-radius: var(--ot-radius-2xl, 24px) !important;
   padding: 48px !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.03) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03) !important;
+}
+
+@media (max-width: 640px) {
+  .detail-info-section {
+    padding: 24px 20px !important;
+    margin-top: 40px !important;
+    margin-bottom: 40px !important;
+    border-radius: var(--ot-radius-xl) !important;
+  }
 }
 
 .section-title {
@@ -44,41 +74,155 @@
   line-height: 1.7 !important;
 }
 
-/* Specifications Table */
 .specs-table {
-  display: flex !important;
-  flex-direction: column !important;
-  border: 1px solid var(--ot-border-color) !important;
-  border-radius: var(--ot-radius-lg) !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  border-top: 1px solid var(--ot-border-color) !important;
+  border-left: 1px solid var(--ot-border-color) !important;
+  border-radius: var(--ot-radius-lg, 12px) !important;
   overflow: hidden !important;
+  gap: 0 !important;
 }
 
 .specs-row {
   display: grid !important;
-  grid-template-columns: 1fr 2fr !important;
+  grid-template-columns: 180px 1fr !important;
+  border-right: 1px solid var(--ot-border-color) !important;
   border-bottom: 1px solid var(--ot-border-color) !important;
-  background: var(--ot-bg-surface) !important;
-}
-
-.specs-row:last-child {
-  border-bottom: none !important;
-}
-
-.specs-row:nth-child(even) {
-  background: var(--ot-bg-body) !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 .spec-key {
-  padding: 14px 20px !important;
+  padding: 16px 20px !important;
+  font-size: 11px !important;
   font-weight: 600 !important;
-  color: var(--ot-text-main) !important;
+  color: var(--ot-text-muted) !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
   border-right: 1px solid var(--ot-border-color) !important;
-  background: var(--ot-bg-body) !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .spec-value {
-  padding: 14px 20px !important;
-  color: var(--ot-text-muted) !important;
+  padding: 16px 20px !important;
+  color: var(--ot-text-main) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
-.not-found { text-align:center; padding:80px; color:var(--ot-text-muted); font-size:16px; }
+.specs-row:nth-child(4n + 1) .spec-value,
+.specs-row:nth-child(4n + 2) .spec-value {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+.specs-row:nth-child(4n + 1) .spec-key,
+.specs-row:nth-child(4n + 2) .spec-key {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+.specs-row:nth-child(4n + 3) .spec-value,
+.specs-row:nth-child(4n + 4) .spec-value {
+  background: transparent !important;
+}
+.specs-row:nth-child(4n + 3) .spec-key,
+.specs-row:nth-child(4n + 4) .spec-key {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+:root[class~="dark"] .specs-row:nth-child(4n + 1) .spec-value,
+:root[class~="dark"] .specs-row:nth-child(4n + 2) .spec-value {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+:root[class~="dark"] .specs-row:nth-child(4n + 1) .spec-key,
+:root[class~="dark"] .specs-row:nth-child(4n + 2) .spec-key {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+:root[class~="dark"] .specs-row:nth-child(4n + 3) .spec-key,
+:root[class~="dark"] .specs-row:nth-child(4n + 4) .spec-key {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+@media (max-width: 992px) {
+  .specs-table {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .specs-row:nth-child(odd) .spec-value {
+    background: rgba(0, 0, 0, 0.02) !important;
+  }
+  .specs-row:nth-child(odd) .spec-key {
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+  .specs-row:nth-child(even) .spec-value {
+    background: transparent !important;
+  }
+  .specs-row:nth-child(even) .spec-key {
+    background: rgba(0, 0, 0, 0.02) !important;
+  }
+  
+  :root[class~="dark"] .specs-row:nth-child(odd) .spec-value {
+    background: rgba(255, 255, 255, 0.02) !important;
+  }
+  :root[class~="dark"] .specs-row:nth-child(odd) .spec-key {
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+  :root[class~="dark"] .specs-row:nth-child(even) .spec-key {
+    background: rgba(255, 255, 255, 0.02) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .specs-row {
+    grid-template-columns: 130px 1fr !important;
+  }
+  .spec-key {
+    padding: 12px 14px !important;
+    font-size: 10px !important;
+  }
+  .spec-value {
+    padding: 12px 14px !important;
+    font-size: 12px !important;
+  }
+}
+
+.login-alert {
+  margin-top: 24px !important;
+  padding: 16px 20px !important;
+  background-color: var(--ot-bg-body) !important;
+  color: var(--ot-text-main) !important;
+  border: 1px solid var(--ot-border-color) !important;
+  border-left: 4px solid var(--ot-blue) !important;
+  border-radius: var(--ot-radius-lg, 12px) !important;
+  font-size: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05) !important;
+}
+
+.login-alert i {
+  font-size: 20px !important;
+  color: var(--ot-blue) !important;
+}
+
+.login-alert a {
+  font-weight: 700 !important;
+  color: var(--ot-blue) !important;
+  text-decoration: none !important;
+  transition: var(--ot-transition) !important;
+}
+
+.login-alert a:hover {
+  text-decoration: underline !important;
+}
+
+.not-found {
+  text-align: center;
+  padding: 80px;
+  color: var(--ot-text-muted);
+  font-size: 16px;
+}

@@ -30,6 +30,22 @@
         </div>
       </div>
 
+      <!-- DESTINATION SECTION -->
+      <div class="section-container">
+        <h3>Destino y Consignatario</h3>
+        <div class="destination-box">
+          <p><strong>Ubicación:</strong> {{ order()?.snapDistrictName }}, {{ order()?.snapProvinceName }}, {{ order()?.snapDepartmentName }}</p>
+          <p><strong>Método:</strong> {{ order()?.snapShipmentMethodName || (order()?.snapAgencyAddress ? 'Recojo en Agencia' : 'Envío a Domicilio') }}</p>
+          @if (order()?.snapAgencyAddress) {
+            <p><strong>Dirección de Agencia:</strong> {{ order()?.snapAgencyAddress }}</p>
+          }
+          <div class="divider"></div>
+          <p><strong>Recibe:</strong> {{ order()?.snapConsigneeName || order()?.userFullName }}</p>
+          <p><strong>Documento:</strong> {{ order()?.snapConsigneeDoc || 'No registrado' }}</p>
+          <p><strong>Teléfono:</strong> {{ order()?.snapConsigneePhone || 'No registrado' }}</p>
+        </div>
+      </div>
+
       <!-- INVOICE SECTION -->
       <div class="section-container">
         <h3>Boleta de Compra</h3>

@@ -2,10 +2,11 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { PaginatorModule } from 'primeng/paginator';
 import { OrdersListComponent } from './components/orders-list/orders-list';
 import { OrderDetailComponent } from './components/order-detail/order-detail';
-import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
 import { OrderService } from '../../../core/domains/checkout/services/order.service';
+import { AlertService } from '../../../shared/services/alert.service';
 import { Order } from '../../../core/domains/checkout/models/order.model';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-orders',
@@ -21,6 +22,7 @@ import { Order } from '../../../core/domains/checkout/models/order.model';
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
+  private alertService = inject(AlertService);
 
   orders = signal<Order[]>([]);
   totalRecords = signal(0);
@@ -32,14 +34,10 @@ export class OrdersComponent implements OnInit {
   detailVisible = signal(false);
   selectedOrder = signal<Order | null>(null);
 
-  content = {
-    title: 'Mis pedidos',
-    subtitle: 'Historial completo de tus compras en OneTech.',
-    breadcrumbLabel: 'Mis pedidos',
-    loadingLabel: 'Cargando pedidos...'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
-  breadcrumb: BreadcrumbItem[] = [{ label: this.content.breadcrumbLabel }];
+  breadcrumb: BreadcrumbItem[] = [{ label: this.t().orders.breadcrumbLabel }];
 
   ngOnInit() {
     this.loadOrders();
@@ -56,7 +54,10 @@ export class OrdersComponent implements OnInit {
         this.totalRecords.set(r.totalElements);
         this.loading.set(false);
       },
-      error: () => this.loading.set(false),
+      error: () => {
+        this.loading.set(false);
+        this.alertService.error(this.t().orders.errorLoadingTitle, this.t().orders.errorLoadingMsg);
+      },
     });
   }
 

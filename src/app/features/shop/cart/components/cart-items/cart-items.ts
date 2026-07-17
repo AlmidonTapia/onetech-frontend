@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { CartItem } from '../../../../../core/domains/shopping/models/cart.model';
+
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-cart-items',
@@ -14,4 +16,7 @@ export class CartItemsComponent {
   @Input() items: CartItem[] = [];
   @Output() updateQty = new EventEmitter<{ id: string; qty: number }>();
   @Output() removeItem = new EventEmitter<string>();
+
+  ts = inject(TranslationService);
+  t = this.ts.t;
 }

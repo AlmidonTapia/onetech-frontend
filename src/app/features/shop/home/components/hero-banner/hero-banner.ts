@@ -13,14 +13,14 @@ export class HeroBannerComponent {
 
   content = {
     badgeIcon: 'pi pi-bolt',
-    badgeText: 'Nuevo: Laptops RTX 4070 en stock',
+    badgeText: 'Descubre nuestros nuevos ingresos',
 
     titleNormal: 'La tecnología que ',
     titleAccent: 'necesitas',
 
-    freeShippingThreshold: 'S/ 199',
-    subTextPre: 'Los mejores precios en laptops, celulares y componentes. Envío gratis desde ',
-    subTextPost: ' a todo Lima.',
+    freeShippingThreshold: '',
+    subTextPre: 'Los mejores productos tecnológicos. Compra en línea con total seguridad.',
+    subTextPost: '',
 
     primaryBtn: {
       label: 'Explorar catálogo',
@@ -35,9 +35,9 @@ export class HeroBannerComponent {
   };
 
   stats = [
-    { value: '+5,000', label: 'Productos' },
-    { value: '24h', label: 'Despacho Lima' },
-    { value: '12', label: 'Cuotas sin interés' }
+    { value: 'Miles', label: 'De productos' },
+    { value: 'Despacho', label: 'Rápido y seguro' },
+    { value: 'Pagos', label: '100% confiables' }
   ];
 
   visualIcons = [

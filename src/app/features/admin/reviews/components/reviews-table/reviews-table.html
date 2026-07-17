@@ -1,17 +1,17 @@
 <p-table 
-    [value]="reviews" 
+    [value]="reviews()" 
     [tableStyle]="{ 'min-width': '60rem' }" 
     styleClass="p-datatable-sm"
     [paginator]="true"
     [rows]="10"
     [lazy]="true"
     (onLazyLoad)="lazyLoad.emit($event)"
-    [totalRecords]="totalRecords"
-    [loading]="loading">
+    [totalRecords]="totalRecords()"
+    [loading]="loading()">
     
     <ng-template pTemplate="caption">
         <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
+            <h5 class="table-header-title">{{ content().quickSearchTitle }}</h5>
             <div class="table-toolbar-filters">
                 <p-select [options]="ratingOptions" [(ngModel)]="selectedRating" (onChange)="onFilter()"
                     optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
@@ -19,7 +19,7 @@
                     optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
                 <span class="p-input-icon-left search-input-wrapper">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content().searchPlaceholder" class="filter-search-input"/>
                 </span>
             </div>
         </div>
@@ -27,13 +27,13 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ content.headers.date }}</th>
-        <th>{{ content.headers.product }}</th>
-        <th>{{ content.headers.client }}</th>
-        <th>{{ content.headers.rating }}</th>
-        <th>{{ content.headers.comment }}</th>
-        <th>{{ content.headers.status }}</th>
-        <th>{{ content.headers.actions }}</th>
+        <th>{{ content().headers.date }}</th>
+        <th>{{ content().headers.product }}</th>
+        <th>{{ content().headers.client }}</th>
+        <th>{{ content().headers.rating }}</th>
+        <th>{{ content().headers.comment }}</th>
+        <th>{{ content().headers.status }}</th>
+        <th>{{ content().headers.actions }}</th>
       </tr>
     </ng-template>
 
@@ -56,14 +56,14 @@
         <td>
           <div class="row-actions">
             @if (review.status === 'PENDING') {
-              <button class="act-btn" style="color: var(--ot-success)" title="Aprobar" (click)="approveClick(review.idReview)">
+              <button class="act-btn" style="color: var(--ot-success)" [title]="content().actions.approve" (click)="approveClick(review.idReview)">
                 <i class="pi pi-check"></i>
               </button>
-              <button class="act-btn act-btn--danger" title="Rechazar" (click)="rejectClick(review.idReview)">
+              <button class="act-btn act-btn--danger" [title]="content().actions.reject" (click)="rejectClick(review.idReview)">
                 <i class="pi pi-times"></i>
               </button>
             } @else {
-              <button class="act-btn" title="Restaurar a pendiente" (click)="review.status = 'PENDING'">
+              <button class="act-btn" [title]="content().actions.restore" (click)="review.status = 'PENDING'">
                 <i class="pi pi-refresh"></i>
               </button>
             }
@@ -76,7 +76,7 @@
       <tr>
         <td colspan="7" style="text-align: center; padding: 3rem 1rem;">
             <i class="pi pi-inbox" style="font-size: 2.5rem; color: var(--ot-gray-400); display: block; margin-bottom: 12px;"></i>
-            <p style="color: var(--ot-text-muted); margin: 0; font-weight: 500;">{{ content.emptyMessage }}</p>
+            <p style="color: var(--ot-text-muted); margin: 0; font-weight: 500;">{{ content().emptyMessage }}</p>
         </td>
       </tr>
     </ng-template>

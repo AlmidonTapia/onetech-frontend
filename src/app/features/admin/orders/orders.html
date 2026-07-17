@@ -2,8 +2,8 @@
 
     <div class="page-header">
         <div>
-      <h1 class="page-title">{{ content.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
+      <h1 class="page-title">{{ t().adminOrders.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminOrders.countSuffix }}</p>
     </div>
     </div>
 
@@ -23,3 +23,12 @@
 
 <app-order-status-form [(visible)]="statusVisible" [order]="editingOrder()" [saving]="saving()"
     (save)="onStatusSave($event)" (cancel)="statusVisible.set(false)" />
+
+<app-order-details-modal 
+  [visible]="showDetailsModal()"
+  [order]="selectedOrder()"
+  [shipment]="selectedShipment()"
+  [invoice]="selectedInvoice()"
+  (onClose)="showDetailsModal.set(false)"
+  (onDownloadInvoice)="downloadInvoice($event)">
+</app-order-details-modal>

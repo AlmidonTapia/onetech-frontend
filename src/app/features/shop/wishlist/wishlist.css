@@ -1,6 +1,5 @@
 .wishlist-page { padding: 28px 0 64px; }
 
-/* Header */
 .page-header {
   display: flex; align-items: flex-start;
   justify-content: space-between; gap: 16px;
@@ -45,7 +44,6 @@
   transform: translateY(0) !important;
 }
 
-/* Grid */
 .wishlist-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -78,7 +76,6 @@
   flex: 1;
 }
 
-/* Deep styling to eliminate nested duplicate borders */
 .wishlist-item ::ng-deep .product-card {
   border: none !important;
   box-shadow: none !important;
@@ -113,7 +110,6 @@
 
 .dark-mode .remove-btn:hover { background: color-mix(in srgb, var(--ot-error) 15%, transparent) !important; }
 
-/* Empty state */
 .empty-wishlist {
   display: flex; flex-direction: column;
   align-items: center; gap: 20px;

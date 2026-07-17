@@ -35,11 +35,11 @@
     <ng-template pTemplate="body" let-c>
         <tr>
             <td><strong>{{ c.code }}</strong></td>
-            <td>{{ c.discountType == "PERCENTAGE" ? "Porcentaje" : "Monto fijo" }}</td>
+            <td>{{ c.discountType == "PERCENTAGE" ? content.types.percentage : content.types.fixedLabel }}</td>
             <td>{{ c.discountValue }}</td>
-            <td>{{ c.startDate ? (c.startDate | date) : 'Inmediato' }}</td>
+            <td>{{ c.startDate ? (c.startDate | date) : content.values.immediate }}</td>
             <td>{{ c.expirationDate | date }}</td>
-            <td>{{ c.usageLimit || 'Sin límite' }}</td>
+            <td>{{ c.usageLimit || content.values.noLimit }}</td>
             <td>{{c.usedCount}}</td>
             <td style="text-align: center;">
                 <span class="status-badge" 
@@ -47,9 +47,9 @@
                     [class.status-inactive]="c.status === 'INACTIVO'"
                     [class.status-exhausted]="c.status === 'AGOTADO'"
                     [class.status-expired]="c.status === 'EXPIRADO'">
-                    {{ c.status === 'ACTIVO' ? 'Activo' : 
-                       c.status === 'INACTIVO' ? 'Inactivo' : 
-                       c.status === 'AGOTADO' ? 'Agotado' : 'Expirado' }}
+                    {{ c.status === 'ACTIVO' ? content.statuses.active : 
+                       c.status === 'INACTIVO' ? content.statuses.inactive : 
+                       c.status === 'AGOTADO' ? content.statuses.exhausted : content.statuses.expired }}
                 </span>
             </td>
             <td>

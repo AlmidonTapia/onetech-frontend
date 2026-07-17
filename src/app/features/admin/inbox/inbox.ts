@@ -4,6 +4,7 @@ import { ContactService } from '../../../core/domains/contact/services/contact.s
 import { ContactMessage } from '../../../core/domains/contact/models/contact.model';
 import { InboxTableComponent } from './components/inbox-table/inbox-table';
 import { AlertService } from '../../../shared/services/alert.service';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-inbox',
@@ -14,40 +15,56 @@ import { AlertService } from '../../../shared/services/alert.service';
 export class InboxComponent implements OnInit {
   private contactService = inject(ContactService);
   private alertService = inject(AlertService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   messages = signal<ContactMessage[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(false);
   unreadCount = signal<number>(0);
 
-  content = {
-    title: 'Bandeja de Entrada',
-    subtitle: 'Gestiona los mensajes enviados por los clientes desde el formulario de contacto.',
-    badgeSuffix: ' no leídos',
-    table: {
-      quickSearchTitle: 'Búsqueda Rápida',
-      searchPlaceholder: 'Nombre, email o asunto...',
-      emptyMessage: 'No hay mensajes en la bandeja de entrada.',
-      headers: {
-        date: 'Fecha',
-        name: 'Nombre',
-        email: 'Email',
-        subject: 'Asunto',
-        status: 'Estado',
-        actions: 'Acciones'
-      },
-      statusLabels: {
-        unread: 'No Leído',
-        read: 'Leído',
-        replied: 'Respondido'
-      },
-      icons: {
-        view: 'pi pi-eye',
-        reply: 'pi pi-reply',
-        delete: 'pi pi-trash'
+  get content() {
+    return {
+      title: this.t().adminInbox.title,
+      subtitle: this.t().adminInbox.subtitle,
+      badgeSuffix: this.t().adminInbox.badgeSuffix,
+      table: {
+        quickSearchTitle: this.t().adminInbox.table.quickSearchTitle,
+        searchPlaceholder: this.t().adminInbox.table.searchPlaceholder,
+        emptyMessage: this.t().adminInbox.table.emptyMessage,
+        headers: {
+          date: this.t().adminInbox.table.headers.date,
+          name: this.t().adminInbox.table.headers.name,
+          email: this.t().adminInbox.table.headers.email,
+          subject: this.t().adminInbox.table.headers.subject,
+          status: this.t().adminInbox.table.headers.status,
+          actions: this.t().adminInbox.table.headers.actions
+        },
+        statusLabels: {
+          unread: this.t().adminInbox.table.statusLabels.unread,
+          read: this.t().adminInbox.table.statusLabels.read,
+          replied: this.t().adminInbox.table.statusLabels.replied
+        },
+        icons: {
+          view: this.t().adminInbox.table.icons.view,
+          reply: this.t().adminInbox.table.icons.reply,
+          delete: this.t().adminInbox.table.icons.delete
+        },
+        actions: {
+          markRead: this.t().adminInbox.table.actions.markRead,
+          markUnread: this.t().adminInbox.table.actions.markUnread,
+          markReplied: this.t().adminInbox.table.actions.markReplied,
+          delete: this.t().adminInbox.table.actions.delete
+        },
+        confirmDelete: {
+          title: this.t().adminInbox.table.confirmDelete.title,
+          message: this.t().adminInbox.table.confirmDelete.message,
+          acceptLabel: this.t().adminInbox.table.confirmDelete.acceptLabel,
+          rejectLabel: this.t().adminInbox.table.confirmDelete.rejectLabel
+        }
       }
-    }
-  } as const;
+    };
+  }
 
   ngOnInit() {
     this.loadMessages({ first: 0, rows: 10 });
@@ -66,7 +83,7 @@ export class InboxComponent implements OnInit {
         this.loading.set(false);
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || 'Error al cargar mensajes');
+        this.alertService.error(err?.error?.message || this.t().adminInbox.alerts.loadError);
         this.loading.set(false);
       }
     });
@@ -82,7 +99,7 @@ export class InboxComponent implements OnInit {
         this.loadMessages({ first: 0, rows: 10 });
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || 'Error al actualizar estado');
+        this.alertService.error(err?.error?.message || this.t().adminInbox.alerts.statusError);
       }
     });
   }
@@ -90,11 +107,11 @@ export class InboxComponent implements OnInit {
   onDelete(id: string) {
     this.contactService.deleteMessage(id).subscribe({
       next: () => {
-        this.alertService.success('Mensaje eliminado');
+        this.alertService.success(this.t().adminInbox.alerts.deleteSuccess);
         this.loadMessages({ first: 0, rows: 10 });
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || 'Error al eliminar mensaje');
+        this.alertService.error(err?.error?.message || this.t().adminInbox.alerts.deleteError);
       }
     });
   }

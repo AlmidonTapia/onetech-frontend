@@ -8,7 +8,7 @@
                 <div style="line-height: 1;"><span class="logo-one">One</span><span class="logo-tech">Tech</span></div>
             </a>
             <p class="footer-tagline">
-                {{ content.tagline }}
+                {{ t().footer.tagline }}
             </p>
             <div class="footer-social">
                 @for (s of social; track s.label) {
@@ -19,21 +19,10 @@
             </div>
         </div>
 
-        <div class="footer-col">
-            <h3 class="footer-heading">{{ content.headings.categories }}</h3>
-            <ul class="footer-links">
-                @for (cat of categories; track cat.label) {
-                <li>
-                    <a [routerLink]="cat.route" [queryParams]="cat.queryParams" class="footer-link">
-                        {{ cat.label }}
-                    </a>
-                </li>
-                }
-            </ul>
-        </div>
+        
 
         <div class="footer-col">
-            <h3 class="footer-heading">{{ content.headings.help }}</h3>
+            <h3 class="footer-heading">{{ t().footer.headings.help }}</h3>
             <ul class="footer-links">
                 @for (link of helpLinks; track link.label) {
                 <li>
@@ -44,9 +33,9 @@
         </div>
 
         <div class="footer-col">
-            <h3 class="footer-heading">{{ content.headings.contact }}</h3>
+            <h3 class="footer-heading">{{ t().footer.headings.contact }}</h3>
             <ul class="footer-contact">
-                @for(item of contactInfo; track item.text) {
+                @for(item of contactInfo(); track $index) {
                 <li>
                     <i class="pi" [class]="item.icon"></i>
                     @if (item.link) {
@@ -67,15 +56,8 @@
         <div class="container footer-bottom-inner">
 
             <p class="footer-copy">
-                {{ content.copyPre }}{{ year }}{{ content.copyPost }}
+                {{ t().footer.copyPre }}{{ year }}{{ t().footer.copyPost }}
             </p>
-
-            <div class="footer-payments">
-                @for (p of payments; track p) {
-                <span class="payment-chip">{{ p }}</span>
-                }
-            </div>
-
         </div>
     </div>
 

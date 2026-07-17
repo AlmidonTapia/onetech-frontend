@@ -36,7 +36,7 @@
     @if (category) {
     <div class="form-row">
       <div class="form-field">
-        <label>Estado</label>
+        <label>{{ content.status.label }}</label>
         <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
       </div>
     </div>

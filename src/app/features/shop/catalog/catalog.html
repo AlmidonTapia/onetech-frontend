@@ -5,10 +5,10 @@
 
     <div class="catalog-layout">
 
-            <div class="mobile-filter-toggle">
+      <div class="mobile-filter-toggle">
         <button class="mobile-filter-btn" (click)="toggleMobileFilters()">
           <i class="pi pi-filter"></i>
-          Filtros
+          {{ t().catalog.mobileFilterBtn }}
         </button>
       </div>
 
@@ -19,7 +19,7 @@
             <aside class="catalog-sidebar" [class.sidebar-mobile-open]="showMobileFilters">
         <div class="sidebar-card">
           <div class="mobile-drawer-header">
-             <h3>Filtros</h3>
+             <h3>{{ t().catalog.mobileDrawerTitle }}</h3>
              <button class="drawer-close-btn" (click)="toggleMobileFilters()"><i class="pi pi-times"></i></button>
           </div>
           <app-catalog-filters

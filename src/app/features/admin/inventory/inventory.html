@@ -1,10 +1,10 @@
 <div class="page-container">
     <div class="page-header">
         <div>
-      <h1 class="page-title">{{ content.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ content.countSuffix }}</p>
+      <h1 class="page-title">{{ t().adminInventory.title }}</h1>
+      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminInventory.countSuffix }}</p>
     </div>
-        <app-button [label]="content.createBtnLabel" [icon]="content.createBtnIcon" (clicked)="formVisible.set(true)" />
+        <app-button [label]="t().adminInventory.createBtnLabel" icon="pi-plus" (clicked)="formVisible.set(true)" />
     </div>
 
     

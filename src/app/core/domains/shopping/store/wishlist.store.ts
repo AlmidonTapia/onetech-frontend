@@ -77,12 +77,12 @@ export const WishlistStore = signalStore(
           if (isAdding) {
             http.post(`${url}/items`, { idProduct: productId }).subscribe({
               next: () => this.getWishlist().subscribe(),
-              error: () => patchState(store, { ids: current }) // Revert
+              error: () => patchState(store, { ids: current }) 
             });
           } else {
             http.delete(`${url}/items/${productId}`).subscribe({
               next: () => this.getWishlist().subscribe(),
-              error: () => patchState(store, { ids: current }) // Revert
+              error: () => patchState(store, { ids: current }) 
             });
           }
           const next = isAdding ? [...current, productId] : current.filter(id => id !== productId);

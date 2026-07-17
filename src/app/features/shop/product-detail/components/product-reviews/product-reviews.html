@@ -1,6 +1,6 @@
 <div class="reviews-section">
   <div class="reviews-header">
-    <h3>{{ content.mainTitle }}</h3>
+    <h3 class="section-title">{{ content.mainTitle }}</h3>
     @if (authService.isAuthenticated() && !showForm()) {
     <app-button variant="outline" [label]="content.writeBtnLabel" [icon]="content.writeBtnIcon"
       (clicked)="showForm.set(true)" />
@@ -35,7 +35,9 @@
   }
 
   @if (loading()) {
-  <p class="reviews-loading">{{ content.loadingLabel }}</p>
+  <div class="reviews-loading">
+    <app-spinner [label]="content.loadingLabel" />
+  </div>
   } @else if (reviews().length === 0) {
   <div class="reviews-empty">
     <i class="pi pi-comment"></i>

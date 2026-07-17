@@ -8,7 +8,7 @@
     </div>
     <app-button
       *ngIf="showCreateBtn && !placeholderMessage"
-      label="Nuevo" icon="pi pi-plus" size="sm"
+      [label]="t().adminShipping.locations.panel.newBtn" icon="pi pi-plus" size="sm"
       (clicked)="create.emit()">
     </app-button>
   </div>
@@ -19,10 +19,12 @@
       <span>{{ placeholderMessage }}</span>
     </div>
 
-    <div *ngIf="!placeholderMessage && loading" class="panel-loading">
-      <i class="pi pi-spin pi-spinner"></i> Cargando...
+    @if (loading) {
+    <div class="panel-loading">
+      <app-spinner [label]="t().adminShipping.locations.panel.loading" size="sm" />
     </div>
-
+    }
+    
     <div *ngIf="!placeholderMessage && !loading && items.length === 0" class="panel-empty">
       <i class="pi pi-inbox"></i>
       <span>{{ emptyMessage }}</span>
@@ -40,7 +42,7 @@
           <span class="item-name">{{ item.name }}</span>
         </div>
         <div class="item-actions">
-          <button class="delete-btn" (click)="delete.emit(item); $event.stopPropagation()" title="Eliminar">
+          <button class="delete-btn" (click)="delete.emit(item); $event.stopPropagation()" [title]="t().adminShipping.locations.panel.deleteTooltip">
             <i class="pi pi-trash"></i>
           </button>
           <i *ngIf="!isLeaf" class="pi pi-chevron-right chevron-icon"></i>

@@ -1,6 +1,6 @@
 <div class="step-section">
   <h3 class="step-title">
-    <i [class]="content.titleIcon"></i> {{ content.title }}
+    <i class="pi pi-credit-card"></i> {{ t().checkout.payment.title }}
   </h3>
   <div class="payment-list">
     @for (m of methods(); track m.idPaymentMethod) {
@@ -9,6 +9,21 @@
       <div class="radio-circle" [class.radio-circle--active]="selectedId() === m.idPaymentMethod"></div>
       <span class="method-name">{{ m.methodName }}</span>
     </div>
+    }
+  </div>
+
+  <div class="mini-coupon" style="margin-top: 24px;">
+    <h4>{{ t().checkout.payment.couponTitle }}</h4>
+    <div class="coupon-input-group" style="display: flex; gap: 8px; margin-top: 12px;">
+      <input type="text" [(ngModel)]="couponCode" [placeholder]="t().checkout.labels.couponPlaceholder" [disabled]="!!selectedCouponId"
+        style="flex: 1; padding: 10px 14px; border: 1px solid var(--ot-border-color); border-radius: var(--ot-radius-md); background: var(--ot-bg-body); color: var(--ot-text-main); outline: none; font-size:13px;">
+      <app-button variant="outline" [label]="t().checkout.buttons.apply" [loading]="validatingCoupon" [disabled]="!couponCode || !!selectedCouponId" (clicked)="onApplyCoupon()" />
+    </div>
+    @if (couponError) {
+      <small class="error-text" style="color: var(--ot-danger); font-size: 12px; margin-top: 4px; display: block;">{{ couponError }}</small>
+    }
+    @if (discountAmount > 0) {
+      <small class="success-text" style="color: var(--ot-success); font-size: 12px; margin-top: 4px; display: block;">{{ t().checkout.payment.couponSuccess }}</small>
     }
   </div>
 </div>

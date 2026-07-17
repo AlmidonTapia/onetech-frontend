@@ -7,19 +7,19 @@
               @if (!collapsed()) {
               <span class="logo-one">One</span><span class="logo-tech">Tech</span>
               } @else {
-              <span class="logo-tech">OT</span>
+              <span class="logo-tech">{{ t().adminLayout.sidebar.logoCollapsed }}</span>
               }
             </div>
         </a>
 
 
         <button class="collapse-btn" (click)="toggleCollapse()"
-            [attr.aria-label]="collapsed() ? content.ariaLabels.expand : content.ariaLabels.collapse">
+            [attr.aria-label]="collapsed() ? t().adminLayout.sidebar.ariaLabelExpand : t().adminLayout.sidebar.ariaLabelCollapse">
             <i class="pi pi-bars"></i>
         </button>
     </div>
 
-    <nav class="sidebar-nav" [attr.aria-label]="content.ariaLabelNav">
+    <nav class="sidebar-nav" [attr.aria-label]="t().adminLayout.sidebar.ariaLabelNav">
         <ul>
             @for (item of navItems; track item.route) {
             <li>

@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/domains/identity/services/auth.servic
 import { WishlistStore } from '../../../core/domains/shopping/store/wishlist.store';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle';
 import { HasRoleDirective } from '../../directives/has-role.directive';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,39 +20,16 @@ import { HasRoleDirective } from '../../directives/has-role.directive';
 export class NavbarComponent {
   authService = inject(AuthService);
   wishlistStore = inject(WishlistStore);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
-  content = {
-    homeRoute: '/',
-    ariaLabelLogo: 'OneTech — Inicio',
-    ariaLabelNav: 'Categorías',
-
-    account: {
-      profileRoute: '/profile',
-      loginRoute: '/auth/login',
-      labelAuthenticated: 'Mi cuenta',
-      labelGuest: 'Hola, ingresa',
-      defaultName: 'Mi cuenta'
-    },
-
-    admin: {
-      route: '/admin',
-      labelPre: 'Panel de',
-      labelPost: 'Administración'
-    },
-
-    wishlist: {
-      route: '/wishlist',
-      title: 'Mis favoritos',
-      labelPre: 'Lista de',
-      labelPost: 'Favoritos'
-    }
-  };
-
-  topbarInfo = {
-    left: { icon: 'pi-truck', text: 'Envío gratis desde S/ 199 · Lima' },
-    right: [
-      { icon: 'pi-phone', text: '+51 (01) 234-5678' },
-      { icon: 'pi-clock', text: 'Lun–Sab 9am–6pm' }
-    ]
-  };
+  get topbarInfo() {
+    return {
+      left: { icon: 'pi-truck', text: this.t().navbar.topbar.shipping },
+      right: [
+        { icon: 'pi-phone', text: this.t().navbar.topbar.phone },
+        { icon: 'pi-clock', text: this.t().navbar.topbar.hours }
+      ]
+    };
+  }
 }

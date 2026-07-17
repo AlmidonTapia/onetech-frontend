@@ -29,24 +29,24 @@ export class PromoBannerComponent {
   promoCards: PromoCard[] = [
     {
       customClass: 'promo-main',
-      tag: '⚡ Ofertas del mes',
-      titleLine1: 'Hasta 30% OFF',
-      titleLine2: 'en laptops gaming',
-      description: 'Aprovecha los mejores precios de la temporada.',
+      tag: '⚡ Promociones Especiales',
+      titleLine1: 'Descubre descuentos',
+      titleLine2: 'en productos seleccionados',
+      description: 'Renueva tu tecnología hoy mismo.',
       icon: 'pi pi-desktop',
       button: {
         variant: 'accent',
         label: 'Ver ofertas',
         route: '/catalog',
-        queryParams: { category: 'gaming' }
+        queryParams: { category: 'ofertas' }
       }
     },
     {
       customClass: 'promo-secondary',
-      tag: '💳 Financiamiento',
-      titleLine1: 'Hasta 12 cuotas',
-      titleLine2: 'sin intereses',
-      description: 'Con todas las tarjetas de crédito Visa y Mastercard.',
+      tag: '💳 Opciones de Pago',
+      titleLine1: 'Diversos métodos',
+      titleLine2: 'de pago disponibles',
+      description: 'Elige la opción que mejor se adapte a tu comodidad y seguridad.',
       icon: 'pi pi-credit-card',
       button: {
         variant: 'outline',

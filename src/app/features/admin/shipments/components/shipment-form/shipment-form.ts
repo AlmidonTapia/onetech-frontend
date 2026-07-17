@@ -10,6 +10,7 @@ import { ShipmentService } from '../../../../../core/domains/shipping/services/s
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { FileValidatorUtil } from '../../../../../shared/utils/file-validator.util';
 import { DatePipe } from '@angular/common';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-shipment-form',
@@ -22,6 +23,9 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   private fb = inject(FormBuilder);
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
+
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
 
   @Input() visible = false;
   @Input() shipment: Shipment | null = null;
@@ -40,26 +44,56 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
 
   methods = signal<ShipmentMethod[]>([]);
 
-  content = {
-    dialogWidth: '500px',
-    titleNew: 'Nuevo Envío',
-    titleDispatch: 'Despachar Envío',
-    titleView: 'Detalles del Envío',
-    errorRequired: 'Campo requerido',
-    apiTimezoneSuffix: 'T00:00:00',
-    styles: {
-      selectWidth: '100%',
-      appendTo: 'body'
-    },
-    actions: {
-      cancelLabel: 'Cerrar',
-      saveLabel: 'Guardar',
-      dispatchLabel: 'Despachar',
-      deliveredLabel: 'Marcar Entregado',
-      returnedLabel: 'Marcar Devuelto',
-      saveIcon: 'pi-check'
-    }
-  } as const;
+  get content() {
+    return {
+      dialogWidth: '500px',
+      titleNew: this.t().adminShipments.form.titleNew,
+      titleDispatch: this.t().adminShipments.form.titleDispatch,
+      titleView: this.t().adminShipments.form.titleView,
+      errorRequired: this.t().adminShipments.form.errorRequired,
+      apiTimezoneSuffix: 'T00:00:00',
+      styles: {
+        selectWidth: '100%',
+        appendTo: 'body'
+      },
+      actions: {
+        cancelLabel: this.t().adminShipments.form.actions.cancelLabel,
+        saveLabel: this.t().adminShipments.form.actions.saveLabel,
+        dispatchLabel: this.t().adminShipments.form.actions.dispatchLabel,
+        deliveredLabel: this.t().adminShipments.form.actions.deliveredLabel,
+        returnedLabel: this.t().adminShipments.form.actions.returnedLabel,
+        pendingReturn: this.t().adminShipments.form.actions.pendingReturn,
+        receiveWarehouse: this.t().adminShipments.form.actions.receiveWarehouse,
+        saveIcon: 'pi-check'
+      },
+      details: {
+        status: this.t().adminShipments.form.details.status,
+        orderId: this.t().adminShipments.form.details.orderId,
+        trackingNumber: this.t().adminShipments.form.details.trackingNumber,
+        pickupCode: this.t().adminShipments.form.details.pickupCode,
+        shippedAt: this.t().adminShipments.form.details.shippedAt,
+        estimatedArrival: this.t().adminShipments.form.details.estimatedArrival,
+        actualArrival: this.t().adminShipments.form.details.actualArrival,
+        receiptImage: this.t().adminShipments.form.details.receiptImage,
+        viewReceipt: this.t().adminShipments.form.details.viewReceipt
+      },
+      fields: {
+        orderId: this.t().adminShipments.form.fields.orderId,
+        orderIdPlaceholder: this.t().adminShipments.form.fields.orderIdPlaceholder,
+        method: this.t().adminShipments.form.fields.method,
+        methodPlaceholder: this.t().adminShipments.form.fields.methodPlaceholder,
+        cost: this.t().adminShipments.form.fields.cost,
+        estimatedArrival: this.t().adminShipments.form.fields.estimatedArrival,
+        trackingNumber: this.t().adminShipments.form.fields.trackingNumber,
+        trackingPlaceholder: this.t().adminShipments.form.fields.trackingPlaceholder,
+        pickupCode: this.t().adminShipments.form.fields.pickupCode,
+        pickupCodePlaceholder: this.t().adminShipments.form.fields.pickupCodePlaceholder,
+        shippedAt: this.t().adminShipments.form.fields.shippedAt,
+        receiptImage: this.t().adminShipments.form.fields.receiptImage,
+        errorImageRequired: this.t().adminShipments.form.errorImageRequired
+      }
+    };
+  }
 
   form = this.fb.group({
     idOrder: ['', Validators.required],
@@ -97,13 +131,13 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     const file = event.target.files[0];
     if (file) {
       if (!FileValidatorUtil.validateFileType(file, ['image/jpeg', 'image/png', 'image/webp'])) {
-        this.alertService.error('Solo se permiten imágenes (JPG, PNG, WEBP).');
+        this.alertService.error(this.t().adminShipments.form.errorImageFormat);
         if (this.fileUpload?.nativeElement) this.fileUpload.nativeElement.value = '';
         this.selectedFile = null;
         return;
       }
       if (!FileValidatorUtil.validateFileSize(file, 5)) {
-        this.alertService.error('La imagen no debe pesar más de 5MB.');
+        this.alertService.error(this.t().adminShipments.form.errorImageSize);
         if (this.fileUpload?.nativeElement) this.fileUpload.nativeElement.value = '';
         this.selectedFile = null;
         return;

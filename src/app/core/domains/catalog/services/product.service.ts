@@ -15,15 +15,23 @@ export class ProductService {
     let params = new HttpParams()
       .set('page', filters.page ?? 0)
       .set('size', filters.size ?? 12);
-    if (filters.idCategory) params = params.set('idCategory', filters.idCategory);
-    if (filters.idBrand)    params = params.set('idBrand', filters.idBrand);
-    if (filters.minPrice)   params = params.set('minPrice', filters.minPrice);
-    if (filters.maxPrice)   params = params.set('maxPrice', filters.maxPrice);
-    if (filters.search)     params = params.set('search', filters.search);
-    if (filters.badge)      params = params.set('badge', filters.badge);
-    if (filters.sort)       params = params.set('sort', filters.sort);
-    if (filters.status)     params = params.set('status', filters.status);
+    if (filters.idCategory != null && filters.idCategory !== '') params = params.set('idCategory', filters.idCategory);
+    if (filters.idBrand != null && filters.idBrand !== '')       params = params.set('idBrand', filters.idBrand);
+    if (filters.minPrice != null)  params = params.set('minPrice', filters.minPrice);
+    if (filters.maxPrice != null)  params = params.set('maxPrice', filters.maxPrice);
+    if (filters.search)            params = params.set('search', filters.search);
+    if (filters.badge)             params = params.set('badge', filters.badge);
+    if (filters.status)            params = params.set('status', filters.status);
 
+    const sortMapping: Record<string, string> = {
+      'price_asc':  'price,asc',
+      'price_desc': 'price,desc',
+      'name_asc':   'productName,asc',
+      'newest':     'createdAt,desc'
+    };
+    if (filters.sort && sortMapping[filters.sort]) {
+      params = params.set('sort', sortMapping[filters.sort]);
+    }
 
     const cacheKey = `products_${params.toString()}`;
     const cached = sessionStorage.getItem(cacheKey);

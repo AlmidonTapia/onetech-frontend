@@ -1,11 +1,11 @@
 <div class="sort-bar">
   <span class="results-count">
-    <strong>{{ totalRecords }}</strong> {{ content.resultsSuffix }}
+    <strong>{{ totalRecords }}</strong> {{ t().catalog.sort.resultsSuffix }}
   </span>
 
   <div class="sort-control">
-    <label class="sort-label">{{ content.sortLabelText }}</label>
+    <label class="sort-label">{{ t().catalog.sort.sortLabelText }}</label>
     <p-select [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="sort"
-      (ngModelChange)="sortChange.emit($event)" [style]="{ 'width': content.selectWidth }" />
+      (ngModelChange)="sortChange.emit($event)" [style]="{ 'width': '220px' }" />
   </div>
 </div>

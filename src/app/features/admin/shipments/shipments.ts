@@ -5,6 +5,7 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ShipmentService } from '../../../core/domains/shipping/services/shipment.service';
 import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, DispatchShipmentData } from '../../../core/domains/shipping/models/shipment.model';
+import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-shipments',
@@ -16,6 +17,8 @@ import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, Dispat
 export class ShipmentsComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   shipments = signal<Shipment[]>([]);
   methods = signal<ShipmentMethod[]>([]);
@@ -29,21 +32,6 @@ export class ShipmentsComponent implements OnInit {
   apiConfig = {
     pageSize: 10
   };
-
-  content = {
-    title: 'Envíos',
-    countSuffix: 'envíos registrados',
-    createBtnLabel: 'Nuevo envío',
-    createBtnIcon: 'pi-plus',
-    alerts: {
-      createSuccess: 'Envío creado exitosamente',
-      createError: 'Error al crear el envío',
-      dispatchSuccess: 'Envío despachado exitosamente',
-      dispatchError: 'Error al despachar el envío',
-      updateSuccess: 'Estado actualizado',
-      updateError: 'Error al actualizar el estado'
-    }
-  } as const;
 
   ngOnInit() {
     this.loadMethodsAndShipments();
@@ -76,7 +64,7 @@ export class ShipmentsComponent implements OnInit {
           const method = this.methods().find(m => m.idShipmentMethod === s.idShipmentMethod);
           return {
             ...s,
-            shipmentMethodName: method ? method.methodName : 'Desconocido'
+            shipmentMethodName: method ? method.methodName : this.t().adminShipments.form.details.unknownMethod
           };
         });
         this.shipments.set(mappedContent);
@@ -101,13 +89,13 @@ export class ShipmentsComponent implements OnInit {
     this.saving.set(true);
     this.shipmentService.create(data).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.createSuccess);
+        this.alertService.success(this.t().adminShipments.alerts.createSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadShipments();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.content.alerts.createError;
+        const errMsg = err?.error?.message || this.t().adminShipments.alerts.createError;
         this.alertService.error(errMsg);
         this.saving.set(false);
       }
@@ -118,13 +106,13 @@ export class ShipmentsComponent implements OnInit {
     this.saving.set(true);
     this.shipmentService.dispatch(payload.id, payload.data, payload.file).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.dispatchSuccess);
+        this.alertService.success(this.t().adminShipments.alerts.dispatchSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadShipments();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.content.alerts.dispatchError;
+        const errMsg = err?.error?.message || this.t().adminShipments.alerts.dispatchError;
         this.alertService.error(errMsg);
         this.saving.set(false);
       }
@@ -135,13 +123,13 @@ export class ShipmentsComponent implements OnInit {
     this.saving.set(true);
     this.shipmentService.updateStatus(data.id, data.status).subscribe({
       next: () => {
-        this.alertService.success(this.content.alerts.updateSuccess);
+        this.alertService.success(this.t().adminShipments.alerts.updateSuccess);
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadShipments();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.content.alerts.updateError;
+        const errMsg = err?.error?.message || this.t().adminShipments.alerts.updateError;
         this.alertService.error(errMsg);
         this.saving.set(false);
       }

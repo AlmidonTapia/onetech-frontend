@@ -8,6 +8,8 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
 import { User } from '../../../../../core/domains/identity/models/user.model';
 import { UserRole } from '../../../../../core/domains/identity/enums/user-role.enum';
 import { UserStatus } from '../../../../../core/domains/identity/enums/user-status.enum';
+import { inject } from '@angular/core';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-users-table',
@@ -24,17 +26,26 @@ export class UsersTableComponent {
   @Output() search = new EventEmitter<string>();
   @Output() filterChange = new EventEmitter<{ role: string, status: string }>();
 
-  roleOptions = [
-    { label: 'Todos los roles', value: 'ALL' },
-    { label: 'Admin', value: UserRole.ADMIN },
-    { label: 'Cliente', value: UserRole.CLIENT }
-  ];
 
-  statusOptions = [
-    { label: 'Todos los estados', value: 'ALL' },
-    { label: 'Habilitado', value: UserStatus.HABILITADO },
-    { label: 'Deshabilitado', value: UserStatus.DESHABILITADO }
-  ];
+
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
+  get roleOptions() {
+    return [
+      { label: this.t().adminUsers.table.roles.all, value: 'ALL' },
+      { label: this.t().adminUsers.table.roles.admin, value: UserRole.ADMIN },
+      { label: this.t().adminUsers.table.roles.client, value: UserRole.CLIENT }
+    ];
+  }
+
+  get statusOptions() {
+    return [
+      { label: this.t().adminUsers.table.statuses.all, value: 'ALL' },
+      { label: this.t().adminUsers.table.statuses.enabled, value: UserStatus.HABILITADO },
+      { label: this.t().adminUsers.table.statuses.disabled, value: UserStatus.DESHABILITADO }
+    ];
+  }
 
   selectedRole = 'ALL';
   selectedStatus = 'ALL';
@@ -55,19 +66,21 @@ export class UsersTableComponent {
     adminRoleKey: UserRole.ADMIN
   } as const;
 
-  content = {
-    headers: {
-      fullName: 'Nombre Completo',
-      email: 'Email',
-      role: 'Rol',
-      status: 'Estado',
-      phone: 'Teléfono',
-      regDate: 'Fecha Registro'
-    },
-    quickSearchTitle: 'Búsqueda Rápida',
-    searchPlaceholder: 'Buscar usuarios...',
-    notRegisteredLabel: 'No registrado',
-    emptyMessage: 'No hay usuarios registrados.',
-    dateFormat: 'mediumDate'
-  };
+  get content() {
+    return {
+      headers: {
+        fullName: this.t().adminUsers.table.headers.fullName,
+        email: this.t().adminUsers.table.headers.email,
+        role: this.t().adminUsers.table.headers.role,
+        status: this.t().adminUsers.table.headers.status,
+        phone: this.t().adminUsers.table.headers.phone,
+        regDate: this.t().adminUsers.table.headers.regDate
+      },
+      quickSearchTitle: this.t().adminUsers.table.quickSearchTitle,
+      searchPlaceholder: this.t().adminUsers.table.searchPlaceholder,
+      notRegisteredLabel: this.t().adminUsers.table.notRegisteredLabel,
+      emptyMessage: this.t().adminUsers.table.emptyMessage,
+      dateFormat: 'mediumDate'
+    };
+  }
 }

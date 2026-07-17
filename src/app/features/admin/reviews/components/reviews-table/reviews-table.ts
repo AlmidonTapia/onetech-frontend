@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
@@ -17,34 +17,37 @@ import { Review } from '../../../../../core/domains/catalog/models/review.model'
   templateUrl: './reviews-table.html'
 })
 export class ReviewsTableComponent {
-  
-  @Input() reviews: Review[] = [];
-  @Input() totalRecords = 0;
-  @Input() loading = false;
-  @Input() content: any;
+  reviews = input.required<Review[]>();
+  totalRecords = input<number>(0);
+  loading = input<boolean>(false);
+  content = input.required<any>();
 
-  @Output() lazyLoad = new EventEmitter<any>();
-  @Output() onApprove = new EventEmitter<string>();
-  @Output() onReject = new EventEmitter<string>();
-  @Output() onDelete = new EventEmitter<string>();
-  @Output() search = new EventEmitter<string>();
-  @Output() filterChange = new EventEmitter<{ rating: number | undefined, status: string | undefined }>();
+  lazyLoad = output<any>();
+  onApprove = output<string>();
+  onReject = output<string>();
+  onDelete = output<string>();
+  search = output<string>();
+  filterChange = output<{ rating: number | undefined, status: string | undefined }>();
 
-  ratingOptions = [
-    { label: 'Todas las calif.', value: 'ALL' },
-    { label: '5 Estrellas', value: 5 },
-    { label: '4 Estrellas', value: 4 },
-    { label: '3 Estrellas', value: 3 },
-    { label: '2 Estrellas', value: 2 },
-    { label: '1 Estrella', value: 1 }
-  ];
+  get ratingOptions() {
+    return [
+      { label: this.content().filters.allRatings, value: 'ALL' },
+      { label: this.content().filters.stars.replace('{count}', '5'), value: 5 },
+      { label: this.content().filters.stars.replace('{count}', '4'), value: 4 },
+      { label: this.content().filters.stars.replace('{count}', '3'), value: 3 },
+      { label: this.content().filters.stars.replace('{count}', '2'), value: 2 },
+      { label: this.content().filters.star, value: 1 }
+    ];
+  }
 
-  statusOptions = [
-    { label: 'Todos los estados', value: 'ALL' },
-    { label: 'Aprobado', value: 'APPROVED' },
-    { label: 'Pendiente', value: 'PENDING' },
-    { label: 'Rechazado', value: 'REJECTED' }
-  ];
+  get statusOptions() {
+    return [
+      { label: this.content().filters.allStatuses, value: 'ALL' },
+      { label: this.content().filters.approved, value: 'APPROVED' },
+      { label: this.content().filters.pending, value: 'PENDING' },
+      { label: this.content().filters.rejected, value: 'REJECTED' }
+    ];
+  }
 
   selectedRating: any = 'ALL';
   selectedStatus = 'ALL';
@@ -84,9 +87,9 @@ export class ReviewsTableComponent {
 
   getStatusLabel(status: string) {
     switch (status) {
-      case 'APPROVED': return 'Aprobado';
-      case 'PENDING': return 'Pendiente';
-      case 'REJECTED': return 'Rechazado';
+      case 'APPROVED': return this.content().status.approved;
+      case 'PENDING': return this.content().status.pending;
+      case 'REJECTED': return this.content().status.rejected;
       default: return status;
     }
   }

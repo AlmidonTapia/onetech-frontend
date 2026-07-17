@@ -8,6 +8,7 @@ import { Shipment } from '../../../../../core/domains/shipping/models/shipment.m
 import { OrderStatusComponent } from './components/order-status/order-status';
 import { OrderItemsComponent } from './components/order-items/order-items';
 import { OrderSummaryComponent } from './components/order-summary/order-summary';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -25,34 +26,8 @@ export class OrderDetailComponent implements OnChanges {
   shipment = signal<Shipment | null>(null);
   loadingShipment = signal<boolean>(false);
 
-  content = {
-    headerPrefix: 'Pedido #',
-    dialogWidth: '600px',
-    dateFormat: 'dd MMMM yyyy, HH:mm',
-    sections: {
-      productsTitle: 'Productos',
-      infoTitle: 'Información del pedido',
-      shipmentTitle: 'Seguimiento de envío'
-    },
-    totals: {
-      subtotalLabel: 'Subtotal',
-      grandTotalLabel: 'Total pagado',
-      unitSuffix: ' c/u'
-    },
-    labels: {
-      client: 'Cliente',
-      orderId: 'ID de orden',
-      trackingNumber: 'Código de seguimiento',
-      estimatedArrival: 'Fecha estimada de entrega',
-      noShipment: 'El envío se encuentra en preparación. El código de seguimiento estará disponible pronto.',
-      loadingShipment: 'Cargando información de envío...',
-      discount: 'Descuento',
-      shipping: 'Envío'
-    },
-    actions: {
-      closeLabel: 'Cerrar'
-    }
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['order'] && this.order) {

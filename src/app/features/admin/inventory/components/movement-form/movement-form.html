@@ -5,12 +5,12 @@
         <div class="form-field">
             <label>{{ content.labels.product }}</label>
             <p-select formControlName="idProduct" [options]="products" optionLabel="productName" optionValue="idProduct"
-                placeholder="Seleccionar producto" [filter]="true" filterPlaceholder="Buscar..."
+                [placeholder]="content.placeholders.product" [filter]="true" [filterPlaceholder]="content.placeholders.search"
                 [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo" />
             @if (isInvalid('idProduct') && form.get('idProduct')?.errors?.['backend']) {
                 <span class="field-error">{{ form.get('idProduct')?.errors?.['backend'] }}</span>
             } @else if (isInvalid('idProduct')) {
-                <span class="field-error">Campo requerido</span>
+                <span class="field-error">{{ content.errorRequired }}</span>
             }
         </div>
 
@@ -45,7 +45,7 @@
                 @if (isInvalid('quantity') && form.get('quantity')?.errors?.['backend']) {
                     <span class="field-error">{{ form.get('quantity')?.errors?.['backend'] }}</span>
                 } @else if (isInvalid('quantity')) {
-                    <span class="field-error">Cantidad mínima es 1</span>
+                    <span class="field-error">{{ content.errorMinQuantity }}</span>
                 }
             </div>
         </div>

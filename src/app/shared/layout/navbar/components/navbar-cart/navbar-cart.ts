@@ -5,6 +5,7 @@ import { CurrencyPenPipe } from '../../../../pipes/currency-pen.pipe';
 import { Popover } from 'primeng/popover';
 import { ButtonComponent } from '../../../../components/ui/button/button';
 import { NgOptimizedImage } from '@angular/common';
+import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-navbar-cart',
@@ -20,15 +21,8 @@ export class NavbarCartComponent {
   itemCount = this.cartStore.itemCount;
   totalAmount = this.cartStore.totalAmount;
 
-  content = {
-    cartRoute: '/cart',
-    ariaLabelCart: 'Ver carrito',
-    cartIcon: 'pi pi-shopping-cart',
-    labelText: 'Carrito',
-    emptyTitle: 'Tu carrito está vacío',
-    goToCartBtn: 'Ver carrito completo',
-    checkoutBtn: 'Ir a pagar'
-  };
+  ts = inject(TranslationService);
+  t = this.ts.t;
 
   goToCheckout(op: any) {
     op.hide();

@@ -1,9 +1,12 @@
-<nav class="navbar-navigation" [attr.aria-label]="content.ariaLabelNav">
+<nav class="navbar-navigation" [attr.aria-label]="t().navbar.menu.ariaLabelNav">
     <ul class="nav-menu-list">
 
         @for (item of categories(); track item.label) {
         <li class="menu-item-node"
-            [class.menu-item-node--has-subs]="item.subcategories && item.subcategories.length > 0">
+            [class.menu-item-node--has-subs]="item.subcategories && item.subcategories.length > 0"
+            [class.menu-item-node--about]="item.label === t().navbar.menu.aboutLabel"
+            [class.menu-item-node--open]="isMenuOpen($index)" (mouseenter)="onMenuEnter($index)"
+            (mouseleave)="onMenuLeave()">
 
             <a [routerLink]="item.route" [queryParams]="item.queryParams" routerLinkActive="menu-link-active"
                 [class.menu-link-accent]="item.accent" class="menu-root-link">
@@ -14,7 +17,7 @@
             </a>
 
             @if (item.subcategories && item.subcategories.length > 0) {
-            <ul class="dropdown-submenu animate-fade-in">
+            <ul class="dropdown-submenu" [ngClass]="{ 'dropdown-submenu--open': isMenuOpen($index) }">
                 @for (sub of item.subcategories; track sub.label) {
                 <li class="submenu-item-node">
                     <a [routerLink]="sub.route" [queryParams]="sub.queryParams" routerLinkActive="submenu-link-active"

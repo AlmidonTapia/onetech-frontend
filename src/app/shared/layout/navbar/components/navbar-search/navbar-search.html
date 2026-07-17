@@ -5,14 +5,14 @@
             [(ngModel)]="query" 
             name="query"
             class="search-input" 
-            [placeholder]="content.placeholderText" 
-            [attr.aria-label]="content.ariaLabels.input"
+            [placeholder]="t().navbar.search.placeholderText" 
+            [attr.aria-label]="t().navbar.search.ariaLabelInput"
             #searchInput
             autocomplete="off"
             (input)="onInput($event, searchOverlay, searchInput)"
         />
-        <button type="submit" class="search-btn" [attr.aria-label]="content.ariaLabels.button">
-            <i [class]="content.searchIcon"></i>
+        <button type="submit" class="search-btn" [attr.aria-label]="t().navbar.search.ariaLabelButton">
+            <i class="pi pi-search"></i>
         </button>
     </form>
 
@@ -21,7 +21,7 @@
             @if (loading()) {
                 <div class="search-loading">
                     <i class="pi pi-spin pi-spinner"></i>
-                    <span>Buscando...</span>
+                    <span>{{ t().navbar.search.searching }}</span>
                 </div>
             } @else if (results().length > 0) {
                 <div class="search-results-list">
@@ -37,12 +37,12 @@
                     }
                 </div>
                 <div class="search-view-all" (click)="search(); searchOverlay.hide()">
-                    Ver todos los resultados para "{{ query }}"
+                    {{ t().navbar.search.viewAllResults }} "{{ query }}"
                 </div>
             } @else if (query.trim()) {
                 <div class="search-empty">
                     <i class="pi pi-search"></i>
-                    <p>No se encontraron resultados para "{{ query }}"</p>
+                    <p>{{ t().navbar.search.noResults }} "{{ query }}"</p>
                 </div>
             }
         </div>

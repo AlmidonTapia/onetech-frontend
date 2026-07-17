@@ -5,7 +5,6 @@
   min-height: 480px;
 }
 
-/* ---- Form inside dialog ---- */
 .simple-form .form-field {
   margin-bottom: 16px;
 }
@@ -25,7 +24,6 @@
   color: var(--ot-text-muted);
 }
 
-/* ---- Responsive ---- */
 @media (max-width: 900px) {
   .locations-container {
     grid-template-columns: 1fr;

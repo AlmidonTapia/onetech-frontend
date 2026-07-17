@@ -9,6 +9,7 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
 import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
 import { CreateInventoryMovementRequest } from '../../../../../core/domains/inventory/models/inventory.model';
 import { Product } from '../../../../../core/domains/catalog/models/product.model';
+import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-movement-form',
@@ -22,6 +23,9 @@ export class MovementFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
 
+  ts = inject(AppTranslationService);
+  t = this.ts.t;
+
   @Input() visible: boolean = false;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -30,34 +34,41 @@ export class MovementFormComponent implements OnInit {
 
   products: Product[] = [];
 
-  content = {
-    dialogWidth: '400px',
-    labels: {
-      product: 'Producto *',
-      type: 'Tipo de movimiento *',
-      quantity: 'Cantidad *',
-      reason: 'Motivo *'
-    },
-    placeholders: {
-      reason: 'Ej: Compra de proveedor, Venta, Ajuste...'
-    },
-    headerTitle: 'Registrar movimiento de inventario',
-    errorRequired: 'El motivo es requerido',
-    styles: {
-      selectWidth: '100%',
-      appendTo: 'body'
-    },
-    actions: {
-      cancelLabel: 'Cancelar',
-      saveLabel: 'Registrar movimiento',
-      saveIcon: 'pi-check'
-    }
-  } as const;
+  get content() {
+    return {
+      dialogWidth: '400px',
+      labels: {
+        product: this.t().adminInventory.form.fields.product,
+        type: this.t().adminInventory.form.fields.type,
+        quantity: this.t().adminInventory.form.fields.quantity,
+        reason: this.t().adminInventory.form.fields.reason
+      },
+      placeholders: {
+        reason: this.t().adminInventory.form.fields.reasonPlaceholder,
+        product: this.t().adminInventory.form.fields.productPlaceholder,
+        search: this.t().adminInventory.form.fields.searchPlaceholder
+      },
+      headerTitle: this.t().adminInventory.form.headerTitle,
+      errorRequired: this.t().adminInventory.form.errorRequired,
+      errorMinQuantity: this.t().adminInventory.form.fields.errorMinQuantity,
+      styles: {
+        selectWidth: '100%',
+        appendTo: 'body'
+      },
+      actions: {
+        cancelLabel: this.t().adminInventory.form.actions.cancelLabel,
+        saveLabel: this.t().adminInventory.form.actions.saveLabel,
+        saveIcon: 'pi-check'
+      }
+    };
+  }
 
-  readonly typeOptions = [
-    { label: 'Entrada (IN)', value: 'IN' },
-    { label: 'Salida (OUT)', value: 'OUT' },
-  ];
+  get typeOptions() {
+    return [
+      { label: this.t().adminInventory.table.types.in, value: 'IN' },
+      { label: this.t().adminInventory.table.types.out, value: 'OUT' },
+    ];
+  }
 
   readonly typeIcons: Record<string, string> = {
     IN: 'pi pi-arrow-up',
