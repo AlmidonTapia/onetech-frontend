@@ -6,8 +6,10 @@ Plataforma de E-commerce desarrollada en Angular 18+, diseñada para ofrecer una
 
 Se han implementado y refinado múltiples módulos administrativos y de cliente para mejorar la experiencia operativa y de compras:
 
+- **Flujo de Compra Avanzado (Checkout Wizard):** Rediseño completo del proceso de compra multi-paso (Modalidad de entrega, Tarifas calculadas por Ubigeo, Datos de Destinatario/Facturación y Pago Seguro con MercadoPago/Stripe).
+- **Perfil de Usuario Integral:** Nuevo portal de cliente (Profile) para gestionar Libreta de Direcciones, consultar el Historial de Pedidos y revisar el seguimiento de despachos en tiempo real.
 - **Panel Administrativo (Dashboard):** Vistas analíticas mejoradas para el seguimiento de órdenes recientes y visualización de estados en tiempo real.
-- **Gestión de Órdenes y Envíos (Shipments):**
+- **Gestión Logística y Envíos (Shipments):**
   - Módulo completo de despachos con seguimiento de estados (`PENDING`, `SHIPPED`, `DELIVERED`, `CANCELLED`).
   - Generación de códigos de recogida (`Pickup Code`) e integración asíncrona con el backend.
   - Vistas dinámicas de cronogramas de envío (Time-line) en el perfil del cliente.
