@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/domains/shared/interceptors/auth.interceptor';
 import { apiResponseInterceptor } from './core/domains/shared/interceptors/api-response.interceptor';
 import { idempotencyInterceptor } from './core/domains/shared/interceptors/idempotency.interceptor';
+import { errorInterceptor } from './core/domains/shared/interceptors/error.interceptor';
 
 function initializeTheme() {
   return () => {
@@ -28,7 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, idempotencyInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, apiResponseInterceptor, idempotencyInterceptor, errorInterceptor])),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {

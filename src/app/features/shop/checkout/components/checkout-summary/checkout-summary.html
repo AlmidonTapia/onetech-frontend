@@ -1,101 +1,101 @@
-<div class="checkout-summary">
+<div class="flex flex-col gap-6">
 
-    <div class="summary-block">
-        <h4 class="block-title">
-            <i [class]="content.blocks.productsIcon"></i> {{ content.blocks.productsTitle }}
+    <div class="p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col gap-3 shadow-sm transition-all duration-300 hover:border-blue-500 hover:shadow-md">
+        <h4 class="text-[13px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.06em] flex items-center gap-2 mt-0 mb-2 border-b-[1.5px] border-slate-200 dark:border-slate-800 pb-2.5">
+            <i [class]="content.blocks.productsIcon" class="text-blue-600 dark:text-blue-400 text-sm"></i> {{ content.blocks.productsTitle }}
         </h4>
-        <div class="items-list">
+        <div class="flex flex-col gap-3">
             @for (item of cart?.items ?? []; track item.idProduct) {
-            <div class="summary-item">
-                <div class="item-img">
+            <div class="flex items-center gap-4 text-[13px] text-slate-900 dark:text-slate-100 border-b border-dashed border-slate-200 dark:border-slate-800 pb-2.5 last:border-b-0 last:pb-0">
+                <div class="w-12 h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0 flex items-center justify-center">
                     @if (item.productImageUrl) {
-                    <img [src]="item.productImageUrl" [alt]="item.productName" />
+                    <img [src]="item.productImageUrl" [alt]="item.productName" class="w-full h-full object-cover" />
                     } @else {
-                    <i class="pi pi-image"></i>
+                    <i class="pi pi-image text-base text-slate-400"></i>
                     }
                 </div>
-                <span class="item-name">{{ item.productName }}</span>
-                <span class="item-qty">× {{ item.quantity }}</span>
-                <span class="item-price">{{ item.subtotal | currencyPen }}</span>
+                <span class="flex-1 font-semibold">{{ item.productName }}</span>
+                <span class="text-slate-500 dark:text-slate-400 whitespace-nowrap">× {{ item.quantity }}</span>
+                <span class="font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">{{ item.subtotal | currencyPen }}</span>
             </div>
             }
         </div>
     </div>
 
-    <div class="summary-block">
-        <h4 class="block-title">
-            <i [class]="content.blocks.addressIcon"></i> {{ content.blocks.addressTitle }}
+    <div class="p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col gap-3 shadow-sm transition-all duration-300 hover:border-blue-500 hover:shadow-md">
+        <h4 class="text-[13px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.06em] flex items-center gap-2 mt-0 mb-2 border-b-[1.5px] border-slate-200 dark:border-slate-800 pb-2.5">
+            <i [class]="content.blocks.addressIcon" class="text-blue-600 dark:text-blue-400 text-sm"></i> {{ content.blocks.addressTitle }}
         </h4>
         @if (ubigeoCode) {
-        <p class="block-detail">
+        <p class="text-sm text-slate-900 dark:text-slate-100 font-semibold m-0">
             Destino - Ubigeo: {{ ubigeoCode }}
         </p>
         } @else {
-        <p class="block-empty">{{ content.blocks.addressEmpty }}</p>
+        <p class="text-[13px] text-slate-500 dark:text-slate-400 italic m-0">{{ content.blocks.addressEmpty }}</p>
         }
     </div>
 
-    <div class="summary-block">
-        <h4 class="block-title">
-            <i class="pi pi-user"></i> Quien recibe
+    <div class="p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col gap-3 shadow-sm transition-all duration-300 hover:border-blue-500 hover:shadow-md">
+        <h4 class="text-[13px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.06em] flex items-center gap-2 mt-0 mb-2 border-b-[1.5px] border-slate-200 dark:border-slate-800 pb-2.5">
+            <i class="pi pi-user text-blue-600 dark:text-blue-400 text-sm"></i> Quien recibe
         </h4>
         @if (consignee) {
-        <div class="block-detail">
+        <div class="text-sm text-slate-900 dark:text-slate-100 font-semibold m-0">
             @if (consignee.isSelf) {
               <p>Yo mismo recibiré el pedido</p>
             } @else {
               <p>{{ consignee.fullName }}</p>
-              <p style="font-size: 13px; color: var(--ot-text-muted);">Doc: {{ consignee.docNumber }} | Cel: {{ consignee.phone }}</p>
+              <p class="text-[13px] text-slate-500 dark:text-slate-400 font-normal">Doc: {{ consignee.docNumber }} | Cel: {{ consignee.phone }}</p>
             }
         </div>
         } @else {
-        <p class="block-empty">Falta llenar los datos de entrega</p>
+        <p class="text-[13px] text-slate-500 dark:text-slate-400 italic m-0">Falta llenar los datos de entrega</p>
         }
     </div>
 
-    <div class="summary-block">
-        <h4 class="block-title">
-            <i [class]="content.blocks.shippingIcon"></i> {{ content.blocks.shippingTitle }}
+    <div class="p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col gap-3 shadow-sm transition-all duration-300 hover:border-blue-500 hover:shadow-md">
+        <h4 class="text-[13px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.06em] flex items-center gap-2 mt-0 mb-2 border-b-[1.5px] border-slate-200 dark:border-slate-800 pb-2.5">
+            <i [class]="content.blocks.shippingIcon" class="text-blue-600 dark:text-blue-400 text-sm"></i> {{ content.blocks.shippingTitle }}
         </h4>
         @if (shipMethod) {
-        <div class="block-row">
-            <span class="block-detail">{{ shipMethod.methodName }}</span>
-            <span class="block-price">{{ shipMethod.basePrice | currencyPen }}</span>
+        <div class="flex justify-between items-center">
+            <span class="text-sm text-slate-900 dark:text-slate-100 font-semibold m-0">{{ shipMethod.methodName }}</span>
+            <span class="text-sm font-bold text-blue-600 dark:text-blue-400">{{ shipMethod.basePrice | currencyPen }}</span>
         </div>
         } @else {
-        <p class="block-empty">{{ content.blocks.shippingEmpty }}</p>
+        <p class="text-[13px] text-slate-500 dark:text-slate-400 italic m-0">{{ content.blocks.shippingEmpty }}</p>
         }
     </div>
 
-    <div class="summary-block">
-        <h4 class="block-title">
-            <i [class]="content.blocks.paymentIcon"></i> {{ content.blocks.paymentTitle }}
+    <div class="p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col gap-3 shadow-sm transition-all duration-300 hover:border-blue-500 hover:shadow-md">
+        <h4 class="text-[13px] font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.06em] flex items-center gap-2 mt-0 mb-2 border-b-[1.5px] border-slate-200 dark:border-slate-800 pb-2.5">
+            <i [class]="content.blocks.paymentIcon" class="text-blue-600 dark:text-blue-400 text-sm"></i> {{ content.blocks.paymentTitle }}
         </h4>
         @if (payMethod) {
-        <p class="block-detail">{{ payMethod.methodName }}</p>
+        <p class="text-sm text-slate-900 dark:text-slate-100 font-semibold m-0">{{ payMethod.methodName }}</p>
         } @else {
-        <p class="block-empty">{{ content.blocks.paymentEmpty }}</p>
+        <p class="text-[13px] text-slate-500 dark:text-slate-400 italic m-0">{{ content.blocks.paymentEmpty }}</p>
         }
     </div>
 
-    <div class="totals-block">
-        <div class="total-row">
+    <div class="bg-white dark:bg-slate-900 border-[2.5px] border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col gap-3 shadow-md">
+        <div class="flex justify-between text-sm text-slate-500 dark:text-slate-400 pb-2.5 border-b border-slate-200 dark:border-slate-800">
             <span>{{ content.totals.subtotalLabel }}</span>
             <span>{{ subtotal | currencyPen }}</span>
         </div>
-        <div class="total-row">
+        <div class="flex justify-between text-sm text-slate-500 dark:text-slate-400 pb-2.5 border-b border-slate-200 dark:border-slate-800">
             <span>{{ content.totals.shippingLabel }}</span>
             <span>{{ shipping | currencyPen }}</span>
         </div>
         @if (discountAmount > 0) {
-        <div class="total-row discount-row">
+        <div class="flex justify-between text-sm text-slate-500 dark:text-slate-400 pb-2.5 border-b border-slate-200 dark:border-slate-800 text-red-500">
             <span>{{ content.totals.discountLabel }}</span>
             <span>-{{ discountAmount | currencyPen }}</span>
         </div>
         }
-        <div class="total-row total-row--grand">
+        <div class="flex justify-between text-base font-bold text-slate-900 dark:text-slate-100 pt-3 border-t-[2.5px] border-dashed border-slate-200 dark:border-slate-800 mt-1">
             <span>{{ content.totals.grandTotalLabel }}</span>
-            <strong>{{ grandTotal | currencyPen }}</strong>
+            <strong class="text-2xl text-blue-600 dark:text-blue-400 font-extrabold">{{ grandTotal | currencyPen }}</strong>
         </div>
     </div>
 </div>

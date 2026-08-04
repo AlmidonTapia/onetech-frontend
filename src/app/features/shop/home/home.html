@@ -1,15 +1,15 @@
-<div class="home-page">
+<div class="pb-[120px]">
   <app-hero-banner />
 
     <app-trust-badges />
 
     @if (brands().length > 0) {
-      <div class="container" style="padding-top: 40px; padding-bottom: 20px;">
+      <div class="container pt-10 pb-5">
         <app-brand-carousel [brands]="brands()" />
       </div>
     }
 
-  <div class="container sections-container" style="margin-top: 40px;">
+  <div class="container flex flex-col gap-10 md:gap-16 mt-10 md:mt-16">
     <app-featured-categories />
     <app-featured-products [title]="content.sections.featured" [products]="featured()" />
     <app-promo-banner />

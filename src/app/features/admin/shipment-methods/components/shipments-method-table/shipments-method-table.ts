@@ -9,8 +9,7 @@ import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
   selector: 'app-shipments-method-table',
   standalone: true,
   imports: [CommonModule, TableModule, CurrencyPenPipe, InputTextModule],
-  templateUrl: './shipments-method-table.html',
-  styleUrl: './shipments-method-table.css'
+  templateUrl: './shipments-method-table.html'
 })
 export class ShipmentsMethodTableComponent {
   methods = input.required<ShipmentMethod[]>();

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { PageResponse } from '../../shared/models/page-response.model';
@@ -26,8 +26,13 @@ export class InvoiceService {
     );
   }
 
+  generateInvoice(idOrder: string): Observable<any> {
+    return this.http.post<any>(`${this.url}/generate/${idOrder}`, {});
+  }
+
   getByOrder(idOrder: string): Observable<Invoice> {
-    return this.http.get<any>(`${this.url}/order/${idOrder}`).pipe(
+    const headers = new HttpHeaders().set('X-Skip-Error-Handler', 'true');
+    return this.http.get<any>(`${this.url}/order/${idOrder}`, { headers }).pipe(
       map(res => res.data || res)
     );
   }

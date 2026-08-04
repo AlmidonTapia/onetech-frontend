@@ -1,33 +1,35 @@
-<p-dialog [visible]="visible" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false" styleClass="add-to-cart-dialog" (onHide)="close()">
+<p-dialog [visible]="visible" [modal]="true" [closable]="false" [draggable]="false" [resizable]="false" styleClass="w-[480px] max-w-[90vw] ![border-radius:24px] overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.1)] [&::ng-deep_.p-dialog-header]:hidden [&::ng-deep_.p-dialog-content]:px-8 [&::ng-deep_.p-dialog-content]:pt-10 [&::ng-deep_.p-dialog-content]:pb-8 [&::ng-deep_.p-dialog-footer]:px-8 [&::ng-deep_.p-dialog-footer]:pb-8 [&::ng-deep_.p-dialog-footer]:pt-0 [&::ng-deep_.p-dialog-footer]:border-none [&::ng-deep_.p-dialog-footer]:bg-transparent" (onHide)="close()">
   @if (addedInfo) {
-    <div class="cart-modal-content">
-      <div class="success-header">
-        <i class="pi pi-check-circle success-icon"></i>
-        <h3>{{ content.title }}</h3>
+    <div>
+      <div class="flex flex-col items-center gap-4 mb-8 text-center">
+        <div class="text-[3.5rem] text-emerald-500 bg-emerald-500/10 rounded-full w-24 h-24 flex items-center justify-center">
+          <i class="pi pi-check-circle"></i>
+        </div>
+        <h3 class="m-0 text-2xl text-slate-900 dark:text-slate-100 font-bold tracking-tight">{{ content.title }}</h3>
       </div>
       
-      <div class="product-info">
-        <div class="product-image-container">
+      <div class="flex gap-4 bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-inner">
+        <div class="w-[88px] h-[88px] shrink-0 rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden flex items-center justify-center">
           @if (addedInfo.product.images && addedInfo.product.images.length > 0) {
-            <img [src]="addedInfo.product.images[0].imageUrl" [alt]="addedInfo.product.productName" class="product-image" />
+            <img [src]="addedInfo.product.images[0].imageUrl" [alt]="addedInfo.product.productName" class="w-full h-full object-cover" />
           } @else {
-            <div class="product-placeholder">
-              <i class="pi pi-image"></i>
+            <div class="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-400">
+              <i class="pi pi-image text-2xl"></i>
             </div>
           }
         </div>
-        <div class="product-details">
-          <p class="product-brand">{{ addedInfo.product.brandName }}</p>
-          <p class="product-name">{{ addedInfo.product.productName }}</p>
-          <p class="product-price">S/ {{ addedInfo.product.price | number:'1.2-2' }}</p>
-          <p class="product-quantity">{{ content.quantityLabel }} {{ addedInfo.quantity }}</p>
+        <div class="flex flex-col justify-center gap-1">
+          <p class="m-0 text-[0.85rem] text-slate-500 uppercase tracking-wide">{{ addedInfo.product.brandName }}</p>
+          <p class="m-0 font-medium text-slate-900 dark:text-slate-100 text-base line-clamp-2">{{ addedInfo.product.productName }}</p>
+          <p class="m-0 font-semibold text-blue-600 dark:text-blue-500 text-[1.1rem]">S/ {{ addedInfo.product.price | number:'1.2-2' }}</p>
+          <p class="m-0 text-[0.85rem] text-slate-500">{{ content.quantityLabel }} {{ addedInfo.quantity }}</p>
         </div>
       </div>
     </div>
   }
 
   <ng-template pTemplate="footer">
-    <div class="dialog-footer">
+    <div class="flex gap-3 justify-center w-full [&_app-button]:flex-1 [&_button]:w-full [&_button]:justify-center">
       <app-button variant="outline" [label]="content.buttons.continueShopping" (clicked)="continueShopping()"></app-button>
       <app-button variant="primary" [label]="content.buttons.goToCart" (clicked)="goToCart()"></app-button>
     </div>

@@ -1,14 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
+
+interface TrustItem {
+  icon: string;
+  title: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-trust-badges',
   standalone: true,
   imports: [],
-  templateUrl: './trust-badges.html',
-  styleUrl: './trust-badges.css'
+  templateUrl: './trust-badges.html'
 })
 export class TrustBadgesComponent {
-  trustItems = [
+  trustItems = computed((): TrustItem[] => [
     {
       icon: 'pi-truck',
       title: 'Envíos rápidos',
@@ -29,5 +34,5 @@ export class TrustBadgesComponent {
       title: 'Soporte 24/7',
       description: 'Estamos aquí para ayudarte en cada etapa de tu compra.'
     }
-  ];
+  ]);
 }

@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
 
@@ -13,20 +14,13 @@ interface CategoryTile {
   selector: 'app-featured-categories',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './featured-categories.html',
-  styleUrl: './featured-categories.css'
+  templateUrl: './featured-categories.html'
 })
 export class FeaturedCategoriesComponent implements OnInit {
-  private categoryService = inject(CategoryService);
-
+  private categoryService = inject(CategoryService);  private destroyRef = inject(DestroyRef);
   categories = signal<CategoryTile[]>([]);
 
-  content = {
-    title: 'Comprar por categoría',
-    viewAllText: 'Ver todo →',
-    viewAllRoute: '/catalog',
-    defaultIcon: 'pi pi-box' 
-  };
+  defaultIcon = 'pi pi-box';
 
   private iconMap: Record<string, string> = {
     'Laptops & PCs': 'pi pi-desktop',
@@ -41,11 +35,11 @@ export class FeaturedCategoriesComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.categoryService.getTree().subscribe({
+    this.categoryService.getTree().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         const mapped: CategoryTile[] = res.map((cat: any) => ({
           label: cat.categoryName,
-          iconClass: this.iconMap[cat.categoryName] || this.content.defaultIcon,
+          iconClass: this.iconMap[cat.categoryName] || this.defaultIcon,
           route: '/catalog',
           queryParams: { idCategory: cat.idCategory }
         }));

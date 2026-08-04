@@ -1,17 +1,17 @@
-<div class="chart-card">
-  <div class="chart-header">
-    <h3 class="chart-title">{{ content.title }}</h3>
-    <span class="chart-subtitle">{{ content.subtitle }}</span>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 h-full shadow-sm transition-all duration-300">
+  <div class="mb-4">
+    <h3 class="text-[15px] font-semibold text-slate-800 dark:text-slate-100 m-0">{{ content.title }}</h3>
+    <span class="text-xs text-slate-500 dark:text-slate-400">{{ content.subtitle }}</span>
   </div>
 
   @if (data) {
-  <div class="chart-body">
+  <div class="flex justify-center">
     <p-chart [type]="content.chartType" [data]="data" [options]="chartOptions" [height]="content.chartHeight" />
   </div>
   }
 
   @else {
-  <div class="chart-empty">
+  <div class="flex items-center justify-center h-[200px] text-sm text-slate-500 dark:text-slate-400">
     {{ content.emptyMessage }}
   </div>
   }

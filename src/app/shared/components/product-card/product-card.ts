@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, DestroyRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgOptimizedImage } from '@angular/common';
 import { CurrencyPenPipe } from '../../pipes/currency-pen.pipe';
 import { DialogModule } from 'primeng/dialog';
@@ -9,6 +10,7 @@ import { WishlistStore } from '../../../core/domains/shopping/store/wishlist.sto
 import { Product } from '../../../core/domains/catalog/models/product.model';
 import { ProductImagesComponent } from '../../../features/shop/product-detail/components/product-images/product-images';
 import { ProductInfoComponent } from '../../../features/shop/product-detail/components/product-info/product-info';
+import { ButtonComponent } from '../ui/button/button';
 
 @Component({
   selector: 'app-product-card',
@@ -18,15 +20,16 @@ import { ProductInfoComponent } from '../../../features/shop/product-detail/comp
     DialogModule,
     ProductImagesComponent,
     ProductInfoComponent,
-    NgOptimizedImage
+    NgOptimizedImage,
+    ButtonComponent
   ],
-  templateUrl: 'product-card.html',
-  styleUrl: 'product-card.css'
+  templateUrl: 'product-card.html'
 })
 export class ProductCardComponent {
   private router = inject(Router);
   private cartStore = inject(CartStore);
   private alertService = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
   wishlistStore = inject(WishlistStore);
 
   @Input() product!: Product;
@@ -82,7 +85,9 @@ export class ProductCardComponent {
   onAddToCart(e: Event) {
     e.stopPropagation();
     this.adding = true;
-    this.cartStore.addItem({ idProduct: this.product.idProduct, quantity: 1 }).subscribe({
+    this.cartStore.addItem({ idProduct: this.product.idProduct, quantity: 1 })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: () => {
         this.adding = false;
         this.addedToCart.emit(this.product);

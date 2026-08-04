@@ -1,33 +1,33 @@
-<aside class="admin-sidebar" [class.sidebar-collapsed]="collapsed()">
+<aside class="flex flex-col w-[var(--ot-sidebar-width)] h-screen bg-gradient-to-b from-[#0b1528] to-[#060c18] text-white/70 fixed top-0 left-0 z-[100] transition-[width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[4px_0_24px_rgba(0,0,0,0.15)] border-r border-white/5 md:[.sidebar-collapsed_&]:w-[68px] max-md:transform max-md:-translate-x-full max-md:w-[var(--ot-sidebar-width)] max-md:shadow-[8px_0_32px_rgba(0,0,0,0.4)] max-md:transition-transform max-md:[.admin-layout:not(.sidebar-collapsed)_&]:translate-x-0" [class.sidebar-collapsed]="collapsed()">
 
-    <div class="sidebar-header">
-        <a routerLink="/admin/dashboard" class="flex items-center gap-2 mb-8 px-2 text-2xl font-bold tracking-tight" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-            <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 32px; width: auto; object-fit: contain; flex-shrink: 0;">
-            <div style="line-height: 1;">
-              @if (!collapsed()) {
-              <span class="logo-one">One</span><span class="logo-tech">Tech</span>
-              } @else {
-              <span class="logo-tech">{{ t().adminLayout.sidebar.logoCollapsed }}</span>
-              }
+    <div class="flex items-center justify-between p-4 px-5 h-[var(--ot-nav-main-height)] border-b border-white/5 gap-2 [.sidebar-collapsed_&]:flex-col [.sidebar-collapsed_&]:h-auto [.sidebar-collapsed_&]:gap-3.5 [.sidebar-collapsed_&]:py-5 [.sidebar-collapsed_&]:px-2 [.sidebar-collapsed_&]:items-center [.sidebar-collapsed_&]:justify-center">
+        <a routerLink="/admin/dashboard" class="flex items-center gap-2 text-[19px] font-extrabold text-white no-underline whitespace-nowrap shrink-0 tracking-tighter [.sidebar-collapsed_&]:m-0 [.sidebar-collapsed_&]:block [.sidebar-collapsed_&]:text-center [.sidebar-collapsed_&]:text-lg">
+            <img src="/icono_wbg_small.png" alt="OneTech Logo" class="h-8 w-auto object-contain shrink-0">
+            <div class="leading-none [.sidebar-collapsed_&]:hidden">
+              <span class="text-white">One</span><span class="text-blue-500">Tech</span>
+            </div>
+            <div class="leading-none hidden [.sidebar-collapsed_&]:block">
+              <span class="text-blue-500">OT</span>
             </div>
         </a>
 
 
-        <button class="collapse-btn" (click)="toggleCollapse()"
-            [attr.aria-label]="collapsed() ? t().adminLayout.sidebar.ariaLabelExpand : t().adminLayout.sidebar.ariaLabelCollapse">
-            <i class="pi pi-bars"></i>
-        </button>
+        <app-button styleClass="!text-white/60 !bg-white/5 !border !border-white/10 !rounded-md !cursor-pointer !w-8 !h-8 !transition-all !duration-300 shrink-0 !inline-flex !items-center !justify-center !border-none hover:!text-white hover:!bg-white/10 [.sidebar-collapsed_&]:m-0" (clicked)="toggleCollapse()"
+            [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'"
+            variant="ghost" icon="pi-bars"></app-button>
     </div>
 
-    <nav class="sidebar-nav" [attr.aria-label]="t().adminLayout.sidebar.ariaLabelNav">
-        <ul>
+    <nav class="flex-1 py-6 px-3 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded" aria-label="Menú admin">
+        <ul class="list-none p-0 m-0 flex flex-col gap-1.5">
             @for (item of navItems; track item.route) {
             <li>
-                <a [routerLink]="item.route" routerLinkActive="nav-active" class="nav-item"
+                <a [routerLink]="item.route" routerLinkActive="!text-white !font-semibold shadow-[0_4px_14px_color-mix(in_srgb,var(--p-primary-color)_35%,transparent)]" [routerLinkActiveOptions]="{exact: true}"
+                   class="flex items-center gap-3 py-3 px-4 text-white/65 no-underline rounded-xl transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative font-medium hover:text-white hover:bg-white/5 [&.active]:bg-[linear-gradient(135deg,var(--p-primary-color)_0%,color-mix(in_srgb,var(--p-primary-color)_80%,#000000)_100%)]"
+                    [class.active]="false"
                     [attr.title]="collapsed() ? item.label : null">
-                    <i class="pi nav-icon" [ngClass]="item.icon"></i>
+                    <i class="pi text-base w-5 text-center" [ngClass]="item.icon"></i>
                     @if (!collapsed()) {
-                    <span class="nav-label">{{ item.label }}</span>
+                    <span class="text-sm whitespace-nowrap">{{ item.label }}</span>
                     }
                 </a>
             </li>

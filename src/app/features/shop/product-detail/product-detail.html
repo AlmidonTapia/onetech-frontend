@@ -1,10 +1,10 @@
-<div class="detail-page">
+<div class="py-10 pb-20 sm:py-5 sm:pb-15">
   <div class="container">
 
-    <app-breadcrumb [items]="breadcrumb()" class="detail-breadcrumb" />
+    <app-breadcrumb [items]="breadcrumb()" class="block mb-8 sm:mb-5" />
 
     @if (loading()) {
-    <div class="detail-loading">
+    <div class="flex items-center justify-center p-16">
       <app-spinner size="md" [label]="content.loadingLabel" />
     </div>
     }
@@ -12,46 +12,55 @@
     @else if (product()) {
     @let prod = product()!;
 
-    <div class="detail-layout">
-      <div class="detail-media">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-start mb-16 sm:mb-10">
+      <div class="w-full">
         <app-product-images [images]="prod.images ?? []" />
       </div>
 
-      <div class="detail-main-info">
+      <div class="sticky top-[100px]">
         <app-product-info [product]="prod" />
       </div>
     </div>
 
-        <div class="detail-info-section">
-      <h3 class="section-title">{{ content.tabs.descriptionLabel }}</h3>
-      <p class="tab-desc-text">{{ prod.description }}</p>
-    </div>
+    <div class="my-16 sm:my-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl sm:rounded-2xl p-12 sm:px-5 sm:py-6 shadow-sm">
+      <p-tabs value="0">
+        <p-tablist>
+          <p-tab value="0">{{ content.tabs.descriptionLabel }}</p-tab>
+          <p-tab value="1">{{ content.tabs.specsLabel }}</p-tab>
+          <p-tab value="2">
+            {{ content.tabs.reviewsLabel }}
+          </p-tab>
+        </p-tablist>
 
-        @if (prod.specifications && (prod.specifications | keyvalue).length > 0) {
-    <div class="detail-info-section">
-      <h3 class="section-title">{{ content.tabs.specsLabel }}</h3>
-      <div class="specs-table">
-        @for (spec of prod.specifications | keyvalue; track spec.key) {
-        <div class="specs-row">
-          <span class="spec-key">{{ spec.key }}</span>
-          <span class="spec-value">{{ spec.value }}</span>
-        </div>
-        }
-      </div>
-    </div>
-    }
+        <p-tabpanels>
+          <p-tabpanel value="0">
+            <p class="text-[15px] text-slate-500 dark:text-slate-400 leading-relaxed">{{ prod.description }}</p>
+          </p-tabpanel>
 
-        <div class="detail-info-section">
-            <app-product-reviews #reviewsList [productId]="prod.idProduct" />
-      
-      @if (authService.isAuthenticated()) {
-        <app-product-review-form [productId]="prod.idProduct" (reviewAdded)="reviewsList.loadReviews()" />
-      } @else {
-        <div class="login-alert">
-          <i class="pi pi-info-circle"></i>
-          <span>{{ content.tabs.reviewsLogin.preLink }}<a routerLink="/auth/login">{{ content.tabs.reviewsLogin.linkText }}</a>{{ content.tabs.reviewsLogin.postLink }}</span>
-        </div>
-      }
+          <p-tabpanel value="1">
+            @if (prod.specifications && (prod.specifications | keyvalue).length > 0) {
+            <div class="grid grid-cols-1 lg:grid-cols-2 border-t border-l border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden gap-0">
+              @for (spec of prod.specifications | keyvalue; let i = $index; track spec.key) {
+              <div class="grid grid-cols-[130px_1fr] sm:grid-cols-[180px_1fr] border-r border-b border-slate-200 dark:border-slate-700 p-0 m-0 shadow-none bg-transparent"
+                   [ngClass]="{
+                     '[&>.spec-value]:bg-black/2 dark:[&>.spec-value]:bg-white/2 [&>.spec-key]:bg-black/5 dark:[&>.spec-key]:bg-white/5': i % 4 === 0 || i % 4 === 1,
+                     '[&>.spec-value]:bg-transparent [&>.spec-key]:bg-black/2 dark:[&>.spec-key]:bg-white/2': i % 4 === 2 || i % 4 === 3
+                   }">
+                <span class="spec-key flex items-center px-[14px] py-[12px] sm:px-5 sm:py-4 text-[10px] sm:text-[11px] font-semibold text-slate-500 dark:text-slate-400 tracking-wider uppercase border-r border-slate-200 dark:border-slate-700">{{ spec.key }}</span>
+                <span class="spec-value flex items-center px-[14px] py-[12px] sm:px-5 sm:py-4 text-[12px] sm:text-[13px] text-slate-900 dark:text-slate-100 leading-normal">{{ spec.value }}</span>
+              </div>
+              }
+            </div>
+            } @else {
+            <p class="text-[15px] text-slate-500 dark:text-slate-400 leading-relaxed">{{ content.tabs.noSpecsMsg }}</p>
+            }
+          </p-tabpanel>
+
+          <p-tabpanel value="2">
+            <app-product-reviews [productId]="prod.idProduct" />
+          </p-tabpanel>
+        </p-tabpanels>
+      </p-tabs>
     </div>
 
     <app-related-products [products]="related()" />

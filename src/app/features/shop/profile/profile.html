@@ -1,41 +1,38 @@
-<div class="profile-page">
-    <div class="container">
+<div class="py-7 pb-16">
+    <div class="container mx-auto px-4">
         <app-breadcrumb [items]="breadcrumb" />
 
-        <div class="profile-layout">
+        <div class="flex flex-col lg:flex-row gap-8 mt-4 items-start">
             <!-- Sidebar -->
-            <aside class="profile-sidebar">
-                <div class="account-card">
-                    <div class="account-avatar">
-                        {{ (authService.currentUser()?.firstName || content.defaultAvatarLetter)[0].toUpperCase() }}
+            <aside class="w-full lg:w-[280px] shrink-0 flex flex-col gap-4 lg:sticky lg:top-[100px]">
+                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 flex flex-col items-center text-center shadow-sm gap-3">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white text-3xl font-bold flex items-center justify-center">
+                        {{ (authService.currentUser()?.firstName || 'U')[0].toUpperCase() }}
                     </div>
-                    <div class="account-info">
-                        <h1>
+                    <div class="flex flex-col">
+                        <h1 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0">
                             {{ authService.currentUser()?.firstName }}
                             {{ authService.currentUser()?.lastName }}
                         </h1>
-                        <p>{{ authService.currentUser()?.email }}</p>
+                        <p class="text-[13px] text-slate-500 dark:text-slate-400 mt-1 m-0">{{ authService.currentUser()?.email }}</p>
                     </div>
                 </div>
 
-                <nav class="sidebar-nav">
-                    @for (item of content.sidebarMenu; track item.label) {
-                        <a [routerLink]="item.route" routerLinkActive="active" class="sidebar-link">
-                            <i [class]="item.icon"></i>
+                <nav class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl py-3 shadow-sm flex flex-col">
+                    @for (item of sidebarMenu; track item.label) {
+                        <a [routerLink]="item.route" routerLinkActive="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-l-blue-600 dark:border-l-blue-400 font-semibold [&>i]:text-blue-600 dark:[&>i]:text-blue-400" class="flex items-center gap-3 px-6 py-3 text-slate-700 dark:text-slate-300 text-sm font-medium no-underline transition-all duration-200 border-l-4 border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-blue-600 dark:hover:text-blue-400 hover:[&>i]:text-blue-600 dark:hover:[&>i]:text-blue-400">
+                            <i [class]="item.icon + ' text-lg text-slate-400 transition-colors duration-200'"></i>
                             <span>{{ item.label }}</span>
                         </a>
                     }
                 </nav>
 
-                <div class="sidebar-footer">
-                    <button class="profile-logout-btn" (click)="onLogout()">
-                        <i class="pi pi-sign-out"></i>
-                        <span>{{ content.logoutLabel }}</span>
-                    </button>
+                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl py-3 px-6 shadow-sm">
+                    <app-button styleClass="flex items-center gap-2.5 w-full py-3 text-sm font-semibold text-red-500 bg-transparent border-none cursor-pointer transition-transform duration-200 hover:translate-x-1" (clicked)="onLogout()" variant="ghost" icon="pi-sign-out" label="Cerrar sesión" [fullWidth]="true"></app-button>
                 </div>
             </aside>
 
-            <main class="profile-content">
+            <main class="flex-1 min-w-0 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 sm:p-8 shadow-sm">
                 <router-outlet></router-outlet>
             </main>
         </div>

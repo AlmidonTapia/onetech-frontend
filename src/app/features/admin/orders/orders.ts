@@ -2,7 +2,6 @@ import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { OrdersTableComponent } from './components/orders-table/orders-table';
 import { OrderStatusFormComponent } from './components/order-status-form/order-status-form';
 import { AlertService } from '../../../shared/services/alert.service';
-import { TranslationService } from '../../../core/services/translation.service';
 import { OrderService } from '../../../core/domains/checkout/services/order.service';
 import { Order, OrderStatus } from '../../../core/domains/checkout/models/order.model';
 import { ShipmentService } from '../../../core/domains/shipping/services/shipment.service';
@@ -16,8 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-orders',
   standalone: true,
   imports: [OrdersTableComponent, OrderStatusFormComponent, OrderDetailsModalComponent],
-  templateUrl: './orders.html',
-  styleUrl: './orders.css'
+  templateUrl: './orders.html'
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
@@ -25,9 +23,6 @@ export class OrdersComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
   private invoiceService = inject(InvoiceService);
   private destroyRef = inject(DestroyRef);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   orders = signal<Order[]>([]);
   totalRecords = signal(0);
   loading = signal(false);
@@ -72,7 +67,7 @@ export class OrdersComponent implements OnInit {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
 
-    this.orderService.getAll(page, this.apiConfig.pageSize, this.searchTerm(), this.filterStatus()).subscribe({
+    this.orderService.getAll(page, this.apiConfig.pageSize, this.searchTerm(), this.filterStatus()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.orders.set(data.content);
         this.totalRecords.set(data.totalElements);
@@ -93,12 +88,12 @@ export class OrdersComponent implements OnInit {
     this.selectedInvoice.set(null);
     this.showDetailsModal.set(true);
 
-    this.shipmentService.getByOrder(o.idOrder).subscribe({
+    this.shipmentService.getByOrder(o.idOrder).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (shipment) => this.selectedShipment.set(shipment),
       error: () => {}
     });
 
-    this.invoiceService.getByOrder(o.idOrder).subscribe({
+    this.invoiceService.getByOrder(o.idOrder).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (invoice) => this.selectedInvoice.set(invoice),
       error: () => {}
     });
@@ -112,19 +107,43 @@ export class OrdersComponent implements OnInit {
     }
   }
 
+  generateInvoice() {
+    const order = this.selectedOrder();
+    if (!order) return;
+    
+    this.loading.set(true);
+    this.invoiceService.generateInvoice(order.idOrder).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.alertService.success('Boleta generada exitosamente');
+        // Refresh invoice data
+        this.invoiceService.getByOrder(order.idOrder).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+          next: (invoice) => {
+            this.selectedInvoice.set(invoice);
+            this.loading.set(false);
+          },
+          error: () => this.loading.set(false)
+        });
+      },
+      error: (err: any) => {
+        this.alertService.error(err?.error?.message || 'Error al generar la boleta');
+        this.loading.set(false);
+      }
+    });
+  }
+
   onStatusSave(newStatus: OrderStatus) {
     if (!this.editingOrder()) return;
     this.saving.set(true);
 
-    this.orderService.updateStatus(this.editingOrder()!.idOrder, newStatus).subscribe({
+    this.orderService.updateStatus(this.editingOrder()!.idOrder, newStatus).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminOrders.alerts.updateSuccess);
+        this.alertService.success('Estado actualizado correctamente');
         this.statusVisible.set(false);
         this.saving.set(false);
         this.loadOrders();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.t().adminOrders.alerts.updateError;
+        const errMsg = err?.error?.message || 'Error al actualizar estado';
         this.alertService.error(errMsg);
         this.saving.set(false);
       }

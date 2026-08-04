@@ -1,20 +1,20 @@
-<nav class="ot-breadcrumb" aria-label="Navegación de ruta">
-    <ol>
+<nav class="flex items-center bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 py-[14px] px-6 sm:py-2.5 sm:px-4 rounded-3xl sm:rounded-2xl shadow-sm hover:shadow-md hover:border-blue-500/30 transition-all duration-200 w-full" aria-label="Navegación de ruta">
+    <ol class="flex items-center flex-wrap gap-[2px] list-none p-0 m-0 w-full">
         <li>
-            <a routerLink="/" class="bc-link bc-home" aria-label="Inicio">
+            <a routerLink="/" class="text-[13px] text-slate-500 hover:text-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800 p-1 px-2 rounded-md transition-colors" aria-label="Inicio">
                 <i class="pi pi-home"></i>
             </a>
         </li>
 
         @for (item of items; track item.label; let last = $last) {
-        <li class="bc-sep" aria-hidden="true">
+        <li class="text-slate-400 text-xs flex items-center" aria-hidden="true">
             <i class="pi pi-angle-right"></i>
         </li>
         <li>
             @if (item.route && !last) {
-            <a [routerLink]="item.route" class="bc-link">{{ item.label }}</a>
+            <a [routerLink]="item.route" class="text-[13px] text-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800 py-1 px-2 rounded-md transition-colors">{{ item.label }}</a>
             } @else {
-            <span class="bc-current" [attr.aria-current]="last ? 'page' : null">
+            <span class="text-[13px] text-slate-500 py-1 px-1.5" [attr.aria-current]="last ? 'page' : null">
                 {{ item.label }}
             </span>
             }

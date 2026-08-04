@@ -1,35 +1,30 @@
-import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap, of, catchError } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, switchMap, of, catchError } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
 import { Product } from '../../../../../core/domains/catalog/models/product.model';
 import { Popover } from 'primeng/popover';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { NgOptimizedImage } from '@angular/common';
-import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-navbar-search',
   standalone: true,
   imports: [FormsModule, Popover, CurrencyPenPipe, NgOptimizedImage],
-  templateUrl: './navbar-search.html',
-  styleUrl: './navbar-search.css'
+  templateUrl: './navbar-search.html'
 })
-export class NavbarSearchComponent implements OnInit, OnDestroy {
+export class NavbarSearchComponent implements OnInit {
   private router = inject(Router);
   private productService = inject(ProductService);
 
   query = '';
   searchSubject = new Subject<string>();
-  private sub?: Subscription;
+  private destroyRef = inject(DestroyRef);
 
   results = signal<Product[]>([]);
   loading = signal(false);
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   search() {
     const q = this.query.trim();
     if (q) {
@@ -40,7 +35,8 @@ export class NavbarSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.searchSubject.pipe(
+    this.searchSubject.pipe(
+      takeUntilDestroyed(this.destroyRef),
       debounceTime(300),
       distinctUntilChanged(),
       switchMap(q => {
@@ -74,7 +70,4 @@ export class NavbarSearchComponent implements OnInit, OnDestroy {
     this.router.navigate(['/product', id]);
   }
 
-  ngOnDestroy() {
-    this.sub?.unsubscribe();
-  }
 }

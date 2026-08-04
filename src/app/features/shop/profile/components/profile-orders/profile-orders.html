@@ -1,36 +1,36 @@
-<div class="profile-section">
-    <div class="section-header">
-        <h3>Mis pedidos</h3>
-        <p>Revisa el estado de tus compras recientes.</p>
+<div class="flex flex-col gap-6">
+    <div class="flex flex-col">
+        <h3 class="text-[20px] font-bold text-slate-900 dark:text-slate-100 mb-1 m-0">Mis pedidos</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">Revisa el estado de tus compras recientes.</p>
     </div>
 
-<div class="orders-list">
+<div class="flex flex-col gap-4">
     @if (loading()) {
         <app-spinner label="Cargando tus órdenes..." />
     } @else if (orders().length === 0) {
-        <p>No tienes órdenes registradas.</p>
+        <p class="text-slate-500 dark:text-slate-400">No tienes órdenes registradas.</p>
     } @else {
         @for (order of orders(); track order.idOrder) {
-            <div class="order-card">
-                <div class="order-card-header">
-                    <div class="order-meta">
-                        <span class="order-id">#{{ order.idOrder.substring(0, 8) }}</span>
-                        <span class="order-date">{{ order.createdAt | date:'dd MMM yyyy' }}</span>
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 transition-all duration-200 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600">
+                <div class="flex justify-between items-center pb-4 border-b border-dashed border-slate-200 dark:border-slate-700 mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-sm text-slate-900 dark:text-slate-100">#{{ order.idOrder.substring(0, 8) }}</span>
+                        <span class="text-[13px] text-slate-500 dark:text-slate-400">{{ order.createdAt | date:'dd MMM yyyy' }}</span>
                     </div>
                     <app-badge [variant]="getStatusBadgeVariant(order.orderStatus)">{{ order.orderStatus }}</app-badge>
                 </div>
                 
-                <div class="order-card-body">
-                    <div class="order-product-info">
-                        <i class="pi pi-box" style="font-size: 2.5rem; color: var(--ot-color-primary-light);"></i>
-                        <div class="order-details">
-                            <h4>{{ order.details.length ? order.details[0].productName : 'Pedido' }}</h4>
-                            <span class="order-items-count">{{ order.details.length }} {{ order.details.length === 1 ? 'producto' : 'productos' }} en este pedido</span>
+                <div class="flex justify-between items-center flex-wrap gap-4 flex-col sm:flex-row sm:items-center items-start">
+                    <div class="flex items-center gap-4 flex-1">
+                        <i class="pi pi-box text-[2.5rem] text-blue-500 dark:text-blue-400"></i>
+                        <div class="flex flex-col gap-1">
+                            <h4 class="m-0 text-[15px] font-semibold text-slate-900 dark:text-slate-100">{{ order.details.length ? order.details[0].productName : 'Pedido' }}</h4>
+                            <span class="text-[13px] text-slate-500 dark:text-slate-400">{{ order.details.length }} {{ order.details.length === 1 ? 'producto' : 'productos' }} en este pedido</span>
                         </div>
                     </div>
                     
-                    <div class="order-price-action">
-                        <span class="order-total">{{ order.totalAmount | currencyPen }}</span>
+                    <div class="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                        <span class="text-lg font-bold text-slate-900 dark:text-slate-100">{{ order.totalAmount | currencyPen }}</span>
                         <app-button variant="outline" size="sm" label="Ver detalle" (click)="viewDetails(order)"></app-button>
                     </div>
                 </div>

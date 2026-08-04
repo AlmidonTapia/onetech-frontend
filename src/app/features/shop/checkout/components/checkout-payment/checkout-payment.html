@@ -1,29 +1,31 @@
-<div class="step-section">
-  <h3 class="step-title">
-    <i class="pi pi-credit-card"></i> {{ t().checkout.payment.title }}
+<div class="flex flex-col gap-5">
+  <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 m-0 mb-4">
+    <i class="pi pi-credit-card text-blue-600 dark:text-blue-500"></i> Método de pago
   </h3>
-  <div class="payment-list">
+  <div class="flex flex-col gap-3">
     @for (m of methods(); track m.idPaymentMethod) {
-    <div class="payment-option" [class.payment-option--selected]="selectedId() === m.idPaymentMethod"
+    <div class="flex items-center gap-4 px-5 py-4 border-2 rounded-[24px] cursor-pointer transition-all duration-300" 
+      [ngClass]="selectedId() === m.idPaymentMethod ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 shadow-[0_4px_12px_rgba(37,99,235,0.08)]' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:-translate-y-[1px] hover:shadow-sm'"
       (click)="select(m)">
-      <div class="radio-circle" [class.radio-circle--active]="selectedId() === m.idPaymentMethod"></div>
-      <span class="method-name">{{ m.methodName }}</span>
+      <div class="w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-all duration-200"
+        [ngClass]="selectedId() === m.idPaymentMethod ? 'border-blue-600 bg-blue-600 shadow-[inset_0_0_0_4px_#ffffff] dark:shadow-[inset_0_0_0_4px_#0f172a]' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'"></div>
+      <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ m.methodName }}</span>
     </div>
     }
   </div>
 
-  <div class="mini-coupon" style="margin-top: 24px;">
-    <h4>{{ t().checkout.payment.couponTitle }}</h4>
-    <div class="coupon-input-group" style="display: flex; gap: 8px; margin-top: 12px;">
-      <input type="text" [(ngModel)]="couponCode" [placeholder]="t().checkout.labels.couponPlaceholder" [disabled]="!!selectedCouponId"
-        style="flex: 1; padding: 10px 14px; border: 1px solid var(--ot-border-color); border-radius: var(--ot-radius-md); background: var(--ot-bg-body); color: var(--ot-text-main); outline: none; font-size:13px;">
-      <app-button variant="outline" [label]="t().checkout.buttons.apply" [loading]="validatingCoupon" [disabled]="!couponCode || !!selectedCouponId" (clicked)="onApplyCoupon()" />
+  <div class="mt-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 rounded-2xl">
+    <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3 m-0">¿Tienes un código de descuento?</h4>
+    <div class="flex gap-2">
+      <input type="text" [(ngModel)]="couponCode" placeholder="Código de descuento" [disabled]="!!selectedCouponId"
+        class="flex-1 px-3.5 py-2.5 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-[13px] outline-none transition-colors focus:border-blue-600 disabled:bg-slate-100 disabled:text-slate-500">
+      <app-button variant="outline" label="Aplicar" [loading]="validatingCoupon" [disabled]="!couponCode || !!selectedCouponId" (clicked)="onApplyCoupon()" />
     </div>
     @if (couponError) {
-      <small class="error-text" style="color: var(--ot-danger); font-size: 12px; margin-top: 4px; display: block;">{{ couponError }}</small>
+      <small class="block mt-2 text-xs text-red-500 font-medium">{{ couponError }}</small>
     }
     @if (discountAmount > 0) {
-      <small class="success-text" style="color: var(--ot-success); font-size: 12px; margin-top: 4px; display: block;">{{ t().checkout.payment.couponSuccess }}</small>
+      <small class="block mt-2 text-xs text-green-600 dark:text-green-500 font-medium">Cupón aplicado correctamente</small>
     }
   </div>
 </div>

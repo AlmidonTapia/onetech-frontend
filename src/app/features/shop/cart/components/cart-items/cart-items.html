@@ -1,33 +1,31 @@
-<div class="cart-items">
+<div class="flex flex-col">
   @for (item of items; track item.idProduct) {
-    <div class="cart-item">
-      <div class="item-image">
+    <div class="flex flex-wrap sm:flex-nowrap items-start sm:items-center gap-4 sm:gap-5 p-4 sm:p-5 sm:px-6 border-b border-slate-200 dark:border-slate-800 transition-colors duration-250 hover:bg-slate-50 dark:hover:bg-slate-800/50 last:border-b-0">
+      <div class="w-20 h-20 rounded-xl bg-slate-50 dark:bg-slate-900 overflow-hidden shrink-0 flex items-center justify-center border border-slate-200 dark:border-slate-800 transition-colors duration-300 group-hover:border-blue-500">
         @if (item.productImageUrl) {
-          <img [src]="item.productImageUrl" [alt]="item.productName" />
+          <img [src]="item.productImageUrl" [alt]="item.productName" class="w-full h-full object-cover" />
         } @else {
-          <i class="pi pi-image"></i>
+          <i class="pi pi-image text-2xl text-slate-400"></i>
         }
       </div>
 
-      <div class="item-info">
-        <a [routerLink]="['/product', item.idProduct]" class="item-name">
+      <div class="flex-1 flex flex-col gap-1.5 min-w-0 flex-[1_1_calc(100%-100px)] sm:flex-auto">
+        <a [routerLink]="['/product', item.idProduct]" class="text-sm font-bold text-slate-900 dark:text-slate-100 whitespace-nowrap overflow-hidden text-ellipsis no-underline transition-colors duration-300 hover:text-blue-600 dark:hover:text-blue-400">
           {{ item.productName }}
         </a>
-        <span class="item-unit-price">{{ item.unitPrice | currencyPen }} {{ t().cart.items.each }}</span>
+        <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ item.unitPrice | currencyPen }} c/u</span>
       </div>
 
-      <div class="item-qty">
-        <button class="qty-btn" (click)="updateQty.emit({ id: item.idProduct, qty: item.quantity - 1 })"
-                [disabled]="item.quantity <= 1">−</button>
-        <span class="qty-val">{{ item.quantity }}</span>
-        <button class="qty-btn" (click)="updateQty.emit({ id: item.idProduct, qty: item.quantity + 1 })">+</button>
+      <div class="flex items-center border-[1.5px] border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shrink-0 bg-slate-50 dark:bg-slate-900 order-3 sm:order-none ml-0 sm:ml-auto">
+        <button class="w-9 h-9 text-base font-bold text-slate-700 dark:text-slate-300 bg-transparent border-none cursor-pointer transition-colors duration-200 hover:not:disabled:bg-slate-200 dark:hover:not:disabled:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed" (click)="updateQty.emit({ id: item.idProduct, qty: item.quantity - 1 })"
+                [disabled]="item.quantity <= 1" aria-label="−">−</button>
+        <span class="min-w-[36px] text-center text-sm font-bold text-slate-900 dark:text-slate-100">{{ item.quantity }}</span>
+        <button class="w-9 h-9 text-base font-bold text-slate-700 dark:text-slate-300 bg-transparent border-none cursor-pointer transition-colors duration-200 hover:not:disabled:bg-slate-200 dark:hover:not:disabled:bg-slate-800" (click)="updateQty.emit({ id: item.idProduct, qty: item.quantity + 1 })" aria-label="+">+</button>
       </div>
 
-      <div class="item-subtotal">{{ item.subtotal | currencyPen }}</div>
+      <div class="text-[15px] sm:text-base font-extrabold text-blue-600 dark:text-blue-400 min-w-0 sm:min-w-[110px] text-right order-4 sm:order-none ml-auto sm:ml-0 self-center">{{ item.subtotal | currencyPen }}</div>
 
-      <button class="remove-btn" (click)="removeItem.emit(item.idProduct)" [title]="t().cart.items.remove">
-        <i class="pi pi-times"></i>
-      </button>
+      <app-button styleClass="w-9 h-9 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-400 transition-colors duration-250 flex items-center justify-center shrink-0 order-5 sm:order-none ml-2 sm:ml-0 self-center" (clicked)="removeItem.emit(item.idProduct)" title="Eliminar" variant="ghost" icon="pi-times"></app-button>
     </div>
   }
 </div>

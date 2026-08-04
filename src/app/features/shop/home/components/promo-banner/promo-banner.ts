@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
+import { CommonModule } from '@angular/common';
 
 interface PromoCard {
   customClass: string;
@@ -20,13 +21,11 @@ interface PromoCard {
 @Component({
   selector: 'app-promo-banner',
   standalone: true,
-  imports: [RouterLink, ButtonComponent],
-  templateUrl: './promo-banner.html',
-  styleUrl: './promo-banner.css'
+  imports: [RouterLink, ButtonComponent, CommonModule],
+  templateUrl: './promo-banner.html'
 })
 export class PromoBannerComponent {
-
-  promoCards: PromoCard[] = [
+  promoCards = computed((): PromoCard[] => [
     {
       customClass: 'promo-main',
       tag: '⚡ Promociones Especiales',
@@ -54,5 +53,5 @@ export class PromoBannerComponent {
         route: '/catalog'
       }
     }
-  ];
+  ]);
 }

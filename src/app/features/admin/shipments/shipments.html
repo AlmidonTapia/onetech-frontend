@@ -1,11 +1,11 @@
-<div class="page-container">
+<div class="flex flex-col gap-6">
 
-  <div class="page-header">
+  <div class="flex items-start justify-between gap-4">
     <div>
-      <h1 class="page-title">{{ t().adminShipments.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminShipments.countSuffix }}</p>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Envíos</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-0">{{ totalRecords() }} envíos registrados</p>
     </div>
-    <app-button [label]="t().adminShipments.createBtnLabel" icon="pi-plus" (clicked)="openCreate()" />
+    <app-button label="Nuevo envío" icon="pi-plus" (clicked)="openCreate()" />
   </div>
 
   <app-shipments-table [shipments]="shipments()" [totalRecords]="totalRecords()"

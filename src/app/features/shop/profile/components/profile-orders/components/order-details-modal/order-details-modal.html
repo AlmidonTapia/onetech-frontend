@@ -1,111 +1,130 @@
 <p-dialog [visible]="visible()" (visibleChange)="closeModal()" [modal]="true"
   [style]="{ width: '100%', maxWidth: '600px' }" [draggable]="false" [resizable]="false"
-  [showHeader]="false" styleClass="order-modal">
+  [showHeader]="false" styleClass="[&::ng-deep_.p-dialog-content]:bg-white dark:[&::ng-deep_.p-dialog-content]:bg-slate-900 [&::ng-deep_.p-dialog-content]:p-6 [&::ng-deep_.p-dialog-content]:rounded-2xl">
 
-  <div class="modal-content">
-    <div class="modal-header">
-      <div class="header-titles">
-        <h2>Detalle de Orden</h2>
-        <span class="order-id">#{{ order()?.idOrder?.substring(0, 8) }}</span>
+  <div class="flex flex-col">
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex flex-col">
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 m-0">Detalle de Orden</h2>
+        <span class="text-sm text-slate-500 dark:text-slate-400">#{{ order()?.idOrder?.substring(0, 8) }}</span>
       </div>
-      <button class="close-btn" (click)="closeModal()">
+
+      <button class="bg-transparent border-none text-xl text-slate-500 dark:text-slate-400 cursor-pointer p-2 rounded-full transition-colors duration-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 flex items-center justify-center" (click)="closeModal()">
         <i class="pi pi-times"></i>
       </button>
     </div>
 
     @if (order()) {
-    <div class="modal-body">
-      <div class="order-summary-box">
-        <div class="summary-item">
-          <span>Fecha</span>
-          <strong>{{ order()?.createdAt | date:'dd MMM yyyy, HH:mm' }}</strong>
+    <div class="flex flex-col gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-100 dark:border-slate-700">
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-slate-500 dark:text-slate-400">Fecha</span>
+          <strong class="text-base text-slate-900 dark:text-slate-100">{{ order()?.createdAt | date:'dd MMM yyyy, HH:mm' }}</strong>
         </div>
-        <div class="summary-item">
-          <span>Total Pagado</span>
-          <strong>{{ order()?.totalAmount | currencyPen }}</strong>
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-slate-500 dark:text-slate-400">Total Pagado</span>
+          <strong class="text-base text-slate-900 dark:text-slate-100">{{ order()?.totalAmount | currencyPen }}</strong>
         </div>
-        <div class="summary-item">
-          <span>Estado de Pago</span>
-          <strong>{{ order()?.orderStatus }}</strong>
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-slate-500 dark:text-slate-400">Estado de Pago</span>
+          <strong class="text-base text-slate-900 dark:text-slate-100">{{ order()?.orderStatus }}</strong>
         </div>
       </div>
 
       <!-- DESTINATION SECTION -->
-      <div class="section-container">
-        <h3>Destino y Consignatario</h3>
-        <div class="destination-box">
-          <p><strong>Ubicación:</strong> {{ order()?.snapDistrictName }}, {{ order()?.snapProvinceName }}, {{ order()?.snapDepartmentName }}</p>
-          <p><strong>Método:</strong> {{ order()?.snapShipmentMethodName || (order()?.snapAgencyAddress ? 'Recojo en Agencia' : 'Envío a Domicilio') }}</p>
+      <div class="flex flex-col gap-4">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0 pb-2 border-b border-slate-200 dark:border-slate-700">Destino y Consignatario</h3>
+        <div class="flex flex-col gap-2 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+          <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Ubicación:</strong> {{ order()?.snapDistrictName }}, {{ order()?.snapProvinceName }}, {{ order()?.snapDepartmentName }}</p>
+          <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Método:</strong> {{ order()?.snapShipmentMethodName || (order()?.snapAgencyAddress ? 'Recojo en Agencia' : 'Envío a Domicilio') }}</p>
           @if (order()?.snapAgencyAddress) {
-            <p><strong>Dirección de Agencia:</strong> {{ order()?.snapAgencyAddress }}</p>
+            <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Dirección de Agencia:</strong> {{ order()?.snapAgencyAddress }}</p>
           }
-          <div class="divider"></div>
-          <p><strong>Recibe:</strong> {{ order()?.snapConsigneeName || order()?.userFullName }}</p>
-          <p><strong>Documento:</strong> {{ order()?.snapConsigneeDoc || 'No registrado' }}</p>
-          <p><strong>Teléfono:</strong> {{ order()?.snapConsigneePhone || 'No registrado' }}</p>
+          <div class="h-px bg-slate-200 dark:bg-slate-700 my-3"></div>
+          <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Recibe:</strong> {{ order()?.snapConsigneeName || order()?.userFullName }}</p>
+          <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Documento:</strong> {{ order()?.snapConsigneeDoc || 'No registrado' }}</p>
+          <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Teléfono:</strong> {{ order()?.snapConsigneePhone || 'No registrado' }}</p>
+        </div>
+      </div>
+
+      <!-- DESTINATION SECTION -->
+      <div class="flex flex-col gap-4">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0 pb-2 border-b border-slate-200 dark:border-slate-700">Destino</h3>
+        <div class="flex flex-col gap-2 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+          <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Ubicación:</strong> {{ order()?.snapDistrictName }}, {{ order()?.snapProvinceName }}, {{ order()?.snapRegionName }}</p>
+          @if (order()?.snapAgencyAddress) {
+            <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Recojo en Agencia:</strong> {{ order()?.snapAgencyAddress }}</p>
+          } @else {
+            <p class="m-0 text-sm text-slate-500 dark:text-slate-400"><strong class="text-slate-900 dark:text-slate-100">Envío a Domicilio</strong></p>
+          }
         </div>
       </div>
 
       <!-- INVOICE SECTION -->
-      <div class="section-container">
-        <h3>Boleta de Compra</h3>
+      <div class="flex flex-col gap-4">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0 pb-2 border-b border-slate-200 dark:border-slate-700">Boleta de Compra</h3>
         @if (invoice()) {
-          <div class="invoice-box">
-            <div class="invoice-info">
-              <i class="pi pi-file-pdf"></i>
+          <div class="flex justify-between items-center p-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+            <div class="flex items-center gap-4">
+              <i class="pi pi-file-pdf text-3xl text-blue-500"></i>
               <div>
-                <strong>Boleta {{ invoice()?.invoiceNumber }}</strong>
-                <p>Emitida el {{ invoice()?.createdAt | date:'dd MMM yyyy' }}</p>
+                <strong class="block text-base text-slate-900 dark:text-slate-100">Boleta {{ invoice()?.invoiceNumber }}</strong>
+                <p class="m-0 text-sm text-slate-500 dark:text-slate-400">Emitida el {{ invoice()?.createdAt | date:'dd MMM yyyy' }}</p>
               </div>
             </div>
             <app-button variant="outline" label="Descargar" icon="pi pi-download" (click)="downloadInvoice(invoice().idInvoice)"></app-button>
           </div>
         } @else {
-          <p class="empty-state">La boleta de compra aún no ha sido generada o no está disponible.</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 italic p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-center m-0">La boleta de compra aún no ha sido generada o no está disponible.</p>
+          @if (isAdmin() && order()?.orderStatus !== 'PENDIENTE' && order()?.orderStatus !== 'CANCELADO' && order()?.orderStatus !== 'EXPIRADO') {
+            <div class="mt-4 text-center">
+              <app-button variant="primary" label="Generar Boleta" icon="pi pi-file" (click)="onGenerateInvoice.emit()"></app-button>
+            </div>
+          }
         }
       </div>
 
       <!-- SHIPMENT SECTION -->
-      <div class="section-container">
-        <h3>Seguimiento de Envío</h3>
+      <div class="flex flex-col gap-4">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0 pb-2 border-b border-slate-200 dark:border-slate-700">Seguimiento de Envío</h3>
         @if (shipment()) {
-          <div class="shipment-timeline">
+          <div class="flex flex-col gap-6 p-4 border-l-2 border-blue-500 ml-4">
             
-            <div class="timeline-status">
-              <span class="status-dot"></span>
-              <div class="status-text">
-                <strong>{{ getShipmentStatusLabel(shipment()?.status) }}</strong>
+            <div class="relative">
+              <span class="absolute -left-[26px] top-1 w-4 h-4 bg-blue-500 rounded-full border-4 border-white dark:border-slate-900"></span>
+              <div class="flex flex-col">
+                <strong class="block text-base text-slate-900 dark:text-slate-100 mb-1">{{ getShipmentStatusLabel(shipment()?.status) }}</strong>
                 @if (shipment()?.trackingNumber) {
-                  <p>Tracking: {{ shipment()?.trackingNumber }}</p>
+                  <p class="m-0 text-sm text-slate-500 dark:text-slate-400">Tracking: {{ shipment()?.trackingNumber }}</p>
                 }
                 @if (shipment()?.estimatedArrival) {
-                  <p>Llegada estimada: {{ shipment()?.estimatedArrival | date:'dd MMM yyyy' }}</p>
+                  <p class="m-0 text-sm text-slate-500 dark:text-slate-400">Llegada estimada: {{ shipment()?.estimatedArrival | date:'dd MMM yyyy' }}</p>
                 }
               </div>
             </div>
 
             @if (shipment()?.receiptImageUrl) {
-              <div class="receipt-image-container">
-                <h4>Boleta de Envío / Guía</h4>
-                <img [src]="shipment()?.receiptImageUrl" alt="Boleta de envío" class="receipt-image">
+              <div class="mt-4">
+                <h4 class="text-sm text-slate-500 dark:text-slate-400 m-0 mb-2">Boleta de Envío / Guía</h4>
+                <img [src]="shipment()?.receiptImageUrl" alt="Boleta de envío" class="max-w-full rounded-lg border border-slate-200 dark:border-slate-700">
               </div>
             }
           </div>
         } @else {
-          <p class="empty-state">El envío aún no ha sido programado.</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400 italic p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-center m-0">El envío aún no ha sido programado.</p>
         }
       </div>
 
-      <div class="section-container">
-        <h3>Productos</h3>
-        <ul class="product-list">
+      <div class="flex flex-col gap-4">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0 pb-2 border-b border-slate-200 dark:border-slate-700">Productos</h3>
+        <ul class="list-none p-0 m-0 flex flex-col gap-4">
           @for (item of order()?.details; track item.idOrderDetail) {
-            <li>
-              <div class="prod-info">
-                <strong>{{ item.productName || 'Producto' }}</strong>
-                <span>x{{ item.quantity }}</span>
+            <li class="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <div class="flex flex-col gap-1">
+                <strong class="text-sm text-slate-900 dark:text-slate-100">{{ item.productName || 'Producto' }}</strong>
+                <span class="text-xs text-slate-500 dark:text-slate-400">x{{ item.quantity }}</span>
               </div>
-              <strong>{{ item.subtotal | currencyPen }}</strong>
+              <strong class="text-base text-slate-900 dark:text-slate-100">{{ item.subtotal | currencyPen }}</strong>
             </li>
           }
         </ul>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CarouselModule } from 'primeng/carousel';
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 
@@ -6,15 +6,10 @@ import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
   selector: 'app-brand-carousel',
   standalone: true,
   imports: [CarouselModule],
-  templateUrl: './brand-carousel.html',
-  styleUrl: './brand-carousel.css'
+  templateUrl: './brand-carousel.html'
 })
 export class BrandCarouselComponent {
   @Input() brands: Brand[] = [];
-
-  content = {
-    title: 'Nuestras Marcas'
-  };
 
   responsiveOptions = [
     {

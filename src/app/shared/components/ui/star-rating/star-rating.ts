@@ -6,8 +6,7 @@ import { RatingModule } from 'primeng/rating';
   selector: 'app-star-rating',
   standalone: true,
   imports: [FormsModule, RatingModule],
-  templateUrl: './star-rating.html',
-  styleUrl: './star-rating.css'
+  templateUrl: './star-rating.html'
 })
 export class StarRatingComponent implements OnChanges {
   @Input() value = 0;

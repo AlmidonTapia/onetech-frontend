@@ -1,4 +1,5 @@
-import { Component, signal, OnInit, inject } from '@angular/core';
+import { Component, signal, OnInit, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
@@ -14,13 +15,13 @@ import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/sp
   selector: 'app-profile-orders',
   standalone: true,
   imports: [DatePipe, CurrencyPenPipe, BadgeComponent, ButtonComponent, OrderDetailsModalComponent, SpinnerComponent],
-  templateUrl: './profile-orders.html',
-  styleUrl: './profile-orders.css'
+  templateUrl: './profile-orders.html'
 })
 export class ProfileOrdersComponent implements OnInit {
   private orderService = inject(OrderService);
   private shipmentService = inject(ShipmentService);
   private invoiceService = inject(InvoiceService);
+  private destroyRef = inject(DestroyRef);
 
   orders = signal<Order[]>([]);
   loading = signal(true);
@@ -31,13 +32,15 @@ export class ProfileOrdersComponent implements OnInit {
   showDetailsModal = signal(false);
 
   ngOnInit() {
-    this.orderService.getMyOrders().subscribe({
-      next: (res) => {
-        this.orders.set(res.content || []);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false)
-    });
+    this.orderService.getMyOrders()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          this.orders.set(res.content || []);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false)
+      });
   }
 
   getStatusBadgeVariant(status: string): any {
@@ -58,15 +61,19 @@ export class ProfileOrdersComponent implements OnInit {
     this.selectedInvoice.set(null);
     this.showDetailsModal.set(true);
 
-    this.shipmentService.getByOrder(order.idOrder).subscribe({
-      next: (shipment) => this.selectedShipment.set(shipment),
-      error: () => {}
-    });
+    this.shipmentService.getByOrder(order.idOrder)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (shipment) => this.selectedShipment.set(shipment),
+        error: () => {}
+      });
 
-    this.invoiceService.getByOrder(order.idOrder).subscribe({
-      next: (invoice) => this.selectedInvoice.set(invoice),
-      error: () => {}
-    });
+    this.invoiceService.getByOrder(order.idOrder)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (invoice) => this.selectedInvoice.set(invoice),
+        error: () => {}
+      });
   }
 
   downloadInvoice(idInvoice: string) {

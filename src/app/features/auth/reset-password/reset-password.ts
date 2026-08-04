@@ -1,32 +1,31 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { AlertComponent } from '../../../shared/components/ui/alert/alert';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
-import { PasswordModule } from 'primeng/password';
+import { PasswordComponent } from '../../../shared/components/ui/password/password';
 import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
 import { handleFormError } from '../../../shared/utils/form-error.util';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
   imports: [
     ReactiveFormsModule, RouterLink,
-    PasswordModule,
+    PasswordComponent,
     ButtonComponent, AlertComponent, AuthLayoutComponent
   ],
-  templateUrl: './reset-password.html',
-  styleUrl: '../login/login.css'
+  templateUrl: './reset-password.html'
 })
 export class ResetPasswordComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private alertService = inject(AlertService);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
-
+  private router = inject(Router);  private destroyRef = inject(DestroyRef);
   loading = signal(false);
   errorMsg = signal('');
   token = signal<string | null>(null);
@@ -98,7 +97,7 @@ export class ResetPasswordComponent implements OnInit {
 
     const newPassword = this.form.value.password!;
     
-    this.authService.resetPassword(this.token()!, newPassword).subscribe({
+    this.authService.resetPassword(this.token()!, newPassword).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.loading.set(false);
         this.alertService.success('Contraseña actualizada', 'Tu contraseña ha sido restablecida con éxito. Ya puedes iniciar sesión.');

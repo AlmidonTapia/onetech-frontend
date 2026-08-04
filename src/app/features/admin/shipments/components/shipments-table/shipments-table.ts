@@ -2,17 +2,18 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePipe, CurrencyPipe, SlicePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe, SlicePipe, TitleCasePipe } from '@angular/common';
 import { Shipment, ShipmentStatus } from '../../../../../core/domains/shipping/models/shipment.model';
 import { inject } from '@angular/core';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
+import { SelectModule } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-shipments-table',
   standalone: true,
-  imports: [TableModule, TooltipModule, DatePipe, CurrencyPipe, SlicePipe, InputTextModule],
-  templateUrl: './shipments-table.html',
-  styleUrl: './shipments-table.css'
+  imports: [TableModule, TooltipModule, DatePipe, InputTextModule, SelectModule, FormsModule, ButtonComponent, CurrencyPipe, SlicePipe],
+  templateUrl: './shipments-table.html'
 })
 export class ShipmentsTableComponent {
   @Input() shipments: Shipment[] = [];
@@ -21,10 +22,6 @@ export class ShipmentsTableComponent {
   @Output() lazyLoad = new EventEmitter<any>();
   @Output() onEdit = new EventEmitter<Shipment>();
   @Output() search = new EventEmitter<string>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     this.search.emit(target.value);
@@ -42,19 +39,19 @@ export class ShipmentsTableComponent {
 
   get content() {
     return {
-      quickSearchTitle: this.t().adminShipments.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminShipments.table.searchPlaceholder,
+      quickSearchTitle: 'Búsqueda Rápida',
+      searchPlaceholder: 'Tracking o ID...',
       headers: {
-        orderId: this.t().adminShipments.table.headers.orderId,
-        method: this.t().adminShipments.table.headers.method,
-        tracking: this.t().adminShipments.table.headers.tracking,
-        cost: this.t().adminShipments.table.headers.cost,
-        shippedAt: this.t().adminShipments.table.headers.shippedAt,
-        arrival: this.t().adminShipments.table.headers.arrival,
-        status: this.t().adminShipments.table.headers.status,
-        actions: this.t().adminShipments.table.headers.actions
+        orderId: 'ID Pedido',
+        method: 'Método',
+        tracking: 'Tracking',
+        cost: 'Costo',
+        shippedAt: 'Fecha Envío',
+        arrival: 'Llegada Estimada',
+        status: 'Estado',
+        actions: 'Acciones'
       },
-      emptyMessage: this.t().adminShipments.table.emptyMessage,
+      emptyMessage: 'No hay envíos registrados.',
       dateFormat: 'mediumDate',
       datetimeFormat: 'medium'
     };
@@ -62,11 +59,11 @@ export class ShipmentsTableComponent {
 
   get statusConfig(): Record<ShipmentStatus, { label: string; class: string; icon: string; tooltip: string }> {
     return {
-      EN_PREPARACION: { label: this.t().adminShipments.form.statusConfig.inPreparation.label, class: 'en-preparacion', icon: 'pi pi-send', tooltip: this.t().adminShipments.form.statusConfig.inPreparation.tooltip },
-      EN_CAMINO: { label: this.t().adminShipments.form.statusConfig.onTheWay.label, class: 'en-camino', icon: 'pi pi-check-square', tooltip: this.t().adminShipments.form.statusConfig.onTheWay.tooltip },
-      ENTREGADO: { label: this.t().adminShipments.form.statusConfig.delivered.label, class: 'entregado', icon: 'pi pi-eye', tooltip: this.t().adminShipments.form.statusConfig.delivered.tooltip },
-      DEVOLUCION_PENDIENTE: { label: this.t().adminShipments.form.statusConfig.pendingReturn.label, class: 'devolucion-pendiente', icon: 'pi pi-truck', tooltip: this.t().adminShipments.form.statusConfig.pendingReturn.tooltip },
-      DEVUELTO: { label: this.t().adminShipments.form.statusConfig.returned.label, class: 'devuelto', icon: 'pi pi-eye', tooltip: this.t().adminShipments.form.statusConfig.returned.tooltip },
+      EN_PREPARACION: { label: 'En Preparación', class: 'bg-slate-50 text-slate-500 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700', icon: 'pi pi-send', tooltip: 'Despachar Envío' },
+      EN_CAMINO: { label: 'En Camino', class: 'bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400', icon: 'pi pi-check-square', tooltip: 'Gestionar Entrega' },
+      ENTREGADO: { label: 'Entregado', class: 'bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400', icon: 'pi pi-eye', tooltip: 'Ver Detalles' },
+      DEVOLUCION_PENDIENTE: { label: 'Dev. Pendiente', class: 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-400', icon: 'pi pi-truck', tooltip: 'Recibir en Almacén' },
+      DEVUELTO: { label: 'Devuelto', class: 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400', icon: 'pi pi-eye', tooltip: 'Ver Detalles' },
     };
   }
 

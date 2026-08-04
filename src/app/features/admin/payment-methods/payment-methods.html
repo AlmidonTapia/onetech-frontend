@@ -1,10 +1,10 @@
-<div class="page-container">
-  <div class="page-header">
+<div class="flex flex-col gap-6">
+  <div class="flex items-start justify-between gap-4">
     <div>
-      <h1 class="page-title">{{ content.title }}</h1>
-      <p class="page-subtitle">{{ methods().length }}{{ content.badgeSuffix }}</p>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">{{ content.title }}</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-0">{{ methods().length }}{{ content.badgeSuffix }}</p>
     </div>
-    <app-button variant="primary" [label]="content.newBtnLabel" icon="pi pi-plus" (clicked)="openCreate()" />
+    <app-button variant="primary" [label]="content.newBtnLabel" icon="pi-plus" (clicked)="openCreate()" />
   </div>
 
   <app-payment-methods-table

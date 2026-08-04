@@ -1,20 +1,21 @@
-import { Component, Output, EventEmitter, OnInit, inject, signal, Input } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject, signal, Input, DestroyRef } from '@angular/core';
 import { PaymentService } from '../../../../../core/domains/checkout/services/payment.service';
 import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { TranslationService } from '../../../../../core/services/translation.service';
+import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-checkout-payment',
   standalone: true,
-  imports: [FormsModule, ButtonComponent],
-  templateUrl: './checkout-payment.html',
-  styleUrl: './checkout-payment.css'
+  imports: [FormsModule, ButtonComponent, CommonModule],
+  templateUrl: './checkout-payment.html'
 })
 export class CheckoutPaymentComponent implements OnInit {
   private paymentService = inject(PaymentService);
+  private destroyRef = inject(DestroyRef);
   @Output() selected = new EventEmitter<PaymentMethod>();
 
   methods = signal<PaymentMethod[]>([]);
@@ -27,12 +28,8 @@ export class CheckoutPaymentComponent implements OnInit {
   @Output() applyCoupon = new EventEmitter<string>();
 
   couponCode = '';
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   ngOnInit() {
-    this.paymentService.getMethods().subscribe(methods => {
+    this.paymentService.getMethods().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(methods => {
       const activeMethods = methods.filter(m => m.status === 'ACTIVO');
       this.methods.set(activeMethods);
 

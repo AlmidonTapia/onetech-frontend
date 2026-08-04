@@ -13,8 +13,7 @@ export interface StatCard {
   selector: 'app-dashboard-stats',
   standalone: true,
   imports: [NgClass],
-  templateUrl: './dashboard-stats.html',
-  styleUrl: './dashboard-stats.css'
+  templateUrl: './dashboard-stats.html'
 })
 export class DashboardStatsComponent {
   @Input() stats: StatCard[] = [];

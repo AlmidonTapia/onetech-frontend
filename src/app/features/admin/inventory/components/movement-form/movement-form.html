@@ -1,69 +1,68 @@
 <p-dialog [visible]="visible" [header]="content.headerTitle" [modal]="true" [closable]="true" [draggable]="false"
     [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
 
-    <form [formGroup]="form" class="simple-form" novalidate>
-        <div class="form-field">
-            <label>{{ content.labels.product }}</label>
-            <p-select formControlName="idProduct" [options]="products" optionLabel="productName" optionValue="idProduct"
+    <form [formGroup]="form" class="flex flex-col gap-4 py-1" novalidate>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ content.labels.product }}</label>
+            <p-select formControlName="idProduct" [options]="products()" optionLabel="productName" optionValue="idProduct"
                 [placeholder]="content.placeholders.product" [filter]="true" [filterPlaceholder]="content.placeholders.search"
                 [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo" />
             @if (isInvalid('idProduct') && form.get('idProduct')?.errors?.['backend']) {
-                <span class="field-error">{{ form.get('idProduct')?.errors?.['backend'] }}</span>
+                <span class="text-[12px] text-red-500">{{ form.get('idProduct')?.errors?.['backend'] }}</span>
             } @else if (isInvalid('idProduct')) {
-                <span class="field-error">{{ content.errorRequired }}</span>
+                <span class="text-[12px] text-red-500">{{ content.errorRequired }}</span>
             }
         </div>
 
-        <div class="form-row">
-            <div class="form-field">
-                <label>{{ content.labels.type }}</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ content.labels.type }}</label>
                 <p-select formControlName="movementType" [options]="typeOptions" optionLabel="label" optionValue="value"
                     [style]="{ 'width': content.styles.selectWidth }" [appendTo]="content.styles.appendTo">
                     <ng-template pTemplate="selectedItem" let-selectedOption>
                         @if (selectedOption) {
-                        <div class="flex align-items-center">
-                            <i [class]="typeIcons[selectedOption.value]"
-                                style="font-size: 0.85rem; margin-right: 0.5rem;"></i>
+                        <div class="flex items-center">
+                            <i [class]="typeIcons[selectedOption.value]" class="text-[13.6px] mr-2"></i>
                             <div>{{ selectedOption.label }}</div>
                         </div>
                         }
                     </ng-template>
                     <ng-template pTemplate="item" let-option>
-                        <div class="flex align-items-center">
-                            <i [class]="typeIcons[option.value]" style="font-size: 0.85rem; margin-right: 0.5rem;"></i>
+                        <div class="flex items-center">
+                            <i [class]="typeIcons[option.value]" class="text-[13.6px] mr-2"></i>
                             <div>{{ option.label }}</div>
                         </div>
                     </ng-template>
                 </p-select>
                 @if (isInvalid('movementType') && form.get('movementType')?.errors?.['backend']) {
-                    <span class="field-error">{{ form.get('movementType')?.errors?.['backend'] }}</span>
+                    <span class="text-[12px] text-red-500">{{ form.get('movementType')?.errors?.['backend'] }}</span>
                 }
             </div>
-            <div class="form-field">
-                <label>{{ content.labels.quantity }}</label>
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ content.labels.quantity }}</label>
                 <p-inputNumber formControlName="quantity" [min]="1" [style]="{ 'width': content.styles.selectWidth }" />
                 @if (isInvalid('quantity') && form.get('quantity')?.errors?.['backend']) {
-                    <span class="field-error">{{ form.get('quantity')?.errors?.['backend'] }}</span>
+                    <span class="text-[12px] text-red-500">{{ form.get('quantity')?.errors?.['backend'] }}</span>
                 } @else if (isInvalid('quantity')) {
-                    <span class="field-error">{{ content.errorMinQuantity }}</span>
+                    <span class="text-[12px] text-red-500">{{ content.errorMinQuantity }}</span>
                 }
             </div>
         </div>
 
-        <div class="form-field">
-            <label>{{ content.labels.reason }}</label>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ content.labels.reason }}</label>
             <input pInputText formControlName="reason" [placeholder]="content.placeholders.reason"
-                [class.ng-invalid]="isInvalid('reason')" />
+                [class.ng-invalid]="isInvalid('reason')" class="w-full" />
             @if (isInvalid('reason') && form.get('reason')?.errors?.['backend']) {
-                <span class="field-error">{{ form.get('reason')?.errors?.['backend'] }}</span>
+                <span class="text-[12px] text-red-500">{{ form.get('reason')?.errors?.['backend'] }}</span>
             } @else if (isInvalid('reason')) {
-                <span class="field-error">{{ content.errorRequired }}</span>
+                <span class="text-[12px] text-red-500">{{ content.errorRequired }}</span>
             }
         </div>
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="dialog-footer">
+        <div class="flex justify-center items-center flex-wrap gap-6 mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
             <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
             <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
                 [loading]="saving" (clicked)="onSave()" />

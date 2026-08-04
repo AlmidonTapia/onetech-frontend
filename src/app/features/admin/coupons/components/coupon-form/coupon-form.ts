@@ -7,7 +7,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Coupon, CreateCouponRequest } from '../../../../../core/domains/checkout/models/coupon.model';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-coupon-form',
@@ -16,14 +15,10 @@ import { TranslationService as AppTranslationService } from '../../../../../core
     CommonModule, ReactiveFormsModule, DialogModule, InputTextModule,
     InputNumberModule, SelectModule, ButtonComponent
   ],
-  templateUrl: './coupon-form.html',
-  styleUrl: './coupon-form.css'
+  templateUrl: './coupon-form.html'
 })
 export class CouponFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   @Input() visible = false;
   @Input() coupon: Coupon | null = null;
   @Input() saving = false;
@@ -34,44 +29,44 @@ export class CouponFormComponent implements OnChanges {
   get content() {
     return {
       dialogWidth: '500px',
-      titleNew: this.t().adminCoupons.form.titleNew,
-      titleEdit: this.t().adminCoupons.form.titleEdit,
-      errorRequired: this.t().adminCoupons.form.errorRequired,
+      titleNew: 'Nuevo Cupón',
+      titleEdit: 'Editar Cupón',
+      errorRequired: 'Campo requerido',
       styles: {
         selectWidth: '100%',
         appendTo: 'body'
       },
       actions: {
-        cancelLabel: this.t().adminCoupons.form.actions.cancelLabel,
-        saveLabel: this.t().adminCoupons.form.actions.saveLabel,
+        cancelLabel: 'Cancelar',
+        saveLabel: 'Guardar Cupón',
         saveIcon: 'pi-check'
       },
       fields: {
-        codeLabel: this.t().adminCoupons.form.fields.codeLabel,
-        codePlaceholder: this.t().adminCoupons.form.fields.codePlaceholder,
-        typeLabel: this.t().adminCoupons.form.fields.typeLabel,
-        valueLabel: this.t().adminCoupons.form.fields.valueLabel,
-        startDateLabel: this.t().adminCoupons.form.fields.startDateLabel,
-        expirationLabel: this.t().adminCoupons.form.fields.expirationLabel,
-        limitLabel: this.t().adminCoupons.form.fields.limitLabel,
-        statusLabel: this.t().adminCoupons.form.fields.statusLabel
+        codeLabel: 'Código del Cupón *',
+        codePlaceholder: 'Ej: VERANO2026',
+        typeLabel: 'Tipo de Descuento *',
+        valueLabel: 'Valor de Descuento *',
+        startDateLabel: 'Fecha de Inicio (Opcional)',
+        expirationLabel: 'Fecha de Expiración *',
+        limitLabel: 'Límite de Usos (Opcional)',
+        statusLabel: 'Estado'
       }
     };
   }
 
   get discountTypes() {
     return [
-      { label: this.t().adminCoupons.table.types.percentage, value: 'PERCENTAGE' },
-      { label: this.t().adminCoupons.table.types.fixed, value: 'FIXED_AMOUNT' }
+      { label: 'Porcentaje', value: 'PERCENTAGE' },
+      { label: 'Fijo', value: 'FIXED_AMOUNT' }
     ];
   }
 
   get statuses() {
     return [
-      { label: this.t().adminCoupons.table.statuses.active, value: 'ACTIVO' },
-      { label: this.t().adminCoupons.table.statuses.inactive, value: 'INACTIVO' },
-      { label: this.t().adminCoupons.table.statuses.exhausted, value: 'AGOTADO' },
-      { label: this.t().adminCoupons.table.statuses.expired, value: 'EXPIRADO' }
+      { label: 'Activo', value: 'ACTIVO' },
+      { label: 'Inactivo', value: 'INACTIVO' },
+      { label: 'Agotado', value: 'AGOTADO' },
+      { label: 'Expirado', value: 'EXPIRADO' }
     ];
   }
 

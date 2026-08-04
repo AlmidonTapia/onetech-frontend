@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button';
 import { OrderService } from '../../../../core/domains/checkout/services/order.service';
@@ -11,40 +12,40 @@ import { SpinnerComponent } from '../../../../shared/components/ui/spinner/spinn
   standalone: true,
   imports: [ButtonComponent, RouterLink, CurrencyPipe, DatePipe, SpinnerComponent],
   template: `
-    <div class="success-container">
-      <div class="success-card">
-        <div class="icon-wrapper">
+    <div class="flex items-center justify-center min-h-[60vh] p-8">
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-8 py-12 text-center w-full max-w-[500px] shadow-sm">
+        <div class="text-[#4ade80] text-[5rem] mb-6">
           <i class="pi pi-check-circle"></i>
         </div>
-        <h1 class="success-title">{{ content.title }}</h1>
-        <p class="success-subtitle">{{ content.subtitle }}</p>
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100 m-0 mb-2">{{ content.title }}</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-lg mb-8 m-0">{{ content.subtitle }}</p>
         
-        <div class="order-info">
-          <span class="order-label">{{ content.orderLabel }}</span>
-          <span class="order-id">#{{ orderId }}</span>
+        <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg mb-6 flex flex-col gap-2 border border-dashed border-slate-200 dark:border-slate-700">
+          <span class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ content.orderLabel }}</span>
+          <span class="text-xl font-bold text-blue-600 dark:text-blue-400">#{{ orderId }}</span>
         </div>
 
         @if (isLoading()) {
-          <div class="skeleton-wrapper">
+          <div class="flex items-center justify-center gap-2 text-slate-500 dark:text-slate-400 py-4 mb-6">
             <app-spinner label="Cargando detalles de tu compra..." />
           </div>
         } @else if (orderData()) {
-          <div class="order-details-card">
-            <div class="detail-row">
-              <span class="detail-label">Fecha:</span>
-              <span class="detail-value">{{ orderData()!.createdAt | date:'medium' }}</span>
+          <div class="text-left bg-slate-50 dark:bg-slate-900/50 rounded-lg p-5 mb-8 border border-slate-200 dark:border-slate-700 flex flex-col gap-3">
+            <div class="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+              <span class="text-[0.9rem] text-slate-500 dark:text-slate-400">Fecha:</span>
+              <span class="text-slate-900 dark:text-slate-100 font-medium text-right">{{ orderData()!.createdAt | date:'medium' }}</span>
             </div>
-            <div class="detail-row">
-              <span class="detail-label">Total pagado:</span>
-              <span class="detail-value total-highlight">{{ orderData()!.totalAmount | currency:'PEN':'symbol':'1.2-2' }}</span>
+            <div class="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+              <span class="text-[0.9rem] text-slate-500 dark:text-slate-400">Total pagado:</span>
+              <span class="text-blue-600 dark:text-blue-400 font-bold text-lg text-right">{{ orderData()!.totalAmount | currency:'PEN':'symbol':'1.2-2' }}</span>
             </div>
-            <div class="detail-row">
-              <span class="detail-label">Método de envío:</span>
-              <span class="detail-value">{{ orderData()!.snapShipmentMethodName }}</span>
+            <div class="flex justify-between items-start border-b border-slate-200 dark:border-slate-700 pb-2">
+              <span class="text-[0.9rem] text-slate-500 dark:text-slate-400">Método de envío:</span>
+              <span class="text-slate-900 dark:text-slate-100 font-medium text-right">{{ orderData()!.snapShipmentMethodName }}</span>
             </div>
-            <div class="detail-row">
-              <span class="detail-label">Destino:</span>
-              <span class="detail-value">
+            <div class="flex justify-between items-start">
+              <span class="text-[0.9rem] text-slate-500 dark:text-slate-400">Destino:</span>
+              <span class="text-slate-900 dark:text-slate-100 font-medium text-right">
                 {{ orderData()!.snapDepartmentName }}, {{ orderData()!.snapProvinceName }}<br>
                 <small>{{ orderData()!.snapDistrictName }}</small>
               </span>
@@ -52,131 +53,20 @@ import { SpinnerComponent } from '../../../../shared/components/ui/spinner/spinn
           </div>
         }
         
-        <p class="success-desc">{{ content.description }}</p>
+        <p class="text-slate-900 dark:text-slate-100 leading-relaxed mb-8 m-0">{{ content.description }}</p>
         
-        <div class="success-actions">
+        <div class="flex gap-4 justify-center flex-wrap">
           <app-button variant="outline" [label]="content.trackBtn" [routerLink]="['/profile/orders']" />
           <app-button variant="primary" [label]="content.continueBtn" [routerLink]="['/catalog']" />
         </div>
       </div>
     </div>
-  `,
-  styles: [`
-    .success-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 60vh;
-      padding: 2rem;
-    }
-    .success-card {
-      background: var(--ot-bg-surface);
-      border: 1px solid var(--ot-border-color);
-      border-radius: var(--ot-radius-lg);
-      padding: 3rem 2rem;
-      text-align: center;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    .icon-wrapper {
-      color: #4ade80;
-      font-size: 5rem;
-      margin-bottom: 1.5rem;
-    }
-    .success-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--ot-text-main);
-      margin: 0 0 0.5rem 0;
-    }
-    .success-subtitle {
-      color: var(--ot-text-muted);
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-    }
-    .order-info {
-      background: var(--ot-bg-body);
-      padding: 1rem;
-      border-radius: var(--ot-radius-md);
-      margin-bottom: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      border: 1px dashed var(--ot-border-color);
-    }
-    .order-label {
-      font-size: 0.875rem;
-      color: var(--ot-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .order-id {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--ot-primary);
-    }
-    .loading-state {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      color: var(--ot-text-muted);
-      padding: 1rem 0;
-      margin-bottom: 1.5rem;
-    }
-    .order-details-card {
-      text-align: left;
-      background: var(--ot-bg-body);
-      border-radius: var(--ot-radius-md);
-      padding: 1.25rem;
-      margin-bottom: 2rem;
-      border: 1px solid var(--ot-border-color);
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      border-bottom: 1px solid var(--ot-border-color);
-      padding-bottom: 0.5rem;
-    }
-    .detail-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-    .detail-label {
-      color: var(--ot-text-muted);
-      font-size: 0.9rem;
-    }
-    .detail-value {
-      color: var(--ot-text-main);
-      font-weight: 500;
-      text-align: right;
-    }
-    .total-highlight {
-      color: var(--ot-primary);
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-    .success-desc {
-      color: var(--ot-text-main);
-      line-height: 1.5;
-      margin-bottom: 2rem;
-    }
-    .success-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-  `]
+  `
 })
 export class CheckoutSuccessComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private orderService = inject(OrderService);
+  private destroyRef = inject(DestroyRef);
 
   orderId = this.route.snapshot.paramMap.get('id') || 'N/A';
   
@@ -195,15 +85,17 @@ export class CheckoutSuccessComponent implements OnInit {
   ngOnInit() {
     if (this.orderId && this.orderId !== 'N/A') {
       this.isLoading.set(true);
-      this.orderService.getById(this.orderId).subscribe({
-        next: (order) => {
-          this.orderData.set(order);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.isLoading.set(false);
-        }
-      });
+      this.orderService.getById(this.orderId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (order) => {
+            this.orderData.set(order);
+            this.isLoading.set(false);
+          },
+          error: () => {
+            this.isLoading.set(false);
+          }
+        });
     }
   }
 }

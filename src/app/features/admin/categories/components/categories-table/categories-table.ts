@@ -5,14 +5,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
 import { Category } from '../../../../../core/domains/catalog/models/category.model';
 import { inject } from '@angular/core';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-categories-table',
   standalone: true,
-  imports: [TableModule, TooltipModule, InputTextModule, BadgeComponent],
-  templateUrl: './categories-table.html',
-  styleUrl: './categories-table.css'
+  imports: [TableModule, TooltipModule, InputTextModule, BadgeComponent, ButtonComponent],
+  templateUrl: './categories-table.html'
 })
 export class CategoriesTableComponent {
   @Input() categories: Category[] = [];
@@ -22,10 +21,6 @@ export class CategoriesTableComponent {
   @Output() editItem = new EventEmitter<Category>();
   @Output() deleteItem = new EventEmitter<Category>();
   @Output() search = new EventEmitter<string>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     this.search.emit(target.value);
@@ -40,19 +35,19 @@ export class CategoriesTableComponent {
 
   get content() {
     return {
-      quickSearchTitle: this.t().adminCategories.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminCategories.table.searchPlaceholder,
+      quickSearchTitle: 'Búsqueda Rápida',
+      searchPlaceholder: 'Buscar categorías...',
       headers: {
-        name: this.t().adminCategories.table.headers.name,
-        parent: this.t().adminCategories.table.headers.parent,
-        actions: this.t().adminCategories.table.headers.actions
+        name: 'Nombre',
+        parent: 'Categoría padre',
+        actions: 'Acciones'
       },
-      rootCategoryLabel: this.t().adminCategories.table.rootCategoryLabel,
+      rootCategoryLabel: 'Categoría raíz',
       tooltips: {
-        edit: this.t().adminCategories.table.tooltips.edit,
-        delete: this.t().adminCategories.table.tooltips.delete
+        edit: 'Editar',
+        delete: 'Eliminar'
       },
-      emptyMessage: this.t().adminCategories.table.emptyMessage,
+      emptyMessage: 'No hay categorías registradas.',
       icons: {
         edit: 'pi pi-pencil',
         delete: 'pi pi-trash'

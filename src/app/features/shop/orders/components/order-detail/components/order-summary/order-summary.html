@@ -1,34 +1,34 @@
-<div class="detail-totals">
-  <div class="total-row">
+<div class="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl flex flex-col gap-3 mb-8 border border-slate-200 dark:border-slate-800">
+  <div class="flex justify-between items-center text-sm text-slate-500 dark:text-slate-400">
       <span>{{ content().totals.subtotalLabel }}</span>
       <span>{{ order().totalAmount - order().shippingCost + order().discountAmount | currencyPen }}</span>
   </div>
   @if (order().discountAmount > 0) {
-  <div class="total-row text-red-500">
+  <div class="flex justify-between items-center text-sm text-red-500">
       <span>{{ content().labels.discount }}</span>
       <span>-{{ order().discountAmount | currencyPen }}</span>
   </div>
   }
-  <div class="total-row">
+  <div class="flex justify-between items-center text-sm text-slate-500 dark:text-slate-400">
       <span>{{ content().labels.shipping }}</span>
       <span>{{ order().shippingCost | currencyPen }}</span>
   </div>
-  <div class="total-row total-row--grand">
+  <div class="flex justify-between items-center mt-3 pt-4 border-t border-dashed border-slate-200 dark:border-slate-700 text-lg text-slate-900 dark:text-slate-100">
       <span>{{ content().totals.grandTotalLabel }}</span>
-      <strong>{{ order().totalAmount | currencyPen }}</strong>
+      <strong class="font-bold">{{ order().totalAmount | currencyPen }}</strong>
   </div>
 </div>
 
-<div class="detail-section">
-  <h4 class="section-title">{{ content().sections.infoTitle }}</h4>
-  <div class="info-grid">
-      <div class="info-item">
-          <span class="info-label">{{ content().labels.client }}</span>
-          <span>{{ order().userFullName }}</span>
+<div class="mb-8">
+  <h4 class="text-base font-bold text-slate-900 dark:text-slate-100 m-0 mb-4">{{ content().sections.infoTitle }}</h4>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 rounded-xl">
+      <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ content().labels.client }}</span>
+          <span class="text-sm text-slate-900 dark:text-slate-100 font-medium">{{ order().userFullName }}</span>
       </div>
-      <div class="info-item">
-          <span class="info-label">{{ content().labels.orderId }}</span>
-          <code>{{ order().idOrder }}</code>
+      <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{{ content().labels.orderId }}</span>
+          <code class="text-sm text-slate-900 dark:text-slate-100 font-medium font-mono bg-slate-50 dark:bg-slate-900 px-2 py-1 rounded w-fit">{{ order().idOrder }}</code>
       </div>
   </div>
 </div>

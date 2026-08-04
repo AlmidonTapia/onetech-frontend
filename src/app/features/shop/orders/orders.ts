@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PaginatorModule } from 'primeng/paginator';
 import { OrdersListComponent } from './components/orders-list/orders-list';
 import { OrderDetailComponent } from './components/order-detail/order-detail';
@@ -6,7 +7,6 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/
 import { OrderService } from '../../../core/domains/checkout/services/order.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { Order } from '../../../core/domains/checkout/models/order.model';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-orders',
@@ -17,12 +17,12 @@ import { TranslationService } from '../../../core/services/translation.service';
     OrderDetailComponent,
     BreadcrumbComponent
   ],
-  templateUrl: './orders.html',
-  styleUrl: './orders.css'
+  templateUrl: './orders.html'
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
   private alertService = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
 
   orders = signal<Order[]>([]);
   totalRecords = signal(0);
@@ -33,11 +33,7 @@ export class OrdersComponent implements OnInit {
 
   detailVisible = signal(false);
   selectedOrder = signal<Order | null>(null);
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
-  breadcrumb: BreadcrumbItem[] = [{ label: this.t().orders.breadcrumbLabel }];
+  breadcrumb: BreadcrumbItem[] = [{ label: 'Mis pedidos' }];
 
   ngOnInit() {
     this.loadOrders();
@@ -48,17 +44,19 @@ export class OrdersComponent implements OnInit {
     this.page.set(p);
     this.loading.set(true);
 
-    this.orderService.getMyOrders(p, this.rows).subscribe({
-      next: r => {
-        this.orders.set(r.content);
-        this.totalRecords.set(r.totalElements);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-        this.alertService.error(this.t().orders.errorLoadingTitle, this.t().orders.errorLoadingMsg);
-      },
-    });
+    this.orderService.getMyOrders(p, this.rows)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: r => {
+          this.orders.set(r.content);
+          this.totalRecords.set(r.totalElements);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.alertService.error('Error al cargar pedidos', 'No se pudieron obtener tus pedidos. Verifica tu conexión e intenta de nuevo.');
+        },
+      });
   }
 
   openDetail(order: Order) {

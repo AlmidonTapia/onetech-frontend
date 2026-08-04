@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-payment-methods-table',
   standalone: true,
-  imports: [CommonModule, TableModule, InputTextModule],
-  templateUrl: './payment-methods-table.html',
-  styleUrl: './payment-methods-table.css'
+  imports: [CommonModule, TableModule, InputTextModule, ButtonComponent],
+  templateUrl: './payment-methods-table.html'
 })
 export class PaymentMethodsTableComponent {
   methods = input.required<PaymentMethod[]>();

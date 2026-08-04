@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit, ViewChild, ElementRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,24 +10,19 @@ import { Shipment, CreateShipmentRequest, ShipmentStatus, ShipmentMethod, Dispat
 import { ShipmentService } from '../../../../../core/domains/shipping/services/shipment.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { FileValidatorUtil } from '../../../../../shared/utils/file-validator.util';
-import { DatePipe } from '@angular/common';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
+import { DatePipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-shipment-form',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent, InputNumberModule, DatePipe],
-  templateUrl: './shipment-form.html',
-  styleUrl: './shipment-form.css'
+  imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent, InputNumberModule, DatePipe, CommonModule],
+  templateUrl: './shipment-form.html'
 })
 export class ShipmentFormComponent implements OnChanges, OnInit {
   private fb = inject(FormBuilder);
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @Input() visible = false;
   @Input() shipment: Shipment | null = null;
   @Input() saving = false;
@@ -47,50 +43,52 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   get content() {
     return {
       dialogWidth: '500px',
-      titleNew: this.t().adminShipments.form.titleNew,
-      titleDispatch: this.t().adminShipments.form.titleDispatch,
-      titleView: this.t().adminShipments.form.titleView,
-      errorRequired: this.t().adminShipments.form.errorRequired,
+      titleNew: 'Nuevo Envío',
+      titleDispatch: 'Despachar Envío',
+      titleView: 'Detalles del Envío',
+      errorRequired: 'Campo requerido',
       apiTimezoneSuffix: 'T00:00:00',
       styles: {
         selectWidth: '100%',
         appendTo: 'body'
       },
       actions: {
-        cancelLabel: this.t().adminShipments.form.actions.cancelLabel,
-        saveLabel: this.t().adminShipments.form.actions.saveLabel,
-        dispatchLabel: this.t().adminShipments.form.actions.dispatchLabel,
-        deliveredLabel: this.t().adminShipments.form.actions.deliveredLabel,
-        returnedLabel: this.t().adminShipments.form.actions.returnedLabel,
-        pendingReturn: this.t().adminShipments.form.actions.pendingReturn,
-        receiveWarehouse: this.t().adminShipments.form.actions.receiveWarehouse,
+        cancelLabel: 'Cerrar',
+        saveLabel: 'Guardar',
+        dispatchLabel: 'Despachar',
+        deliveredLabel: 'Marcar Entregado',
+        returnedLabel: 'Marcar Devuelto',
+        pendingReturn: 'Devolución Pendiente',
+        receiveWarehouse: 'Recibir en Almacén',
         saveIcon: 'pi-check'
       },
       details: {
-        status: this.t().adminShipments.form.details.status,
-        orderId: this.t().adminShipments.form.details.orderId,
-        trackingNumber: this.t().adminShipments.form.details.trackingNumber,
-        pickupCode: this.t().adminShipments.form.details.pickupCode,
-        shippedAt: this.t().adminShipments.form.details.shippedAt,
-        estimatedArrival: this.t().adminShipments.form.details.estimatedArrival,
-        actualArrival: this.t().adminShipments.form.details.actualArrival,
-        receiptImage: this.t().adminShipments.form.details.receiptImage,
-        viewReceipt: this.t().adminShipments.form.details.viewReceipt
+        status: 'Estado:',
+        orderId: 'ID Orden:',
+        trackingNumber: 'Tracking Number:',
+        pickupCode: 'Código de Recojo:',
+        shippedAt: 'Fecha de Envío:',
+        estimatedArrival: 'Llegada Estimada:',
+        actualArrival: 'Llegada Real:',
+        receiptImage: 'Boleta de Envío:',
+        viewReceipt: 'Ver Boleta'
       },
       fields: {
-        orderId: this.t().adminShipments.form.fields.orderId,
-        orderIdPlaceholder: this.t().adminShipments.form.fields.orderIdPlaceholder,
-        method: this.t().adminShipments.form.fields.method,
-        methodPlaceholder: this.t().adminShipments.form.fields.methodPlaceholder,
-        cost: this.t().adminShipments.form.fields.cost,
-        estimatedArrival: this.t().adminShipments.form.fields.estimatedArrival,
-        trackingNumber: this.t().adminShipments.form.fields.trackingNumber,
-        trackingPlaceholder: this.t().adminShipments.form.fields.trackingPlaceholder,
-        pickupCode: this.t().adminShipments.form.fields.pickupCode,
-        pickupCodePlaceholder: this.t().adminShipments.form.fields.pickupCodePlaceholder,
-        shippedAt: this.t().adminShipments.form.fields.shippedAt,
-        receiptImage: this.t().adminShipments.form.fields.receiptImage,
-        errorImageRequired: this.t().adminShipments.form.errorImageRequired
+        orderId: 'ID del Pedido *',
+        orderIdPlaceholder: 'Ej: ord_123',
+        method: 'Método de Envío *',
+        methodPlaceholder: 'Seleccione método',
+        cost: 'Costo (S/.) *',
+        estimatedArrival: 'Llegada Estimada *',
+        trackingNumber: 'Tracking Number *',
+        trackingPlaceholder: 'Ej: TRK-987',
+        pickupCode: 'Código de Recojo *',
+        pickupCodePlaceholder: 'Ej: REC-123',
+        shippedAt: 'Fecha y Hora de Envío *',
+        receiptImage: 'Foto Boleta de Envío *',
+        errorImageRequired: 'Debe seleccionar una imagen.',
+        changeImage: 'Cambiar imagen',
+        selectImage: 'Seleccionar imagen'
       }
     };
   }
@@ -116,7 +114,7 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
   }
 
   ngOnInit() {
-    this.shipmentService.getMethods().subscribe({
+    this.shipmentService.getMethods().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (m) => this.methods.set(m),
       error: () => { }
     });
@@ -127,23 +125,43 @@ export class ShipmentFormComponent implements OnChanges, OnInit {
     return control?.invalid && control?.touched;
   }
 
+  previewUrl = signal<string | null>(null);
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       if (!FileValidatorUtil.validateFileType(file, ['image/jpeg', 'image/png', 'image/webp'])) {
-        this.alertService.error(this.t().adminShipments.form.errorImageFormat);
+        this.alertService.error('Solo se permiten imágenes (JPG, PNG, WEBP).');
         if (this.fileUpload?.nativeElement) this.fileUpload.nativeElement.value = '';
         this.selectedFile = null;
+        this.previewUrl.set(null);
         return;
       }
       if (!FileValidatorUtil.validateFileSize(file, 5)) {
-        this.alertService.error(this.t().adminShipments.form.errorImageSize);
+        this.alertService.error('La imagen no debe pesar más de 5MB.');
         if (this.fileUpload?.nativeElement) this.fileUpload.nativeElement.value = '';
         this.selectedFile = null;
+        this.previewUrl.set(null);
         return;
       }
       this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => this.previewUrl.set(e.target?.result as string);
+      reader.readAsDataURL(file);
     }
+  }
+
+  getStatusLabel(status: string): string {
+    const map: Record<string, string> = {
+      'PENDIENTE': 'Pendiente',
+      'EN_PREPARACION': 'En Preparación',
+      'EN_TRANSITO': 'En Tránsito',
+      'LISTO_PARA_RECOJO': 'Listo para Recojo',
+      'ENTREGADO': 'Entregado',
+      'DEVUELTO': 'Devuelto',
+      'CANCELADO': 'Cancelado'
+    };
+    return map[status] || status;
   }
 
   ngOnChanges() {

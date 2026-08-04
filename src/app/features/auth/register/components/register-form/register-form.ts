@@ -16,8 +16,7 @@ import { AuthService } from '../../../../../core/domains/identity/services/auth.
     CommonModule, ReactiveFormsModule, RouterLink, ButtonComponent,
     InputTextModule, PasswordModule, CheckboxModule, AlertComponent
   ],
-  templateUrl: './register-form.html',
-  styleUrl: './register-form.css'
+  templateUrl: './register-form.html'
 })
 export class RegisterFormComponent {
   formData = input.required<any>();

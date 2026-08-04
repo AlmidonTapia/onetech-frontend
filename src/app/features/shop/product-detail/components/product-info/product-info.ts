@@ -1,4 +1,5 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { BadgeComponent } from '../../../../../shared/components/ui/badge/badge';
 import { StarRatingComponent } from '../../../../../shared/components/ui/star-rating/star-rating';
@@ -12,12 +13,12 @@ import { Product } from '../../../../../core/domains/catalog/models/product.mode
   selector: 'app-product-info',
   standalone: true,
   imports: [FormsModule, BadgeComponent, ButtonComponent, CurrencyPenPipe],
-  templateUrl: './product-info.html',
-  styleUrl: './product-info.css'
+  templateUrl: './product-info.html'
 })
 export class ProductInfoComponent {
   private cartStore = inject(CartStore);
   private alertService = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
 
   @Input() product!: Product;
 
@@ -70,16 +71,18 @@ export class ProductInfoComponent {
 
   addToCart() {
     this.adding.set(true);
-    this.cartStore.addItem({ idProduct: this.product.idProduct, quantity: this.qty() }).subscribe({
-      next: () => {
-        this.adding.set(false);
-      },
-      error: (err) => {
-        const errMsg = err.error?.message || this.content.alerts.errorTitle;
-        this.alertService.error(this.content.alerts.errorTitle, errMsg);
-        this.adding.set(false);
-      }
-    });
+    this.cartStore.addItem({ idProduct: this.product.idProduct, quantity: this.qty() })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.adding.set(false);
+        },
+        error: (err) => {
+          const errMsg = err.error?.message || this.content.alerts.errorTitle;
+          this.alertService.error(this.content.alerts.errorTitle, errMsg);
+          this.adding.set(false);
+        }
+      });
   }
 
   share(platform: 'whatsapp' | 'facebook' | 'copy') {

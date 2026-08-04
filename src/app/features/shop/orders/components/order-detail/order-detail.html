@@ -1,28 +1,28 @@
-<p-dialog [visible]="visible" [header]="t().orders.detail.headerPrefix + (order?.idOrder?.substring(0,8)?.toUpperCase() ?? '')"
+<p-dialog [visible]="visible" [header]="'Pedido #' + (order?.idOrder?.substring(0,8)?.toUpperCase() ?? '')"
   [modal]="true" [closable]="true" [draggable]="false" [style]="{ width: '600px' }" (onHide)="close()">
 
   @if (order) {
-  <div class="order-detail">
+  <div class="flex flex-col gap-6">
       <app-order-status 
           [order]="order" 
           [shipment]="shipment()" 
           [loadingShipment]="loadingShipment()" 
-          [content]="t().orders.detail">
+          [content]="{headerPrefix:'Pedido #',sections:{productsTitle:'Productos',infoTitle:'Información del pedido',shipmentTitle:'Seguimiento de envío'},totals:{subtotalLabel:'Subtotal',grandTotalLabel:'Total pagado',unitSuffix:' c/u'},labels:{client:'Cliente',orderId:'ID de orden',trackingNumber:'Código de seguimiento',estimatedArrival:'Fecha estimada de entrega',noShipment:'El envío se encuentra en preparación. El código de seguimiento estará disponible pronto.',loadingShipment:'Cargando información de envío...',discount:'Descuento',shipping:'Envío',expiresIn:'Vence en: ',pickupCode:'Código de Recojo'},actions:{closeLabel:'Cerrar'}}">
       </app-order-status>
 
       <app-order-items 
           [order]="order" 
-          [content]="t().orders.detail">
+          [content]="{headerPrefix:'Pedido #',sections:{productsTitle:'Productos',infoTitle:'Información del pedido',shipmentTitle:'Seguimiento de envío'},totals:{subtotalLabel:'Subtotal',grandTotalLabel:'Total pagado',unitSuffix:' c/u'},labels:{client:'Cliente',orderId:'ID de orden',trackingNumber:'Código de seguimiento',estimatedArrival:'Fecha estimada de entrega',noShipment:'El envío se encuentra en preparación. El código de seguimiento estará disponible pronto.',loadingShipment:'Cargando información de envío...',discount:'Descuento',shipping:'Envío',expiresIn:'Vence en: ',pickupCode:'Código de Recojo'},actions:{closeLabel:'Cerrar'}}">
       </app-order-items>
 
       <app-order-summary 
           [order]="order" 
-          [content]="t().orders.detail">
+          [content]="{headerPrefix:'Pedido #',sections:{productsTitle:'Productos',infoTitle:'Información del pedido',shipmentTitle:'Seguimiento de envío'},totals:{subtotalLabel:'Subtotal',grandTotalLabel:'Total pagado',unitSuffix:' c/u'},labels:{client:'Cliente',orderId:'ID de orden',trackingNumber:'Código de seguimiento',estimatedArrival:'Fecha estimada de entrega',noShipment:'El envío se encuentra en preparación. El código de seguimiento estará disponible pronto.',loadingShipment:'Cargando información de envío...',discount:'Descuento',shipping:'Envío',expiresIn:'Vence en: ',pickupCode:'Código de Recojo'},actions:{closeLabel:'Cerrar'}}">
       </app-order-summary>
   </div>
   }
 
   <ng-template pTemplate="footer">
-      <app-button variant="ghost" [label]="t().orders.detail.actions.closeLabel" (clicked)="close()" />
+      <app-button variant="ghost" label="Cerrar" (clicked)="close()" />
   </ng-template>
 </p-dialog>

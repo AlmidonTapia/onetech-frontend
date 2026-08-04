@@ -6,8 +6,7 @@ import { ButtonComponent } from '../button/button';
   selector: 'app-empty-state',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
-  templateUrl: './empty-state.html',
-  styleUrl: './empty-state.css'
+  templateUrl: './empty-state.html'
 })
 export class EmptyStateComponent {
   @Input() icon: string = 'pi-inbox';

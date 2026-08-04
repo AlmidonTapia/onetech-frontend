@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
@@ -8,23 +9,19 @@ import { ShipmentService } from '../../../core/domains/shipping/services/shipmen
 import { ShipmentMethod } from '../../../core/domains/shipping/models/shipment.model';
 import { ShipmentsMethodTableComponent } from './components/shipments-method-table/shipments-method-table';
 import { ShipmentMethodFormComponent } from './components/shipment-method-form/shipment-method-form';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-shipment-methods',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent,  ShipmentsMethodTableComponent, ShipmentMethodFormComponent],
-  templateUrl: './shipment-methods.html',
-  styleUrl: './shipment-methods.css'
+  templateUrl: './shipment-methods.html'
 })
 export class ShipmentMethodsComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   methods = signal<ShipmentMethod[]>([]);
   loading = signal(false);
   saving = signal(false);
@@ -34,41 +31,41 @@ export class ShipmentMethodsComponent implements OnInit {
 
   get statuses() {
     return [
-      { label: this.t().adminShipmentMethods.statuses.active, value: 'ACTIVO' },
-      { label: this.t().adminShipmentMethods.statuses.inactive, value: 'INACTIVO' }
+      { label: 'Activo', value: 'ACTIVO' },
+      { label: 'Inactivo', value: 'INACTIVO' }
     ];
   }
 
   get content() {
     return {
-      title: this.t().adminShipmentMethods.title,
-      badgeSuffix: this.t().adminShipmentMethods.badgeSuffix,
-      newBtnLabel: this.t().adminShipmentMethods.newBtnLabel,
+      title: 'Métodos de Envío',
+      badgeSuffix: ' métodos',
+      newBtnLabel: 'Nuevo Método',
       newBtnIcon: 'pi-plus',
       table: {
-        quickSearchTitle: this.t().adminShipmentMethods.table.quickSearchTitle,
-        searchPlaceholder: this.t().adminShipmentMethods.table.searchPlaceholder,
+        quickSearchTitle: 'Búsqueda Rápida',
+        searchPlaceholder: 'Buscar método...',
         headers: {
-          name: this.t().adminShipmentMethods.table.headers.name,
-          price: this.t().adminShipmentMethods.table.headers.price,
-          status: this.t().adminShipmentMethods.table.headers.status,
-          actions: this.t().adminShipmentMethods.table.headers.actions
+          name: 'Nombre del Método',
+          price: 'Precio Base',
+          status: 'Estado',
+          actions: 'Acciones'
         },
-        emptyMsg: this.t().adminShipmentMethods.table.emptyMsg
+        emptyMsg: 'No hay métodos de envío registrados.'
       },
       dialog: {
-        createTitle: this.t().adminShipmentMethods.dialog.createTitle,
-        editTitle: this.t().adminShipmentMethods.dialog.editTitle,
+        createTitle: 'Nuevo Método de Envío',
+        editTitle: 'Editar Método de Envío',
         fields: {
-          name: this.t().adminShipmentMethods.dialog.fields.name,
-          namePlaceholder: this.t().adminShipmentMethods.dialog.fields.namePlaceholder,
-          price: this.t().adminShipmentMethods.dialog.fields.price,
-          status: this.t().adminShipmentMethods.dialog.fields.status,
-          statusPlaceholder: this.t().adminShipmentMethods.dialog.fields.statusPlaceholder
+          name: 'Nombre del Método',
+          namePlaceholder: 'Ej: Express',
+          price: 'Precio Base (S/)',
+          status: 'Estado',
+          statusPlaceholder: 'Seleccione un estado'
         },
         actions: {
-          cancel: this.t().adminShipmentMethods.dialog.actions.cancel,
-          save: this.t().adminShipmentMethods.dialog.actions.save
+          cancel: 'Cancelar',
+          save: 'Guardar'
         }
       }
     };
@@ -91,7 +88,7 @@ export class ShipmentMethodsComponent implements OnInit {
 
   loadMethods() {
     this.loading.set(true);
-    this.shipmentService.getMethods(false, this.searchTerm()).subscribe({
+    this.shipmentService.getMethods(false, this.searchTerm()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => {
         this.methods.set(r);
         this.loading.set(false);
@@ -132,15 +129,15 @@ export class ShipmentMethodsComponent implements OnInit {
       ? this.shipmentService.updateMethod(currentMethod.idShipmentMethod, data)
       : this.shipmentService.createMethod(data);
 
-    req$.subscribe({
+    req$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminShipmentMethods.alerts.saveSuccess);
+        this.alertService.success('Método de envío guardado');
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadMethods();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminShipmentMethods.alerts.saveError);
+        this.alertService.error(err?.error?.message || 'Error al guardar método');
         this.saving.set(false);
       }
     });
@@ -148,18 +145,18 @@ export class ShipmentMethodsComponent implements OnInit {
 
   onDelete(m: ShipmentMethod) {
     this.modalService.open({
-      title: this.t().adminShipmentMethods.confirmDelete.title,
-      message: this.t().adminShipmentMethods.confirmDelete.message.replace('{name}', m.methodName),
+      title: '¿Eliminar método de envío?',
+      message: '¿Estás seguro de que deseas eliminar este método de envío?'.replace('{name}', m.methodName),
       severity: 'danger',
-      confirmLabel: this.t().adminShipmentMethods.confirmDelete.confirmLabel,
+      confirmLabel: 'Sí, eliminar',
       onConfirm: () => {
-        this.shipmentService.deleteMethod(m.idShipmentMethod).subscribe({
+        this.shipmentService.deleteMethod(m.idShipmentMethod).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
-            this.alertService.success(this.t().adminShipmentMethods.alerts.deleteSuccess);
+            this.alertService.success('Método de envío eliminado exitosamente');
             this.loadMethods();
           },
           error: (err: any) => {
-            this.alertService.error(err?.error?.message || this.t().adminShipmentMethods.alerts.deleteError);
+            this.alertService.error(err?.error?.message || 'Error al eliminar el método de envío');
           }
         });
       }

@@ -1,17 +1,17 @@
-<div class="detail-section">
-  <h4 class="section-title">{{ content().sections.productsTitle }}</h4>
-  <div class="detail-items">
+<div class="mb-8">
+  <h4 class="text-base font-bold text-slate-900 dark:text-slate-100 m-0 mb-4">{{ content().sections.productsTitle }}</h4>
+  <div class="flex flex-col gap-3">
       @for (item of order().details; track item.idOrderDetail) {
-      <div class="detail-item">
-          <div class="item-info">
-              <span class="item-name">{{ item.productName }}</span>
-              <span class="item-qty">× {{ item.quantity }}</span>
+      <div class="flex justify-between items-center py-3 px-4 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800">
+          <div class="flex flex-col gap-1">
+              <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ item.productName }}</span>
+              <span class="text-xs text-slate-500 dark:text-slate-400">× {{ item.quantity }}</span>
           </div>
-          <div class="item-prices">
-              <div class="item-unit-row">
-                  <span class="item-unit">{{ item.unitPrice | currencyPen }}{{ content().totals.unitSuffix }}</span>
+          <div class="flex flex-col items-end gap-1">
+              <div class="flex items-center">
+                  <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.unitPrice | currencyPen }}{{ content().totals.unitSuffix }}</span>
               </div>
-              <span class="item-subtotal">{{ item.subtotal | currencyPen }}</span>
+              <span class="text-[15px] font-bold text-slate-900 dark:text-slate-100">{{ item.subtotal | currencyPen }}</span>
           </div>
       </div>
       }

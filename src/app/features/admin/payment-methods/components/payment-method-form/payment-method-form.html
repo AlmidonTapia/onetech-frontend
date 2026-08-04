@@ -1,19 +1,19 @@
 <p-dialog [visible]="visible()" (visibleChange)="!$event && close()" [header]="isEditing() ? content().form.titleEdit : content().form.titleNew" [style]="{width: '400px'}" [modal]="true">
-  <form [formGroup]="formGroup()" (ngSubmit)="submit()" class="modal-form">
-    <div class="form-grid">
-      <div class="form-group">
-        <label>{{ content().form.labels.name }}</label>
-        <input type="text" formControlName="methodName" class="form-input" [placeholder]="content().form.placeholders.name" />
+  <form [formGroup]="formGroup()" (ngSubmit)="submit()" class="flex flex-col gap-6 py-2">
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-1.5">
+        <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-100">{{ content().form.labels.name }}</label>
+        <input type="text" formControlName="methodName" class="w-full h-[42px] border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 text-sm outline-none focus:border-blue-500 transition-colors" [placeholder]="content().form.placeholders.name" />
       </div>
-      <div class="form-group" *ngIf="isEditing()">
-        <label>{{ content().form.labels.status }}</label>
-        <select formControlName="status" class="form-select">
+      <div class="flex flex-col gap-1.5" *ngIf="isEditing()">
+        <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-100">{{ content().form.labels.status }}</label>
+        <select formControlName="status" class="w-full h-[42px] border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 text-sm outline-none focus:border-blue-500 transition-colors">
           <option value="ACTIVO">{{ content().form.statusOptions.active }}</option>
           <option value="INACTIVO">{{ content().form.statusOptions.inactive }}</option>
         </select>
       </div>
     </div>
-    <div class="modal-actions">
+    <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
       <app-button variant="outline" [label]="content().form.buttons.cancel" type="button" (clicked)="close()" />
       <app-button variant="primary" [label]="content().form.buttons.save" type="submit" [loading]="saving()" [disabled]="formGroup().invalid" />
     </div>

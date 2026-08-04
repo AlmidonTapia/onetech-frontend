@@ -6,14 +6,12 @@ import { TagModule } from 'primeng/tag';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-order-status-form',
   standalone: true,
   imports: [ReactiveFormsModule, DialogModule, SelectModule, TagModule, ButtonComponent, CurrencyPenPipe],
-  templateUrl: './order-status-form.html',
-  styleUrl: './order-status-form.css'
+  templateUrl: './order-status-form.html'
 })
 export class OrderStatusFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
@@ -24,28 +22,24 @@ export class OrderStatusFormComponent implements OnChanges {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<OrderStatus>();
   @Output() cancel = new EventEmitter<void>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   get content() {
     return {
       dialogWidth: '440px',
-      headerTitle: this.t().adminOrders.form.headerTitle,
+      headerTitle: 'Cambiar estado de orden',
       idPrefix: '#',
       labels: {
-        order: this.t().adminOrders.form.labels.order,
-        client: this.t().adminOrders.form.labels.client,
-        total: this.t().adminOrders.form.labels.total,
-        newStatus: this.t().adminOrders.form.labels.newStatus
+        order: 'Orden:',
+        client: 'Cliente:',
+        total: 'Total:',
+        newStatus: 'Nuevo estado *'
       },
-      placeholderSelect: this.t().adminOrders.form.placeholderSelect,
+      placeholderSelect: 'Seleccionar estado',
       styles: {
         selectWidth: '100%'
       },
       actions: {
-        cancelLabel: this.t().adminOrders.form.actions.cancelLabel,
-        saveLabel: this.t().adminOrders.form.actions.saveLabel,
+        cancelLabel: 'Cancelar',
+        saveLabel: 'Actualizar estado',
         saveIcon: 'pi-check'
       }
     };
@@ -55,11 +49,11 @@ export class OrderStatusFormComponent implements OnChanges {
 
   get statusOptions(): { label: string; value: OrderStatus }[] {
     return [
-      { label: this.t().orders.status.PENDIENTE, value: 'PENDIENTE' },
-      { label: this.t().orders.status.PAGADO, value: 'PAGADO' },
-      { label: this.t().orders.status.ENVIADO, value: 'ENVIADO' },
-      { label: this.t().orders.status.COMPLETADO, value: 'COMPLETADO' },
-      { label: this.t().orders.status.CANCELADO, value: 'CANCELADO' },
+      { label: 'Pendiente', value: 'PENDIENTE' },
+      { label: 'Pagado', value: 'PAGADO' },
+      { label: 'Enviado', value: 'ENVIADO' },
+      { label: 'Completado', value: 'COMPLETADO' },
+      { label: 'Cancelado', value: 'CANCELADO' },
     ];
   }
 

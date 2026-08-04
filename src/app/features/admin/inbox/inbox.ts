@@ -1,10 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ContactService } from '../../../core/domains/contact/services/contact.service';
 import { ContactMessage } from '../../../core/domains/contact/models/contact.model';
 import { InboxTableComponent } from './components/inbox-table/inbox-table';
 import { AlertService } from '../../../shared/services/alert.service';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-inbox',
@@ -14,10 +14,7 @@ import { TranslationService } from '../../../core/services/translation.service';
 })
 export class InboxComponent implements OnInit {
   private contactService = inject(ContactService);
-  private alertService = inject(AlertService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private alertService = inject(AlertService);  private destroyRef = inject(DestroyRef);
   messages = signal<ContactMessage[]>([]);
   totalRecords = signal<number>(0);
   loading = signal<boolean>(false);
@@ -25,42 +22,42 @@ export class InboxComponent implements OnInit {
 
   get content() {
     return {
-      title: this.t().adminInbox.title,
-      subtitle: this.t().adminInbox.subtitle,
-      badgeSuffix: this.t().adminInbox.badgeSuffix,
+      title: 'Bandeja de Entrada',
+      subtitle: 'Gestiona los mensajes de contacto',
+      badgeSuffix: ' mensajes',
       table: {
-        quickSearchTitle: this.t().adminInbox.table.quickSearchTitle,
-        searchPlaceholder: this.t().adminInbox.table.searchPlaceholder,
-        emptyMessage: this.t().adminInbox.table.emptyMessage,
+        quickSearchTitle: 'Búsqueda Rápida',
+        searchPlaceholder: 'Buscar mensaje...',
+        emptyMessage: 'No hay mensajes.',
         headers: {
-          date: this.t().adminInbox.table.headers.date,
-          name: this.t().adminInbox.table.headers.name,
-          email: this.t().adminInbox.table.headers.email,
-          subject: this.t().adminInbox.table.headers.subject,
-          status: this.t().adminInbox.table.headers.status,
-          actions: this.t().adminInbox.table.headers.actions
+          date: 'Fecha',
+          name: 'Nombre',
+          email: 'Email',
+          subject: 'Asunto',
+          status: 'Estado',
+          actions: 'Acciones'
         },
         statusLabels: {
-          unread: this.t().adminInbox.table.statusLabels.unread,
-          read: this.t().adminInbox.table.statusLabels.read,
-          replied: this.t().adminInbox.table.statusLabels.replied
+          unread: 'No Leído',
+          read: 'Leído',
+          replied: 'Respondido'
         },
         icons: {
-          view: this.t().adminInbox.table.icons.view,
-          reply: this.t().adminInbox.table.icons.reply,
-          delete: this.t().adminInbox.table.icons.delete
+          view: 'Ver',
+          reply: 'Responder',
+          delete: 'Eliminar'
         },
         actions: {
-          markRead: this.t().adminInbox.table.actions.markRead,
-          markUnread: this.t().adminInbox.table.actions.markUnread,
-          markReplied: this.t().adminInbox.table.actions.markReplied,
-          delete: this.t().adminInbox.table.actions.delete
+          markRead: 'Marcar como leído',
+          markUnread: 'Marcar como no leído',
+          markReplied: 'Marcar como respondido',
+          delete: 'Eliminar'
         },
         confirmDelete: {
-          title: this.t().adminInbox.table.confirmDelete.title,
-          message: this.t().adminInbox.table.confirmDelete.message,
-          acceptLabel: this.t().adminInbox.table.confirmDelete.acceptLabel,
-          rejectLabel: this.t().adminInbox.table.confirmDelete.rejectLabel
+          title: '¿Eliminar mensaje?',
+          message: 'El mensaje será eliminado permanentemente.',
+          acceptLabel: 'Sí, eliminar',
+          rejectLabel: 'Cancelar'
         }
       }
     };
@@ -76,14 +73,14 @@ export class InboxComponent implements OnInit {
     const size = event.rows;
     const search = event.globalFilter || '';
 
-    this.contactService.getAll(page, size, search).subscribe({
+    this.contactService.getAll(page, size, search).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response) => {
         this.messages.set(response.content);
         this.totalRecords.set(response.totalElements);
         this.loading.set(false);
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminInbox.alerts.loadError);
+        this.alertService.error(err?.error?.message || 'Error al cargar mensajes');
         this.loading.set(false);
       }
     });
@@ -94,24 +91,24 @@ export class InboxComponent implements OnInit {
   }
 
   onStatusChange(event: { id: string, status: 'UNREAD' | 'READ' | 'REPLIED' }) {
-    this.contactService.updateStatus(event.id, event.status).subscribe({
+    this.contactService.updateStatus(event.id, event.status).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.loadMessages({ first: 0, rows: 10 });
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminInbox.alerts.statusError);
+        this.alertService.error(err?.error?.message || 'Error al cambiar estado');
       }
     });
   }
 
   onDelete(id: string) {
-    this.contactService.deleteMessage(id).subscribe({
+    this.contactService.deleteMessage(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminInbox.alerts.deleteSuccess);
+        this.alertService.success('Mensaje eliminado');
         this.loadMessages({ first: 0, rows: 10 });
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminInbox.alerts.deleteError);
+        this.alertService.error(err?.error?.message || 'Error al eliminar');
       }
     });
   }

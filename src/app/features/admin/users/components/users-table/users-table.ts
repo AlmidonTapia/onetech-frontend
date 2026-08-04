@@ -9,14 +9,12 @@ import { User } from '../../../../../core/domains/identity/models/user.model';
 import { UserRole } from '../../../../../core/domains/identity/enums/user-role.enum';
 import { UserStatus } from '../../../../../core/domains/identity/enums/user-status.enum';
 import { inject } from '@angular/core';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-users-table',
   standalone: true,
   imports: [TableModule, TooltipModule, DatePipe, TitleCasePipe, InputTextModule, SelectModule, FormsModule],
-  templateUrl: './users-table.html',
-  styleUrl: './users-table.css'
+  templateUrl: './users-table.html'
 })
 export class UsersTableComponent {
   @Input() users: User[] = [];
@@ -24,26 +22,21 @@ export class UsersTableComponent {
   @Input() loading = false;
   @Output() lazyLoad = new EventEmitter<any>();
   @Output() search = new EventEmitter<string>();
-  @Output() filterChange = new EventEmitter<{ role: string, status: string }>();
 
-
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
+  @Output() filterChange = new EventEmitter<{role: string, status: string}>();
   get roleOptions() {
     return [
-      { label: this.t().adminUsers.table.roles.all, value: 'ALL' },
-      { label: this.t().adminUsers.table.roles.admin, value: UserRole.ADMIN },
-      { label: this.t().adminUsers.table.roles.client, value: UserRole.CLIENT }
+      { label: 'Todos los roles', value: 'ALL' },
+      { label: 'Admin', value: UserRole.ADMIN },
+      { label: 'Cliente', value: UserRole.CLIENT }
     ];
   }
 
   get statusOptions() {
     return [
-      { label: this.t().adminUsers.table.statuses.all, value: 'ALL' },
-      { label: this.t().adminUsers.table.statuses.enabled, value: UserStatus.HABILITADO },
-      { label: this.t().adminUsers.table.statuses.disabled, value: UserStatus.DESHABILITADO }
+      { label: 'Todos los estados', value: 'ALL' },
+      { label: 'Habilitado', value: UserStatus.HABILITADO },
+      { label: 'Deshabilitado', value: UserStatus.DESHABILITADO }
     ];
   }
 
@@ -69,17 +62,17 @@ export class UsersTableComponent {
   get content() {
     return {
       headers: {
-        fullName: this.t().adminUsers.table.headers.fullName,
-        email: this.t().adminUsers.table.headers.email,
-        role: this.t().adminUsers.table.headers.role,
-        status: this.t().adminUsers.table.headers.status,
-        phone: this.t().adminUsers.table.headers.phone,
-        regDate: this.t().adminUsers.table.headers.regDate
+        fullName: 'Nombre Completo',
+        email: 'Email',
+        role: 'Rol',
+        status: 'Estado',
+        phone: 'Teléfono',
+        regDate: 'Fecha Registro'
       },
-      quickSearchTitle: this.t().adminUsers.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminUsers.table.searchPlaceholder,
-      notRegisteredLabel: this.t().adminUsers.table.notRegisteredLabel,
-      emptyMessage: this.t().adminUsers.table.emptyMessage,
+      quickSearchTitle: 'Búsqueda Rápida',
+      searchPlaceholder: 'Nombre, email, DNI...',
+      notRegisteredLabel: 'No registrado',
+      emptyMessage: 'No hay usuarios registrados.',
       dateFormat: 'mediumDate'
     };
   }

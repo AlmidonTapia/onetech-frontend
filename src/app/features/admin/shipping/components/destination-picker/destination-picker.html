@@ -1,16 +1,16 @@
-<div class="dest-picker-section">
-  <label class="section-label">
-    <i class="pi pi-map-marker"></i> {{ t().adminShipping.destinationPicker.title }}
+<div class="my-2 p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+  <label class="flex items-center gap-1.5 text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1">
+    <i class="pi pi-map-marker text-blue-600 dark:text-blue-500"></i> Destinos de cobertura
   </label>
-  <p class="section-hint">{{ t().adminShipping.destinationPicker.hint }}</p>
+  <p class="text-[12.5px] text-slate-500 dark:text-slate-400 m-0 mb-3">Seleccione una ubicación y haga clic en "Agregar" para añadir destinos.</p>
 
-  <div class="dest-picker-row" style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center mb-3">
     <p-select [options]="departments()" 
               [ngModel]="pickerDepartment()" 
               (ngModelChange)="onPickerDepartmentChange($event)"
               [ngModelOptions]="{standalone: true}"
               optionLabel="name" optionValue="id" 
-              [placeholder]="t().adminShipping.destinationPicker.department" [showClear]="true" 
+              placeholder="Departamento" [showClear]="true" 
               styleClass="w-full"
               [filter]="true" filterPlaceholder="Buscar...">
     </p-select>
@@ -20,13 +20,13 @@
               (ngModelChange)="onPickerProvincesChange($event)"
               [ngModelOptions]="{standalone: true}"
               optionLabel="name" optionValue="id" 
-              [placeholder]="t().adminShipping.destinationPicker.provinces"
+              placeholder="Provincias (Múltiple)"
               styleClass="w-full"
               [disabled]="!pickerDepartment()"
               [maxSelectedLabels]="1"
               [filter]="false"
               [showHeader]="false"
-              [selectedItemsLabel]="t().adminShipping.destinationPicker.selected">
+              selectedItemsLabel="{0} seleccionados">
     </p-multiSelect>
 
     <p-multiSelect [options]="districts()" 
@@ -34,43 +34,43 @@
               (ngModelChange)="onPickerDistrictsChange($event)"
               [ngModelOptions]="{standalone: true}"
               optionLabel="name" optionValue="id" 
-              [placeholder]="t().adminShipping.destinationPicker.districts"
+              placeholder="Distritos (Múltiple)"
               styleClass="w-full"
               [disabled]="pickerProvinces().length !== 1"
               [maxSelectedLabels]="1"
               [filter]="false"
               [showHeader]="false"
-              [selectedItemsLabel]="t().adminShipping.destinationPicker.selected">
+              selectedItemsLabel="{0} seleccionados">
     </p-multiSelect>
   </div>
 
-  <div class="dest-picker-address-row" style="margin-top: 12px;">
+  <div class="mt-3">
     <input type="text" 
-           class="p-inputtext w-full"
+           class="w-full h-10 px-3 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm outline-none focus:border-blue-500 transition-colors"
            [ngModel]="pickerAddress()" 
            (ngModelChange)="pickerAddress.set($event)"
            [ngModelOptions]="{standalone: true}"
-           [placeholder]="t().adminShipping.destinationPicker.address" />
+           placeholder="Dirección del Local de la Agencia en este destino (Opcional)" />
   </div>
 
-  <div class="dest-picker-actions" style="margin-top: 12px;">
-    <app-button [label]="t().adminShipping.destinationPicker.addBtn" icon="pi pi-plus" size="sm" variant="accent" (clicked)="addDestination()"></app-button>
+  <div class="flex justify-end mt-3 sm:justify-end">
+    <app-button label="Agregar Destino" icon="pi pi-plus" size="sm" variant="accent" (clicked)="addDestination()" styleClass="w-full sm:w-auto"></app-button>
   </div>
 
-    <div class="dest-chips" *ngIf="destinations.length > 0" style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
-    <div class="dest-chip" *ngFor="let dest of destinations; let i = index" style="background: var(--ot-bg-body); border: 1px solid var(--ot-border-color); padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <i class="pi pi-map-marker" style="color: var(--p-primary-color, #6366f1);"></i>
-        <span style="font-size: 0.85rem; color: var(--ot-text-main);">{{ dest.label }}</span>
+  <div class="flex flex-col gap-2 mt-4" *ngIf="destinations.length > 0">
+    <div class="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg flex items-center justify-between animate-[chipIn_0.25s_ease-out]" *ngFor="let dest of destinations; let i = index">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-map-marker text-blue-600 dark:text-blue-500 text-xs opacity-70"></i>
+        <span class="text-[13.6px] text-slate-800 dark:text-slate-200">{{ dest.label }}</span>
       </div>
-      <button class="chip-remove" (click)="removeDestination(i)" [title]="t().adminShipping.destinationPicker.removeTooltip" style="background: none; border: none; color: var(--ot-text-muted); cursor: pointer; padding: 4px; border-radius: 4px;">
-        <i class="pi pi-times"></i>
+      <button class="bg-transparent border-none text-blue-600 dark:text-blue-400 p-1 rounded-full flex items-center justify-center cursor-pointer transition-colors ml-0.5 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/15 dark:hover:text-red-400" (click)="removeDestination(i)" title="Quitar">
+        <i class="pi pi-times text-[10px]"></i>
       </button>
     </div>
   </div>
 
-  <div class="dest-empty" *ngIf="destinations.length === 0" style="margin-top: 16px; display: flex; align-items: center; gap: 8px; color: var(--ot-text-muted); font-size: 0.85rem; background: var(--ot-bg-body); padding: 12px; border-radius: 8px; border: 1px dashed var(--ot-border-color);">
-    <i class="pi pi-info-circle"></i>
-    <span>{{ t().adminShipping.destinationPicker.emptyState }}</span>
+  <div class="flex items-center gap-2 mt-4 p-3 bg-slate-50 dark:bg-slate-800/50 border border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-500 dark:text-slate-400 text-[13.6px]" *ngIf="destinations.length === 0">
+    <i class="pi pi-info-circle text-blue-600 dark:text-blue-500 opacity-60 shrink-0"></i>
+    <span>No hay destinos agregados. Use los selectores de arriba para agregar zonas de cobertura.</span>
   </div>
 </div>

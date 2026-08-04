@@ -1,50 +1,56 @@
-<section class="hero">
-  <div class="container hero-inner">
-
-    <div class="hero-content">
-      <div class="hero-badge">
-        <i [class]="content.badgeIcon"></i> {{ content.badgeText }}
+<section class="relative overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 pt-[100px] pb-[120px] border-b border-white/5">
+  <div class="container grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10 lg:gap-16 items-center">
+    <div class="flex flex-col items-start z-10">
+      <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-sm font-semibold py-2 px-[18px] rounded-full mb-7 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-all duration-300 hover:bg-white/15 hover:-translate-y-0.5">
+        <i class="pi pi-bolt text-orange-400 text-base"></i> Descubre nuestros nuevos ingresos
       </div>
 
-      <h1 class="hero-title">
-        {{ content.titleNormal }}<br>
-        <span class="hero-accent">{{ content.titleAccent }}</span>
+      <h1 class="text-[clamp(40px,6vw,68px)] font-black leading-[1.05] text-white mb-6 tracking-tight shadow-black/20 text-shadow-sm">
+        La tecnología que <br>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500 dark:from-blue-300 dark:to-blue-400">necesitas</span>
       </h1>
 
-      <p class="hero-sub">
-        {{ content.subTextPre }}<strong>{{ content.freeShippingThreshold }}</strong>{{ content.subTextPost }}
+      <p class="text-lg text-white/80 leading-relaxed mb-10 max-w-[480px] font-normal">
+        Los mejores productos tecnológicos. Compra en línea con total seguridad.
       </p>
 
-      <div class="hero-actions">
-        <app-button variant="accent" size="lg" [label]="content.primaryBtn.label" [icon]="content.primaryBtn.icon"
-          iconPos="right" [routerLink]="content.primaryBtn.route" />
+      <div class="flex flex-wrap gap-4 mb-12">
+        <app-button variant="accent" size="lg" label="Explorar catálogo" icon="pi-arrow-right"
+          iconPos="right" routerLink="/catalog" />
 
-        <app-button variant="outline" size="lg" [label]="content.secondaryBtn.label"
-          [routerLink]="content.secondaryBtn.route" [queryParams]="content.secondaryBtn.queryParams" />
+        <app-button variant="outline" size="lg" label="Ver ofertas"
+          routerLink="/catalog" [queryParams]="{ category: 'ofertas' }" class="[&::ng-deep_.btn-outline]:!border-white/30 [&::ng-deep_.btn-outline]:!text-white [&::ng-deep_.btn-outline]:!bg-white/5 [&::ng-deep_.btn-outline]:backdrop-blur-md [&::ng-deep_.btn-outline:hover]:!bg-white/15" />
       </div>
 
-      <div class="hero-stats">
-        @for (stat of stats; track stat.label; let last = $last) {
-        <div class="hero-stat">
-          <strong>{{ stat.value }}</strong>
-          <span>{{ stat.label }}</span>
+      <div class="flex items-center gap-8">
+        <div class="flex flex-col">
+          <strong class="text-[28px] font-extrabold text-white leading-tight">Miles</strong>
+          <span class="text-[13px] text-white/60 mt-1 uppercase tracking-wider font-semibold">De productos</span>
         </div>
-        @if (!last) { <div class="hero-stat-sep"></div> }
-        }
+        <div class="w-px h-10 bg-white/15"></div>
+        <div class="flex flex-col">
+          <strong class="text-[28px] font-extrabold text-white leading-tight">Despacho</strong>
+          <span class="text-[13px] text-white/60 mt-1 uppercase tracking-wider font-semibold">Rápido y seguro</span>
+        </div>
+        <div class="w-px h-10 bg-white/15"></div>
+        <div class="flex flex-col">
+          <strong class="text-[28px] font-extrabold text-white leading-tight">Pagos</strong>
+          <span class="text-[13px] text-white/60 mt-1 uppercase tracking-wider font-semibold">100% confiables</span>
+        </div>
       </div>
     </div>
 
-    <div class="hero-visual">
-      <div class="hero-glow"></div>
-
-      <div class="hero-icon-grid">
+    <div class="hidden lg:flex relative items-center justify-center min-h-[400px]">
+      <div class="absolute w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(59,130,246,0.5)_0%,transparent_60%)] dark:bg-[radial-gradient(circle,rgba(96,165,250,0.3)_0%,transparent_60%)] rounded-full blur-[60px] z-0 animate-[pulse_6s_infinite_alternate_ease-in-out]"></div>
+      <div class="grid grid-cols-2 gap-6 relative z-10">
         @for (item of visualIcons; track $index) {
-        <div [class]="item.class">
+        <div class="bg-white/10 border border-white/15 rounded-2xl md:rounded-[24px] flex items-center justify-center text-white backdrop-blur-md shadow-[0_16px_40px_rgba(0,0,0,0.2)] transition-all duration-[400ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:-translate-y-3 hover:scale-[1.08] hover:text-blue-300 hover:border-blue-400/40 hover:shadow-[0_24px_48px_rgba(0,0,0,0.3)]"
+             [class.w-[140px]]="!item.class.includes('icon-bubble--sm')" [class.h-[140px]]="!item.class.includes('icon-bubble--sm')" [class.text-[56px]]="!item.class.includes('icon-bubble--sm')"
+             [class.w-[100px]]="item.class.includes('icon-bubble--sm')" [class.h-[100px]]="item.class.includes('icon-bubble--sm')" [class.text-[40px]]="item.class.includes('icon-bubble--sm')" [class.mt-5]="item.class.includes('icon-bubble--sm')">
           <i [class]="item.icon"></i>
         </div>
         }
       </div>
     </div>
-
   </div>
 </section>

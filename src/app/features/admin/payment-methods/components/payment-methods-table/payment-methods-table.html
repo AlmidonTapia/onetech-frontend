@@ -1,46 +1,46 @@
-<div class="table-container">
+<div class="px-6 pb-6">
   <p-table [value]="methods()" [loading]="loading()" styleClass="p-datatable-sm">
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content().table.quickSearchTitle }}</h5>
-            <span class="p-input-icon-left search-input-wrapper">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content().table.searchPlaceholder" class="filter-search-input"/>
+        <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+            <h5 class="m-0 text-lg font-semibold text-slate-800 dark:text-slate-100">{{ content().table.quickSearchTitle }}</h5>
+            <span class="p-input-icon-left relative w-64">
+                <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content().table.searchPlaceholder" class="w-full pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors"/>
             </span>
         </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ content().table.headers.name }}</th>
-        <th>{{ content().table.headers.status }}</th>
-        <th style="width: 120px; text-align: center;">{{ content().table.headers.actions }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content().table.headers.name }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content().table.headers.status }}</th>
+        <th class="w-[120px] bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 text-center">{{ content().table.headers.actions }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-method>
-      <tr>
-        <td><strong>{{ method.methodName }}</strong></td>
-        <td>
-          <span class="status-badge" [class.status-active]="method.status === 'ACTIVO'" [class.status-inactive]="method.status !== 'ACTIVO'">
+      <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+        <td class="py-3 text-slate-800 dark:text-slate-200"><strong class="font-semibold">{{ method.methodName }}</strong></td>
+        <td class="py-3">
+          <span class="px-2 py-1 rounded text-xs font-semibold inline-block" 
+                [class.bg-green-100]="method.status === 'ACTIVO'" [class.text-green-700]="method.status === 'ACTIVO'" [class.dark:bg-green-500/20]="method.status === 'ACTIVO'" [class.dark:text-green-500]="method.status === 'ACTIVO'"
+                [class.bg-red-100]="method.status !== 'ACTIVO'" [class.text-red-700]="method.status !== 'ACTIVO'" [class.dark:bg-red-500/20]="method.status !== 'ACTIVO'" [class.dark:text-red-500]="method.status !== 'ACTIVO'">
             {{ method.status || 'ACTIVO' }}
           </span>
         </td>
-        <td>
-          <div class="action-buttons">
-            <button class="btn-action btn-edit" (click)="edit(method)">
-              <i class="pi pi-pencil"></i>
-            </button>
-            <button class="btn-action btn-delete" (click)="remove(method)">
-              <i class="pi pi-trash"></i>
-            </button>
+        <td class="py-3 text-center">
+          <div class="flex justify-center gap-2">
+            <app-button styleClass="w-8 h-8 !p-0" icon="pi-pencil" (clicked)="edit(method)" variant="ghost" title="Editar"></app-button>
+            <app-button styleClass="w-8 h-8 !p-0" icon="pi-trash" (clicked)="remove(method)" variant="danger" title="Eliminar"></app-button>
           </div>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="3" class="table-empty-state">
-        <i class="pi pi-inbox table-empty-icon"></i>
-        <p class="table-empty-text">{{ content().emptyMessage }}</p>
+      <td colspan="3" class="text-center p-8 text-slate-500 dark:text-slate-400">
+        <div class="flex flex-col items-center justify-center gap-2">
+          <i class="pi pi-inbox text-4xl opacity-50"></i>
+          <p class="m-0 text-sm italic">{{ content().emptyMessage }}</p>
+        </div>
       </td>
     </tr>
   </ng-template>

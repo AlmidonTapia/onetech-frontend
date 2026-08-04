@@ -1,48 +1,48 @@
-<div class="search-form-wrapper">
-    <form class="navbar-search-form" (ngSubmit)="search()">
+<div class="relative w-full">
+    <form class="flex w-full h-11 rounded-full border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden transition-all duration-300 focus-within:border-blue-500 focus-within:shadow-[0_0_0_4px_#eff6ff,0_8px_16px_rgba(0,0,0,0.05)] dark:focus-within:shadow-[0_0_0_4px_rgba(77,136,255,0.15),0_8px_16px_rgba(0,0,0,0.3)]" (ngSubmit)="search()">
         <input 
             type="text" 
             [(ngModel)]="query" 
             name="query"
-            class="search-input" 
-            [placeholder]="t().navbar.search.placeholderText" 
-            [attr.aria-label]="t().navbar.search.ariaLabelInput"
+            class="flex-1 px-4.5 text-sm border-none outline-none text-slate-900 dark:text-slate-100 bg-transparent placeholder:text-slate-400" 
+            placeholder="Buscar laptops, monitores, componentes..." 
+            aria-label="Buscar productos"
             #searchInput
             autocomplete="off"
             (input)="onInput($event, searchOverlay, searchInput)"
         />
-        <button type="submit" class="search-btn" [attr.aria-label]="t().navbar.search.ariaLabelButton">
+        <button type="submit" class="flex items-center justify-center w-[52px] bg-orange-500 hover:bg-orange-600 text-white text-[17px] transition-all duration-300 shrink-0 border-none cursor-pointer" aria-label="Buscar">
             <i class="pi pi-search"></i>
         </button>
     </form>
 
-    <p-popover #searchOverlay styleClass="search-overlay-panel">
-        <div class="search-results-container">
+    <p-popover #searchOverlay styleClass="w-[calc(100vw-32px)] max-w-[500px] bg-white dark:bg-slate-800 rounded-xl shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15),0_8px_10px_-6px_rgba(0,0,0,0.1)] !p-0 border border-slate-200 dark:border-slate-700">
+        <div class="flex flex-col">
             @if (loading()) {
-                <div class="search-loading">
-                    <i class="pi pi-spin pi-spinner"></i>
-                    <span>{{ t().navbar.search.searching }}</span>
+                <div class="flex flex-col items-center justify-center p-8 text-slate-500 gap-2">
+                    <i class="pi pi-spin pi-spinner text-2xl text-blue-500"></i>
+                    <span>Buscando...</span>
                 </div>
             } @else if (results().length > 0) {
-                <div class="search-results-list">
+                <div class="flex flex-col">
                     @for (product of results(); track product.idProduct) {
-                        <div class="search-result-item" (click)="goToProduct(product.idProduct, searchOverlay)">
+                        <div class="flex items-center gap-4 p-4 cursor-pointer border-b border-slate-200 dark:border-slate-700 transition-colors duration-200 hover:bg-slate-50 dark:hover:bg-slate-900/50" (click)="goToProduct(product.idProduct, searchOverlay)">
                             <img [ngSrc]="product.images && product.images.length > 0 ? product.images[0].imageUrl : '/assets/images/placeholder.png'" 
-                                 width="40" height="40" [alt]="product.productName">
-                            <div class="result-details">
-                                <span class="result-name">{{ product.productName }}</span>
-                                <span class="result-price">{{ product.price | currencyPen }}</span>
+                                 width="40" height="40" [alt]="product.productName" class="rounded object-contain bg-white">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm text-slate-900 dark:text-slate-100 font-medium line-clamp-2">{{ product.productName }}</span>
+                                <span class="text-sm font-bold text-blue-600 dark:text-blue-400">{{ product.price | currencyPen }}</span>
                             </div>
                         </div>
                     }
                 </div>
-                <div class="search-view-all" (click)="search(); searchOverlay.hide()">
-                    {{ t().navbar.search.viewAllResults }} "{{ query }}"
+                <div class="p-4 text-center text-orange-500 font-semibold text-sm cursor-pointer bg-white dark:bg-slate-800 rounded-b-xl hover:underline hover:bg-slate-50 dark:hover:bg-slate-900/50" (click)="search(); searchOverlay.hide()">
+                    Ver todos los resultados para "{{ query }}"
                 </div>
             } @else if (query.trim()) {
-                <div class="search-empty">
-                    <i class="pi pi-search"></i>
-                    <p>{{ t().navbar.search.noResults }} "{{ query }}"</p>
+                <div class="flex flex-col items-center justify-center p-8 text-slate-500 gap-2">
+                    <i class="pi pi-search text-3xl text-slate-300 dark:text-slate-600"></i>
+                    <p class="m-0">No se encontraron resultados para "{{ query }}"</p>
                 </div>
             }
         </div>

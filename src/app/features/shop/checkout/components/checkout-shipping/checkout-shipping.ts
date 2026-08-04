@@ -1,30 +1,27 @@
-import { Component, Output, EventEmitter, inject, signal, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Output, EventEmitter, inject, signal, Input, OnChanges, SimpleChanges, DestroyRef } from '@angular/core';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 import { UbigeoService } from '../../../../../core/domains/shipping/services/ubigeo.service';
 import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/spinner';
-import { TranslationService } from '../../../../../core/services/translation.service';
+import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-checkout-shipping',
   standalone: true,
-  imports: [CurrencyPenPipe, SpinnerComponent],
-  templateUrl: './checkout-shipping.html',
-  styleUrl: './checkout-shipping.css'
+  imports: [CurrencyPenPipe, SpinnerComponent, CommonModule],
+  templateUrl: './checkout-shipping.html'
 })
 export class CheckoutShippingComponent implements OnChanges {
   @Input() ubigeoCode?: string;
   @Output() selected = new EventEmitter<ShipmentMethod | null>();
 
   private ubigeoService = inject(UbigeoService);
+  private destroyRef = inject(DestroyRef);
 
   methods = signal<ShipmentMethod[]>([]);
   selectedId = signal<string | null>(null);
   loading = signal(false);
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['ubigeoCode'] && this.ubigeoCode) {
       this.loadRates(this.ubigeoCode);
@@ -34,7 +31,7 @@ export class CheckoutShippingComponent implements OnChanges {
   loadRates(ubigeoCode: string) {
     this.loading.set(true);
     this.methods.set([]);
-    this.ubigeoService.getRates(ubigeoCode).subscribe(rates => {
+    this.ubigeoService.getRates(ubigeoCode).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(rates => {
       const availableRates = rates.filter(r => r.isAvailable);
       const mappedMethods: ShipmentMethod[] = availableRates.map(r => ({
         idShipmentMethod: r.idShipmentMethod,

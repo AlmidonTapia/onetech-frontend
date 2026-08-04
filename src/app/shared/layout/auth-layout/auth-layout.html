@@ -1,41 +1,45 @@
-<div class="auth-layout">
+<div class="min-h-screen grid grid-cols-1 md:grid-cols-2">
 
-  <div class="auth-brand">
-    <a routerLink="/" class="auth-back-btn" title="Volver a la tienda">
+  <div class="hidden md:flex flex-col items-center justify-center p-12 relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900">
+    <!-- Decoraciones de fondo -->
+    <div class="absolute rounded-full bg-white/5 w-[500px] h-[500px] -top-[150px] -right-[150px]"></div>
+    <div class="absolute rounded-full bg-white/5 w-[300px] h-[300px] -bottom-[80px] -left-[80px]"></div>
+
+    <a routerLink="/" class="absolute top-8 left-8 w-11 h-11 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white text-lg no-underline cursor-pointer transition-all duration-200 ease-in-out backdrop-blur-md z-10 hover:bg-white/20 hover:scale-105" title="Volver a la tienda">
       <i class="pi pi-arrow-left"></i>
     </a>
-    <div class="brand-inner animate-fade-scale">
-      <a [routerLink]="brandData.logoRoute || '/'" class="brand-logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
-        <img [src]="brandData.logoImage || '/icono_wbg_small.png'" alt="OneTech Logo" style="height: 48px; width: auto; object-fit: contain; flex-shrink: 0;">
-        <div style="line-height: 1;"><span class="logo-one">{{ brandData.logoText1 || 'One' }}</span><span class="logo-tech">{{ brandData.logoText2 || 'Tech' }}</span></div>
+    <div class="flex flex-col gap-10 max-w-[440px] relative z-10 animate-fade-scale">
+      <a [routerLink]="brandData.logoRoute || '/'" class="flex items-center gap-3 no-underline text-4xl font-extrabold tracking-tight">
+        <img [src]="brandData.logoImage || '/icono_wbg_small.png'" alt="OneTech Logo" class="h-12 w-auto object-contain shrink-0">
+        <div class="leading-none"><span class="text-white">{{ brandData.logoText1 || 'One' }}</span><span class="text-orange-500">{{ brandData.logoText2 || 'Tech' }}</span></div>
       </a>
 
       @if (brandData) {
-        <div class="brand-copy">
-          <h2>{{ brandData.title }}</h2>
-          <p>{{ brandData.description }}</p>
+        <div class="flex flex-col gap-3">
+          <h2 class="text-[32px] font-extrabold text-white leading-tight tracking-tight m-0">{{ brandData.title }}</h2>
+          <p class="text-base text-white/70 leading-relaxed m-0">{{ brandData.description }}</p>
         </div>
 
         @if (brandData.stats) {
-          <div class="brand-stats">
+          <div class="flex items-center gap-6 bg-white/5 rounded-3xl py-6 px-8 border border-white/10 backdrop-blur-md">
             @for (stat of brandData.stats; track stat.label; let last = $last) {
-            <div class="brand-stat">
-              <strong>{{ stat.value }}</strong>
-              <span>{{ stat.label }}</span>
+            <div class="flex flex-col items-center">
+              <strong class="text-2xl font-extrabold text-orange-500 leading-tight">{{ stat.value }}</strong>
+              <span class="text-[13px] text-white/60 text-center uppercase tracking-wider mt-1">{{ stat.label }}</span>
             </div>
-            @if (!last) { <div class="stat-divider"></div> }
+            @if (!last) { <div class="w-px h-10 bg-white/10"></div> }
             }
           </div>
         }
 
         @if (brandData.benefits) {
-          <ul class="brand-benefits">
+          <ul class="list-none p-0 flex flex-col gap-6 m-0">
             @for (benefit of brandData.benefits; track benefit.title) {
-              <li>
-                <div class="benefit-icon"><i [class]="benefit.icon"></i></div>
-                <div>
-                  <strong>{{ benefit.title }}</strong>
-                  <span>{{ benefit.desc }}</span>
+              <li class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-lg bg-white/10 shrink-0 flex items-center justify-center text-xl text-orange-500 backdrop-blur-md"><i [class]="benefit.icon"></i></div>
+                <div class="flex flex-col gap-1">
+                  <strong class="block text-[15px] font-semibold text-white">{{ benefit.title }}</strong>
+                  <span class="text-sm text-white/50 leading-snug block">{{ benefit.desc }}</span>
                 </div>
               </li>
             }
@@ -43,9 +47,9 @@
         }
 
         @if (brandData.perks) {
-          <ul class="brand-perks">
+          <ul class="list-none p-0 flex flex-col gap-3.5 m-0">
             @for (perk of brandData.perks; track perk) {
-            <li><i class="pi pi-check-circle"></i> {{ perk }}</li>
+            <li class="flex items-center gap-3 text-[15px] text-white/80"><i class="pi pi-check-circle text-orange-500 text-lg shrink-0"></i> {{ perk }}</li>
             }
           </ul>
         }
@@ -53,7 +57,7 @@
     </div>
   </div>
 
-  <div class="auth-form-panel">
+  <div class="flex items-center justify-center py-12 px-8 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
     <ng-content></ng-content>
   </div>
 

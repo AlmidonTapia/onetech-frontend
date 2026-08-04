@@ -6,14 +6,14 @@ import { NgClass } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { map, startWith } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslationService } from '../../../core/services/translation.service';
+
+import { ButtonComponent } from '../../components/ui/button/button';
 
 @Component({
   selector: 'app-admin-topbar',
   standalone: true,
-  imports: [ThemeToggleComponent, ReactiveFormsModule, NgClass],
-  templateUrl: './admin-topbar.html',
-  styleUrl: './admin-topbar.css'
+  imports: [ThemeToggleComponent, ReactiveFormsModule, NgClass, ButtonComponent],
+  templateUrl: './admin-topbar.html'
 })
 export class AdminTopbarComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
@@ -21,34 +21,31 @@ export class AdminTopbarComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private elementRef = inject(ElementRef);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   isDropdownOpen = signal(false);
   showSearchResults = signal(false);
 
   get modules() {
     return [
-      { label: this.t().adminLayout.navItems.dashboard, route: '/admin/dashboard', icon: 'pi-home' },
-      { label: this.t().adminLayout.navItems.products, route: '/admin/products', icon: 'pi-box' },
-      { label: this.t().adminLayout.navItems.categories, route: '/admin/categories', icon: 'pi-tags' },
-      { label: this.t().adminLayout.navItems.brands, route: '/admin/brands', icon: 'pi-star' },
-      { label: this.t().adminLayout.navItems.inventory, route: '/admin/inventory', icon: 'pi-server' },
-      { label: this.t().adminLayout.navItems.coupons, route: '/admin/coupons', icon: 'pi-ticket' },
-      { label: this.t().adminLayout.navItems.orders, route: '/admin/orders', icon: 'pi-shopping-bag' },
-      { label: this.t().adminLayout.navItems.shipments, route: '/admin/shipments', icon: 'pi-truck' },
-      { label: this.t().adminLayout.navItems.shipping, route: '/admin/shipping', icon: 'pi-compass' },
-      { label: this.t().adminLayout.navItems.paymentMethods, route: '/admin/payment-methods', icon: 'pi-credit-card' },
-      { label: this.t().adminLayout.navItems.users, route: '/admin/users', icon: 'pi-users' },
-      { label: this.t().adminLayout.navItems.reviews, route: '/admin/reviews', icon: 'pi-comments' },
-      { label: this.t().adminLayout.navItems.inbox, route: '/admin/inbox', icon: 'pi-inbox' }
+      { label: 'Dashboard', route: '/admin/dashboard', icon: 'pi-home' },
+      { label: 'Productos', route: '/admin/products', icon: 'pi-box' },
+      { label: 'Categorías', route: '/admin/categories', icon: 'pi-tags' },
+      { label: 'Marcas', route: '/admin/brands', icon: 'pi-star' },
+      { label: 'Inventario', route: '/admin/inventory', icon: 'pi-server' },
+      { label: 'Cupones', route: '/admin/coupons', icon: 'pi-ticket' },
+      { label: 'Órdenes', route: '/admin/orders', icon: 'pi-shopping-bag' },
+      { label: 'Envíos', route: '/admin/shipments', icon: 'pi-truck' },
+      { label: 'Logística / Envíos', route: '/admin/shipping', icon: 'pi-compass' },
+      { label: 'Métodos Pago', route: '/admin/payment-methods', icon: 'pi-credit-card' },
+      { label: 'Usuarios', route: '/admin/users', icon: 'pi-users' },
+      { label: 'Reseñas', route: '/admin/reviews', icon: 'pi-comments' },
+      { label: 'Bandeja Entrada', route: '/admin/inbox', icon: 'pi-inbox' }
     ];
   }
 
   get dropdownItems() {
     return [
-      { label: this.t().adminLayout.navItems.profile, icon: 'pi-user', route: '/admin/profile' },
-      { label: this.t().adminLayout.navItems.settings, icon: 'pi-cog', route: '/admin/settings' }
+      { label: 'Mi Perfil', icon: 'pi-user', route: '/admin/profile' },
+      { label: 'Configuración', icon: 'pi-cog', route: '/admin/settings' }
     ];
   }
 
@@ -68,7 +65,7 @@ export class AdminTopbarComponent {
   get userProfile() {
     const user = this.authService.currentUser();
     return {
-      name: user ? `${user.firstName} ${user.lastName}` : this.t().adminLayout.topbar.profileRole,
+      name: user ? `${user.firstName} ${user.lastName}` : 'Administrador',
       role: 'ADMIN',
       avatarInitials: user ? user.firstName[0].toUpperCase() : 'AD'
     };

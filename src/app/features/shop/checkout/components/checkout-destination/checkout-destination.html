@@ -1,38 +1,46 @@
-<div class="destination-section">
-  <div class="destination-header">
-    <div class="destination-title-area">
-      <h3>{{ t().checkout.destination.title }}</h3>
-      <p class="destination-subtitle">{{ t().checkout.destination.subtitle }}</p>
+<div class="flex flex-col gap-5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-[20px] p-8">
+  <div class="flex justify-between items-center gap-6">
+    <div class="flex flex-col gap-2">
+      <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">{{ content.title }}</h3>
+      <p class="text-[15px] text-slate-500 dark:text-slate-400 m-0 leading-relaxed">Selecciona tu ciudad para ver qué agencias de envío tenemos disponibles.</p>
     </div>
-    <div class="destination-icon-area">
-      <div class="icon-circle">
-        <i class="pi pi-map-marker"></i>
+    <div class="flex justify-center items-center">
+      <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center shadow-[0_4px_6px_-1px_rgba(59,130,246,0.1)]">
+        <i class="pi pi-map-marker text-[28px] text-blue-500"></i>
       </div>
     </div>
   </div>
+
+  <div class="flex items-start gap-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 px-5 rounded-lg -mt-2">
+    <i class="pi pi-check-circle text-green-500 text-2xl mt-0.5"></i>
+    <div>
+      <strong class="block text-[15px] text-slate-800 dark:text-slate-100 mb-1">Envíos a todo el país</strong>
+      <p class="text-sm text-slate-500 dark:text-slate-400 m-0 leading-relaxed">Realizamos envíos a los 24 departamentos del Perú mediante las principales agencias.</p>
+    </div>
+  </div>
   
-  <div class="destination-grid">
-    <div class="form-field">
-      <label>{{ t().checkout.destination.deptLabel }}</label>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ content.deptLabel }}</label>
       <p-select [ngModel]="selectedDepartment()" (ngModelChange)="onDepartmentChange($event)" 
         [options]="departments()" optionLabel="name" optionValue="id" 
-        [disabled]="loadingDepts()" [placeholder]="t().checkout.destination.deptPlaceholder"
+        [disabled]="loadingDepts()" placeholder="Selecciona una región"
         [style]="{ width: '100%' }" appendTo="body"></p-select>
     </div>
 
-    <div class="form-field">
-      <label>{{ t().checkout.destination.provLabel }}</label>
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ content.provLabel }}</label>
       <p-select [ngModel]="selectedProvince()" (ngModelChange)="onProvinceChange($event)" 
         [options]="provinces()" optionLabel="name" optionValue="id" 
-        [disabled]="loadingProvs() || !selectedDepartment()" [placeholder]="t().checkout.destination.provPlaceholder"
+        [disabled]="loadingProvs() || !selectedDepartment()" placeholder="Selecciona una provincia"
         [style]="{ width: '100%' }" appendTo="body"></p-select>
     </div>
 
-    <div class="form-field">
-      <label>{{ t().checkout.destination.distLabel }}</label>
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-semibold text-slate-800 dark:text-slate-100">{{ content.distLabel }}</label>
       <p-select [ngModel]="selectedDistrict()" (ngModelChange)="onDistrictChange($event)" 
         [options]="districts()" optionLabel="name" optionValue="id" 
-        [disabled]="loadingDists() || !selectedProvince()" [placeholder]="t().checkout.destination.distPlaceholder"
+        [disabled]="loadingDists() || !selectedProvince()" placeholder="Selecciona un distrito"
         [style]="{ width: '100%' }" appendTo="body"></p-select>
     </div>
   </div>

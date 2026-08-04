@@ -6,7 +6,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   standalone: true,
   imports: [ProgressSpinnerModule],
   templateUrl: './spinner.html',
-  styleUrl: './spinner.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpinnerComponent {

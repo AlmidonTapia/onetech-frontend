@@ -13,6 +13,8 @@ import { AddToCartModalComponent } from '../../components/ui/add-to-cart-modal/a
   imports: [RouterOutlet, ToastModule, NavbarComponent, FooterComponent, ModalComponent, AddToCartModalComponent],
   providers: [MessageService],
   templateUrl: './shop-layout.html',
-  styleUrl: './shop-layout.css'
+  host: {
+    'class': 'flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all duration-300'
+  }
 })
 export class ShopLayoutComponent { }

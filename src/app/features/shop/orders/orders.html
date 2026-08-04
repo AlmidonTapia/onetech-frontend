@@ -1,17 +1,17 @@
-<div class="orders-page">
+<div class="py-6 sm:py-10 pb-16 sm:pb-20">
     <div class="container">
 
         <app-breadcrumb [items]="breadcrumb" />
 
-        <div class="page-header">
-            <h1>{{ t().orders.title }}</h1>
-            <p class="page-sub">{{ t().orders.subtitle }}</p>
+        <div class="my-6 sm:my-10">
+            <h1 class="text-2xl sm:text-[32px] font-extrabold text-slate-900 dark:text-slate-100 tracking-tight m-0">Mis pedidos</h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-2 m-0">Historial completo de tus compras en OneTech.</p>
         </div>
 
         <app-orders-list [orders]="orders()" [loading]="loading()" (viewDetail)="openDetail($event)" />
 
         @if (totalRecords() > rows && !loading()) {
-        <div class="paginator-wrap">
+        <div class="flex justify-center mt-10">
             <p-paginator [rows]="rows" [totalRecords]="totalRecords()" [first]="page() * rows"
                 (onPageChange)="loadOrders($event)" />
         </div>

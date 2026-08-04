@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { Review } from '../../../../../core/domains/catalog/models/review.model';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-reviews-table',
   standalone: true,
-  imports: [TableModule, TagModule, ButtonModule, RatingModule, FormsModule, CommonModule, TooltipModule, InputTextModule, SelectModule],
+  imports: [TableModule, TagModule, ButtonModule, RatingModule, FormsModule, CommonModule, TooltipModule, InputTextModule, SelectModule, ButtonComponent],
   templateUrl: './reviews-table.html'
 })
 export class ReviewsTableComponent {

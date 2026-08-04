@@ -1,31 +1,31 @@
-<div class="table-toolbar" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: 12px; user-select: none; cursor: default;">
-      <h2 style="margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--ot-text-main);">{{ content.title }}</h2>
-      <span style="background: var(--ot-bg-surface); border: 1px solid var(--ot-border-color); color: var(--ot-text-muted); padding: 2px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;">
+<div class="flex justify-between items-center mb-4 flex-wrap gap-4">
+    <div class="flex items-center gap-3 select-none cursor-default">
+      <h2 class="m-0 text-lg font-semibold text-slate-800 dark:text-slate-100">{{ content.title }}</h2>
+      <span class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full text-xs font-semibold">
         {{ rates().length }} {{ content.title }}
       </span>
     </div>
-    <app-button variant="primary" [label]="content.newRateBtn" icon="pi pi-plus" (clicked)="openCreate()"></app-button>
+    <app-button variant="primary" [label]="content.newRateBtn" icon="pi-plus" (clicked)="openCreate()"></app-button>
 </div>
 
-  <p-table [value]="filteredRates()" [loading]="loading()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
+<p-table [value]="filteredRates()" [loading]="loading()" [paginator]="true" [rows]="10" styleClass="p-datatable-sm p-datatable-striped">
     
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearch }}</h5>
-            <div class="table-toolbar-filters" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <div class="flex flex-col gap-3 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+            <h5 class="text-lg font-semibold text-slate-800 dark:text-slate-100 m-0">{{ content.quickSearch }}</h5>
+            <div class="flex items-center gap-3 flex-wrap">
                 <p-select [options]="agencyFilterOptions()" 
                           [ngModel]="filterAgency()" 
                           (ngModelChange)="filterAgency.set($event)"
                           optionLabel="label" optionValue="value" 
                           [placeholder]="content.filter.agencyPlaceholder"
-                          styleClass="w-full" />
+                          styleClass="w-full sm:w-48" />
 
                 <p-select [options]="departmentFilterOptions()" 
                           [ngModel]="filterDepartment()" 
                           (ngModelChange)="onFilterDepartmentChange($event)"
                           optionLabel="label" optionValue="value" 
-                          styleClass="filter-dropdown"
+                          styleClass="w-full sm:w-48"
                           [filter]="true" filterPlaceholder="Buscar..." />
 
                 <p-select [options]="provinceFilterOptions()" 
@@ -33,22 +33,22 @@
                           (ngModelChange)="filterProvince.set($event)"
                           optionLabel="label" optionValue="value" 
                           [placeholder]="content.filter.provPlaceholder"
-                          styleClass="w-full"
+                          styleClass="w-full sm:w-48"
                           [disabled]="filterDepartment() === 'ALL'" />
 
                 <p-select [options]="availabilityFilterOptions" 
                           [ngModel]="filterAvailability()" 
                           (ngModelChange)="filterAvailability.set($event)"
                           optionLabel="label" optionValue="value" 
-                          styleClass="filter-dropdown" />
+                          styleClass="w-full sm:w-48" />
 
-                <span class="p-input-icon-left w-full">
-                    <i class="pi pi-search"></i>
+                <span class="p-input-icon-left relative w-full sm:w-64">
+                    <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                     <input pInputText type="text" 
                            [ngModel]="filterText()" 
                            (ngModelChange)="filterText.set($event)"
                            [placeholder]="content.searchPlaceholder" 
-                           class="p-inputtext w-full"/>
+                           class="pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors w-full"/>
                 </span>
             </div>
         </div>
@@ -56,33 +56,33 @@
 
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ content.columns.agency }}</th>
-        <th>{{ content.columns.destination }}</th>
-        <th>{{ content.columns.address }}</th>
-        <th>{{ content.columns.cost }}</th>
-        <th>{{ content.columns.status }}</th>
-        <th style="width: 100px; text-align: center;">{{ content.columns.actions }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.columns.agency }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.columns.destination }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.columns.address }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.columns.cost }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.columns.status }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 text-center w-[100px]">{{ content.columns.actions }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rate>
-      <tr>
-        <td>{{ rate.methodName }}</td>
-        <td>{{ getUbigeoDescription(rate) }}</td>
-        <td>
-          <span *ngIf="rate.agencyAddress; else noAddress">{{ rate.agencyAddress }}</span>
-          <ng-template #noAddress><span style="color: var(--ot-text-muted); opacity: 0.5;">—</span></ng-template>
+      <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+        <td class="py-3 text-slate-800 dark:text-slate-200 font-medium">{{ rate.methodName }}</td>
+        <td class="py-3 text-slate-600 dark:text-slate-300">{{ getUbigeoDescription(rate) }}</td>
+        <td class="py-3">
+          <span class="text-slate-600 dark:text-slate-300" *ngIf="rate.agencyAddress; else noAddress">{{ rate.agencyAddress }}</span>
+          <ng-template #noAddress><span class="text-slate-400 dark:text-slate-500 opacity-50">—</span></ng-template>
         </td>
-        <td>{{ rate.cost | currencyPen }}</td>
-        <td>
+        <td class="py-3 text-slate-600 dark:text-slate-300">{{ rate.cost | currencyPen }}</td>
+        <td class="py-3">
           <p-tag [severity]="rate.isAvailable ? 'success' : 'danger'" 
                  [value]="rate.isAvailable ? 'Disponible' : 'No Disponible'"></p-tag>
         </td>
-        <td style="text-align: center;">
-          <div class="row-actions">
-            <button class="act-btn" (click)="openEdit(rate)" title="Editar">
+        <td class="py-3 text-center">
+          <div class="flex justify-center items-center gap-1">
+            <button class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 transition-colors bg-transparent border-none cursor-pointer" (click)="openEdit(rate)" title="Editar">
               <i class="pi pi-pencil"></i>
             </button>
-            <button class="act-btn act-btn--danger" (click)="delete(rate)" title="Eliminar">
+            <button class="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-400 transition-colors bg-transparent border-none cursor-pointer" (click)="delete(rate)" title="Eliminar">
               <i class="pi pi-trash"></i>
             </button>
           </div>
@@ -91,71 +91,75 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="6" class="table-empty-state">
-        <i class="pi pi-inbox table-empty-icon"></i>
-        <p class="table-empty-text">{{ content.emptyTable }}</p>
+      <td colspan="6" class="text-center py-12">
+        <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+            <i class="pi pi-inbox text-4xl mb-3"></i>
+            <p class="text-sm m-0">{{ content.emptyTable }}</p>
+        </div>
       </td>
     </tr>
   </ng-template>
-  </p-table>
+</p-table>
 
 
 <p-dialog [(visible)]="showDialog" [header]="isEdit() ? content.modal.editTitle : content.modal.createTitle"
-          [modal]="true" styleClass="ot-dialog p-fluid" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }" [style]="{ width: '600px' }">
+          [modal]="true" styleClass="ot-dialog" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }" [style]="{ width: '600px' }">
   
-  <form [formGroup]="form" class="simple-form mt-4">
+  <form [formGroup]="form" class="flex flex-col gap-4 mt-4">
     
-    <div class="field mb-4">
-      <label class="font-semibold mb-2 block">{{ content.form.agencyLabel }}</label>
+    <div class="flex flex-col gap-1.5 mb-2">
+      <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-200">{{ content.form.agencyLabel }}</label>
       <p-select [options]="agencies()" formControlName="idShipmentMethod" optionLabel="methodName" optionValue="idShipmentMethod" [placeholder]="content.form.agencyPlaceholder" styleClass="w-full"></p-select>
-      <small class="text-red-500" *ngIf="form.get('idShipmentMethod')?.touched && form.get('idShipmentMethod')?.invalid">Requerido</small>
+      <small class="text-red-500 text-xs" *ngIf="form.get('idShipmentMethod')?.touched && form.get('idShipmentMethod')?.invalid">Requerido</small>
     </div>
 
     <ng-container *ngIf="isEdit()">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div class="field">
-          <label class="font-semibold mb-2 block">{{ content.form.departmentLabel }}</label>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-200">{{ content.form.departmentLabel }}</label>
           <p-select [options]="departments()" formControlName="idDepartment" optionLabel="name" optionValue="id" placeholder="Nacional" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
         </div>
-        <div class="field">
-          <label class="font-semibold mb-2 block">{{ content.form.provinceLabel }}</label>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-200">{{ content.form.provinceLabel }}</label>
           <p-select [options]="provinces()" formControlName="idProvince" optionLabel="name" optionValue="id" placeholder="Todos" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
         </div>
-        <div class="field">
-          <label class="font-semibold mb-2 block">{{ content.form.districtLabel }}</label>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-200">{{ content.form.districtLabel }}</label>
           <p-select [options]="districts()" formControlName="idDistrict" optionLabel="name" optionValue="id" placeholder="Todos" [showClear]="true" styleClass="w-full" [filter]="true" filterPlaceholder="Buscar..."></p-select>
         </div>
       </div>
-      <div class="field mb-4">
-        <label class="font-semibold mb-2 block">{{ content.form.addressLabel }}</label>
-        <input type="text" pInputText class="p-inputtext w-full" formControlName="agencyAddress" [placeholder]="content.form.addressPlaceholder" />
+      <div class="flex flex-col gap-1.5 mb-2">
+        <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-200">{{ content.form.addressLabel }}</label>
+        <input type="text" class="w-full h-10 px-3 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm outline-none focus:border-blue-500 transition-colors" formControlName="agencyAddress" [placeholder]="content.form.addressPlaceholder" />
       </div>
     </ng-container>
 
     <ng-container *ngIf="!isEdit()">
-      <app-destination-picker 
-        [destinations]="destinations()" 
-        (destinationsChange)="onDestinationsChange($event)">
-      </app-destination-picker>
+      <div class="mb-2">
+        <app-destination-picker 
+          [destinations]="destinations()" 
+          (destinationsChange)="onDestinationsChange($event)">
+        </app-destination-picker>
+      </div>
     </ng-container>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="field mb-4">
-        <label class="font-semibold mb-2 block">{{ content.form.costLabel }}</label>
+      <div class="flex flex-col gap-1.5 mb-2">
+        <label class="text-[13px] font-semibold text-slate-800 dark:text-slate-200">{{ content.form.costLabel }}</label>
         <p-inputNumber formControlName="cost" mode="currency" currency="PEN" [min]="0" styleClass="w-full" [showButtons]="true"></p-inputNumber>
       </div>
 
-      <div class="field mb-4 flex align-items-end pb-3">
-        <div class="flex align-items-center" style="gap: 8px;">
+      <div class="flex items-end pb-3 mb-2">
+        <div class="flex items-center gap-2">
           <p-checkbox formControlName="isAvailable" [binary]="true" inputId="available"></p-checkbox>
-          <label for="available" class="font-semibold mb-0" style="margin: 0; cursor: pointer;">{{ content.form.availableLabel }}</label>
+          <label for="available" class="m-0 cursor-pointer text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.form.availableLabel }}</label>
         </div>
       </div>
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <div class="flex justify-content-end gap-2">
+    <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
       <app-button variant="outline" [label]="content.modal.cancelBtn" (clicked)="showDialog.set(false)"></app-button>
       <app-button variant="primary" [label]="content.modal.saveBtn" [loading]="submitting()" (clicked)="save()"></app-button>
     </div>

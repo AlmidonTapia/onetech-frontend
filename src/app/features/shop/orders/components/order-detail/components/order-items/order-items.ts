@@ -7,8 +7,7 @@ import { CurrencyPenPipe } from '../../../../../../../shared/pipes/currency-pen.
   selector: 'app-order-items',
   standalone: true,
   imports: [CommonModule, CurrencyPenPipe],
-  templateUrl: './order-items.html',
-  styleUrl: './order-items.css'
+  templateUrl: './order-items.html'
 })
 export class OrderItemsComponent {
   order = input.required<Order>();

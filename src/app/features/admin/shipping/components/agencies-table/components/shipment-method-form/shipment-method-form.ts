@@ -9,8 +9,7 @@ import { ButtonComponent } from '../../../../../../../shared/components/ui/butto
   selector: 'app-shipment-method-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, DialogModule, SelectModule, ButtonComponent],
-  templateUrl: './shipment-method-form.html',
-  styleUrl: './shipment-method-form.css'
+  templateUrl: './shipment-method-form.html'
 })
 export class ShipmentMethodFormComponent {
   visible = input<boolean>(false);

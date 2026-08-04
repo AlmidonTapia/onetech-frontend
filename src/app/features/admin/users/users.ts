@@ -5,21 +5,16 @@ import { User } from '../../../core/domains/identity/models/user.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [UsersTableComponent],
-  templateUrl: './users.html',
-  styleUrl: './users.css'
+  templateUrl: './users.html'
 })
 export class UsersComponent implements OnInit {
   private userService = inject(UserService);
   private destroyRef = inject(DestroyRef);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   users = signal<User[]>([]);
   totalRecords = signal(0);
   loading = signal(false);
@@ -58,7 +53,7 @@ export class UsersComponent implements OnInit {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
 
-    this.userService.getAllUsers(page, this.apiConfig.pageSize, this.searchTerm(), this.filterRole(), this.filterStatus()).subscribe({
+    this.userService.getAllUsers(page, this.apiConfig.pageSize, this.searchTerm(), this.filterRole(), this.filterStatus()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => {
         this.users.set(r.content);
         this.totalRecords.set(r.totalElements);

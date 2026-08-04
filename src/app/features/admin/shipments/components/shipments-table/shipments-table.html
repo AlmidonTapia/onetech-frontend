@@ -3,50 +3,48 @@
     [styleClass]="tableConfig.styleClass">
 
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearchTitle || 'Búsqueda Rápida' }}</h5>
-            <span class="p-input-icon-left search-input-wrapper">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder || 'Tracking o ID...'" class="filter-search-input"/>
+        <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+            <h5 class="m-0 text-lg font-semibold text-slate-800 dark:text-slate-100">{{ content.quickSearchTitle || 'Búsqueda Rápida' }}</h5>
+            <span class="p-input-icon-left relative w-64">
+                <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder || 'Tracking o ID...'" class="w-full pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors"/>
             </span>
         </div>
     </ng-template>
 
     <ng-template pTemplate="header">
         <tr>
-            <th>{{ content.headers.orderId }}</th>
-            <th>{{ content.headers.method }}</th>
-            <th>{{ content.headers.tracking }}</th>
-            <th>{{ content.headers.cost }}</th>
-            <th>{{ content.headers.shippedAt }}</th>
-            <th>{{ content.headers.arrival }}</th>
-            <th>{{ content.headers.status }}</th>
-            <th [style.width]="tableConfig.actionsWidth">{{ content.headers.actions }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.orderId }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.method }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.tracking }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.cost }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.shippedAt }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.arrival }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.status }}</th>
+            <th class="w-[80px] bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-s>
-        <tr>
-            <td>
-                <span class="order-id">
+        <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <td class="py-3">
+                <span class="font-semibold font-mono text-slate-800 dark:text-slate-200">
                     {{ s.idOrder | slice: tableConfig.sliceStart : tableConfig.sliceEnd }}
                 </span>
             </td>
-            <td>{{ s.shipmentMethodName }}</td>
-            <td>{{ s.trackingNumber || '-' }}</td>
-            <td>{{ s.shippingCost | currency: tableConfig.currencyCode }}</td>
-            <td>{{ s.shippedAt ? (s.shippedAt | date: content.datetimeFormat) : '-' }}</td>
-            <td>{{ s.estimatedArrival | date: content.dateFormat }}</td>
-            <td>
-                <span class="status-badge" [class]="getStatusClass(s.status)">
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ s.shipmentMethodName }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ s.trackingNumber || '-' }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ s.shippingCost | currency: tableConfig.currencyCode }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ s.shippedAt ? (s.shippedAt | date: content.datetimeFormat) : '-' }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ s.estimatedArrival | date: content.dateFormat }}</td>
+            <td class="py-3">
+                <span class="px-2 py-1 rounded text-xs font-semibold inline-block" [class]="getStatusClass(s.status)">
                     {{ getStatusLabel(s.status) }}
                 </span>
             </td>
-            <td>
-                <div class="row-actions">
-                    <button class="act-btn" [pTooltip]="getActionTooltip(s.status)" (click)="onEdit.emit(s)">
-                        <i [class]="getActionIcon(s.status)"></i>
-                    </button>
+            <td class="py-3">
+                <div class="flex justify-center gap-2">
+                    <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 transition-colors bg-transparent border-none cursor-pointer" [pTooltip]="getActionTooltip(s.status)" (clicked)="onEdit.emit(s)" variant="ghost" [icon]="getActionIcon(s.status)"></app-button>
                 </div>
             </td>
         </tr>
@@ -54,9 +52,11 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
-                <i class="pi pi-inbox table-empty-icon"></i>
-                <p class="table-empty-text">{{ content.emptyMessage }}</p>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center p-8 text-slate-500 dark:text-slate-400">
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <i class="pi pi-inbox text-4xl opacity-50"></i>
+                  <p class="m-0 text-sm">{{ content.emptyMessage }}</p>
+                </div>
             </td>
         </tr>
     </ng-template>

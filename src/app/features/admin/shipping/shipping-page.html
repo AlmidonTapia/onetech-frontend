@@ -1,40 +1,39 @@
-<div class="page-container">
-  <div class="page-header">
+<div class="flex flex-col gap-6">
+  <div class="flex items-start justify-between gap-4 flex-wrap">
     <div>
-      <h1 class="page-title">{{ t().adminShipping.title }}</h1>
-      <p class="page-subtitle">{{ t().adminShipping.description }}</p>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Logística y Envíos</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">Gestiona las agencias de envío disponibles y configura las tarifas o cobertura por Ubigeo.</p>
     </div>
   </div>
 
   <p-tabs value="0">
     <p-tablist>
       <p-tab value="0">
-        <i class="pi pi-compass mr-2"></i> {{ t().adminShipping.tabs.agencies }}
+        <i class="pi pi-compass mr-2"></i> Agencias / Métodos
       </p-tab>
       <p-tab value="1">
-        <i class="pi pi-map mr-2"></i> {{ t().adminShipping.tabs.rates }}
+        <i class="pi pi-map mr-2"></i> Cobertura y Tarifas
       </p-tab>
       <p-tab value="2">
-        <i class="pi pi-map-marker mr-2"></i> {{ t().adminShipping.tabs.locations }}
+        <i class="pi pi-map-marker mr-2"></i> Ubicaciones
       </p-tab>
     </p-tablist>
     <p-tabpanels>
       <p-tabpanel value="0">
-        <div style="padding-top: 16px;">
+        <div class="pt-4">
           <app-agencies-table />
         </div>
       </p-tabpanel>
       <p-tabpanel value="1">
-        <div style="padding-top: 16px;">
+        <div class="pt-4">
           <app-rates-table />
         </div>
       </p-tabpanel>
       <p-tabpanel value="2">
-        <div style="padding-top: 16px;">
+        <div class="pt-4">
           <app-locations-table />
         </div>
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
 </div>
-

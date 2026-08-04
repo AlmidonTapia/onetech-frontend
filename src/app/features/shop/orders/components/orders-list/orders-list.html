@@ -1,70 +1,70 @@
-<div class="orders-container">
+<div class="block">
 
-    @if (loading) {
-    <div class="orders-grid">
-        @for (item of skeletonItems; track $index) {
-        <div class="order-card skeleton-card">
-            <div class="card-header skeleton-header">
-                <div class="skeleton-text skeleton-id"></div>
-                <div class="skeleton-badge"></div>
-            </div>
-            <div class="card-body skeleton-body">
-                <div class="skeleton-text skeleton-count"></div>
-                <div class="skeleton-text skeleton-price"></div>
-            </div>
-            <div class="card-footer skeleton-footer">
-                <div class="skeleton-button"></div>
-            </div>
-        </div>
-        }
-    </div>
-    }
+  @if (loading) {
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      @for (item of skeletonItems; track $index) {
+      <div class="flex flex-col gap-4 p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl md:rounded-[24px] shadow-sm animate-pulse pointer-events-none">
+          <div class="flex justify-between items-start gap-3">
+              <div class="w-[120px] h-[18px] bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+              <div class="w-20 h-6 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+          </div>
+          <div class="flex justify-between items-center p-3 sm:p-4 bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 rounded-lg">
+              <div class="w-[60px] h-[14px] bg-slate-200 dark:bg-slate-700 rounded"></div>
+              <div class="w-20 h-[18px] bg-slate-200 dark:bg-slate-700 rounded"></div>
+          </div>
+          <div class="mt-auto">
+              <div class="w-full h-10 bg-slate-200 dark:bg-slate-700 rounded-md"></div>
+          </div>
+      </div>
+      }
+  </div>
+  }
 
-    @else if (orders.length === 0) {
-    <div class="orders-empty animate-fade-in">
-        <i class="pi pi-box"></i>
-        <h3>{{ t().orders.list.emptyTitle }}</h3>
-        <p>{{ t().orders.list.emptyDescription }}</p>
-    </div>
-    }
+  @else if (orders.length === 0) {
+  <div class="flex flex-col items-center gap-4 py-20 px-6 text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl md:rounded-[24px] shadow-sm animate-fade-in">
+      <i class="pi pi-box text-5xl text-slate-400 dark:text-slate-500"></i>
+      <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0">No tienes pedidos aún</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 m-0">Historial de compras vacío. Explora la tienda para comenzar.</p>
+  </div>
+  }
 
-    @else {
-    <div class="orders-grid animate-fade-in">
-        @for (order of orders; track order.idOrder) {
-        <div class="order-card">
+  @else {
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 animate-fade-in">
+      @for (order of orders; track order.idOrder) {
+      <div class="flex flex-col gap-4 p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl md:rounded-[24px] shadow-sm transition-all duration-300 hover:border-blue-500 hover:shadow-md hover:-translate-y-0.5">
 
-            <div class="card-header">
-                <div class="header-info">
-                    <span class="order-id">
-                        {{ t().orders.list.orderPrefix }}{{ order.idOrder.substring(0, 8).toUpperCase() }}
-                    </span>
-                    <span class="order-date">
-                        {{ order.createdAt | date: 'dd/MM/yyyy' }}
-                    </span>
-                </div>
-                <app-badge [variant]="statusMap[order.orderStatus].variant" [dot]="true">
-                    {{ statusMap[order.orderStatus].label }}
-                </app-badge>
-            </div>
+          <div class="flex justify-between items-start gap-3">
+              <div class="flex flex-col gap-1">
+                  <span class="text-[15px] font-bold text-slate-900 dark:text-slate-100 font-mono">
+                      Pedido #{{ order.idOrder.substring(0, 8).toUpperCase() }}
+                  </span>
+                  <span class="text-xs text-slate-500 dark:text-slate-400">
+                      {{ order.createdAt | date: 'dd/MM/yyyy' }}
+                  </span>
+              </div>
+              <app-badge [variant]="statusMap[order.orderStatus].variant" [dot]="true">
+                  {{ statusMap[order.orderStatus].label }}
+              </app-badge>
+          </div>
 
-            <div class="card-body">
-                <span class="order-summary-text">
-                    {{ order.details.length }}
-                    {{ order.details.length === 1 ? t().orders.list.productSuffixSingular : t().orders.list.productSuffixPlural }}
-                </span>
-                <div class="order-price-block">
-                    <span class="price-amount">{{ order.totalAmount | currencyPen }}</span>
-                </div>
-            </div>
+          <div class="flex justify-between items-center p-3 sm:p-4 bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 rounded-lg">
+              <span class="text-[13px] font-semibold text-slate-500 dark:text-slate-400">
+                  {{ order.details.length }}
+                  {{ order.details.length === 1 ? 'producto' : 'productos' }}
+              </span>
+              <div class="flex flex-col items-end">
+                  <span class="text-base font-extrabold text-blue-600 dark:text-blue-400">{{ order.totalAmount | currencyPen }}</span>
+              </div>
+          </div>
 
-            <div class="card-footer">
-                <app-button variant="outline" [label]="t().orders.list.actionBtnLabel" icon="pi-eye"
-                    [fullWidth]="true" (clicked)="viewDetail.emit(order)" />
-            </div>
+          <div class="mt-auto">
+              <app-button variant="outline" label="Ver detalle" icon="pi-eye"
+                  [fullWidth]="true" (clicked)="viewDetail.emit(order)" class="[&::ng-deep_.btn-outline]:bg-white dark:[&::ng-deep_.btn-outline]:bg-slate-800" />
+          </div>
 
-        </div>
-        }
-    </div>
-    }
+      </div>
+      }
+  </div>
+  }
 
 </div>

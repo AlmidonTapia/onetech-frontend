@@ -10,14 +10,13 @@ import { Product } from '../../../../../core/domains/catalog/models/product.mode
 import { Category } from '../../../../../core/domains/catalog/models/category.model';
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 import { inject } from '@angular/core';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-products-table',
   standalone: true,
   imports: [TableModule, TooltipModule, BadgeComponent, CurrencyPenPipe, InputTextModule, SelectModule, FormsModule],
-  templateUrl: './products-table.html',
-  styleUrl: './products-table.css'
+  templateUrl: './products-table.html'
 })
 export class ProductsTableComponent {
   @Input() products: Product[] = [];
@@ -33,15 +32,11 @@ export class ProductsTableComponent {
   
   @Output() search = new EventEmitter<string>();
   @Output() filterChange = new EventEmitter<{ category: string, brand: string, status: string }>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   get statusOptions() {
     return [
-      { label: this.t().adminProducts.table.allStatuses, value: 'ALL' },
-      { label: this.t().adminProducts.table.status.active, value: 'ACTIVO' },
-      { label: this.t().adminProducts.table.status.inactive, value: 'INACTIVO' }
+      { label: 'Todos los estados', value: 'ALL' },
+      { label: 'Activo', value: 'ACTIVO' },
+      { label: 'Inactivo', value: 'INACTIVO' }
     ];
   }
 
@@ -51,14 +46,14 @@ export class ProductsTableComponent {
 
   get categoryOptions() {
     return [
-      { label: this.t().adminProducts.table.allCategories, idCategory: 'ALL' }, 
+      { label: 'Todas las categorías', idCategory: 'ALL' }, 
       ...this.categories.map(c => ({ label: c.categoryName, idCategory: c.idCategory }))
     ];
   }
 
   get brandOptions() {
     return [
-      { label: this.t().adminProducts.table.allBrands, idBrand: 'ALL' }, 
+      { label: 'Todas las marcas', idBrand: 'ALL' }, 
       ...this.brands.map(b => ({ label: b.brandName, idBrand: b.idBrand }))
     ];
   }
@@ -86,35 +81,35 @@ export class ProductsTableComponent {
 
   get content() {
     return {
-      quickSearchTitle: this.t().adminProducts.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminProducts.table.searchPlaceholder,
+      quickSearchTitle: 'Catálogo de Productos',
+      searchPlaceholder: 'Buscar producto...',
       headers: {
-        img: this.t().adminProducts.table.headers.img,
-        product: this.t().adminProducts.table.headers.product,
-        sku: this.t().adminProducts.table.headers.sku,
-        category: this.t().adminProducts.table.headers.category,
-        brand: this.t().adminProducts.table.headers.brand,
-        price: this.t().adminProducts.table.headers.price,
-        stock: this.t().adminProducts.table.headers.stock,
-        status: this.t().adminProducts.table.headers.status,
-        actions: this.t().adminProducts.table.headers.actions
+        img: 'Img',
+        product: 'Producto',
+        sku: 'SKU',
+        category: 'Categoría',
+        brand: 'Marca',
+        price: 'Precio',
+        stock: 'Stock',
+        status: 'Estado',
+        actions: 'Acciones'
       },
       tooltips: {
-        images: this.t().adminProducts.table.tooltips.images,
-        edit: this.t().adminProducts.table.tooltips.edit,
-        delete: this.t().adminProducts.table.tooltips.delete
+        images: 'Imágenes',
+        edit: 'Editar',
+        delete: 'Eliminar'
       },
-      emptyMessage: this.t().adminProducts.table.emptyMessage,
+      emptyMessage: 'No se encontraron productos.',
       icons: {
         images: 'pi pi-image',
         edit: 'pi pi-pencil',
         delete: 'pi pi-trash',
-        deleteLabel: this.t().adminProducts.table.deleteLabel
+        deleteLabel: 'Eliminar'
       },
       statusLabels: {
-        active: this.t().adminProducts.table.status.active,
-        inactive: this.t().adminProducts.table.status.inactive,
-        outOfStock: this.t().adminProducts.table.status.outOfStock
+        active: 'Activo',
+        inactive: 'Inactivo',
+        outOfStock: 'Agotado'
       }
     };
   }

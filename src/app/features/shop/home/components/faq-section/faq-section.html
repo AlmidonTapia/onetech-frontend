@@ -1,19 +1,23 @@
-<section class="faq-section">
+<section class="py-16 bg-slate-50 dark:bg-slate-900">
   <div class="container">
-    <div class="faq-header">
-      <h2 class="faq-title">Preguntas frecuentes</h2>
-      <p class="faq-sub">Todo lo que necesitas saber para comprar con confianza</p>
+    <div class="text-center mb-10">
+      <h2 class="text-[22px] md:text-[28px] font-extrabold text-slate-900 dark:text-slate-100 m-0 mb-2">Preguntas frecuentes</h2>
+      <p class="text-[15px] text-slate-500 dark:text-slate-400 m-0">Todo lo que necesitas saber para comprar con confianza</p>
     </div>
-    <div class="faq-list">
-      @for (item of faqItems; track item.question; let i = $index) {
-      <div class="faq-item" [class.faq-item--open]="openIndex === i">
-        <button class="faq-question" (click)="toggle(i)">
+    <div class="max-w-[760px] mx-auto flex flex-col gap-3">
+      @for (item of faqItems(); track item.question; let i = $index) {
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl md:rounded-[24px] overflow-hidden transition-all duration-300"
+           [ngClass]="{'border-blue-500 shadow-[0_0_0_3px_rgba(59,130,246,0.1)] dark:border-blue-400 dark:shadow-[0_0_0_3px_rgba(96,165,250,0.1)]': openIndex === i}">
+        <button class="w-full flex items-center justify-between gap-4 py-[18px] px-5 bg-transparent border-none cursor-pointer text-sm md:text-[15px] font-semibold text-slate-900 dark:text-slate-100 text-left transition-colors duration-300"
+                [ngClass]="{'text-blue-600 dark:text-blue-400': openIndex === i}"
+                (click)="toggle(i)">
           <span>{{ item.question }}</span>
-          <i class="pi" [class.pi-angle-down]="openIndex !== i" [class.pi-angle-up]="openIndex === i"></i>
+          <i class="pi text-sm shrink-0 text-slate-500 dark:text-slate-400 transition-transform duration-300" 
+             [class.pi-angle-down]="openIndex !== i" [class.pi-angle-up]="openIndex === i"></i>
         </button>
         @if (openIndex === i) {
-        <div class="faq-answer">
-          <p>{{ item.answer }}</p>
+        <div class="px-5 pb-[18px] animate-[fadeIn_0.2s_ease]">
+          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed m-0">{{ item.answer }}</p>
         </div>
         }
       </div>

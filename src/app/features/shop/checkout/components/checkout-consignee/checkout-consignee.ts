@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, signal, OnInit, effect, inject } from '@angular/core';
+import { Component, Output, EventEmitter, signal, OnInit, effect, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -14,14 +14,13 @@ export interface ConsigneeInfo {
   phone: string;
 }
 
-import { TranslationService } from '../../../../../core/services/translation.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-checkout-consignee',
   standalone: true,
   imports: [CommonModule, FormsModule, InputTextModule, ToggleSwitchModule, CheckboxModule],
-  templateUrl: './checkout-consignee.html',
-  styleUrl: './checkout-consignee.css'
+  templateUrl: './checkout-consignee.html'
 })
 export class CheckoutConsigneeComponent implements OnInit {
   @Output() selected = new EventEmitter<ConsigneeInfo | null>();
@@ -32,9 +31,18 @@ export class CheckoutConsigneeComponent implements OnInit {
   phone = signal('');
   acceptedPolicies = signal(false);
   private initialized = false;
-  
-  ts = inject(TranslationService);
-  t = this.ts.t;
+  private destroyRef = inject(DestroyRef);
+
+  content = {
+    title: 'Datos de Entrega',
+    subtitle: '¿Quién recibirá el pedido?',
+    selfLabel: 'Yo recibiré el pedido',
+    selfFillLabel: 'Mis datos',
+    othersLabel: 'Datos del receptor',
+    fullNameLabel: 'Nombre completo',
+    docNumberLabel: 'Número de documento',
+    phoneLabel: 'Celular'
+  };
 
   constructor(
     private authService: AuthService,
@@ -56,7 +64,7 @@ export class CheckoutConsigneeComponent implements OnInit {
     if (user) {
       this.fullName.set(user.firstName + ' ' + user.lastName);
       
-      this.userService.getProfile().subscribe({
+      this.userService.getProfile().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (profile) => {
           if (profile.documentNumber) this.docNumber.set(profile.documentNumber);
           if (profile.phone) this.phone.set(profile.phone);

@@ -3,14 +3,14 @@
     [styleClass]="tableConfig.styleClass" [tableStyle]="{ 'min-width': tableConfig.tableMinWidth }">
 
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
-            <div class="table-toolbar-filters">
+        <div class="flex items-center justify-between gap-4 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex-wrap">
+            <h5 class="text-lg font-semibold text-slate-800 dark:text-slate-100 m-0">{{ content.quickSearchTitle }}</h5>
+            <div class="flex items-center gap-3 flex-wrap">
                 <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onFilterStatus()"
-                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
-                <span class="p-input-icon-left search-input-wrapper">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+                    optionLabel="label" optionValue="value" styleClass="w-full sm:w-48" />
+                <span class="p-input-icon-left relative">
+                    <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors w-full sm:w-64"/>
                 </span>
             </div>
         </div>
@@ -18,39 +18,35 @@
 
         <ng-template pTemplate="header">
         <tr>
-            <th style="width:130px">{{ content.headers.orderId }}</th>
-            <th>{{ content.headers.client }}</th>
-            <th>{{ content.headers.date }}</th>
-            <th style="width:120px">{{ content.headers.total }}</th>
-            <th style="width:130px">{{ content.headers.status }}</th>
-            <th style="width:110px">{{ content.headers.actions }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3" style="width: 130px;">{{ content.headers.orderId }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.client }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.date }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3" style="width: 120px;">{{ content.headers.total }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3" style="width: 130px;">{{ content.headers.status }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3" style="width: 110px;">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
 
         <ng-template pTemplate="body" let-order>
-        <tr>
-            <td>
-                <code class="order-id">
+        <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <td class="py-3">
+                <code class="text-[12px] bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded text-slate-800 dark:text-slate-200 font-mono">
                     {{ content.idPrefix }}{{ order.idOrder.substring(0, 8) }}
                 </code>
             </td>
-            <td>{{ order.userFullName }}</td>
-            <td>{{ order.createdAt | date: content.dateFormat }}</td>
-            <td class="price">{{ order.totalAmount | currencyPen }}</td>
-            <td>
+            <td class="py-3 font-medium text-slate-800 dark:text-slate-200">{{ order.userFullName }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ order.createdAt | date: content.dateFormat }}</td>
+            <td class="py-3 font-semibold text-blue-600 dark:text-blue-400">{{ order.totalAmount | currencyPen }}</td>
+            <td class="py-3">
                                 <p-tag [value]="getStatusLabel(order.orderStatus)" [severity]="getStatusSeverity(order.orderStatus)" />
             </td>
-            <td>
-                <div class="row-actions">
-                                        <button class="act-btn" [pTooltip]="content.tooltips.viewDetail" (click)="viewDetail.emit(order)">
-                        <i [class]="content.icons.viewDetail"></i>
-                    </button>
-                                        <button class="act-btn" 
+            <td class="py-3">
+                <div class="flex items-center gap-1.5">
+                                        <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 transition-colors bg-transparent" [pTooltip]="content.tooltips.viewDetail" (clicked)="viewDetail.emit(order)" variant="ghost" icon="pi-eye"></app-button>
+                                        <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 transition-colors bg-transparent disabled:opacity-40 disabled:cursor-not-allowed" 
                         [pTooltip]="order.orderStatus !== 'PENDIENTE' ? content.tooltips.automatedStatus : content.tooltips.changeStatus"
                         [disabled]="order.orderStatus !== 'PENDIENTE'"
-                        (click)="changeStatus.emit(order)">
-                        <i [class]="content.icons.changeStatus"></i>
-                    </button>
+                        (clicked)="changeStatus.emit(order)" variant="ghost" icon="pi-sync"></app-button>
                 </div>
             </td>
         </tr>
@@ -58,9 +54,11 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
-                <i class="pi pi-inbox table-empty-icon"></i>
-                <p class="table-empty-text">{{ content.emptyMessage }}</p>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center py-12">
+                <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                    <i class="pi pi-inbox text-4xl mb-3"></i>
+                    <p class="text-sm m-0">{{ content.emptyMessage }}</p>
+                </div>
             </td>
         </tr>
     </ng-template>

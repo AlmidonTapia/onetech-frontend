@@ -1,14 +1,15 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ProductImage } from '../../../../../core/domains/catalog/models/product.model';
 
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
+
 @Component({
   selector: 'app-product-images',
   standalone: true,
-  imports: [CommonModule, DialogModule, NgOptimizedImage],
-  templateUrl: './product-images.html',
-  styleUrl: './product-images.css'
+  imports: [CommonModule, DialogModule, NgOptimizedImage, ButtonComponent],
+  templateUrl: './product-images.html'
 })
 export class ProductImagesComponent {
   @Input() set images(imgs: ProductImage[]) {
@@ -18,18 +19,11 @@ export class ProductImagesComponent {
   }
   get images() { return this._images; }
 
+  @Input() badge?: string;
+
   _images: ProductImage[] = [];
   active = signal<string | null>(null);
   zoomVisible = signal(false);
-
-  content = {
-    mainImageAlt: 'Imagen del producto',
-    thumbImageAlt: 'Vista del producto',
-    newBadge: 'NEW',
-    referentialLabel: 'IMAGEN REFERENCIAL',
-    zoomAriaLabel: 'Ampliar imagen',
-    zoomImageAlt: 'Zoom de producto'
-  };
 
   toggleZoom() {
     this.zoomVisible.set(!this.zoomVisible());

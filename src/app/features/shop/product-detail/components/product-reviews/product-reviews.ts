@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, Input, OnInit, inject, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, DecimalPipe, CommonModule } from '@angular/common';
 import { StarRatingComponent } from '../../../../../shared/components/ui/star-rating/star-rating';
@@ -14,13 +15,13 @@ import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/sp
   selector: 'app-product-reviews',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, StarRatingComponent, ButtonComponent, DatePipe, DecimalPipe, InputTextModule, SpinnerComponent],
-  templateUrl: './product-reviews.html',
-  styleUrl: './product-reviews.css'
+  templateUrl: './product-reviews.html'
 })
 export class ProductReviewsComponent implements OnInit {
   private reviewService = inject(ReviewService);
   private alertService = inject(AlertService);
   authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
   @Input() productId!: string;
 
@@ -86,10 +87,12 @@ export class ProductReviewsComponent implements OnInit {
 
   loadReviews() {
     this.loading.set(true);
-    this.reviewService.getByProduct(this.productId).subscribe({
-      next: r => { this.reviews.set(r.content); this.loading.set(false); },
-      error: () => this.loading.set(false),
-    });
+    this.reviewService.getByProduct(this.productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: r => { this.reviews.set(r.content); this.loading.set(false); },
+        error: () => this.loading.set(false),
+      });
   }
 
   onSubmit() {
@@ -103,21 +106,23 @@ export class ProductReviewsComponent implements OnInit {
       rating: this.newRating, 
       title: this.newTitle, 
       comment: this.newComment 
-    }).subscribe({
-      next: () => {
-        this.alertService.success(this.content.alerts.successMsg);
-        this.newRating = 0;
-        this.newTitle = '';
-        this.newComment = '';
-        this.showForm.set(false);
-        this.sending.set(false);
-        this.loadReviews();
-      },
-      error: (err) => {
-        const msg = err.error?.message || this.content.alerts.errorMsg;
-        this.alertService.error(msg);
-        this.sending.set(false);
-      }
-    });
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.alertService.success(this.content.alerts.successMsg);
+          this.newRating = 0;
+          this.newTitle = '';
+          this.newComment = '';
+          this.showForm.set(false);
+          this.sending.set(false);
+          this.loadReviews();
+        },
+        error: (err) => {
+          const msg = err.error?.message || this.content.alerts.errorMsg;
+          this.alertService.error(msg);
+          this.sending.set(false);
+        }
+      });
   }
 }

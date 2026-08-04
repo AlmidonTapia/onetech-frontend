@@ -1,14 +1,16 @@
-<div class="checkout-page">
-  <div class="container">
+<div class="py-8 pb-16">
+  <div class="container max-w-[1280px]">
 
-    <div class="checkout-stepper-container">
-      <div class="checkout-stepper">
+    <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:px-10 mb-8 shadow-sm transition-all duration-300">
+      <div class="flex items-center justify-between w-full relative">
         @for (step of steps; track step; let idx = $index) {
-          <div class="stepper-item" 
-               [class.stepper-item--active]="currentStep() === idx"
-               [class.stepper-item--completed]="currentStep() > idx">
-            
-            <div class="stepper-node">
+          <div class="flex items-center gap-3 z-10 relative">
+            <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all duration-300 shadow-sm"
+                 [ngClass]="{
+                   'border-blue-600 bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]': currentStep() === idx,
+                   'border-green-500 bg-green-500 text-white': currentStep() > idx,
+                   'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400': currentStep() < idx
+                 }">
               @if (currentStep() > idx) {
                 <i class="pi pi-check"></i>
               } @else {
@@ -16,20 +18,25 @@
               }
             </div>
             
-            <span class="stepper-label">{{ step }}</span>
+            <span class="text-sm font-semibold transition-all duration-300 hidden md:block"
+                  [ngClass]="{
+                    'text-blue-600': currentStep() === idx,
+                    'text-green-500': currentStep() > idx,
+                    'text-slate-400': currentStep() < idx
+                  }">{{ step }}</span>
           </div>
 
           @if (idx < steps.length - 1) {
-            <div class="stepper-line" 
-                 [class.stepper-line--completed]="currentStep() > idx">
+            <div class="flex-1 h-[3px] mx-2 md:mx-4 rounded-full relative z-0 overflow-hidden transition-all duration-300"
+                 [ngClass]="currentStep() > idx ? 'bg-green-500' : 'bg-slate-200 dark:bg-slate-700'">
             </div>
           }
         }
       </div>
     </div>
 
-    <div class="checkout-layout">
-      <div class="checkout-main">
+    <div class="flex flex-col lg:grid lg:grid-cols-[1fr_380px] gap-8 lg:gap-12 items-start">
+      <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-12 shadow-sm min-w-0 w-full">
         @if (currentStep() === 0) {
         <app-checkout-destination (selected)="onUbigeoSelected($event)" />
         }
@@ -49,48 +56,49 @@
         }
         @if (currentStep() === 4) {
           @if (selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
-            <div class="payment-step-info">
-              <h3><i class="pi pi-shield"></i> {{ t().checkout.securePayment.title }}</h3>
-              <div class="secure-alert">
-                <i class="pi pi-exclamation-circle"></i>
-                <p>{{ t().checkout.securePayment.description }}<strong>{{ finalTotal | currencyPen }}</strong>.</p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3 flex items-center gap-2"><i class="pi pi-shield text-green-500"></i> Pago Seguro con MercadoPago</h3>
+              <div class="flex items-start gap-3 bg-green-500/10 border border-green-500/25 p-3.5 rounded-xl mt-1">
+                <i class="pi pi-exclamation-circle text-green-500 text-xl mt-0.5"></i>
+                <p class="text-[0.95rem] text-slate-500 dark:text-slate-400 leading-relaxed m-0">Tu información de pago está cifrada de extremo a extremo. Ingresa los datos de tu tarjeta para procesar el cargo de <strong class="text-slate-800 dark:text-slate-100 font-bold">{{ finalTotal | currencyPen }}</strong>.</p>
               </div>
             </div>
             
-            <div class="mp-brick-wrapper">
-              <div class="mp-brick-header">
-                <i class="pi pi-credit-card"></i>
-                <span>{{ t().checkout.securePayment.header }}</span>
+            <div class="mt-4 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900">
+              <div class="flex items-center gap-2 px-5 py-3.5 bg-gradient-to-br from-blue-600 to-blue-700 text-white text-sm font-semibold">
+                <i class="pi pi-credit-card text-base"></i>
+                <span>Ingresa los datos de tu tarjeta</span>
               </div>
-              <div id="paymentBrick_container"></div>
+              <div id="paymentBrick_container" class="min-h-[200px]"></div>
             </div>
           } @else {
-            <div class="confirm-review">
-              <div class="confirm-icon">
-                <i class="pi pi-check-circle"></i>
+            <div class="text-center py-12 px-6">
+              <div class="mb-4">
+                <i class="pi pi-check-circle text-[3.5rem] text-green-500 animate-pulse"></i>
               </div>
-              <h3>{{ t().checkout.confirmReview.title }}</h3>
-              <p>{{ t().checkout.confirmReview.descriptionPre }} <strong>{{ t().checkout.buttons.confirmAndPay }}</strong>{{ t().checkout.confirmReview.descriptionPost }}</p>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 my-4">Revisa tu pedido antes de confirmar</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">Verifica los datos en el panel derecho. Si todo está correcto, haz clic en <strong class="font-bold">Confirmar y Pagar</strong>.</p>
             </div>
           }
         }
 
-        <div class="checkout-actions">
+        <div class="flex flex-col sm:flex-row justify-between items-center sm:items-stretch mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 gap-3 flex-wrap">
           @if (currentStep() > 0) {
-          <app-button variant="outline" [label]="t().checkout.buttons.back" (clicked)="prevStep()" />
+          <app-button variant="outline" label="Atrás" (clicked)="prevStep()" class="w-full sm:w-auto" />
           }
 
           @if (currentStep() < 4) {
-            <app-button variant="primary" [label]="t().checkout.buttons.continue" [disabled]="!canGoNext()" (clicked)="nextStep()" />
+            <app-button variant="primary" label="Continuar" [disabled]="!canGoNext()" (clicked)="nextStep()" class="w-full sm:w-auto sm:ml-auto" />
           } @else {
             @if (!selectedPayMethod()?.methodName?.toLowerCase()?.includes('mercado')) {
-              <app-button variant="accent" [label]="t().checkout.buttons.confirmAndPay" [loading]="placing()" (clicked)="placeOrder()" />
+              <app-button variant="accent" label="Confirmar y Pagar" [loading]="placing()" (clicked)="placeOrder()" class="w-full sm:w-auto sm:ml-auto" />
             }
           }
         </div>
       </div>
 
-      <div class="checkout-aside">
+      <div class="w-full">
         <app-checkout-aside 
           [cart]="cartStore.cart()" 
           [itemCount]="cartStore.itemCount()"
@@ -104,7 +112,7 @@
           [finalTotal]="finalTotal">
         </app-checkout-aside>
 
+      </div>
     </div>
   </div>
-</div>
 </div>

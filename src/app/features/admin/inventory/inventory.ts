@@ -1,10 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { InventoryTableComponent } from './components/inventory-table/inventory-table';
 import { MovementFormComponent } from './components/movement-form/movement-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { TranslationService } from '../../../core/services/translation.service';
 import { InventoryService } from '../../../core/domains/inventory/services/inventory.service';
 import { InventoryMovement, CreateInventoryMovementRequest } from '../../../core/domains/inventory/models/inventory.model';
 import { handleFormError } from '../../../shared/utils/form-error.util';
@@ -14,16 +14,13 @@ import { ViewChild } from '@angular/core';
   selector: 'app-inventory',
   standalone: true,
   imports: [InventoryTableComponent, MovementFormComponent, ButtonComponent],
-  templateUrl: './inventory.html',
-  styleUrl: './inventory.css'
+  templateUrl: './inventory.html'
 })
 export class InventoryComponent implements OnInit {
   private inventoryService = inject(InventoryService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @ViewChild(MovementFormComponent) movementForm!: MovementFormComponent;
 
   movements = signal<InventoryMovement[]>([]);
@@ -55,7 +52,7 @@ export class InventoryComponent implements OnInit {
   loadMovements(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.inventoryService.getAll(page, this.apiConfig.pageSize, this.searchTerm(), this.filterType()).subscribe({
+    this.inventoryService.getAll(page, this.apiConfig.pageSize, this.searchTerm(), this.filterType()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => {
         this.movements.set(r.content);
         this.totalRecords.set(r.totalElements);
@@ -67,16 +64,16 @@ export class InventoryComponent implements OnInit {
 
   onSave(data: CreateInventoryMovementRequest) {
     this.saving.set(true);
-    this.inventoryService.register(data).subscribe({
+    this.inventoryService.register(data).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminInventory.alerts.success);
+        this.alertService.success('Movimiento registrado correctamente');
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadMovements();
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.movementForm.form) || undefined;
-        this.alertService.error(this.t().adminInventory.alerts.error, errorMsg);
+        this.alertService.error('Error al registrar movimiento', errorMsg);
         this.saving.set(false);
       }
     });
@@ -84,19 +81,19 @@ export class InventoryComponent implements OnInit {
 
   onCancel(id: string) {
     this.modalService.open({
-      title: this.t().adminInventory.confirmModal.title,
-      message: this.t().adminInventory.confirmModal.message,
+      title: '¿Anular movimiento?',
+      message: 'Esta acción anulará el movimiento seleccionado y revertirá el stock afectado del producto de forma permanente.',
       severity: 'danger',
-      confirmLabel: this.t().adminInventory.confirmModal.confirmLabel,
+      confirmLabel: 'Sí, anular',
       onConfirm: () => {
         this.loading.set(true);
-        this.inventoryService.cancel(id).subscribe({
+        this.inventoryService.cancel(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
-            this.alertService.success(this.t().adminInventory.alerts.cancelSuccess);
+            this.alertService.success('Movimiento de inventario anulado correctamente');
             this.loadMovements();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || this.t().adminInventory.alerts.cancelError;
+            const errMsg = err?.error?.message || 'Error al anular el movimiento de inventario';
             this.alertService.error(errMsg);
             this.loading.set(false);
           }

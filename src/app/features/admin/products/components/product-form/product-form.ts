@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, OnInit, DestroyRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
@@ -12,26 +14,22 @@ import { Category } from '../../../../../core/domains/catalog/models/category.mo
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
 import { BrandService } from '../../../../../core/domains/catalog/services/brand.service';
-import { TranslationService } from '../../../../../core/services/translation.service';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
   imports: [
-    ReactiveFormsModule, FormsModule, DialogModule, InputTextModule,
+    ReactiveFormsModule, FormsModule, DialogModule, InputTextModule, TooltipModule,
     TextareaModule, SelectModule, InputNumberModule, ButtonComponent, DatePipe
   ],
-  templateUrl: './product-form.html',
-  styleUrl: './product-form.css'
+  templateUrl: './product-form.html'
 })
 export class ProductFormComponent implements OnChanges, OnInit {
   private fb = inject(FormBuilder);
   private categoryService = inject(CategoryService);
   private brandService = inject(BrandService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @Input() visible = false;
   @Input() product: Product | null = null;
   @Input() saving = false;
@@ -46,31 +44,31 @@ export class ProductFormComponent implements OnChanges, OnInit {
   get content() {
     return {
       dialogWidth: '600px',
-      titleNew: this.t().adminProducts.form.titleNew,
-      titleEdit: this.t().adminProducts.form.titleEdit,
-      errorRequired: this.t().adminProducts.form.errorRequired,
-      metaLabel: this.t().adminProducts.form.metaLabel,
+      titleNew: 'Nuevo Producto',
+      titleEdit: 'Editar Producto',
+      errorRequired: 'Campo requerido',
+      metaLabel: 'Última modificación:',
       styles: {
         selectWidth: '100%',
         appendTo: 'body'
       },
       actions: {
-        cancelLabel: this.t().adminProducts.form.cancelLabel,
-        saveLabel: this.t().adminProducts.form.saveLabel,
+        cancelLabel: 'Cancelar',
+        saveLabel: 'Guardar',
         saveIcon: 'pi-check'
       },
       specs: {
-        title: this.t().adminProducts.form.specs.title,
-        addLabel: this.t().adminProducts.form.specs.addLabel,
+        title: 'Especificaciones Técnicas',
+        addLabel: 'Añadir Propiedad',
         addIcon: 'pi-plus',
-        keyPlaceholder: this.t().adminProducts.form.specs.keyPlaceholder,
-        valuePlaceholder: this.t().adminProducts.form.specs.valuePlaceholder,
-        deleteTitle: this.t().adminProducts.form.specs.deleteTitle,
-        emptyMessage: this.t().adminProducts.form.specs.emptyMessage
+        keyPlaceholder: 'Propiedad (Ej: RAM, Procesador)',
+        valuePlaceholder: 'Valor (Ej: 16GB, Intel i7)',
+        deleteTitle: 'Eliminar propiedad',
+        emptyMessage: 'No hay especificaciones añadidas para este producto.'
       },
       imagesInfo: {
-        newProductMsg: this.t().adminProducts.form.imagesInfo.newProductMsg,
-        manageBtnLabel: this.t().adminProducts.form.imagesInfo.manageBtnLabel,
+        newProductMsg: 'Podrá subir imágenes una vez que guarde el producto por primera vez.',
+        manageBtnLabel: 'Gestionar Imágenes',
         manageBtnIcon: 'pi pi-images'
       }
     };
@@ -78,42 +76,42 @@ export class ProductFormComponent implements OnChanges, OnInit {
 
   get statuses() {
     return [
-      { label: this.t().adminProducts.table.status.active, value: 'ACTIVO' },
-      { label: this.t().adminProducts.table.status.inactive, value: 'INACTIVO' },
-      { label: this.t().adminProducts.table.status.outOfStock, value: 'AGOTADO' }
+      { label: 'Activo', value: 'ACTIVO' },
+      { label: 'Inactivo', value: 'INACTIVO' },
+      { label: 'Agotado', value: 'AGOTADO' }
     ];
   }
 
   get badges() {
     return [
-      { label: this.t().adminProducts.form.badges.none, value: null },
-      { label: this.t().adminProducts.form.badges.new, value: 'NEW' },
-      { label: this.t().adminProducts.form.badges.bestseller, value: 'BESTSELLER' },
-      { label: this.t().adminProducts.form.badges.offer, value: 'OFFER' }
+      { label: 'Ninguno', value: null },
+      { label: 'Nuevo', value: 'NEW' },
+      { label: 'Más vendido', value: 'BESTSELLER' },
+      { label: 'Oferta', value: 'OFFER' }
     ];
   }
 
   get formConfig(): any[] {
     return [
       [
-        { name: 'productName', label: this.t().adminProducts.form.fields.name, type: 'text', placeholder: this.t().adminProducts.form.fields.namePlaceholder },
-        { name: 'sku', label: this.t().adminProducts.form.fields.sku, type: 'text', placeholder: this.t().adminProducts.form.fields.skuPlaceholder }
+        { name: 'productName', label: 'Nombre del producto *', type: 'text', placeholder: 'Ej: Laptop Asus ROG' },
+        { name: 'sku', label: 'SKU *', type: 'text', placeholder: 'Ej: LAP-ASUS-01' }
       ],
       [
-        { name: 'idCategory', label: this.t().adminProducts.form.fields.category, type: 'select', optionsKey: 'categories', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: this.t().adminProducts.form.fields.categoryPlaceholder },
-        { name: 'idBrand', label: this.t().adminProducts.form.fields.brand, type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'idBrand', placeholder: this.t().adminProducts.form.fields.brandPlaceholder }
+        { name: 'idCategory', label: 'Categoría *', type: 'select', optionsKey: 'categories', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Seleccionar categoría' },
+        { name: 'idBrand', label: 'Marca *', type: 'select', optionsKey: 'brands', optionLabel: 'brandName', optionValue: 'idBrand', placeholder: 'Seleccionar marca' }
       ],
       [
-        { name: 'price', label: this.t().adminProducts.form.fields.price, type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
-        { name: 'originalPrice', label: this.t().adminProducts.form.fields.originalPrice, type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
+        { name: 'price', label: 'Precio (S/.) *', type: 'number', mode: 'decimal', min: 0.01, minFractionDigits: 2 },
+        { name: 'originalPrice', label: 'Precio Original (Opcional)', type: 'number', mode: 'decimal', min: 0, minFractionDigits: 2 }
       ],
       [
-        { name: 'stockQuantity', label: this.t().adminProducts.form.fields.stock, type: 'number', mode: 'decimal', min: 0 },
-        { name: 'status', label: this.t().adminProducts.form.fields.status, type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: this.t().adminProducts.form.fields.statusPlaceholder },
-        { name: 'badge', label: this.t().adminProducts.form.fields.badge, type: 'select', optionsKey: 'badges', optionLabel: 'label', optionValue: 'value', placeholder: this.t().adminProducts.form.fields.badgePlaceholder }
+        { name: 'stockQuantity', label: 'Stock Inicial *', type: 'number', mode: 'decimal', min: 0 },
+        { name: 'status', label: 'Estado *', type: 'select', optionsKey: 'statuses', optionLabel: 'label', optionValue: 'value', placeholder: 'Seleccionar estado' },
+        { name: 'badge', label: 'Insignia', type: 'select', optionsKey: 'badges', optionLabel: 'label', optionValue: 'value', placeholder: 'Sin insignia' }
       ],
       [
-        { name: 'description', label: this.t().adminProducts.form.fields.description, type: 'textarea', placeholder: this.t().adminProducts.form.fields.descriptionPlaceholder }
+        { name: 'description', label: 'Descripción del producto *', type: 'textarea', placeholder: 'Ingresa las especificaciones y características principales...' }
       ]
     ];
   }
@@ -136,8 +134,8 @@ export class ProductFormComponent implements OnChanges, OnInit {
   }
 
   ngOnInit() {
-    this.categoryService.getAll(0, 100).subscribe(r => this.categories.set(r.content));
-    this.brandService.getAll(0, 100).subscribe(r => this.brands.set(r.content));
+    this.categoryService.getAll(0, 100).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.categories.set(r.content));
+    this.brandService.getAll(0, 100).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.brands.set(r.content));
   }
 
   getOptions(key: string) {

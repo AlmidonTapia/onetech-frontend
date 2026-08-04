@@ -1,7 +1,8 @@
-<div class="ot-star-rating">
-    <p-rating [(ngModel)]="rating" [readonly]="readonly" (ngModelChange)="onRate($event)" />
+<div class="inline-flex items-center gap-2">
+    <p-rating [(ngModel)]="rating" [readonly]="readonly" (ngModelChange)="onRate($event)" 
+        class="[&::ng-deep_.p-rating]:flex [&::ng-deep_.p-rating]:items-center [&::ng-deep_.p-rating]:gap-0.5 [&::ng-deep_.p-rating-icon]:text-base [&::ng-deep_.p-rating-icon]:text-slate-200 dark:[&::ng-deep_.p-rating-icon]:text-slate-700 [&::ng-deep_.p-rating-item-active_.p-rating-icon]:!text-orange-500 [&::ng-deep_.p-rating-item-active_.p-rating-icon]:fill-orange-500" />
 
     @if (showCount && count !== undefined) {
-    <span class="rating-count">({{ count }} {{ content.reviewsSuffix }})</span>
+    <span class="text-[13px] text-slate-500 dark:text-slate-400">({{ count }} {{ content.reviewsSuffix }})</span>
     }
 </div>

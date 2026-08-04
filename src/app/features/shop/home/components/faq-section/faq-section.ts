@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface FaqItem {
+  question: string;
+  answer: string;
+}
 
 @Component({
   selector: 'app-faq-section',
   standalone: true,
-  imports: [],
-  templateUrl: './faq-section.html',
-  styleUrl: './faq-section.css'
+  imports: [CommonModule],
+  templateUrl: './faq-section.html'
 })
 export class FaqSectionComponent {
   openIndex: number | null = null;
 
-  faqItems = [
+  faqItems = computed((): FaqItem[] => [
     {
       question: '¿Hacen envíos a todo el Perú?',
       answer: 'Sí, realizamos envíos a nivel nacional. Los productos se despachan a través de couriers confiables y el tiempo de entrega depende de la ciudad destino (generalmente 1 a 3 días hábiles).'
@@ -35,7 +40,7 @@ export class FaqSectionComponent {
       question: '¿Puedo cambiar o devolver un producto?',
       answer: 'Aceptamos cambios y devoluciones dentro de los 7 días calendario desde la recepción del producto, siempre que esté en perfectas condiciones, sin uso y en su empaque original.'
     }
-  ];
+  ]);
 
   toggle(index: number) {
     this.openIndex = this.openIndex === index ? null : index;

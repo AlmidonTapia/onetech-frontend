@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,14 +20,14 @@ import { StoreConfigService } from '../../../../shared/services/store-config.ser
     TextareaModule,
     SelectModule
   ],
-  templateUrl: './contact-us.html',
-  styleUrl: './contact-us.css'
+  templateUrl: './contact-us.html'
 })
 export class ContactUsComponent {
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);
   private http = inject(HttpClient);
   private storeConfigService = inject(StoreConfigService);
+  private destroyRef = inject(DestroyRef);
 
   loading = signal(false);
 
@@ -73,7 +74,7 @@ export class ContactUsComponent {
   }
 
   ngOnInit() {
-    this.storeConfigService.getConfiguration().subscribe({
+    this.storeConfigService.getConfiguration().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (config) => {
         this.content.contactDetails[0].desc = config.address || 'No disponible';
         this.content.contactDetails[1].desc = config.supportPhone || 'No disponible';
@@ -89,7 +90,7 @@ export class ContactUsComponent {
       return;
     }
 
-    this.http.post(`${environment.apiUrl}/contact`, this.form.value).subscribe({
+    this.http.post(`${environment.apiUrl}/contact`, this.form.value).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.loading.set(false);
         this.form.reset();

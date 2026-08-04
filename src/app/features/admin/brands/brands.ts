@@ -5,7 +5,6 @@ import { BrandFormComponent } from './components/brand-form/brand-form';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { TranslationService } from '../../../core/services/translation.service';
 import { BrandService } from '../../../core/domains/catalog/services/brand.service';
 import { Brand, CreateBrandRequest } from '../../../core/domains/catalog/models/brand.model';
 import { Subject } from 'rxjs';
@@ -17,17 +16,13 @@ import { handleFormError } from '../../../shared/utils/form-error.util';
   selector: 'app-brands',
   standalone: true,
   imports: [BrandsTableComponent, BrandFormComponent, ButtonComponent],
-  templateUrl: './brands.html',
-  styleUrl: './brands.css'
+  templateUrl: './brands.html'
 })
 export class BrandsComponent implements OnInit {
   private brandService = inject(BrandService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   @ViewChild(BrandFormComponent) brandForm!: BrandFormComponent;
 
   brands = signal<Brand[]>([]);
@@ -62,7 +57,7 @@ export class BrandsComponent implements OnInit {
   loadBrands(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.brandService.getAll(page, this.apiConfig.pageSize, this.searchTerm()).subscribe({
+    this.brandService.getAll(page, this.apiConfig.pageSize, this.searchTerm()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => {
         this.brands.set(r.content);
         this.totalRecords.set(r.totalElements);
@@ -91,26 +86,26 @@ export class BrandsComponent implements OnInit {
       ? this.brandService.update(currentBrand.idBrand, request as any)
       : this.brandService.create(request);
 
-    request$.subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (response: any) => {
         const brandId = currentBrand ? currentBrand.idBrand : response.id;
         if (file && brandId) {
-          this.brandService.uploadImage(brandId, file).subscribe({
+          this.brandService.uploadImage(brandId, file).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: () => {
-              this.alertService.success(this.t().adminBrands.alerts.saveSuccess);
+              this.alertService.success('Marca guardada');
               this.formVisible.set(false);
               this.saving.set(false);
               this.loadBrands();
             },
             error: () => {
-              this.alertService.error(this.t().adminBrands.alerts.uploadError);
+              this.alertService.error('Marca guardada, pero ocurrió un error al subir la imagen');
               this.saving.set(false);
               this.formVisible.set(false);
               this.loadBrands();
             }
           });
         } else {
-          this.alertService.success(this.t().adminBrands.alerts.saveSuccess);
+          this.alertService.success('Marca guardada');
           this.formVisible.set(false);
           this.saving.set(false);
           this.loadBrands();
@@ -118,7 +113,7 @@ export class BrandsComponent implements OnInit {
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.brandForm.form) || undefined;
-        this.alertService.error(this.t().adminBrands.alerts.saveError, errorMsg);
+        this.alertService.error('Error al guardar', errorMsg);
         this.saving.set(false);
       }
     });
@@ -126,17 +121,17 @@ export class BrandsComponent implements OnInit {
 
   onDelete(b: Brand) {
     this.modalService.open({
-      title: this.t().adminBrands.confirmModal.title,
-      message: `"${b.brandName}" ${this.t().adminBrands.confirmModal.messageText}`,
+      title: '¿Eliminar marca?',
+      message: `"${b.brandName}" ${'será eliminada.'}`,
       severity: 'danger',
-      confirmLabel: this.t().adminBrands.confirmModal.confirmLabel,
+      confirmLabel: 'Sí, eliminar',
       onConfirm: () => {
-        this.brandService.delete(b.idBrand).subscribe({
+        this.brandService.delete(b.idBrand).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
-            this.alertService.success(this.t().adminBrands.alerts.deleteSuccess);
+            this.alertService.success('Marca eliminada exitosamente');
             this.loadBrands();
           },
-          error: (err: any) => this.alertService.error(err?.error?.message || this.t().adminBrands.alerts.deleteError),
+          error: (err: any) => this.alertService.error(err?.error?.message || 'Error al eliminar la marca'),
         });
       },
     });

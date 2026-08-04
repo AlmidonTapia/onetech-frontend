@@ -7,15 +7,13 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { InventoryMovement } from '../../../../../core/domains/inventory/models/inventory.model';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-inventory-table',
   standalone: true,
   imports: [TableModule, BadgeComponent, ButtonComponent, DatePipe, InputTextModule, SelectModule, FormsModule],
-  templateUrl: './inventory-table.html',
-  styleUrl: './inventory-table.css'
+  templateUrl: './inventory-table.html'
 })
 export class InventoryTableComponent {
   @Input() movements: InventoryMovement[] = [];
@@ -25,15 +23,11 @@ export class InventoryTableComponent {
   @Output() onCancel = new EventEmitter<string>();
   @Output() search = new EventEmitter<string>();
   @Output() filterType = new EventEmitter<string>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   get typeOptions() {
     return [
-      { label: this.t().adminInventory.table.types.all, value: 'ALL' },
-      { label: this.t().adminInventory.table.types.in, value: 'IN' },
-      { label: this.t().adminInventory.table.types.out, value: 'OUT' }
+      { label: 'Todos los tipos', value: 'ALL' },
+      { label: 'Entrada (IN)', value: 'IN' },
+      { label: 'Salida (OUT)', value: 'OUT' }
     ];
   }
 
@@ -60,30 +54,30 @@ export class InventoryTableComponent {
 
   get content() {
     return {
-      quickSearchTitle: this.t().adminInventory.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminInventory.table.searchPlaceholder,
+      quickSearchTitle: 'Búsqueda Rápida',
+      searchPlaceholder: 'Buscar en inventario...',
       headers: {
-        product: this.t().adminInventory.table.headers.product,
-        type: this.t().adminInventory.table.headers.type,
-        quantity: this.t().adminInventory.table.headers.quantity,
-        reason: this.t().adminInventory.table.headers.reason,
-        date: this.t().adminInventory.table.headers.date,
-        status: this.t().adminInventory.table.headers.status,
-        actions: this.t().adminInventory.table.headers.actions
+        product: 'Producto',
+        type: 'Tipo',
+        quantity: 'Cantidad',
+        reason: 'Motivo',
+        date: 'Fecha',
+        status: 'Estado',
+        actions: 'Acciones'
       },
       labels: {
-        inText: this.t().adminInventory.table.labels.inText,
-        outText: this.t().adminInventory.table.labels.outText,
+        inText: 'Entrada',
+        outText: 'Salida',
         inSign: '+',
         outSign: '-',
-        enabledText: this.t().adminInventory.table.labels.enabledText,
-        canceledText: this.t().adminInventory.table.labels.canceledText
+        enabledText: 'Habilitado',
+        canceledText: 'Anulado'
       },
       icons: {
         inIcon: 'pi pi-arrow-up',
         outIcon: 'pi pi-arrow-down'
       },
-      emptyMessage: this.t().adminInventory.table.emptyMessage,
+      emptyMessage: 'No hay movimientos registrados.',
       dateFormat: 'dd/MM/yyyy HH:mm'
     };
   }

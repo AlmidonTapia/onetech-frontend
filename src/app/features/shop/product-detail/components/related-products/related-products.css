@@ -1,4 +1,0 @@
-.related-section { padding-top:40px; border-top:1px solid var(--ot-border-color); }
-.related-title { font-size:24px; font-weight:800; color:var(--ot-text-main); margin-bottom:24px; letter-spacing: -0.02em; }
-.related-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
-@media (max-width:900px) { .related-grid { grid-template-columns:repeat(2,1fr); } }

@@ -14,8 +14,7 @@ import { ConfirmationService } from 'primeng/api';
   standalone: true,
   imports: [CommonModule, TableModule, InputTextModule, MenuModule, DatePipe, ConfirmDialogModule],
   providers: [ConfirmationService],
-  templateUrl: './inbox-table.html',
-  styleUrl: './inbox-table.css'
+  templateUrl: './inbox-table.html'
 })
 export class InboxTableComponent {
   messages = input.required<ContactMessage[]>();

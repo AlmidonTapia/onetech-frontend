@@ -17,8 +17,7 @@ export interface AuthBrandData {
   selector: 'app-auth-layout',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './auth-layout.html',
-  styleUrl: './auth-layout.css'
+  templateUrl: './auth-layout.html'
 })
 export class AuthLayoutComponent {
   @Input() brandData!: AuthBrandData;

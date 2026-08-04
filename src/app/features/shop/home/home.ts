@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { HeroBannerComponent }         from './components/hero-banner/hero-banner';
 import { FeaturedCategoriesComponent } from './components/featured-categories/featured-categories';
 import { FeaturedProductsComponent }   from './components/featured-products/featured-products';
@@ -10,6 +10,7 @@ import { ProductService } from '../../../core/domains/catalog/services/product.s
 import { BrandService } from '../../../core/domains/catalog/services/brand.service';
 import { Product } from '../../../core/domains/catalog/models/product.model';
 import { SeoService } from '../../../core/domains/shared/services/seo.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
@@ -20,12 +21,13 @@ import { SeoService } from '../../../core/domains/shared/services/seo.service';
     TrustBadgesComponent, FaqSectionComponent, BrandCarouselComponent
   ],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  host: { 'class': 'block bg-slate-50 dark:bg-slate-900 transition-all duration-300' }
 })
 export class HomeComponent implements OnInit {
   private productService = inject(ProductService);
   private brandService = inject(BrandService);
   private seoService = inject(SeoService);
+  private destroyRef = inject(DestroyRef);
 
   featured    = signal<Product[]>([]);
   newArrivals = signal<Product[]>([]);
@@ -45,9 +47,9 @@ export class HomeComponent implements OnInit {
       description: 'La mejor tienda de tecnología en línea. Compra laptops, smartphones y accesorios con envíos a todo el país.'
     });
 
-    this.productService.getAll({ page: 0, size: 8 }).subscribe(r => this.featured.set(r.content));
-    this.productService.getAll({ page: 0, size: 8, sort: 'createdAt,desc' }).subscribe(r => this.newArrivals.set(r.content));
-    this.productService.getAll({ badge: 'BESTSELLER', size: 8, page: 0 }).subscribe(r => this.bestSellers.set(r.content));
-    this.brandService.getAll(0, 20).subscribe(r => this.brands.set(r.content));
+    this.productService.getAll({ page: 0, size: 8 }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.featured.set(r.content));
+    this.productService.getAll({ page: 0, size: 8, sort: 'createdAt,desc' }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.newArrivals.set(r.content));
+    this.productService.getAll({ badge: 'BESTSELLER', size: 8, page: 0 }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.bestSellers.set(r.content));
+    this.brandService.getAll(0, 20).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.brands.set(r.content));
   }
 }

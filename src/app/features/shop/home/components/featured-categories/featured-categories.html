@@ -1,21 +1,19 @@
-<section class="section">
+<section class="pt-5 pb-0">
   <div class="container">
-
-    <div class="section-header">
-      <h2 class="section-title">{{ content.title }}</h2>
-      <a [routerLink]="content.viewAllRoute" class="section-link">{{ content.viewAllText }}</a>
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 flex-wrap gap-2 sm:gap-4">
+      <h2 class="text-xl sm:text-[22px] md:text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight m-0">Comprar por categoría</h2>
+      <a routerLink="/catalog" class="text-[13px] sm:text-[15px] font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap transition-colors duration-300 hover:text-blue-800 dark:hover:text-blue-500 hover:underline">Ver todo →</a>
     </div>
 
-    <div class="cat-grid">
+    <div class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
       @for (cat of categories(); track cat.label) {
-      <a [routerLink]="cat.route" [queryParams]="cat.queryParams" class="cat-tile">
-        <div class="cat-icon-wrapper">
-          <i [class]="cat.iconClass + ' cat-icon'"></i>
+      <a [routerLink]="cat.route" [queryParams]="cat.queryParams" class="group flex flex-col items-center justify-center gap-3 sm:gap-4 p-5 sm:p-6 md:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl md:rounded-[24px] text-center cursor-pointer min-h-[140px] sm:min-h-[160px] h-full transition-all duration-[300ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:shadow-[0_16px_32px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_16px_32px_rgba(0,0,0,0.4)] hover:-translate-y-2 hover:border-blue-500/30 dark:hover:border-blue-400/30 hover:bg-gradient-to-b hover:from-white hover:to-blue-500/5 dark:hover:from-slate-900 dark:hover:to-blue-400/5 no-underline">
+        <div class="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-blue-500/10 dark:bg-blue-400/10 shrink-0 transition-all duration-400 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:bg-blue-600 dark:group-hover:bg-blue-500 group-hover:scale-[1.15] group-hover:-translate-y-1 group-hover:shadow-[0_8px_16px_rgba(59,130,246,0.3)]">
+          <i [class]="cat.iconClass" class="text-[22px] sm:text-2xl md:text-[28px] text-blue-600 dark:text-blue-400 leading-none transition-colors duration-300 group-hover:text-white"></i>
         </div>
-        <span class="cat-label">{{ cat.label }}</span>
+        <span class="text-xs sm:text-[13px] md:text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug transition-colors duration-300 line-clamp-2 overflow-hidden group-hover:text-blue-600 dark:group-hover:text-blue-400">{{ cat.label }}</span>
       </a>
       }
     </div>
-
   </div>
 </section>

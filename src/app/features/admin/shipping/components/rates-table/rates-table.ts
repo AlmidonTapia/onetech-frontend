@@ -13,12 +13,12 @@ import { ModalService } from '../../../../../shared/services/modal.service';
 import { ShippingRate, ShipmentMethod, LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
-import { TranslationService } from '../../../../../core/services/translation.service';
 import { forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestinationPickerComponent } from '../destination-picker/destination-picker';
 
 import { FormsModule } from '@angular/forms';
+import { adminShippingContent } from '../../../../../core/content/shared/adminShipping.content';
 
 export interface DestinationChip {
   id: string;
@@ -36,17 +36,16 @@ export interface DestinationChip {
     CommonModule, FormsModule, TableModule, ButtonComponent, TagModule, DialogModule,
     ReactiveFormsModule, InputNumberModule, SelectModule,  CheckboxModule, CurrencyPenPipe, DestinationPickerComponent
   ],
-  templateUrl: './rates-table.html',
-  styleUrl: './rates-table.css'
+  templateUrl: './rates-table.html'
 })
 export class RatesTableComponent implements OnInit {
+  adminShippingContent = adminShippingContent;
+
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
-  ts = inject(TranslationService);
-  t = this.ts.t;
 
   rates = signal<ShippingRate[]>([]);
   agencies = signal<ShipmentMethod[]>([]);
@@ -76,73 +75,73 @@ export class RatesTableComponent implements OnInit {
 
   get content() {
     return {
-      title: this.t().adminShipping.rates.title,
-      newRateBtn: this.t().adminShipping.rates.newRateBtn,
-      createBtnLabel: this.t().adminShipping.rates.newRateBtn,
+      title: adminShippingContent.rates.title,
+      newRateBtn: adminShippingContent.rates.newRateBtn,
+      createBtnLabel: adminShippingContent.rates.newRateBtn,
       createBtnIcon: 'pi pi-plus',
-      quickSearch: this.t().adminShipping.rates.quickSearch,
-      searchPlaceholder: this.t().adminShipping.rates.searchPlaceholder,
-      emptyTable: this.t().adminShipping.rates.emptyTable,
-      createDialogTitle: this.t().adminShipping.rates.modal.createTitle,
-      editDialogTitle: this.t().adminShipping.rates.modal.editTitle,
+      quickSearch: adminShippingContent.rates.quickSearch,
+      searchPlaceholder: adminShippingContent.rates.searchPlaceholder,
+      emptyTable: adminShippingContent.rates.emptyTable,
+      createDialogTitle: adminShippingContent.rates.modal.createTitle,
+      editDialogTitle: adminShippingContent.rates.modal.editTitle,
       columns: {
-        agency: this.t().adminShipping.rates.columns.agency,
-        destination: this.t().adminShipping.rates.columns.destination,
-        address: this.t().adminShipping.rates.columns.address,
-        cost: this.t().adminShipping.rates.columns.cost,
-        status: this.t().adminShipping.rates.columns.status,
-        actions: this.t().adminShipping.rates.columns.actions
+        agency: adminShippingContent.rates.columns.agency,
+        destination: adminShippingContent.rates.columns.destination,
+        address: adminShippingContent.rates.columns.address,
+        cost: adminShippingContent.rates.columns.cost,
+        status: adminShippingContent.rates.columns.status,
+        actions: adminShippingContent.rates.columns.actions
       },
       modal: {
-        createTitle: this.t().adminShipping.rates.modal.createTitle,
-        editTitle: this.t().adminShipping.rates.modal.editTitle,
-        cancelBtn: this.t().adminShipping.rates.modal.cancelBtn,
-        saveBtn: this.t().adminShipping.rates.modal.saveBtn
+        createTitle: adminShippingContent.rates.modal.createTitle,
+        editTitle: adminShippingContent.rates.modal.editTitle,
+        cancelBtn: adminShippingContent.rates.modal.cancelBtn,
+        saveBtn: adminShippingContent.rates.modal.saveBtn
       },
       filter: {
-        agencyPlaceholder: this.t().adminShipping.rates.filter.agencyPlaceholder,
-        deptPlaceholder: this.t().adminShipping.rates.filter.deptPlaceholder,
-        provPlaceholder: this.t().adminShipping.rates.filter.provPlaceholder
+        agencyPlaceholder: adminShippingContent.rates.filter.agencyPlaceholder,
+        deptPlaceholder: adminShippingContent.rates.filter.deptPlaceholder,
+        provPlaceholder: adminShippingContent.rates.filter.provPlaceholder
       },
       form: {
-        agencyLabel: this.t().adminShipping.rates.form.agencyLabel,
-        departmentLabel: this.t().adminShipping.rates.form.departmentLabel,
-        provinceLabel: this.t().adminShipping.rates.form.provinceLabel,
-        districtLabel: this.t().adminShipping.rates.form.districtLabel,
-        addressLabel: this.t().adminShipping.rates.form.addressLabel,
-        costLabel: this.t().adminShipping.rates.form.costLabel,
-        availableLabel: this.t().adminShipping.rates.form.availableLabel,
-        agencyPlaceholder: this.t().adminShipping.rates.form.agencyPlaceholder,
-        addressPlaceholder: this.t().adminShipping.rates.form.addressPlaceholder
+        agencyLabel: adminShippingContent.rates.form.agencyLabel,
+        departmentLabel: adminShippingContent.rates.form.departmentLabel,
+        provinceLabel: adminShippingContent.rates.form.provinceLabel,
+        districtLabel: adminShippingContent.rates.form.districtLabel,
+        addressLabel: adminShippingContent.rates.form.addressLabel,
+        costLabel: adminShippingContent.rates.form.costLabel,
+        availableLabel: adminShippingContent.rates.form.availableLabel,
+        agencyPlaceholder: adminShippingContent.rates.form.agencyPlaceholder,
+        addressPlaceholder: adminShippingContent.rates.form.addressPlaceholder
       }
     };
   }
 
   get availabilityFilterOptions() {
     return [
-      { label: this.t().adminShipping.rates.filters.allStatuses, value: 'ALL' },
-      { label: this.t().adminShipping.rates.filters.available, value: 'AVAILABLE' },
-      { label: this.t().adminShipping.rates.filters.unavailable, value: 'UNAVAILABLE' }
+      { label: adminShippingContent.rates.filters.allStatuses, value: 'ALL' },
+      { label: adminShippingContent.rates.filters.available, value: 'AVAILABLE' },
+      { label: adminShippingContent.rates.filters.unavailable, value: 'UNAVAILABLE' }
     ];
   }
 
   agencyFilterOptions = computed(() => {
     return [
-      { label: this.t().adminShipping.rates.filters.allAgencies, value: 'ALL' },
+      { label: adminShippingContent.rates.filters.allAgencies, value: 'ALL' },
       ...this.agencies().map(a => ({ label: a.methodName, value: a.idShipmentMethod }))
     ];
   });
 
   departmentFilterOptions = computed(() => {
     return [
-      { label: this.t().adminShipping.rates.filters.allDepartments, value: 'ALL' },
+      { label: adminShippingContent.rates.filters.allDepartments, value: 'ALL' },
       ...this.filterDepartments().map(d => ({ label: d.name, value: d.id }))
     ];
   });
 
   provinceFilterOptions = computed(() => {
     return [
-      { label: this.t().adminShipping.rates.filters.allProvinces, value: 'ALL' },
+      { label: adminShippingContent.rates.filters.allProvinces, value: 'ALL' },
       ...this.filterProvinces().map(p => ({ label: p.name, value: p.id }))
     ];
   });
@@ -211,7 +210,7 @@ export class RatesTableComponent implements OnInit {
     this.filterDepartment.set(deptId);
     this.filterProvince.set('ALL');
     if (deptId && deptId !== 'ALL') {
-      this.shipmentService.getProvinces(deptId).subscribe({
+      this.shipmentService.getProvinces(deptId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res) => this.filterProvinces.set(res),
         error: () => this.filterProvinces.set([])
       });
@@ -228,38 +227,38 @@ export class RatesTableComponent implements OnInit {
 
   loadRates() {
     this.loading.set(true);
-    this.shipmentService.getRates(0, 500).subscribe({
+    this.shipmentService.getRates(0, 500).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.rates.set(res.content || []);
         this.loading.set(false);
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminShipping.rates.alerts.loadError);
+        this.alertService.error(err?.error?.message || adminShippingContent.rates.alerts.loadError);
         this.loading.set(false);
       }
     });
   }
 
   loadAgencies() {
-    this.shipmentService.getMethods(true).subscribe({
+    this.shipmentService.getMethods(true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => this.agencies.set(res)
     });
   }
 
   loadFilterDepartments() {
-    this.shipmentService.getDepartments().subscribe({
+    this.shipmentService.getDepartments().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => this.filterDepartments.set(res)
     });
   }
 
   loadDepartments() {
-    this.shipmentService.getDepartments().subscribe({
+    this.shipmentService.getDepartments().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => this.departments.set(res)
     });
   }
 
   loadProvinces(idDepartment: string) {
-    this.shipmentService.getProvinces(idDepartment).subscribe({
+    this.shipmentService.getProvinces(idDepartment).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.provinces.set(res);
         this.form.patchValue({ idDistrict: null });
@@ -269,7 +268,7 @@ export class RatesTableComponent implements OnInit {
   }
 
   loadDistricts(idProvince: string) {
-    this.shipmentService.getDistricts(idProvince).subscribe({
+    this.shipmentService.getDistricts(idProvince).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => this.districts.set(res)
     });
   }
@@ -279,7 +278,7 @@ export class RatesTableComponent implements OnInit {
     if (rate.departmentName) parts.push(rate.departmentName);
     if (rate.provinceName) parts.push(rate.provinceName);
     if (rate.districtName) parts.push(rate.districtName);
-    return parts.length > 0 ? parts.join(' / ') : this.t().adminShipping.rates.values.national;
+    return parts.length > 0 ? parts.join(' / ') : adminShippingContent.rates.values.national;
   }
 
   openCreate() {
@@ -325,18 +324,18 @@ export class RatesTableComponent implements OnInit {
 
   delete(rate: ShippingRate) {
     this.modalService.open({
-      title: this.t().adminShipping.rates.confirmDelete.title,
-      message: this.t().adminShipping.rates.confirmDelete.message.replace('{agency}', rate.methodName),
+      title: adminShippingContent.rates.confirmDelete.title,
+      message: adminShippingContent.rates.confirmDelete.message.replace('{agency}', rate.methodName || ''),
       severity: 'danger',
-      confirmLabel: this.t().adminShipping.rates.confirmDelete.confirmLabel,
+      confirmLabel: adminShippingContent.rates.confirmDelete.confirmLabel,
       onConfirm: () => {
-        this.shipmentService.deleteRate(rate.idRate).subscribe({
+        this.shipmentService.deleteRate(rate.idRate).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
-            this.alertService.success(this.t().adminShipping.rates.alerts.deleteSuccess);
+            this.alertService.success(adminShippingContent.rates.alerts.deleteSuccess);
             this.loadRates();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || this.t().adminShipping.rates.alerts.deleteError;
+            const errMsg = err?.error?.message || adminShippingContent.rates.alerts.deleteError;
             this.alertService.error(errMsg);
           }
         });
@@ -355,7 +354,7 @@ export class RatesTableComponent implements OnInit {
     }
     
     if (!this.isEdit() && this.destinations().length === 0) {
-      this.alertService.warn(this.t().adminShipping.rates.alerts.requireDestination);
+      this.alertService.warn(adminShippingContent.rates.alerts.requireDestination);
       return;
     }
 
@@ -363,15 +362,15 @@ export class RatesTableComponent implements OnInit {
     const data = this.form.value;
 
     if (this.isEdit()) {
-      this.shipmentService.updateRate(this.currentRateId!, data).subscribe({
+      this.shipmentService.updateRate(this.currentRateId!, data).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
-          this.alertService.success(this.t().adminShipping.rates.alerts.saveSuccess);
+          this.alertService.success(adminShippingContent.rates.alerts.saveSuccess);
           this.showDialog.set(false);
           this.loadRates();
           this.submitting.set(false);
         },
         error: (err: any) => {
-          const errMsg = err?.error?.message || this.t().adminShipping.rates.alerts.saveError;
+          const errMsg = err?.error?.message || adminShippingContent.rates.alerts.saveError;
           this.alertService.error(errMsg);
           this.submitting.set(false);
         }
@@ -387,15 +386,15 @@ export class RatesTableComponent implements OnInit {
         return this.shipmentService.createRate(rateData);
       });
 
-      forkJoin(requests).subscribe({
+      forkJoin(requests).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
-          this.alertService.success(this.t().adminShipping.rates.alerts.createSuccess.replace('{count}', requests.length.toString()));
+          this.alertService.success(adminShippingContent.rates.alerts.createSuccess.replace('{count}', requests.length.toString()));
           this.showDialog.set(false);
           this.loadRates();
           this.submitting.set(false);
         },
         error: (err: any) => {
-          const errMsg = err?.error?.message || this.t().adminShipping.rates.alerts.createError;
+          const errMsg = err?.error?.message || adminShippingContent.rates.alerts.createError;
           this.alertService.error(errMsg);
           this.submitting.set(false);
           this.loadRates();

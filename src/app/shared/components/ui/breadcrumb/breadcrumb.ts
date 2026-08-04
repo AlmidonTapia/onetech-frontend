@@ -10,8 +10,7 @@ export interface BreadcrumbItem {
   selector: 'app-breadcrumb',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './breadcrumb.html',
-  styleUrl: './breadcrumb.css'
+  templateUrl: './breadcrumb.html'
 })
 export class BreadcrumbComponent {
   @Input() items: BreadcrumbItem[] = [];

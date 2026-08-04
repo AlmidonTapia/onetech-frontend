@@ -1,6 +1,7 @@
-import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { Component, inject, signal, effect, OnInit, DestroyRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { forkJoin, switchMap, of } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { CheckoutDestinationComponent } from './components/checkout-destination/checkout-destination';
@@ -21,7 +22,7 @@ import { environment } from '../../../../environments/environment';
 import { CheckoutConsigneeComponent, ConsigneeInfo } from './components/checkout-consignee/checkout-consignee';
 
 import { CurrencyPenPipe } from '../../../shared/pipes/currency-pen.pipe';
-import { TranslationService } from '../../../core/services/translation.service';
+import { CommonModule } from '@angular/common';
 
 declare var MercadoPago: any;
 
@@ -36,10 +37,10 @@ declare var MercadoPago: any;
     CheckoutPaymentComponent,
     CheckoutAsideComponent,
     FormsModule,
-    CurrencyPenPipe
+    CurrencyPenPipe,
+    CommonModule
   ],
-  templateUrl: './checkout.html',
-  styleUrl: './checkout.css'
+  templateUrl: './checkout.html'
 })
 export class CheckoutComponent implements OnInit {
   cartStore = inject(CartStore);
@@ -49,6 +50,7 @@ export class CheckoutComponent implements OnInit {
   private authService = inject(AuthService);
   private alertService = inject(AlertService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   currentStep = signal(0);
   placing = signal(false);
@@ -67,11 +69,7 @@ export class CheckoutComponent implements OnInit {
   validatingCoupon = signal(false);
 
   private mpBrickController: any = null;
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
-  get steps() { return this.t().checkout.steps; }
+  get steps() { return ['Destino', 'Envío', 'Datos de Entrega', 'Pago', 'Confirmar']; }
 
   constructor() {
     effect(() => {
@@ -112,7 +110,7 @@ export class CheckoutComponent implements OnInit {
       script.src = 'https://sdk.mercadopago.com/js/v2';
       script.onload = () => resolve();
       script.onerror = () => {
-        this.alertService.error(this.t().checkout.alerts.sdkBlockedTitle, this.t().checkout.alerts.sdkBlockedMsg);
+        this.alertService.error('SDK bloqueado o no cargado', 'No se pudo cargar el sistema de pago. Desactiva tu bloqueador de anuncios e intenta nuevamente.');
       };
       document.head.appendChild(script);
     });
@@ -120,7 +118,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     if (this.cartStore.itemCount() === 0) {
-      this.alertService.info(this.t().checkout.alerts.emptyCartTitle, this.t().checkout.alerts.emptyCartMsg);
+      this.alertService.info('Tu carrito está vacío', 'Agrega productos para proceder al pago.');
       this.router.navigate(['/cart']);
     }
   }
@@ -167,7 +165,7 @@ export class CheckoutComponent implements OnInit {
     this.validatingCoupon.set(true);
     this.couponError.set('');
     
-    this.couponService.validate(this.couponCode()).subscribe({
+    this.couponService.validate(this.couponCode()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (coupon) => {
         this.selectedCouponId.set(coupon.idCoupon);
         if (coupon.discountType === 'FIXED_AMOUNT') {
@@ -176,10 +174,10 @@ export class CheckoutComponent implements OnInit {
           this.discountAmount.set(this.cartStore.totalAmount() * (coupon.discountValue / 100));
         }
         this.validatingCoupon.set(false);
-        this.alertService.success(this.t().checkout.alerts.couponApplied, this.t().checkout.alerts.couponAppliedMsg);
+        this.alertService.success('Cupón aplicado', 'Se ha aplicado el descuento a tu compra.');
       },
       error: (err: any) => {
-        this.couponError.set(err?.error?.message || this.t().checkout.alerts.couponInvalid);
+        this.couponError.set(err?.error?.message || 'Cupón inválido o expirado.');
         this.validatingCoupon.set(false);
         this.selectedCouponId.set(null);
         this.discountAmount.set(0);
@@ -203,13 +201,13 @@ export class CheckoutComponent implements OnInit {
 
     const currentUser = this.authService.currentUser();
     if (!currentUser || !currentUser.email) {
-      this.alertService.error(this.t().checkout.alerts.invalidSession);
+      this.alertService.error('Sesión no válida o expirada. Por favor, inicia sesión de nuevo.');
       this.router.navigate(['/auth/login'], { queryParams: { returnUrl: '/checkout' } });
       return;
     }
 
     if (typeof MercadoPago === 'undefined') {
-      this.alertService.error(this.t().checkout.alerts.sdkBlockedTitle, this.t().checkout.alerts.sdkNotLoaded);
+      this.alertService.error('SDK bloqueado o no cargado', 'El SDK de Mercado Pago no está cargado. Por favor, recarga la página.');
       return;
     }
 
@@ -247,7 +245,7 @@ export class CheckoutComponent implements OnInit {
           });
         },
         onError: (error: any) => {
-          this.alertService.error(this.t().checkout.alerts.brickErrorTitle, this.t().checkout.alerts.brickError);
+          this.alertService.error('Error del sistema de pago', 'Ocurrió un error al cargar el formulario de pago.');
           this.mpBrickReady.set(false);
         }
       }
@@ -260,7 +258,7 @@ export class CheckoutComponent implements OnInit {
         settings
       );
     } catch (error) {
-      this.alertService.error(this.t().checkout.alerts.initPaymentErrorTitle, this.t().checkout.alerts.initPaymentErrorMsg);
+      this.alertService.error('Error al inicializar el pago', 'No se pudo cargar el formulario de pago seguro. Verifica tu conexión o intenta con otro método de pago.');
     }
   }
 
@@ -311,20 +309,20 @@ export class CheckoutComponent implements OnInit {
           cartClear: this.cartStore.clearCart()
         });
       })
-    ).subscribe({
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result: any) => {
         const orderId = result.orderId;
         this.alertService.success(
-          this.t().checkout.alerts.successTitle,
-          this.t().checkout.alerts.paymentSuccessMsg.replace('{id}', orderId.substring(0, 8))
+          '¡Pedido realizado!',
+          'Tu pago fue procesado con éxito. Orden #' + orderId.substring(0, 8) + ' confirmada.'
         );
         this.placing.set(false);
         resolve();
         this.router.navigate(['/checkout/success', orderId]);
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.t().checkout.alerts.paymentError;
-        this.alertService.error(this.t().checkout.alerts.paymentErrorTitle, errMsg);
+        const errMsg = err?.error?.message || 'Error al procesar el cargo con tu tarjeta.';
+        this.alertService.error('Error en el pago', errMsg);
         this.placing.set(false);
         reject();
       }
@@ -374,20 +372,20 @@ export class CheckoutComponent implements OnInit {
           cartClear: this.cartStore.clearCart() as any
         });
       })
-    ).subscribe({
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result: any) => {
         const orderId = result.orderId;
  
         this.alertService.success(
-          this.t().checkout.alerts.successTitle,
-          `${this.t().checkout.alerts.successSub}${orderId.substring(0, 8)}${this.t().checkout.alerts.successEnd}`
+          '¡Pedido realizado!',
+          `${'Orden #'}${orderId.substring(0, 8)}${' confirmada.'}`
         );
         this.placing.set(false);
         this.router.navigate(['/checkout/success', orderId]);
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.t().checkout.alerts.error;
-        this.alertService.error(this.t().checkout.alerts.orderErrorTitle, errMsg);
+        const errMsg = err?.error?.message || 'Error al procesar el pedido o sus servicios secundarios';
+        this.alertService.error('Error al generar la orden', errMsg);
         this.placing.set(false);
       }
     });

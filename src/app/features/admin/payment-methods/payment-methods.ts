@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../../shared/components/ui/button/button';
@@ -8,23 +9,19 @@ import { PaymentService } from '../../../core/domains/checkout/services/payment.
 import { PaymentMethod } from '../../../core/domains/checkout/models/payment.model';
 import { PaymentMethodsTableComponent } from './components/payment-methods-table/payment-methods-table';
 import { PaymentMethodFormComponent } from './components/payment-method-form/payment-method-form';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-payment-methods',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent,  PaymentMethodsTableComponent, PaymentMethodFormComponent],
-  templateUrl: './payment-methods.html',
-  styleUrl: './payment-methods.css'
+  templateUrl: './payment-methods.html'
 })
 export class PaymentMethodsComponent implements OnInit {
   private paymentService = inject(PaymentService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private fb = inject(FormBuilder);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   methods = signal<PaymentMethod[]>([]);
   loading = signal(false);
   saving = signal(false);
@@ -34,18 +31,37 @@ export class PaymentMethodsComponent implements OnInit {
 
   get content() {
     return {
-      title: this.t().adminPaymentMethods.title,
-      badgeSuffix: this.t().adminPaymentMethods.badgeSuffix,
-      newBtnLabel: this.t().adminPaymentMethods.newBtnLabel,
+      title: 'Métodos de Pago',
+      badgeSuffix: ' métodos',
+      newBtnLabel: 'Nuevo Método',
       table: {
-        quickSearchTitle: this.t().adminPaymentMethods.table.quickSearchTitle,
-        searchPlaceholder: this.t().adminPaymentMethods.table.searchPlaceholder,
+        quickSearchTitle: 'Búsqueda Rápida',
+        searchPlaceholder: 'Buscar método...',
         headers: {
-          name: this.t().adminPaymentMethods.table.headers.name,
-          status: this.t().adminPaymentMethods.table.headers.status,
-          actions: this.t().adminPaymentMethods.table.headers.actions
+          name: 'Nombre',
+          status: 'Estado',
+          actions: 'Acciones'
         },
-        emptyMsg: this.t().adminPaymentMethods.table.emptyMessage
+        emptyMessage: 'No hay métodos de pago registrados.'
+      },
+      form: {
+        titleNew: 'Nuevo Método',
+        titleEdit: 'Editar Método',
+        labels: {
+          name: 'Nombre del Método',
+          status: 'Estado'
+        },
+        placeholders: {
+          name: 'Ej: Tarjeta de Crédito'
+        },
+        statusOptions: {
+          active: 'Activo',
+          inactive: 'Inactivo'
+        },
+        buttons: {
+          cancel: 'Cancelar',
+          save: 'Guardar'
+        }
       }
     };
   }
@@ -66,7 +82,7 @@ export class PaymentMethodsComponent implements OnInit {
 
   loadMethods() {
     this.loading.set(true);
-    this.paymentService.getMethods(this.searchTerm()).subscribe({
+    this.paymentService.getMethods(this.searchTerm()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => {
         this.methods.set(r);
         this.loading.set(false);
@@ -105,15 +121,15 @@ export class PaymentMethodsComponent implements OnInit {
       ? this.paymentService.updateMethod(currentMethod.idPaymentMethod, data)
       : this.paymentService.createMethod(data);
 
-    req$.subscribe({
+    req$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminPaymentMethods.alerts.saveSuccess);
+        this.alertService.success('Método de pago guardado con éxito');
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadMethods();
       },
       error: (err: any) => {
-        const errMsg = err?.error?.message || this.t().adminPaymentMethods.alerts.saveError;
+        const errMsg = err?.error?.message || 'Error al guardar el método de pago';
         this.alertService.error(errMsg);
         this.saving.set(false);
       }
@@ -122,18 +138,17 @@ export class PaymentMethodsComponent implements OnInit {
 
   onDelete(m: PaymentMethod) {
     this.modalService.open({
-      title: this.t().adminPaymentMethods.confirmDelete.title,
-      message: this.t().adminPaymentMethods.confirmDelete.message.replace('{name}', m.methodName),
-      severity: 'danger',
-      confirmLabel: this.t().adminPaymentMethods.confirmDelete.confirmLabel,
+      title: '¿Eliminar método de pago?',
+      message: 'Se eliminará de forma permanente.',
+      confirmLabel: 'Sí, eliminar',
       onConfirm: () => {
-        this.paymentService.deleteMethod(m.idPaymentMethod).subscribe({
+        this.paymentService.deleteMethod(m.idPaymentMethod).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
-            this.alertService.success(this.t().adminPaymentMethods.alerts.deleteSuccess);
+            this.alertService.success('Método de pago eliminado con éxito');
             this.loadMethods();
           },
           error: (err: any) => {
-            const errMsg = err?.error?.message || this.t().adminPaymentMethods.alerts.deleteError;
+            const errMsg = err?.error?.message || 'Error al eliminar el método de pago';
             this.alertService.error(errMsg);
           }
         });

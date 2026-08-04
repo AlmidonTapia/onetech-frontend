@@ -13,8 +13,7 @@ type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'cont
   selector: 'app-invoices-table',
   standalone: true,
   imports: [TableModule, TagModule, TooltipModule, CurrencyPenPipe, DatePipe, ButtonComponent],
-  templateUrl: './invoices-table.html',
-  styleUrl: './invoices-table.css'
+  templateUrl: './invoices-table.html'
 })
 export class InvoicesTableComponent {
   invoices = input.required<Invoice[]>();

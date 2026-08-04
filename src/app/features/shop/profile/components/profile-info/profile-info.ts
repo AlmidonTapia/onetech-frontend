@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -13,14 +14,14 @@ import { handleFormError } from '../../../../../shared/utils/form-error.util';
   selector: 'app-profile-info',
   standalone: true,
   imports: [ReactiveFormsModule, InputTextModule, SelectModule, ButtonComponent],
-  templateUrl: './profile-info.html',
-  styleUrl: './profile-info.css'
+  templateUrl: './profile-info.html'
 })
 export class ProfileInfoComponent implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
   saving = signal(false);
   loading = signal(true);
@@ -76,20 +77,22 @@ export class ProfileInfoComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.userService.getProfile().subscribe({
-      next: (user: User) => {
-        this.form.patchValue({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          documentType: user.documentType ?? '',
-          documentNumber: user.documentNumber ?? '',
-          phone: user.phone ?? '',
-        });
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
+    this.userService.getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user: User) => {
+          this.form.patchValue({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            documentType: user.documentType ?? '',
+            documentNumber: user.documentNumber ?? '',
+            phone: user.phone ?? '',
+          });
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 
   isInvalid(field: string): boolean {
@@ -111,16 +114,18 @@ export class ProfileInfoComponent implements OnInit {
       phone: this.form.value.phone ?? '',
     };
 
-    this.userService.updateProfileDetails(requestData).subscribe({
-      next: () => {
-        this.alertService.success(this.content.alerts.success);
-        this.saving.set(false);
-      },
-      error: (err) => {
-        const errorMsg = handleFormError(err, this.form);
-        this.alertService.error(errorMsg || this.content.alerts.error);
-        this.saving.set(false);
-      },
-    });
+    this.userService.updateProfileDetails(requestData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.alertService.success(this.content.alerts.success);
+          this.saving.set(false);
+        },
+        error: (err) => {
+          const errorMsg = handleFormError(err, this.form);
+          this.alertService.error(errorMsg || this.content.alerts.error);
+          this.saving.set(false);
+        },
+      });
   }
 }

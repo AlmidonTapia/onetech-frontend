@@ -1,16 +1,12 @@
-<div class="quantity-selector" 
-     [class.disabled]="disabled()" 
+<div class="inline-flex items-center h-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full overflow-hidden" 
+     [class.opacity-60]="disabled()" 
      role="spinbutton" 
      [attr.aria-valuenow]="value()" 
      [attr.aria-valuemin]="min()" 
      [attr.aria-valuemax]="max()" 
      tabindex="0"
      (keydown)="onKeyDown($event)">
-  <button type="button" class="qty-btn" (click)="decrease()" [disabled]="disabled() || value() <= min()" aria-label="Disminuir cantidad" tabindex="-1">
-    <i class="pi pi-minus" aria-hidden="true"></i>
-  </button>
-  <span class="qty-value" aria-hidden="true">{{ value() }}</span>
-  <button type="button" class="qty-btn" (click)="increase()" [disabled]="disabled() || value() >= max()" aria-label="Aumentar cantidad" tabindex="-1">
-    <i class="pi pi-plus" aria-hidden="true"></i>
-  </button>
+  <app-button styleClass="!w-10 !h-full flex items-center justify-center bg-transparent border-none text-slate-700 dark:text-slate-200 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/15 dark:hover:text-blue-400 disabled:text-slate-400 disabled:dark:text-slate-500 disabled:hover:bg-transparent" (clicked)="decrease()" [disabled]="disabled() || value() <= min()" aria-label="Disminuir cantidad" tabindex="-1" variant="ghost" icon="pi-minus"></app-button>
+  <span class="flex items-center justify-center w-10 font-semibold text-slate-900 dark:text-slate-100 text-base select-none" aria-hidden="true">{{ value() }}</span>
+  <app-button styleClass="!w-10 !h-full flex items-center justify-center bg-transparent border-none text-slate-700 dark:text-slate-200 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/15 dark:hover:text-blue-400 disabled:text-slate-400 disabled:dark:text-slate-500 disabled:hover:bg-transparent" (clicked)="increase()" [disabled]="disabled() || value() >= max()" aria-label="Aumentar cantidad" tabindex="-1" variant="ghost" icon="pi-plus"></app-button>
 </div>

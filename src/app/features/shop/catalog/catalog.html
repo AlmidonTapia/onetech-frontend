@@ -1,26 +1,24 @@
-<div class="catalog-page">
+<div class="py-6 sm:py-10 pb-16 sm:pb-20">
   <div class="container">
 
-    <app-breadcrumb [items]="breadcrumb" class="catalog-breadcrumb" />
+    <app-breadcrumb [items]="breadcrumb" class="block mb-5 sm:mb-8" />
 
-    <div class="catalog-layout">
+    <div class="flex flex-col lg:grid lg:grid-cols-[260px_1fr] xl:grid-cols-[280px_1fr] gap-4 lg:gap-6 xl:gap-8 items-stretch">
 
-      <div class="mobile-filter-toggle">
-        <button class="mobile-filter-btn" (click)="toggleMobileFilters()">
-          <i class="pi pi-filter"></i>
-          {{ t().catalog.mobileFilterBtn }}
-        </button>
+      <div class="block lg:hidden mb-4">
+        <app-button styleClass="flex items-center gap-2 px-5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold text-slate-800 dark:text-slate-100 cursor-pointer shadow-sm transition-all duration-300 hover:border-blue-500 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400" (clicked)="toggleMobileFilters()" variant="ghost" icon="pi-filter" label="Filtros"></app-button>
       </div>
 
-            @if (showMobileFilters) {
-        <div class="sidebar-backdrop" (click)="toggleMobileFilters()"></div>
+      @if (showMobileFilters) {
+        <div class="fixed inset-0 bg-black/50 z-[1999] backdrop-blur-[4px] animate-fade-in block lg:hidden" (click)="toggleMobileFilters()"></div>
       }
 
-            <aside class="catalog-sidebar" [class.sidebar-mobile-open]="showMobileFilters">
-        <div class="sidebar-card">
-          <div class="mobile-drawer-header">
-             <h3>{{ t().catalog.mobileDrawerTitle }}</h3>
-             <button class="drawer-close-btn" (click)="toggleMobileFilters()"><i class="pi pi-times"></i></button>
+      <aside class="fixed lg:static top-0 left-0 w-[300px] max-w-[85vw] lg:w-auto h-[100dvh] lg:h-full z-[2000] lg:z-auto bg-slate-50 lg:bg-transparent dark:bg-slate-900 lg:dark:bg-transparent transition-transform duration-300 lg:transition-none ease-[cubic-bezier(0.4,0,0.2,1)] shadow-[4px_0_32px_rgba(0,0,0,0.25)] lg:shadow-none"
+             [ngClass]="showMobileFilters ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
+        <div class="h-full lg:h-auto lg:sticky lg:top-[100px] lg:max-h-[calc(100vh-120px)] overflow-y-auto bg-slate-50 dark:bg-slate-900 lg:border lg:border-slate-200 lg:dark:border-slate-700 lg:rounded-2xl lg:shadow-md transition-all duration-300 lg:hover:border-blue-500 lg:hover:shadow-lg pb-12 lg:pb-0">
+          <div class="flex lg:hidden items-center justify-between p-5 border-b border-slate-200 dark:border-slate-700 sticky top-0 bg-slate-50 dark:bg-slate-900 z-10">
+             <h3 class="m-0 text-lg font-bold text-slate-800 dark:text-slate-100">Filtros</h3>
+             <app-button styleClass="w-9 h-9 flex items-center justify-center bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-slate-500 text-sm cursor-pointer transition-all duration-300 hover:border-red-500 hover:text-red-500" (clicked)="toggleMobileFilters()" variant="ghost" icon="pi-times"></app-button>
           </div>
           <app-catalog-filters
             [filters]="filters()"
@@ -28,7 +26,7 @@
         </div>
       </aside>
 
-            <div class="catalog-content">
+      <div class="flex flex-col gap-0 min-w-0">
         <app-catalog-sort
           [totalRecords]="totalRecords()"
           [sort]="sort()"
@@ -39,7 +37,7 @@
           [loading]="loading()" />
 
         @if (totalRecords() > rows) {
-          <div class="pagination-wrapper">
+          <div class="flex justify-center mt-10">
             <p-paginator
               [rows]="rows"
               [totalRecords]="totalRecords()"

@@ -9,8 +9,7 @@ import { PaymentMethod } from '../../../../../core/domains/checkout/models/payme
   selector: 'app-checkout-summary',
   standalone: true,
   imports: [CurrencyPenPipe],
-  templateUrl: './checkout-summary.html',
-  styleUrl: './checkout-summary.css'
+  templateUrl: './checkout-summary.html'
 })
 export class CheckoutSummaryComponent {
   @Input() cart: Cart | null = null;

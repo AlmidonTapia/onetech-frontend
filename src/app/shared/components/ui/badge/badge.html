@@ -1,4 +1,13 @@
-<span class="ot-badge" [ngClass]="['badge-' + variant(), pill() ? 'badge-pill' : '']">
-    @if (dot()) { <span class="badge-dot" aria-hidden="true"></span> }
+<span class="inline-flex items-center gap-[5px] text-[11px] font-semibold px-2 py-[3px] tracking-[.04em] uppercase"
+      [class.rounded-full]="pill()"
+      [ngClass]="{
+        'bg-green-100/85 text-green-600 dark:bg-green-600/15 dark:text-green-500': variant() === 'success',
+        'bg-red-100/85 text-red-600 dark:bg-red-600/15 dark:text-red-500': variant() === 'error',
+        'bg-amber-100/85 text-amber-500 dark:bg-amber-600/15 dark:text-amber-500': variant() === 'warning',
+        'bg-sky-100/85 text-sky-600 dark:bg-sky-600/15 dark:text-sky-500': variant() === 'info',
+        'bg-blue-50 text-blue-600 dark:bg-blue-600/15 dark:text-blue-400': variant() === 'blue',
+        'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300': variant() === 'gray'
+      }">
+    @if (dot()) { <span class="w-[6px] h-[6px] rounded-full bg-current shrink-0" aria-hidden="true"></span> }
     <ng-content />
 </span>

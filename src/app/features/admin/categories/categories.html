@@ -1,19 +1,15 @@
-<div class="page-container">
-
-  <div class="page-header">
+<div class="flex flex-col gap-6">
+  <div class="flex items-start justify-between gap-4 flex-wrap">
     <div>
-      <h1 class="page-title">{{ t().adminCategories.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminCategories.countSuffix }}</p>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Categorías</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">{{ totalRecords() }} categorías registradas</p>
     </div>
-    <app-button [label]="t().adminCategories.createBtnLabel" icon="pi-plus" (clicked)="openCreate()" />
+    <app-button label="Nueva categoría" icon="pi-plus" (clicked)="openCreate()" />
   </div>
 
-  
-    <app-categories-table [categories]="categories()" [totalRecords]="totalRecords()" [loading]="loading()"
-      (lazyLoad)="loadCategories($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)"
-      (search)="onSearch($event)" />
-  
-
+  <app-categories-table [categories]="categories()" [totalRecords]="totalRecords()" [loading]="loading()"
+    (lazyLoad)="loadCategories($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)"
+    (search)="onSearch($event)" />
 </div>
 
 <app-category-form [(visible)]="formVisible" [category]="editingCat()" [categories]="categories()" [saving]="saving()"

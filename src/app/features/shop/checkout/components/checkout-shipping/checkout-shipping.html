@@ -1,26 +1,28 @@
-<div class="step-section">
-  <h3 class="step-title">
-    <i class="pi pi-truck"></i> {{ t().checkout.shipping.title }}
+<div class="flex flex-col gap-5">
+  <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 m-0 mb-4">
+    <i class="pi pi-truck text-blue-600 dark:text-blue-500"></i> Método de envío
   </h3>
 
-  <div class="shipping-list">
+  <div class="flex flex-col gap-3">
     @if (loading()) {
-      <div class="shipping-loading">
-        <app-spinner [label]="t().checkout.shipping.loading" size="sm" />
+      <div class="flex items-center gap-3 py-6 px-4 text-sm text-slate-500 dark:text-slate-400">
+        <app-spinner label="Cargando agencias disponibles..." size="sm" />
       </div>
     } @else {
-    @for (method of methods(); track method.idShipmentMethod) {
-    <div class="shipping-option" [class.shipping-option--selected]="selectedId() === method.idShipmentMethod"
-      (click)="select(method)">
-      <div class="radio-circle" [class.radio-circle--active]="selectedId() === method.idShipmentMethod"></div>
-      <div class="method-info">
-        <span class="method-name">{{ method.methodName }}</span>
-        <span class="method-price">{{ method.basePrice | currencyPen }}</span>
+      @for (method of methods(); track method.idShipmentMethod) {
+      <div class="flex items-center gap-4 px-5 py-4 border-2 rounded-[24px] cursor-pointer transition-all duration-300" 
+        [ngClass]="selectedId() === method.idShipmentMethod ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 shadow-[0_4px_12px_rgba(37,99,235,0.08)]' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-600 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:-translate-y-[1px] hover:shadow-sm'"
+        (click)="select(method)">
+        <div class="w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-all duration-200" 
+          [ngClass]="selectedId() === method.idShipmentMethod ? 'border-blue-600 bg-blue-600 shadow-[inset_0_0_0_4px_#ffffff] dark:shadow-[inset_0_0_0_4px_#0f172a]' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800'"></div>
+        <div class="flex justify-between items-center flex-1">
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-100">{{ method.methodName }}</span>
+          <span class="text-[15px] font-extrabold text-blue-600 dark:text-blue-500">{{ method.basePrice | currencyPen }}</span>
+        </div>
       </div>
-    </div>
-    }
-    @if (methods().length === 0) {
-        <p class="no-methods-available">{{ t().checkout.shipping.noAvailable }}</p>
+      }
+      @if (methods().length === 0) {
+        <p class="text-red-500 dark:text-red-400 font-medium text-sm text-center p-2.5">No hay métodos de envío disponibles para esta zona.</p>
       }
     }
   </div>

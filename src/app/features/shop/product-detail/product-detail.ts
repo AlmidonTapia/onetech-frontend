@@ -1,17 +1,19 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { KeyValuePipe } from '@angular/common';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { KeyValuePipe, CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { ProductImagesComponent } from './components/product-images/product-images';
 import { ProductInfoComponent } from './components/product-info/product-info';
 import { ProductReviewsComponent } from './components/product-reviews/product-reviews';
-import { ProductReviewFormComponent } from './components/product-review-form/product-review-form';
+
 import { RelatedProductsComponent } from './components/related-products/related-products';
 import { SpinnerComponent } from '../../../shared/components/ui/spinner/spinner';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
+import { TabsModule } from 'primeng/tabs';
 import { ProductService } from '../../../core/domains/catalog/services/product.service';
 import { AuthService } from '../../../core/domains/identity/services/auth.service';
 import { SeoService } from '../../../core/domains/shared/services/seo.service';
 import { Product } from '../../../core/domains/catalog/models/product.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,19 +23,21 @@ import { Product } from '../../../core/domains/catalog/models/product.model';
     ProductImagesComponent,
     ProductInfoComponent,
     ProductReviewsComponent,
-    ProductReviewFormComponent,
+
     RelatedProductsComponent,
     SpinnerComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    TabsModule,
+    CommonModule
   ],
-  templateUrl: './product-detail.html',
-  styleUrl: './product-detail.css'
+  templateUrl: './product-detail.html'
 })
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   authService = inject(AuthService);
   private seoService = inject(SeoService);
+  private destroyRef = inject(DestroyRef);
 
   product = signal<Product | null>(null);
   related = signal<Product[]>([]);
@@ -64,7 +68,7 @@ export class ProductDetailComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const id = params.get('id')!;
       this.loadProduct(id);
       
@@ -73,32 +77,34 @@ export class ProductDetailComponent implements OnInit {
 
   loadProduct(id: string) {
     this.loading.set(true);
-    this.productService.getById(id).subscribe({
-      next: p => {
-        this.product.set(p);
-        this.loading.set(false);
+    this.productService.getById(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: p => {
+          this.product.set(p);
+          this.loading.set(false);
 
-        this.seoService.setMetaData({
-          title: p.productName,
-          description: p.description || `Compra ${p.productName} en OneTech`,
-          image: p.images?.[0]?.imageUrl
-        });
+          this.seoService.setMetaData({
+            title: p.productName,
+            description: p.description || `Compra ${p.productName} en OneTech`,
+            image: p.images?.[0]?.imageUrl
+          });
 
-        this.breadcrumb.set([
-          { label: this.content.catalogLabel, route: this.content.catalogRoute },
-          { label: p.categoryName ?? this.content.noCategoryLabel, route: this.content.catalogRoute },
-          { label: p.productName },
-        ]);
+          this.breadcrumb.set([
+            { label: this.content.catalogLabel, route: this.content.catalogRoute },
+            { label: p.categoryName ?? this.content.noCategoryLabel, route: this.content.catalogRoute },
+            { label: p.productName },
+          ]);
 
-        this.productService.getAll({
-          page: this.apiConfig.relatedPage,
-          size: this.apiConfig.relatedSize,
-          idCategory: p.idCategory
-        }).subscribe(r => {
-          this.related.set(r.content.filter((rp: any) => rp.idProduct !== id));
-        });
-      },
-      error: () => this.loading.set(false),
-    });
+          this.productService.getAll({
+            page: this.apiConfig.relatedPage,
+            size: this.apiConfig.relatedSize,
+            idCategory: p.idCategory
+          }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => {
+            this.related.set(r.content.filter((rp: any) => rp.idProduct !== id));
+          });
+        },
+        error: () => this.loading.set(false),
+      });
   }
 }

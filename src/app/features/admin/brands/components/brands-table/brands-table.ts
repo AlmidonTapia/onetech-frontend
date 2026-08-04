@@ -4,14 +4,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
 import { Brand } from '../../../../../core/domains/catalog/models/brand.model';
 import { inject } from '@angular/core';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-brands-table',
   standalone: true,
-  imports: [TableModule, TooltipModule, InputTextModule],
-  templateUrl: './brands-table.html',
-  styleUrl: './brands-table.css'
+  imports: [TableModule, TooltipModule, InputTextModule, ButtonComponent],
+  templateUrl: './brands-table.html'
 })
 export class BrandsTableComponent {
   @Input() brands: Brand[] = [];
@@ -22,10 +21,6 @@ export class BrandsTableComponent {
   @Output() editItem = new EventEmitter<Brand>();
   @Output() deleteItem = new EventEmitter<Brand>();
   @Output() search = new EventEmitter<string>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
     this.search.emit(target.value);
@@ -40,17 +35,17 @@ export class BrandsTableComponent {
 
   get content() {
     return {
-      quickSearchTitle: this.t().adminBrands.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminBrands.table.searchPlaceholder,
+      quickSearchTitle: 'Búsqueda Rápida',
+      searchPlaceholder: 'Buscar marcas...',
       headers: {
-        brand: this.t().adminBrands.table.headers.brand,
-        actions: this.t().adminBrands.table.headers.actions
+        brand: 'Marca',
+        actions: 'Acciones'
       },
       tooltips: {
-        edit: this.t().adminBrands.table.tooltips.edit,
-        delete: this.t().adminBrands.table.tooltips.delete
+        edit: 'Editar',
+        delete: 'Eliminar'
       },
-      emptyMessage: this.t().adminBrands.table.emptyMessage,
+      emptyMessage: 'No hay marcas registradas.',
       icons: {
         edit: 'pi pi-pencil',
         delete: 'pi pi-trash'

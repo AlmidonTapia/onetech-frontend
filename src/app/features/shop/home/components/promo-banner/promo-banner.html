@@ -1,27 +1,29 @@
-<section class="promo-section">
+<section class="pt-10 pb-20">
   <div class="container">
-    <div class="promo-grid">
-
-      @for (card of promoCards; track card.tag) {
-      <div [class]="'promo-card ' + card.customClass">
-        <div class="promo-content">
-          <span class="promo-tag">{{ card.tag }}</span>
-          <h3>
+    <div class="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr] gap-4 sm:gap-6 lg:gap-8">
+      @for (card of promoCards(); track card.tag) {
+      <div class="group relative flex items-center justify-between overflow-hidden rounded-2xl md:rounded-[24px] p-8 sm:p-12 lg:p-14 transition-all duration-[400ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:-translate-y-1.5 hover:shadow-[0_24px_48px_rgba(0,0,0,0.12)]"
+           [ngClass]="{
+             'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 text-white shadow-[0_16px_32px_rgba(37,99,235,0.2)] dark:from-blue-900 dark:to-blue-800 dark:border dark:border-white/5 dark:shadow-[0_16px_32px_rgba(0,0,0,0.4)] dark:hover:border-blue-400/30': card.customClass === 'promo-main',
+             'bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-[0_16px_32px_rgba(0,0,0,0.1)] dark:from-slate-900 dark:to-slate-800 dark:border dark:border-white/5 dark:hover:border-white/15': card.customClass === 'promo-secondary'
+           }">
+        <div class="relative z-10 flex flex-col gap-4">
+          <span class="self-start px-3 py-1.5 text-sm font-extrabold tracking-widest uppercase text-orange-400 bg-white/10 rounded-full backdrop-blur-sm">{{ card.tag }}</span>
+          <h3 class="text-2xl sm:text-4xl font-black leading-[1.1] tracking-tight text-shadow-sm m-0">
             {{ card.titleLine1 }}<br>
             {{ card.titleLine2 }}
           </h3>
-          <p>{{ card.description }}</p>
+          <p class="text-sm sm:text-base opacity-90 leading-relaxed max-w-[320px] m-0">{{ card.description }}</p>
 
           <app-button [variant]="card.button.variant" [label]="card.button.label" [routerLink]="card.button.route"
-            [queryParams]="card.button.queryParams || null" />
+            [queryParams]="card.button.queryParams || null" class="mt-2 [&::ng-deep_.btn-outline]:!border-white/40 [&::ng-deep_.btn-outline]:!text-white [&::ng-deep_.btn-outline]:!bg-white/5 [&::ng-deep_.btn-outline]:font-bold [&::ng-deep_.btn-outline:hover]:!bg-white/15" />
         </div>
 
-        <div class="promo-icon">
+        <div class="absolute right-6 -bottom-5 text-[100px] sm:text-[140px] leading-none text-white opacity-10 transition-transform duration-[600ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:scale-[1.15] group-hover:-rotate-12 group-hover:opacity-15">
           <i [class]="card.icon"></i>
         </div>
       </div>
       }
-
     </div>
   </div>
 </section>

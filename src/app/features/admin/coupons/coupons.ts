@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CouponsTableComponent } from './components/coupons-table/coupons-table';
 import { CouponFormComponent } from './components/coupon-form/coupon-form';
 import { handleFormError } from '../../../shared/utils/form-error.util';
@@ -7,22 +8,18 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { CouponService } from '../../../core/domains/checkout/services/coupon.service';
 import { Coupon, CreateCouponRequest } from '../../../core/domains/checkout/models/coupon.model';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-coupons',
   standalone: true,
   imports: [CouponsTableComponent, CouponFormComponent, ButtonComponent],
-  templateUrl: './coupons.html',
-  styleUrl: './coupons.css'
+  templateUrl: './coupons.html'
 })
 export class CouponsComponent implements OnInit {
   private couponService = inject(CouponService);
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @ViewChild(CouponFormComponent) couponForm!: CouponFormComponent;
 
   coupons = signal<Coupon[]>([]);
@@ -57,7 +54,7 @@ export class CouponsComponent implements OnInit {
   loadCoupons(event?: any) {
     const page = event ? Math.floor(event.first / event.rows) : 0;
     this.loading.set(true);
-    this.couponService.getAll(page, 10, this.searchTerm(), this.filterType(), this.filterStatus()).subscribe({
+    this.couponService.getAll(page, 10, this.searchTerm(), this.filterType(), this.filterStatus()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => {
         this.coupons.set(r.content);
         this.totalRecords.set(r.totalElements);
@@ -85,16 +82,16 @@ export class CouponsComponent implements OnInit {
       ? this.couponService.update(this.editingCoupon()!.idCoupon, data)
       : this.couponService.create(data);
 
-    req$.subscribe({
+    req$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(isEditing ? this.t().adminCoupons.alerts.updateSuccess : this.t().adminCoupons.alerts.createSuccess);
+        this.alertService.success(isEditing ? 'Cupón actualizado' : 'Cupón creado');
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadCoupons();
       },
       error: (err) => {
         const errorMsg = handleFormError(err, this.couponForm.form) || undefined;
-        this.alertService.error(this.t().adminCoupons.alerts.saveError, errorMsg);
+        this.alertService.error('Error al guardar cupón', errorMsg);
         this.saving.set(false);
       }
     });
@@ -102,17 +99,17 @@ export class CouponsComponent implements OnInit {
 
   onDelete(c: Coupon) {
     this.modalService.open({
-      title: this.t().adminCoupons.confirmModal.title,
-      message: this.t().adminCoupons.confirmModal.deleteMessage.replace('{code}', c.code),
+      title: '¿Eliminar cupón?',
+      message: `El cupón "${c.code}" será eliminado permanentemente.`,
       severity: 'danger',
-      confirmLabel: this.t().adminCoupons.confirmModal.confirmLabel,
+      confirmLabel: 'Sí, eliminar',
       onConfirm: () => {
-        this.couponService.delete(c.idCoupon).subscribe({
+        this.couponService.delete(c.idCoupon).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
-            this.alertService.success(this.t().adminCoupons.alerts.deleteSuccess);
+            this.alertService.success('Cupón eliminado');
             this.loadCoupons();
           },
-          error: (err: any) => this.alertService.error(err?.error?.message || this.t().adminCoupons.alerts.deleteError)
+          error: (err: any) => this.alertService.error(err?.error?.message || 'Error al eliminar cupón')
         });
       },
     });

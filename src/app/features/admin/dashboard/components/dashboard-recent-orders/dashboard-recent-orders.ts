@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
-import { TranslationService } from '../../../../../core/services/translation.service';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/order.model';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
@@ -10,34 +10,29 @@ type SeverityType = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'cont
 @Component({
   selector: 'app-dashboard-recent-orders',
   standalone: true,
-  imports: [RouterLink, TagModule, CurrencyPenPipe],
-  templateUrl: './dashboard-recent-orders.html',
-  styleUrl: './dashboard-recent-orders.css'
+  imports: [RouterLink, TagModule, CurrencyPenPipe, CommonModule],
+  templateUrl: './dashboard-recent-orders.html'
 })
 export class DashboardRecentOrdersComponent {
   @Input() orders: Order[] = [];
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   get content() {
     return {
-      title: this.t().adminDashboard.recentOrders.title,
-      viewAllLabel: this.t().adminDashboard.recentOrders.viewAllLabel,
+      title: 'Órdenes recientes',
+      viewAllLabel: 'Ver todas →',
       viewAllRoute: '/admin/orders',
-      emptyMessage: this.t().adminDashboard.recentOrders.emptyMessage,
+      emptyMessage: 'No hay órdenes recientes.',
       idPrefix: '#'
     };
   }
 
   get statusConfig(): Record<OrderStatus, { label: string; severity: SeverityType }> {
     return {
-      PENDIENTE: { label: this.t().orders.status.PENDIENTE, severity: 'warn' },
-      PAGADO: { label: this.t().orders.status.PAGADO, severity: 'info' },
-      ENVIADO: { label: this.t().orders.status.ENVIADO, severity: 'secondary' },
-      COMPLETADO: { label: this.t().orders.status.COMPLETADO, severity: 'success' },
-      CANCELADO: { label: this.t().orders.status.CANCELADO, severity: 'danger' },
-      EXPIRADO: { label: this.t().orders.status.EXPIRADO, severity: 'danger' }
+      PENDIENTE: { label: 'Pendiente', severity: 'warn' },
+      PAGADO: { label: 'Pagado', severity: 'info' },
+      ENVIADO: { label: 'Enviado', severity: 'secondary' },
+      COMPLETADO: { label: 'Completado', severity: 'success' },
+      CANCELADO: { label: 'Cancelado', severity: 'danger' },
+      EXPIRADO: { label: 'Expirado', severity: 'danger' }
     };
   }
 

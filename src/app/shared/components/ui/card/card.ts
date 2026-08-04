@@ -6,7 +6,6 @@ import { NgClass } from '@angular/common';
   standalone: true,
   imports: [NgClass],
   templateUrl: './card.html',
-  styleUrl: './card.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent {

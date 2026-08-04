@@ -8,7 +8,6 @@ export type BadgeVariant = 'success' | 'error' | 'warning' | 'info' | 'gray' | '
   standalone: true,
   imports: [NgClass],
   templateUrl: './badge.html',
-  styleUrl: './badge.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeComponent {

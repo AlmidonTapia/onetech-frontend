@@ -3,75 +3,95 @@
 
   @if (shipment) {
     @if (shipment.status === 'EN_PREPARACION') {
-      <form [formGroup]="dispatchForm" class="simple-form" novalidate>
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ content.fields.trackingNumber }}</label>
-            <input pInputText formControlName="trackingNumber" [placeholder]="content.fields.trackingPlaceholder" [class.ng-invalid]="isInvalid('trackingNumber', dispatchForm)" />
-            @if (isInvalid('trackingNumber', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
+      <form [formGroup]="dispatchForm" class="flex flex-col gap-4 pt-2" novalidate>
+        <div class="flex gap-4">
+          <div class="flex flex-col gap-1.5 flex-1">
+            <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.trackingNumber }}</label>
+            <input pInputText formControlName="trackingNumber" [placeholder]="content.fields.trackingPlaceholder" class="w-full" [class.border-red-500]="isInvalid('trackingNumber', dispatchForm)" />
+            @if (isInvalid('trackingNumber', dispatchForm)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
           </div>
-          <div class="form-field">
-            <label>{{ content.fields.pickupCode }}</label>
-            <input pInputText formControlName="pickupCode" [placeholder]="content.fields.pickupCodePlaceholder" [class.ng-invalid]="isInvalid('pickupCode', dispatchForm)" />
-            @if (isInvalid('pickupCode', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ content.fields.shippedAt }}</label>
-            <input pInputText type="datetime-local" formControlName="shippedAt" [class.ng-invalid]="isInvalid('shippedAt', dispatchForm)" />
-            @if (isInvalid('shippedAt', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
-          </div>
-          <div class="form-field">
-            <label>{{ content.fields.estimatedArrival }}</label>
-            <input pInputText type="date" formControlName="estimatedArrival" [class.ng-invalid]="isInvalid('estimatedArrival', dispatchForm)" />
-            @if (isInvalid('estimatedArrival', dispatchForm)) { <span class="field-error">{{ content.errorRequired }}</span> }
+          <div class="flex flex-col gap-1.5 flex-1">
+            <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.pickupCode }}</label>
+            <input pInputText formControlName="pickupCode" [placeholder]="content.fields.pickupCodePlaceholder" class="w-full" [class.border-red-500]="isInvalid('pickupCode', dispatchForm)" />
+            @if (isInvalid('pickupCode', dispatchForm)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ content.fields.receiptImage }}</label>
-            <input type="file" #fileUpload (change)="onFileSelected($event)" accept="image/*, image/webp, .webp" class="file-input" />
-            @if (!selectedFile) { <span class="field-error">{{ content.fields.errorImageRequired }}</span> }
+        <div class="flex gap-4">
+          <div class="flex flex-col gap-1.5 flex-1">
+            <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.shippedAt }}</label>
+            <input pInputText type="datetime-local" formControlName="shippedAt" class="w-full" [class.border-red-500]="isInvalid('shippedAt', dispatchForm)" />
+            @if (isInvalid('shippedAt', dispatchForm)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
+          </div>
+          <div class="flex flex-col gap-1.5 flex-1">
+            <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.estimatedArrival }}</label>
+            <input pInputText type="date" formControlName="estimatedArrival" class="w-full" [class.border-red-500]="isInvalid('estimatedArrival', dispatchForm)" />
+            @if (isInvalid('estimatedArrival', dispatchForm)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="flex flex-col gap-1.5 flex-1">
+            <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.receiptImage }}</label>
+            <div class="relative w-full">
+              <input type="file" accept="image/*, image/webp, .webp" (change)="onFileSelected($event)" #fileUpload class="hidden" />
+              
+              @if (previewUrl()) {
+                <div class="relative w-full h-40 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden cursor-pointer group" (click)="fileUpload.click()">
+                  <img [src]="previewUrl()" alt="Preview" class="w-full h-full object-cover" />
+                  <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"><i class="pi pi-pencil mr-1"></i> {{ content.fields.changeImage }}</div>
+                </div>
+              } @else {
+                <div class="w-full h-40 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" (click)="fileUpload.click()">
+                  <i class="pi pi-image text-2xl mb-2"></i>
+                  <span class="text-sm font-medium">{{ content.fields.selectImage }}</span>
+                </div>
+              }
+            </div>
+            @if (!selectedFile && dispatchForm.touched) { <span class="text-xs text-red-500 mt-0.5">{{ content.fields.errorImageRequired }}</span> }
           </div>
         </div>
       </form>
     } @else {
-      <div class="readonly-view">
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.status }}</span>
-          <span class="status-badge" [class]="shipment.status.toLowerCase()">{{ shipment.status }}</span>
+      <div class="flex flex-col gap-3 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg">
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.status }}</span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold capitalize" 
+                [ngClass]="{
+                  'bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-500': shipment.status === 'EN_CAMINO',
+                  'bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-500': shipment.status === 'ENTREGADO',
+                  'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-500': shipment.status === 'DEVUELTO',
+                  'bg-orange-100 text-orange-800 dark:bg-orange-500/20 dark:text-orange-500': shipment.status === 'DEVOLUCION_PENDIENTE'
+                }">{{ getStatusLabel(shipment.status) }}</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.orderId }}</span>
-          <span>{{ shipment.idOrder }}</span>
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.orderId }}</span>
+          <span class="text-slate-800 dark:text-slate-200">{{ shipment.idOrder }}</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.trackingNumber }}</span>
-          <span>{{ shipment.trackingNumber }}</span>
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.trackingNumber }}</span>
+          <span class="text-slate-800 dark:text-slate-200">{{ shipment.trackingNumber }}</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.pickupCode }}</span>
-          <span>{{ shipment.pickupCode || '-' }}</span>
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.pickupCode }}</span>
+          <span class="text-slate-800 dark:text-slate-200">{{ shipment.pickupCode || '-' }}</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.shippedAt }}</span>
-          <span>{{ shipment.shippedAt ? (shipment.shippedAt | date:'medium') : '-' }}</span>
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.shippedAt }}</span>
+          <span class="text-slate-800 dark:text-slate-200">{{ shipment.shippedAt ? (shipment.shippedAt | date:'medium') : '-' }}</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.estimatedArrival }}</span>
-          <span>{{ shipment.estimatedArrival | date:'mediumDate' }}</span>
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.estimatedArrival }}</span>
+          <span class="text-slate-800 dark:text-slate-200">{{ shipment.estimatedArrival | date:'mediumDate' }}</span>
         </div>
-        <div class="detail-row">
-          <span class="detail-label">{{ content.details.actualArrival }}</span>
-          <span>{{ shipment.actualArrival ? (shipment.actualArrival | date:'medium') : '-' }}</span>
+        <div class="flex items-center">
+          <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.actualArrival }}</span>
+          <span class="text-slate-800 dark:text-slate-200">{{ shipment.actualArrival ? (shipment.actualArrival | date:'medium') : '-' }}</span>
         </div>
         @if (shipment.receiptImageUrl) {
-          <div class="detail-row image-row">
-            <span class="detail-label">{{ content.details.receiptImage }}</span>
-            <a [href]="shipment.receiptImageUrl" target="_blank" class="receipt-link">
+          <div class="flex items-center">
+            <span class="font-semibold text-slate-600 dark:text-slate-400 w-[150px]">{{ content.details.receiptImage }}</span>
+            <a [href]="shipment.receiptImageUrl" target="_blank" class="flex items-center gap-1 font-medium text-sky-600 hover:underline dark:text-sky-400">
               <i class="pi pi-external-link"></i> {{ content.details.viewReceipt }}
             </a>
           </div>
@@ -81,36 +101,36 @@
   }
 
   @else {
-    <form [formGroup]="form" class="simple-form" novalidate>
-      <div class="form-row">
-        <div class="form-field">
-          <label>{{ content.fields.orderId }}</label>
-          <input pInputText formControlName="idOrder" [placeholder]="content.fields.orderIdPlaceholder" [class.ng-invalid]="isInvalid('idOrder', form)" />
-          @if (isInvalid('idOrder', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
+    <form [formGroup]="form" class="flex flex-col gap-4 pt-2" novalidate>
+      <div class="flex gap-4">
+        <div class="flex flex-col gap-1.5 flex-1">
+          <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.orderId }}</label>
+          <input pInputText formControlName="idOrder" [placeholder]="content.fields.orderIdPlaceholder" class="w-full" [class.border-red-500]="isInvalid('idOrder', form)" />
+          @if (isInvalid('idOrder', form)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
         </div>
-        <div class="form-field">
-          <label>{{ content.fields.method }}</label>
+        <div class="flex flex-col gap-1.5 flex-1">
+          <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.method }}</label>
           <p-select formControlName="idShipmentMethod" [options]="methods()" optionLabel="methodName" optionValue="idShipmentMethod" [placeholder]="content.fields.methodPlaceholder" [appendTo]="content.styles.appendTo" [style]="{ 'width': content.styles.selectWidth }"></p-select>
-          @if (isInvalid('idShipmentMethod', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
+          @if (isInvalid('idShipmentMethod', form)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label>{{ content.fields.cost }}</label>
+      <div class="flex gap-4">
+        <div class="flex flex-col gap-1.5 flex-1">
+          <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.cost }}</label>
           <p-inputNumber formControlName="shippingCost" mode="decimal" [minFractionDigits]="2" [style]="{ 'width': content.styles.selectWidth }"></p-inputNumber>
-          @if (isInvalid('shippingCost', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
+          @if (isInvalid('shippingCost', form)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
         </div>
-        <div class="form-field">
-          <label>{{ content.fields.estimatedArrival }}</label>
-          <input pInputText type="date" formControlName="estimatedArrival" [class.ng-invalid]="isInvalid('estimatedArrival', form)" />
-          @if (isInvalid('estimatedArrival', form)) { <span class="field-error">{{ content.errorRequired }}</span> }
+        <div class="flex flex-col gap-1.5 flex-1">
+          <label class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.fields.estimatedArrival }}</label>
+          <input pInputText type="date" formControlName="estimatedArrival" class="w-full" [class.border-red-500]="isInvalid('estimatedArrival', form)" />
+          @if (isInvalid('estimatedArrival', form)) { <span class="text-xs text-red-500 mt-0.5">{{ content.errorRequired }}</span> }
         </div>
       </div>
     </form>
   }
 
   <ng-template pTemplate="footer">
-    <div class="dialog-footer">
+    <div class="flex justify-end gap-3 mt-6">
       <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
       
       @if (!shipment) {
@@ -118,7 +138,7 @@
       } @else if (shipment.status === 'EN_PREPARACION') {
         <app-button variant="primary" [label]="content.actions.dispatchLabel" icon="pi-send" [loading]="saving" (clicked)="onDispatch()" />
       } @else if (shipment.status === 'EN_CAMINO') {
-        <div class="action-buttons">
+        <div class="flex gap-3">
           <app-button variant="danger" [label]="content.actions.pendingReturn" icon="pi-reply" [loading]="saving" (clicked)="onUpdateStatus('DEVOLUCION_PENDIENTE')" />
           <app-button variant="primary" [label]="content.actions.deliveredLabel" icon="pi-check-circle" [loading]="saving" (clicked)="onUpdateStatus('ENTREGADO')" />
         </div>

@@ -1,4 +1,4 @@
-<div class="locations-container">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[480px]">
 
     <app-location-panel
     [title]="content.deptTitle"
@@ -51,28 +51,28 @@
   [draggable]="false"
   [resizable]="false">
 
-  <form [formGroup]="form" class="simple-form mt-4">
-    <div class="form-field">
-      <label>Código INEI *</label>
+  <form [formGroup]="form" class="flex flex-col gap-4 mt-4">
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13.6px] font-semibold text-slate-800 dark:text-slate-200">Código INEI *</label>
       <input type="text" pInputText formControlName="id"
              [placeholder]="getCodeHint()"
              [maxlength]="getCodeMaxLength()"
              class="w-full" />
-      <small class="text-help">{{ getCodeHint() }}</small>
-      <small class="text-red-500" *ngIf="form.get('id')?.touched && form.get('id')?.invalid">El código es requerido</small>
+      <small class="block mt-1 text-xs text-slate-500 dark:text-slate-400">{{ getCodeHint() }}</small>
+      <small class="text-red-500 text-xs" *ngIf="form.get('id')?.touched && form.get('id')?.invalid">El código es requerido</small>
     </div>
 
-    <div class="form-field">
-      <label>Nombre *</label>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13.6px] font-semibold text-slate-800 dark:text-slate-200">Nombre *</label>
       <input type="text" pInputText formControlName="name"
              placeholder="Ej: Lima"
              class="w-full" />
-      <small class="text-red-500" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">El nombre es requerido</small>
+      <small class="text-red-500 text-xs" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">El nombre es requerido</small>
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <div class="flex justify-content-end gap-2">
+    <div class="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
       <app-button variant="outline" label="Cancelar" (clicked)="showDialog.set(false)"></app-button>
       <app-button variant="primary" label="Guardar" [loading]="submitting()" (clicked)="save()"></app-button>
     </div>

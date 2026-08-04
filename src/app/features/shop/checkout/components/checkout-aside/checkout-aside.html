@@ -1,73 +1,73 @@
-<div class="mini-summary-card">
-  <h4>{{ t().checkout.summaryTitle }} ({{ itemCount }})</h4>
+<div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 lg:sticky lg:top-[100px] shadow-sm transition-all duration-300">
+  <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 m-0 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">Tu pedido ({{ itemCount }})</h4>
 
-  <div class="mini-items-list">
+  <div class="flex flex-col gap-3 max-h-[240px] overflow-y-auto mb-4 pr-1">
     @for (item of cart?.items ?? []; track item.idProduct) {
-    <div class="mini-item">
-      <span class="mini-name">{{ item.productName }}</span>
-      <span class="mini-qty">× {{ item.quantity }}</span>
-      <span class="mini-price">{{ item.subtotal | currencyPen }}</span>
+    <div class="flex justify-between items-center text-[13px] pb-2">
+      <span class="text-slate-800 dark:text-slate-100 font-medium truncate max-w-[180px]">{{ item.productName }}</span>
+      <span class="text-slate-500 dark:text-slate-400 ml-2 mr-auto">× {{ item.quantity }}</span>
+      <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.subtotal | currencyPen }}</span>
     </div>
     }
   </div>
 
-  <div class="mini-total subtotal">
-    <span>{{ t().checkout.labels.subtotal }}</span>
-    <strong>{{ subtotal | currencyPen }}</strong>
+  <div class="flex justify-between items-center py-3 text-sm text-slate-500 dark:text-slate-400 border-b-[1.5px] border-dashed border-slate-200 dark:border-slate-700 pb-4 mb-2">
+    <span>Subtotal</span>
+    <strong class="text-slate-800 dark:text-slate-100 text-[15px] font-semibold">{{ subtotal | currencyPen }}</strong>
   </div>
 
   @if (ubigeoCode) {
-    <div class="mini-selected-info">
-      <strong>{{ t().checkout.aside.deliveryAddress }}</strong>
-      <span>{{ locationName || ('Ubigeo: ' + ubigeoCode) }}</span>
+    <div class="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700 text-[13px] text-slate-800 dark:text-slate-100">
+      <strong class="block text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">Dirección de Entrega</strong>
+      <span class="block leading-relaxed">{{ locationName || ('Ubigeo: ' + ubigeoCode) }}</span>
     </div>
   }
 
   @if (shipMethod) {
-    <div class="mini-selected-info">
-      <strong>{{ t().checkout.aside.shippingAgency }}</strong>
-      <span>{{ shipMethod.methodName }}</span>
+    <div class="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700 text-[13px] text-slate-800 dark:text-slate-100">
+      <strong class="block text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">Agencia de Envío</strong>
+      <span class="block leading-relaxed">{{ shipMethod.methodName }}</span>
     </div>
   }
 
   @if (consignee) {
-    <div class="mini-selected-info">
-      <strong>{{ t().checkout.aside.receiver }}</strong>
+    <div class="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700 text-[13px] text-slate-800 dark:text-slate-100">
+      <strong class="block text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">Quien Recibe</strong>
       @if (consignee.isSelf) {
-        <span>{{ consignee.fullName || t().checkout.aside.myself }}</span>
+        <span class="block leading-relaxed">{{ consignee.fullName || 'Yo mismo' }}</span>
       } @else {
-        <span>{{ consignee.fullName }}</span>
+        <span class="block leading-relaxed">{{ consignee.fullName }}</span>
       }
-      <span class="text-xs text-gray-500 block">DNI: {{ consignee.docNumber }}</span>
-      <span class="text-xs text-gray-500 block">Cel: {{ consignee.phone }}</span>
+      <span class="text-xs text-slate-500 dark:text-slate-400 block">DNI: {{ consignee.docNumber }}</span>
+      <span class="text-xs text-slate-500 dark:text-slate-400 block">Cel: {{ consignee.phone }}</span>
     </div>
   }
 
   @if (payMethod) {
-    <div class="mini-selected-info">
-      <strong>{{ t().checkout.aside.paymentMethod }}</strong>
-      <span>{{ payMethod.methodName }}</span>
+    <div class="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700 text-[13px] text-slate-800 dark:text-slate-100">
+      <strong class="block text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">Método de Pago</strong>
+      <span class="block leading-relaxed">{{ payMethod.methodName }}</span>
     </div>
   }
 
 
 
   @if (discountAmount > 0) {
-    <div class="mini-total discount">
-      <span>{{ t().checkout.labels.discount }}</span>
-      <strong>- {{ discountAmount | currencyPen }}</strong>
+    <div class="flex justify-between items-center py-1 text-sm text-green-600 dark:text-green-500 pt-1">
+      <span>Descuento</span>
+      <strong class="text-[15px] font-semibold">- {{ discountAmount | currencyPen }}</strong>
     </div>
   }
 
   @if (shipMethod) {
-    <div class="mini-total shipping">
-      <span>{{ t().checkout.labels.shipping }}</span>
-      <strong>{{ shipMethod.basePrice | currencyPen }}</strong>
+    <div class="flex justify-between items-center py-3 text-sm text-slate-500 dark:text-slate-400">
+      <span class="font-bold text-slate-800 dark:text-slate-100">Envío</span>
+      <strong class="text-slate-800 dark:text-slate-100 text-[15px] font-semibold">{{ shipMethod.basePrice | currencyPen }}</strong>
     </div>
   }
 
-  <div class="mini-total final">
-    <span>{{ t().checkout.totalLabel }}</span>
-    <strong>{{ finalTotal | currencyPen }}</strong>
+  <div class="flex justify-between items-center py-4 mt-2 border-t-[1.5px] border-dashed border-slate-200 dark:border-slate-700 text-[15px] font-bold text-slate-800 dark:text-slate-100">
+    <span>Total</span>
+    <strong class="text-blue-600 dark:text-blue-500 text-xl font-extrabold">{{ finalTotal | currencyPen }}</strong>
   </div>
 </div>

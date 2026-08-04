@@ -1,11 +1,11 @@
 <app-auth-layout [brandData]="brandData">
-  <div class="auth-form-card animate-fade-scale">
+  <div class="w-full max-w-[460px] flex flex-col gap-7 bg-slate-50 dark:bg-slate-900 p-8 sm:p-10 rounded-2xl sm:rounded-[24px] shadow-lg border border-slate-200 dark:border-slate-700 transition-all duration-300 animate-fade-scale">
 
-    <div class="form-header">
-      <h1>{{ formData.title }}</h1>
-      <p>
+    <div class="flex flex-col">
+      <h1 class="font-sans text-[32px] font-extrabold bg-gradient-to-br from-blue-600 to-blue-500 bg-clip-text text-transparent m-0 mb-2 tracking-tight">{{ formData.title }}</h1>
+      <p class="m-0 text-slate-500 dark:text-slate-400">
         {{ formData.registerText }}
-        <a [routerLink]="formData.registerRoute" queryParamsHandling="merge" class="form-link">{{ formData.registerLinkText }}</a>
+        <a [routerLink]="formData.registerRoute" queryParamsHandling="merge" class="text-blue-600 dark:text-blue-400 font-semibold transition-colors duration-300 hover:text-blue-700 dark:hover:text-blue-300 hover:underline">{{ formData.registerLinkText }}</a>
       </p>
     </div>
 
@@ -15,22 +15,22 @@
     </app-alert>
     }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form" novalidate>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-2" novalidate>
 
       @for (field of fields; track field.name) {
-      <div class="form-field">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <label [for]="field.name" style="margin-bottom: 0;">{{ field.label }}</label>
+      <div class="flex flex-col gap-2 relative pb-5">
+        <div class="flex justify-between items-center mb-1">
+          <label [for]="field.name" class="text-sm font-semibold text-slate-800 dark:text-slate-100 m-0">{{ field.label }}</label>
           @if (field.name === 'password') {
-            <a [routerLink]="formData.forgotPasswordRoute" class="form-link" style="font-size: 0.875rem;">{{ formData.forgotPasswordText }}</a>
+            <a [routerLink]="formData.forgotPasswordRoute" class="text-blue-600 dark:text-blue-400 font-semibold transition-colors duration-300 hover:text-blue-700 dark:hover:text-blue-300 hover:underline text-[13px]">{{ formData.forgotPasswordText }}</a>
           }
         </div>
 
         @if (field.type === 'email') {
-        <div class="input-wrapper">
-          <i [class]="field.icon + ' input-icon'"></i>
+        <div class="relative">
+          <i [class]="field.icon + ' absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base z-10 pointer-events-none'"></i>
           <input pInputText [id]="field.name" type="email" [formControlName]="field.name"
-            [placeholder]="field.placeholder" class="with-icon" [class.ng-invalid]="isInvalid(field.name)"
+            [placeholder]="field.placeholder" class="!pl-11 w-full" [class.ng-invalid]="isInvalid(field.name)"
             [class.ng-dirty]="isInvalid(field.name)" />
         </div>
         }
@@ -43,13 +43,13 @@
 
         @if (isInvalid(field.name)) {
         @if (form.get(field.name)?.errors?.['required']) {
-        <small class="field-error">{{ formData.errors.required }}</small>
+        <small class="absolute bottom-0 left-0 text-xs text-red-500 font-medium">{{ formData.errors.required }}</small>
         }
         @if (form.get(field.name)?.errors?.['email']) {
-        <small class="field-error">{{ formData.errors.email }}</small>
+        <small class="absolute bottom-0 left-0 text-xs text-red-500 font-medium">{{ formData.errors.email }}</small>
         }
         @if (form.get(field.name)?.errors?.['backend']) {
-        <small class="field-error">{{ form.get(field.name)?.errors?.['backend'] }}</small>
+        <small class="absolute bottom-0 left-0 text-xs text-red-500 font-medium">{{ form.get(field.name)?.errors?.['backend'] }}</small>
         }
         }
       </div>
@@ -58,10 +58,11 @@
         <app-button type="submit" variant="primary" [label]="formData.submitButtonLabel" [fullWidth]="true"
           [loading]="loading()" />
 
-        <div class="auth-divider">
-          <span>{{ formData.dividerText }}</span>
+        <div class="flex items-center gap-4 w-full my-5 before:content-[''] before:flex-1 before:h-px before:bg-slate-200 dark:before:bg-slate-700 after:content-[''] after:flex-1 after:h-px after:bg-slate-200 dark:after:bg-slate-700">
+          <span class="text-sm text-slate-500">{{ formData.dividerText }}</span>
         </div>
-        <app-button type="button" variant="outline" [fullWidth]="true" class="btn-google"
+        
+        <app-button type="button" variant="outline" [fullWidth]="true" styleClass="!text-slate-800 dark:!text-slate-100 !bg-slate-50 dark:!bg-slate-900 hover:!bg-slate-100 dark:hover:!bg-slate-800"
           (click)="loginWithGoogle()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
             <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>

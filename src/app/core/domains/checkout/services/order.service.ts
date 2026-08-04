@@ -29,7 +29,9 @@ export class OrderService {
 
   create(data: CreateOrderRequest, idempotencyKey?: string) {
     const headers = idempotencyKey ? new HttpHeaders({ 'Idempotency-Key': idempotencyKey }) : undefined;
-    return this.http.post<string>(this.url, data, { headers });
+    return this.http.post<ApiResponse<any>>(this.url, data, { headers }).pipe(
+      map(res => res.id as string)
+    );
   }
 
   updateStatus(id: string, newStatus: OrderStatus) {

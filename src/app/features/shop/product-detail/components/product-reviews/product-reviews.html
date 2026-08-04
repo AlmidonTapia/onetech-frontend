@@ -1,6 +1,6 @@
-<div class="reviews-section">
-  <div class="reviews-header">
-    <h3 class="section-title">{{ content.mainTitle }}</h3>
+<div class="flex flex-col gap-6">
+  <div class="flex items-center justify-between">
+    <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0">{{ content.mainTitle }}</h3>
     @if (authService.isAuthenticated() && !showForm()) {
     <app-button variant="outline" [label]="content.writeBtnLabel" [icon]="content.writeBtnIcon"
       (clicked)="showForm.set(true)" />
@@ -8,25 +8,25 @@
   </div>
 
   @if (showForm()) {
-  <div class="review-form animate-fade-in">
-    <h4>{{ content.formTitle }}</h4>
+  <div class="bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-5 flex flex-col gap-4 animate-fade-in">
+    <h4 class="text-[15px] font-semibold text-slate-900 dark:text-slate-100 m-0">{{ content.formTitle }}</h4>
 
-    <div class="form-field">
-      <label>{{ content.ratingLabel }}</label>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.ratingLabel }}</label>
       <app-star-rating [(value)]="newRating" [readonly]="false" />
     </div>
 
-    <div class="form-field">
-      <label>{{ content.titleLabel }}</label>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.titleLabel }}</label>
       <input pInputText [(ngModel)]="newTitle" [placeholder]="content.titlePlaceholder" />
     </div>
 
-    <div class="form-field">
-      <label>{{ content.commentLabel }}</label>
-      <textarea [(ngModel)]="newComment" rows="3" [placeholder]="content.commentPlaceholder"></textarea>
+    <div class="flex flex-col gap-1.5">
+      <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.commentLabel }}</label>
+      <textarea [(ngModel)]="newComment" rows="3" [placeholder]="content.commentPlaceholder" class="w-full p-3 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-sm resize-y outline-none transition-colors duration-200 focus:border-blue-500 font-inherit"></textarea>
     </div>
 
-    <div class="form-actions">
+    <div class="flex justify-end gap-2.5 mt-2">
       <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="showForm.set(false)" />
       <app-button variant="primary" [label]="content.actions.submitLabel" [loading]="sending()"
         (clicked)="onSubmit()" />
@@ -35,55 +35,55 @@
   }
 
   @if (loading()) {
-  <div class="reviews-loading">
+  <div class="text-slate-500 dark:text-slate-400 text-center p-6">
     <app-spinner [label]="content.loadingLabel" />
   </div>
   } @else if (reviews().length === 0) {
-  <div class="reviews-empty">
-    <i class="pi pi-comment"></i>
-    <p>{{ content.emptyTitle }}</p>
+  <div class="flex flex-col items-center gap-2.5 p-10 text-slate-500 dark:text-slate-400">
+    <i class="pi pi-comment text-4xl"></i>
+    <p class="m-0">{{ content.emptyTitle }}</p>
   </div>
   } @else {
-  <div class="reviews-summary">
-    <div class="summary-average">
-      <span class="average-number">{{ averageRating() | number:'1.1-1' }}</span>
+  <div class="flex flex-col sm:flex-row gap-6 sm:gap-10 items-start sm:items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-[20px] p-6 sm:p-8 shadow-sm mb-2">
+    <div class="flex flex-col items-center gap-1.5">
+      <span class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 leading-none">{{ averageRating() | number:'1.1-1' }}</span>
       <app-star-rating [value]="averageRating()" [readonly]="true" [showCount]="false" />
-      <span class="total-reviews">{{ reviews().length }} {{ content.totalReviewsLabel }}</span>
+      <span class="text-[13px] text-slate-500 dark:text-slate-400 mt-1">{{ reviews().length }} {{ content.totalReviewsLabel }}</span>
     </div>
-    <div class="summary-bars">
+    <div class="flex-1 flex flex-col gap-2.5 w-full">
       @for (stat of ratingCounts(); track stat.stars) {
-      <div class="bar-row">
-        <span class="star-label">{{ stat.stars }} <i class="pi pi-star-fill"></i></span>
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="stat.percentage"></div>
+      <div class="flex items-center gap-3">
+        <span class="w-10 text-[13px] font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-1">{{ stat.stars }} <i class="pi pi-star-fill text-yellow-500 text-[11px]"></i></span>
+        <div class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div class="h-full bg-blue-500 rounded-full transition-all duration-300" [style.width.%]="stat.percentage"></div>
         </div>
-        <span class="percent-label">{{ stat.percentage | number:'1.0-0' }}%</span>
+        <span class="w-10 text-xs text-slate-500 dark:text-slate-400 text-right">{{ stat.percentage | number:'1.0-0' }}%</span>
       </div>
       }
     </div>
   </div>
-  <div class="reviews-list">
+  <div class="flex flex-col gap-4">
     @for (review of reviews(); track review.idReview) {
-    <div class="review-card">
-      <div class="review-header">
-        <div class="reviewer-avatar">
+    <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl sm:rounded-[20px] p-5 sm:p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+      <div class="flex items-center gap-3 mb-3 flex-wrap">
+        <div class="w-9 h-9 rounded-full bg-blue-500 dark:bg-blue-400 text-white dark:text-slate-900 text-sm font-bold flex items-center justify-center">
           {{ review.userFullName?.[0]?.toUpperCase() ?? content.defaultAvatarLetter }}
         </div>
 
-        <div>
-          <span class="reviewer-name">{{ review.userFullName }}</span>
-          <span class="review-date">{{ review.createdAt | date: content.dateFormat }}</span>
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold text-slate-900 dark:text-slate-100 block">{{ review.userFullName }}</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400">{{ review.createdAt | date: content.dateFormat }}</span>
         </div>
 
-        <div class="review-rating">
+        <div class="ml-auto">
           <app-star-rating [value]="review.rating" [readonly]="true" [showCount]="false" />
         </div>
       </div>
       
       @if (review.title) {
-        <h5 class="review-title">{{ review.title }}</h5>
+        <h5 class="text-[15px] font-bold text-slate-900 dark:text-slate-100 m-0 mb-1 mt-3">{{ review.title }}</h5>
       }
-      <p class="review-comment">{{ review.comment }}</p>
+      <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed m-0">{{ review.comment }}</p>
     </div>
     }
   </div>

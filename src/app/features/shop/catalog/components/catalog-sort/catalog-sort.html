@@ -1,11 +1,11 @@
-<div class="sort-bar">
-  <span class="results-count">
-    <strong>{{ totalRecords }}</strong> {{ t().catalog.sort.resultsSuffix }}
+<div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 sm:gap-0 mb-6 p-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 items-stretch">
+  <span class="text-sm text-slate-500 dark:text-slate-400">
+    <strong class="text-slate-900 dark:text-slate-100">{{ totalRecords }}</strong> productos encontrados
   </span>
 
-  <div class="sort-control">
-    <label class="sort-label">{{ t().catalog.sort.sortLabelText }}</label>
+  <div class="flex items-center justify-between sm:justify-start gap-3">
+    <label class="text-sm font-medium text-slate-500 dark:text-slate-400">Ordenar por:</label>
     <p-select [options]="options" optionLabel="label" optionValue="value" [(ngModel)]="sort"
-      (ngModelChange)="sortChange.emit($event)" [style]="{ 'width': '220px' }" />
+      (ngModelChange)="sortChange.emit($event)" styleClass="w-[220px]" />
   </div>
 </div>

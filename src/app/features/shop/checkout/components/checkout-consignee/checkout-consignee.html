@@ -1,53 +1,54 @@
-<div class="consignee-section">
-  <h3>{{ t().checkout.consignee.title }}</h3>
-  <p class="section-subtitle">{{ t().checkout.consignee.subtitle }}</p>
+<div class="flex flex-col">
+  <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-1">{{ content.title }}</h3>
+  <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ content.subtitle }}</p>
 
-  <div class="toggle-container">
-    <div class="toggle-wrapper">
+  <div class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl mb-6 shadow-sm">
+    <div class="flex items-center justify-center shrink-0 toggle-wrapper-custom">
       <p-toggleswitch [ngModel]="isSelf()" (ngModelChange)="onToggleChange($event)"></p-toggleswitch>
     </div>
-    <label class="toggle-label">{{ t().checkout.consignee.selfLabel }}</label>
+    <label class="text-[15px] font-medium text-slate-800 dark:text-slate-100 cursor-pointer">{{ content.selfLabel }}</label>
   </div>
 
-  <div class="shipping-disclaimer">
-    <i class="pi pi-info-circle"></i>
-    <div class="disclaimer-text">
-      <strong>{{ t().checkout.consignee.disclaimerTitle }}</strong>
-      <p>{{ t().checkout.consignee.disclaimerText }}</p>
+  <div class="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl mb-6">
+    <i class="pi pi-info-circle text-blue-500 text-xl mt-0.5"></i>
+    <div>
+      <strong class="block text-sm text-blue-800 dark:text-blue-300 mb-1">Importante para el envío:</strong>
+      <p class="text-[13px] text-blue-700 dark:text-blue-400 m-0 leading-relaxed">Estos datos son exclusivamente para el envío y recojo por parte de la agencia, y son distintos a los datos del comprobante de pago.</p>
     </div>
   </div>
 
-  <div class="others-container">
-    <h4>{{ isSelf() ? t().checkout.consignee.selfFillLabel : t().checkout.consignee.othersLabel }}</h4>
-    <div class="form-grid">
-      <div class="form-field">
-        <label>{{ t().checkout.consignee.fullNameLabel }}</label>
-        <input pInputText type="text" [ngModel]="fullName()" (ngModelChange)="fullName.set($event); emitChange()" placeholder="Ej. Juan Pérez">
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 shadow-sm animate-fade-scale mb-6">
+    <h4 class="text-base font-semibold text-slate-800 dark:text-slate-100 mb-5">{{ isSelf() ? content.selfFillLabel : content.othersLabel }}</h4>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <label class="text-[13px] font-semibold text-slate-500 dark:text-slate-400">{{ content.fullNameLabel }}</label>
+        <input pInputText type="text" [ngModel]="fullName()" (ngModelChange)="fullName.set($event); emitChange()" placeholder="Ej. Juan Pérez" class="w-full">
       </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label>{{ t().checkout.consignee.docNumberLabel }}</label>
-          <input pInputText type="text" [ngModel]="docNumber()" (ngModelChange)="docNumber.set($event); emitChange()" placeholder="Ej. 76543210">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2">
+          <label class="text-[13px] font-semibold text-slate-500 dark:text-slate-400">{{ content.docNumberLabel }}</label>
+          <input pInputText type="text" [ngModel]="docNumber()" (ngModelChange)="docNumber.set($event); emitChange()" placeholder="Ej. 76543210" class="w-full">
         </div>
-        <div class="form-field">
-          <label>{{ t().checkout.consignee.phoneLabel }}</label>
-          <input pInputText type="text" [ngModel]="phone()" (ngModelChange)="phone.set($event); emitChange()" placeholder="Ej. 987654321">
+        <div class="flex flex-col gap-2">
+          <label class="text-[13px] font-semibold text-slate-500 dark:text-slate-400">{{ content.phoneLabel }}</label>
+          <input pInputText type="text" [ngModel]="phone()" (ngModelChange)="phone.set($event); emitChange()" placeholder="Ej. 987654321" class="w-full">
         </div>
       </div>
     </div>
   </div>
 
-  <div class="policies-section">
-    <div class="policies-info">
-      <i class="pi pi-shield"></i>
-      <p>
-        {{ t().checkout.consignee.policiesInfoPre }}
-        <a routerLink="/policies/shipping" target="_blank">{{ t().checkout.consignee.policiesInfoLink }}</a>{{ t().checkout.consignee.policiesInfoPost }}
+  <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-5 mb-2">
+    <div class="flex items-start gap-3 mb-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+      <i class="pi pi-shield text-green-500 text-lg mt-0.5"></i>
+      <p class="m-0">
+        Para garantizar una entrega exitosa, te invitamos a revisar nuestras 
+        <a routerLink="/policies/shipping" target="_blank" class="text-blue-600 hover:underline">políticas de envío</a>. 
+        Asegúrate de que los datos ingresados sean correctos.
       </p>
     </div>
-    <div class="policies-checkbox">
+    <div class="flex items-start gap-2.5">
       <p-checkbox [binary]="true" [ngModel]="acceptedPolicies()" (ngModelChange)="acceptedPolicies.set($event); emitChange()" inputId="acceptPolicies"></p-checkbox>
-      <label for="acceptPolicies">{{ t().checkout.consignee.policiesAccept }}</label>
+      <label for="acceptPolicies" class="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer pt-0.5">He leído y acepto las políticas de envío y condiciones de entrega.</label>
     </div>
   </div>
 </div>

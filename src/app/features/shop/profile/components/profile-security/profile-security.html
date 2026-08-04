@@ -1,51 +1,51 @@
-<div class="profile-section">
-    <div class="section-header">
-        <h3>{{ content.title }}</h3>
-        <p>{{ content.subtitle }}</p>
+<div class="flex flex-col gap-6">
+    <div class="flex flex-col">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1 m-0">{{ content.title }}</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">{{ content.subtitle }}</p>
     </div>
 
-    <form [formGroup]="form" class="security-form" novalidate>
+    <form [formGroup]="form" class="flex flex-col gap-4 max-w-[480px]" novalidate>
 
-        <div class="form-field">
-            <label>{{ content.labels.currentPassword }}</label>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.currentPassword }}</label>
             <p-password formControlName="currentPassword" [placeholder]="content.placeholders.currentPassword"
-                [feedback]="false" [toggleMask]="true" styleClass="w-full"
+                [feedback]="false" [toggleMask]="true" styleClass="w-full [&>input]:w-full"
                 [class.ng-invalid]="isInvalid('currentPassword')" [class.ng-dirty]="isInvalid('currentPassword')" />
             @if (isInvalid('currentPassword') && form.get('currentPassword')?.errors?.['required']) {
-            <span class="field-error">{{ content.errors.required }}</span>
+            <span class="text-xs text-red-500">{{ content.errors.required }}</span>
             }
         </div>
 
-        <div class="form-field">
-            <label>{{ content.labels.newPassword }}</label>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.newPassword }}</label>
             <p-password formControlName="newPassword" [placeholder]="content.placeholders.newPassword" [feedback]="true"
-                [toggleMask]="true" styleClass="w-full" promptLabel="Escribe una contraseña" weakLabel="Débil"
+                [toggleMask]="true" styleClass="w-full [&>input]:w-full" promptLabel="Escribe una contraseña" weakLabel="Débil"
                 mediumLabel="Media" strongLabel="Segura" [class.ng-invalid]="isInvalid('newPassword')"
                 [class.ng-dirty]="isInvalid('newPassword')" />
             @if (isInvalid('newPassword')) {
             @if (form.get('newPassword')?.errors?.['required']) {
-            <span class="field-error">{{ content.errors.required }}</span>
+            <span class="text-xs text-red-500">{{ content.errors.required }}</span>
             }
             @if (form.get('newPassword')?.errors?.['minlength']) {
-            <span class="field-error">{{ content.errors.minlength }}</span>
+            <span class="text-xs text-red-500">{{ content.errors.minlength }}</span>
             }
             }
         </div>
 
-        <div class="form-field">
-            <label>{{ content.labels.confirmPassword }}</label>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.confirmPassword }}</label>
             <p-password formControlName="confirmPassword" [placeholder]="content.placeholders.confirmPassword"
-                [feedback]="false" [toggleMask]="true" styleClass="w-full"
+                [feedback]="false" [toggleMask]="true" styleClass="w-full [&>input]:w-full"
                 [class.ng-invalid]="isInvalid('confirmPassword')" [class.ng-dirty]="isInvalid('confirmPassword')" />
             @if (isInvalid('confirmPassword') && form.get('confirmPassword')?.errors?.['required']) {
-            <span class="field-error">{{ content.errors.required }}</span>
+            <span class="text-xs text-red-500">{{ content.errors.required }}</span>
             }
             @if (form.errors?.['mismatch'] && form.get('confirmPassword')?.touched) {
-            <span class="field-error">{{ content.errors.mismatch }}</span>
+            <span class="text-xs text-red-500">{{ content.errors.mismatch }}</span>
             }
         </div>
 
-        <div class="form-actions">
+        <div class="pt-2">
             <app-button variant="primary" [label]="content.actions.submitLabel" [icon]="content.actions.submitIcon"
                 [loading]="saving()" (clicked)="onSave()" />
         </div>

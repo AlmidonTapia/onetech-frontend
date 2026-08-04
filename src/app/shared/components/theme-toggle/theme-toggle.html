@@ -1,4 +1,3 @@
-<button (click)="toggleTheme()" [attr.aria-label]="isDark() ? content.ariaLight : content.ariaDark"
-    class="theme-toggle-btn">
-    <i class="pi" [class]="isDark() ? content.iconLight : content.iconDark"></i>
-</button>
+<app-button styleClass="!inline-flex !items-center !justify-center !w-11 !h-11 !rounded-full text-slate-900 dark:text-slate-100 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 hover:-translate-y-[2px] hover:text-blue-600 transition-all duration-300 [&_i]:!text-xl" (clicked)="toggleTheme()" 
+    [attr.aria-label]="isDark() ? content.ariaLight : content.ariaDark"
+    variant="ghost" [icon]="isDark() ? content.iconLight : content.iconDark"></app-button>

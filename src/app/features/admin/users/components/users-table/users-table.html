@@ -3,16 +3,16 @@
     styleClass="p-datatable-sm">
 
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearchTitle || 'Búsqueda Rápida' }}</h5>
-            <div class="table-toolbar-filters">
+        <div class="flex items-center justify-between gap-4 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex-wrap">
+            <h5 class="text-lg font-semibold text-slate-800 dark:text-slate-100 m-0">{{ content.quickSearchTitle || 'Búsqueda Rápida' }}</h5>
+            <div class="flex items-center gap-3 flex-wrap">
                 <p-select [options]="roleOptions" [(ngModel)]="selectedRole" (onChange)="onFilter()"
-                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
+                    optionLabel="label" optionValue="value" styleClass="w-full sm:w-48" />
                 <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onFilter()"
-                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
-                <span class="p-input-icon-left search-input-wrapper">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+                    optionLabel="label" optionValue="value" styleClass="w-full sm:w-48" />
+                <span class="p-input-icon-left relative">
+                    <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors w-full sm:w-64"/>
                 </span>
             </div>
         </div>
@@ -20,39 +20,43 @@
 
     <ng-template pTemplate="header">
         <tr>
-            <th>{{ content.headers.fullName }}</th>
-            <th>{{ content.headers.email }}</th>
-            <th>{{ content.headers.role }}</th>
-            <th>{{ content.headers.status }}</th>
-            <th>{{ content.headers.phone }}</th>
-            <th>{{ content.headers.regDate }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.fullName }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.email }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.role }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.status }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.phone }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.regDate }}</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-user>
-        <tr>
-            <td><span class="user-name">{{ user.firstName }} {{ user.lastName }}</span></td>
-            <td>{{ user.email }}</td>
-            <td>
-                <span class="role-badge" [class.admin]="user.role === tableConfig.adminRoleKey">
+        <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <td class="py-3"><span class="font-medium text-slate-800 dark:text-slate-200">{{ user.firstName }} {{ user.lastName }}</span></td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ user.email }}</td>
+            <td class="py-3">
+                <span class="px-2 py-1 rounded text-xs font-semibold border"
+                      [class]="user.role === tableConfig.adminRoleKey ? 'bg-blue-50 text-blue-600 border-transparent dark:bg-blue-500/15 dark:text-blue-400' : 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'">
                     {{ user.role | titlecase }}
                 </span>
             </td>
-            <td>
-                <span class="status-badge" [class.active]="user.status === 'HABILITADO'" [class.inactive]="user.status === 'DESHABILITADO'">
+            <td class="py-3">
+                <span class="px-2 py-1 rounded text-xs font-semibold border"
+                      [class]="user.status === 'HABILITADO' ? 'bg-green-50 text-green-600 border-transparent dark:bg-green-500/15 dark:text-green-400' : 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'">
                     {{ user.status | titlecase }}
                 </span>
             </td>
-            <td>{{ user.phone || content.notRegisteredLabel }}</td>
-            <td>{{ user.createdAt | date: content.dateFormat }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ user.phone || content.notRegisteredLabel }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ user.createdAt | date: content.dateFormat }}</td>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
-                <i class="pi pi-inbox table-empty-icon"></i>
-                <p class="table-empty-text">{{ content.emptyMessage }}</p>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center py-12">
+                <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                    <i class="pi pi-inbox text-4xl mb-3"></i>
+                    <p class="text-sm m-0">{{ content.emptyMessage }}</p>
+                </div>
             </td>
         </tr>
     </ng-template>

@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReviewService } from '../../../../../core/domains/catalog/services/review.service';
 import { AlertService } from '../../../../../shared/services/alert.service';
@@ -18,8 +19,7 @@ import { handleFormError } from '../../../../../shared/utils/form-error.util';
     InputTextModule,
     TextareaModule
   ],
-  templateUrl: './product-review-form.html',
-  styleUrl: './product-review-form.css'
+  templateUrl: './product-review-form.html'
 })
 export class ProductReviewFormComponent {
   @Input({ required: true }) productId!: string;
@@ -28,6 +28,7 @@ export class ProductReviewFormComponent {
   private fb = inject(FormBuilder);
   private reviewService = inject(ReviewService);
   private alertService = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
 
   loading = signal(false);
 
@@ -71,18 +72,20 @@ export class ProductReviewFormComponent {
       rating: value.rating as number,
       title: value.title as string,
       comment: value.comment as string
-    }).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.form.reset({ rating: 0, title: '', comment: '' });
-        this.alertService.success('Reseña Publicada', 'Gracias por compartir tu opinión.');
-        this.reviewAdded.emit();
-      },
-      error: (err) => {
-        this.loading.set(false);
-        const backendMsg = handleFormError(err, this.form);
-        this.alertService.error('Error', backendMsg || 'No se pudo publicar la reseña.');
-      }
-    });
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.form.reset({ rating: 0, title: '', comment: '' });
+          this.alertService.success('Reseña Publicada', 'Gracias por compartir tu opinión.');
+          this.reviewAdded.emit();
+        },
+        error: (err) => {
+          this.loading.set(false);
+          const backendMsg = handleFormError(err, this.form);
+          this.alertService.error('Error', backendMsg || 'No se pudo publicar la reseña.');
+        }
+      });
   }
 }

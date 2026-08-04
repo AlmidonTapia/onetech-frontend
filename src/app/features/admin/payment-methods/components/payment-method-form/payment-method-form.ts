@@ -8,8 +8,7 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
   selector: 'app-payment-method-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, DialogModule, ButtonComponent],
-  templateUrl: './payment-method-form.html',
-  styleUrl: './payment-method-form.css'
+  templateUrl: './payment-method-form.html'
 })
 export class PaymentMethodFormComponent {
   visible = input<boolean>(false);

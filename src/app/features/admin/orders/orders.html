@@ -1,24 +1,20 @@
-<div class="page-container">
-
-    <div class="page-header">
+<div class="flex flex-col gap-6">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
         <div>
-      <h1 class="page-title">{{ t().adminOrders.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminOrders.countSuffix }}</p>
-    </div>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Órdenes</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">{{ totalRecords() }} órdenes en total</p>
+        </div>
     </div>
 
-    
-        <app-orders-table 
-            [orders]="orders()" 
-            [totalRecords]="totalRecords()" 
-            [loading]="loading()"
-            (lazyLoad)="loadOrders($event)" 
-            (changeStatus)="openStatus($event)" 
-            (viewDetail)="openDetail($event)"
-            (search)="onSearch($event)" 
-            (filterStatus)="onFilterStatus($event)" />
-    
-
+    <app-orders-table 
+        [orders]="orders()" 
+        [totalRecords]="totalRecords()" 
+        [loading]="loading()"
+        (lazyLoad)="loadOrders($event)" 
+        (changeStatus)="openStatus($event)" 
+        (viewDetail)="openDetail($event)"
+        (search)="onSearch($event)" 
+        (filterStatus)="onFilterStatus($event)" />
 </div>
 
 <app-order-status-form [(visible)]="statusVisible" [order]="editingOrder()" [saving]="saving()"
@@ -29,6 +25,8 @@
   [order]="selectedOrder()"
   [shipment]="selectedShipment()"
   [invoice]="selectedInvoice()"
+  [isAdmin]="true"
   (onClose)="showDetailsModal.set(false)"
-  (onDownloadInvoice)="downloadInvoice($event)">
+  (onDownloadInvoice)="downloadInvoice($event)"
+  (onGenerateInvoice)="generateInvoice()">
 </app-order-details-modal>

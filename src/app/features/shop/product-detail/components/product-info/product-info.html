@@ -1,6 +1,6 @@
-<div class="product-info">
+<div class="flex flex-col gap-4">
 
-  <div class="info-tags">
+  <div class="flex gap-2 flex-wrap">
     @if (product.badge === 'NEW') { <app-badge variant="blue">{{ content.newBadge }}</app-badge> }
     @else if (product.badge === 'BESTSELLER') { <app-badge variant="blue">{{ content.badges.bestseller }}</app-badge> }
     @else if (product.badge === 'OFFER') { <app-badge variant="blue">{{ content.badges.offer }}</app-badge> }
@@ -8,55 +8,55 @@
     <app-badge variant="gray">{{ product.brandName }}</app-badge>
   </div>
 
-  <h1 class="info-name">{{ product.productName }}</h1>
+  <h1 class="text-[clamp(20px,3vw,28px)] font-bold text-slate-900 dark:text-slate-100 leading-snug m-0">{{ product.productName }}</h1>
 
-  <div class="info-sku">{{ content.skuLabel }} <code>{{ product.sku }}</code></div>
+  <div class="text-[13px] text-slate-500 dark:text-slate-400">{{ content.skuLabel }} <code class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 px-1.5 py-0.5 rounded">{{ product.sku }}</code></div>
 
-  <div class="info-price">
+  <div class="flex flex-col gap-1">
     @if (product.originalPrice && product.originalPrice > product.price) {
-      <div class="price-original-wrapper">
-        <span class="price-original">{{ product.originalPrice | currencyPen }}</span>
-        <span class="price-discount-badge">-{{ getDiscountPercent() }}%</span>
+      <div class="flex items-center gap-2 mb-0.5">
+        <span class="text-base text-slate-500 dark:text-slate-400 line-through">{{ product.originalPrice | currencyPen }}</span>
+        <span class="bg-red-500 text-white text-[11px] font-bold px-1.5 py-0.5 rounded-sm">-{{ getDiscountPercent() }}%</span>
       </div>
     }
-    <span class="price-main">{{ product.price | currencyPen }}</span>
-    <span class="price-cuotas">{{ content.financingPrefix }}{{ (product.price / 12) | currencyPen }}</span>
+    <span class="text-4xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tight">{{ product.price | currencyPen }}</span>
+    <span class="text-sm text-slate-500 dark:text-slate-400">{{ content.financingPrefix }}{{ (product.price / 12) | currencyPen }}</span>
   </div>
 
-  <div class="info-stock">
+  <div class="my-1">
     @if (product.status === 'INACTIVO') {
-    <span class="stock-out" style="color: var(--ot-gray-500, #64748b);">
+    <span class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 dark:text-slate-400">
       <i class="pi pi-ban"></i>
       {{ content.stock.unavailableLabel }}
     </span>
     } @else if (product.stockQuantity > 0 && product.status !== 'AGOTADO') {
     @if (product.stockQuantity <= 5) {
-      <span class="stock-urgency">
+      <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-red-500">
         <i class="pi pi-exclamation-circle"></i>
         {{ content.stock.onlyLeftPrefix }}{{ product.stockQuantity }}{{ content.stock.onlyLeftSuffix }}
       </span>
     } @else {
-      <span class="stock-ok">
+      <span class="inline-flex items-center gap-1.5 text-sm font-medium text-green-500">
         <i [class]="content.stock.availableIcon"></i>
         {{ content.stock.availablePrefix }}{{ product.stockQuantity }}{{ content.stock.availableSuffix }}
       </span>
     }
     } @else {
-    <span class="stock-out">
+    <span class="inline-flex items-center gap-1.5 text-sm font-medium text-red-500">
       <i [class]="content.stock.outIcon"></i>
       {{ content.stock.outLabel }}
     </span>
     }
   </div>
 
-  <p class="info-desc">{{ product.description }}</p>
+  <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed m-0">{{ product.description }}</p>
 
   @if (product.stockQuantity > 0 && product.status !== 'AGOTADO' && product.status !== 'INACTIVO') {
-  <div class="info-actions">
-    <div class="qty-control">
-      <button class="qty-btn" (click)="changeQty(-1)" [disabled]="qty() <= 1">−</button>
-      <span class="qty-value">{{ qty() }}</span>
-      <button class="qty-btn" (click)="changeQty(1)" [disabled]="qty() >= product.stockQuantity">+</button>
+  <div class="flex items-center gap-4 flex-wrap mt-2">
+    <div class="flex items-center border-2 border-slate-200 dark:border-slate-700 rounded-2xl md:rounded-[16px] overflow-hidden">
+      <button class="w-10 h-11 text-lg font-semibold text-slate-900 dark:text-slate-100 bg-transparent border-none cursor-pointer transition-colors hover:not(:disabled):bg-slate-50 dark:hover:not(:disabled):bg-slate-800 disabled:opacity-40" (click)="changeQty(-1)" [disabled]="qty() <= 1">−</button>
+      <span class="min-w-[44px] text-center text-[15px] font-semibold text-slate-900 dark:text-slate-100">{{ qty() }}</span>
+      <button class="w-10 h-11 text-lg font-semibold text-slate-900 dark:text-slate-100 bg-transparent border-none cursor-pointer transition-colors hover:not(:disabled):bg-slate-50 dark:hover:not(:disabled):bg-slate-800 disabled:opacity-40" (click)="changeQty(1)" [disabled]="qty() >= product.stockQuantity">+</button>
     </div>
 
     <app-button variant="accent" size="lg" [label]="content.actions.addToCartLabel"
@@ -64,17 +64,17 @@
   </div>
   }
 
-  <div class="info-share">
-    <span>Compartir:</span>
-    <button class="share-btn share-wa" (click)="share('whatsapp')" title="Compartir en WhatsApp"><i class="pi pi-whatsapp"></i></button>
-    <button class="share-btn share-fb" (click)="share('facebook')" title="Compartir en Facebook"><i class="pi pi-facebook"></i></button>
-    <button class="share-btn share-link" (click)="share('copy')" title="Copiar enlace"><i class="pi pi-link"></i></button>
+  <div class="flex items-center gap-3 my-1">
+    <span class="text-sm font-medium text-slate-500 dark:text-slate-400">Compartir:</span>
+    <button class="w-9 h-9 rounded-full flex items-center justify-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:shadow-sm hover:text-[#25d366] hover:border-[#25d366]" (click)="share('whatsapp')" title="Compartir en WhatsApp"><i class="pi pi-whatsapp"></i></button>
+    <button class="w-9 h-9 rounded-full flex items-center justify-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:shadow-sm hover:text-[#1877f2] hover:border-[#1877f2]" (click)="share('facebook')" title="Compartir en Facebook"><i class="pi pi-facebook"></i></button>
+    <button class="w-9 h-9 rounded-full flex items-center justify-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:shadow-sm hover:text-blue-600 hover:border-blue-600 dark:hover:text-blue-400 dark:hover:border-blue-400" (click)="share('copy')" title="Copiar enlace"><i class="pi pi-link"></i></button>
   </div>
 
-  <div class="info-shipping">
+  <div class="flex flex-col gap-2 p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl md:rounded-[24px] border border-slate-200 dark:border-slate-700 mt-1">
     @for (perk of content.shippingPerks; track perk.text) {
-    <div class="shipping-item">
-      <i [class]="perk.icon"></i>
+    <div class="flex items-center gap-2.5 text-[13px] text-slate-900 dark:text-slate-100">
+      <i [class]="perk.icon" class="!text-blue-600 dark:!text-blue-400 !text-base"></i>
       <span>{{ perk.text }}</span>
     </div>
     }

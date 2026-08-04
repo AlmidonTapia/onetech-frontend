@@ -1,58 +1,58 @@
-<div class="profile-section">
-    <div class="section-header">
-        <h3>{{ content.title }}</h3>
-        <p>{{ content.subtitle }}</p>
+<div class="flex flex-col gap-6">
+    <div class="flex flex-col">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1 m-0">{{ content.title }}</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">{{ content.subtitle }}</p>
     </div>
 
-    <form [formGroup]="form" class="profile-form" novalidate>
-        <div class="form-row">
-            <div class="form-field">
-                <label>{{ content.labels.firstName }}</label>
-                <input pInputText formControlName="firstName" readonly />
+    <form [formGroup]="form" class="flex flex-col gap-4 max-w-[560px]" novalidate>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.firstName }}</label>
+                <input pInputText formControlName="firstName" readonly class="w-full bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 cursor-not-allowed" />
             </div>
-            <div class="form-field">
-                <label>{{ content.labels.lastName }}</label>
-                <input pInputText formControlName="lastName" readonly />
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.lastName }}</label>
+                <input pInputText formControlName="lastName" readonly class="w-full bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 cursor-not-allowed" />
             </div>
         </div>
 
-        <div class="form-field">
-            <label>{{ content.labels.email }}</label>
-            <input pInputText formControlName="email" readonly />
-            <span class="field-hint">{{ content.hints.emailImmutable }}</span>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.email }}</label>
+            <input pInputText formControlName="email" readonly class="w-full bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 cursor-not-allowed" />
+            <span class="text-xs text-slate-500 dark:text-slate-400">{{ content.hints.emailImmutable }}</span>
         </div>
 
-        <div class="form-row">
-            <div class="form-field">
-                <label>{{ content.labels.documentType }}</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.documentType }}</label>
                 <p-select formControlName="documentType" [options]="docTypes" optionLabel="label" optionValue="value"
                     [placeholder]="content.placeholders.docTypeSelect"
                     [style]="{ 'width': content.styles.selectWidth }" />
                 @if (isInvalid('documentType') && form.get('documentType')?.errors?.['backend']) {
-                    <span class="field-error">{{ form.get('documentType')?.errors?.['backend'] }}</span>
+                    <span class="text-xs text-red-500">{{ form.get('documentType')?.errors?.['backend'] }}</span>
                 }
             </div>
-            <div class="form-field">
-                <label>{{ content.labels.documentNumber }}</label>
-                <input pInputText formControlName="documentNumber" [placeholder]="content.placeholders.docNumber" />
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.documentNumber }}</label>
+                <input pInputText formControlName="documentNumber" [placeholder]="content.placeholders.docNumber" class="w-full" />
                 @if (isInvalid('documentNumber') && form.get('documentNumber')?.errors?.['backend']) {
-                    <span class="field-error">{{ form.get('documentNumber')?.errors?.['backend'] }}</span>
+                    <span class="text-xs text-red-500">{{ form.get('documentNumber')?.errors?.['backend'] }}</span>
                 }
             </div>
         </div>
 
-        <div class="form-field">
-            <label>{{ content.labels.phone }}</label>
-            <input pInputText formControlName="phone" [placeholder]="content.placeholders.phone" maxlength="9" />
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-900 dark:text-slate-100">{{ content.labels.phone }}</label>
+            <input pInputText formControlName="phone" [placeholder]="content.placeholders.phone" maxlength="9" class="w-full" />
             @if (isInvalid('phone') && form.get('phone')?.errors?.['pattern']) {
-            <span class="field-error">{{ content.errors.phonePattern }}</span>
+            <span class="text-xs text-red-500">{{ content.errors.phonePattern }}</span>
             }
             @if (isInvalid('phone') && form.get('phone')?.errors?.['backend']) {
-            <span class="field-error">{{ form.get('phone')?.errors?.['backend'] }}</span>
+            <span class="text-xs text-red-500">{{ form.get('phone')?.errors?.['backend'] }}</span>
             }
         </div>
 
-        <div class="form-actions">
+        <div class="pt-2">
             <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
                 [loading]="saving()" (clicked)="onSave()" />
         </div>

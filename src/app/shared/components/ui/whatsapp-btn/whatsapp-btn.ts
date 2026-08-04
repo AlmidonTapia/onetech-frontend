@@ -1,4 +1,5 @@
 import { Component, Input, computed, signal } from '@angular/core';
+import { uiContent } from '../../../../core/content/shared/ui.content';
 
 @Component({
   selector: 'app-whatsapp-btn',
@@ -54,7 +55,7 @@ export class WhatsappBtnComponent {
   @Input() productUrl?: string;
   @Input() phone = '+51926348987';
 
-  readonly ariaLabel = 'Consultar por WhatsApp';
+  readonly ariaLabel = uiContent.whatsappBtn.ariaLabel;
 
   waLink = computed(() => {
     const isBrowser = typeof window !== 'undefined';

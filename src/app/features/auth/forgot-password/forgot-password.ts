@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, DestroyRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/domains/identity/services/auth.service';
@@ -8,6 +8,7 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
 import { handleFormError } from '../../../shared/utils/form-error.util';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,14 +18,12 @@ import { handleFormError } from '../../../shared/utils/form-error.util';
     InputTextModule,
     ButtonComponent, AlertComponent, AuthLayoutComponent
   ],
-  templateUrl: './forgot-password.html',
-  styleUrl: '../login/login.css'
+  templateUrl: './forgot-password.html'
 })
 export class ForgotPasswordComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private alertService = inject(AlertService);
-
+  private alertService = inject(AlertService);  private destroyRef = inject(DestroyRef);
   loading = signal(false);
   errorMsg = signal('');
   successMsg = signal('');
@@ -74,7 +73,7 @@ export class ForgotPasswordComponent {
 
     const email = this.form.value.email!;
     
-    this.authService.forgotPassword(email).subscribe({
+    this.authService.forgotPassword(email).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.loading.set(false);
         this.successMsg.set('Hemos enviado un enlace de recuperación a tu correo electrónico.');

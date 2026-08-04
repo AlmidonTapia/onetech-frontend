@@ -6,15 +6,13 @@ import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Brand, CreateBrandRequest, UpdateBrandRequest } from '../../../../../core/domains/catalog/models/brand.model';
 import { BrandStatus } from '../../../../../core/domains/catalog/enums/brand-status.enum';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-brand-form',
   standalone: true,
   imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent],
-  templateUrl: './brand-form.html',
-  styleUrl: './brand-form.css'
+  templateUrl: './brand-form.html'
 })
 export class BrandFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
@@ -25,45 +23,41 @@ export class BrandFormComponent implements OnChanges {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<{ request: CreateBrandRequest | UpdateBrandRequest, file?: File }>();
   @Output() cancel = new EventEmitter<void>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
 
   get content() {
     return {
       dialogWidth: '400px',
-      titleNew: this.t().adminBrands.form.titleNew,
-      titleEdit: this.t().adminBrands.form.titleEdit,
-      errorRequired: this.t().adminBrands.form.errorRequired,
+      titleNew: 'Nueva Marca',
+      titleEdit: 'Editar Marca',
+      errorRequired: 'Campo requerido',
       actions: {
-        cancelLabel: this.t().adminBrands.form.actions.cancelLabel,
-        saveLabel: this.t().adminBrands.form.actions.saveLabel,
+        cancelLabel: 'Cancelar',
+        saveLabel: 'Guardar',
         saveIcon: 'pi-check'
       },
       image: {
-        label: this.t().adminBrands.form.image.label,
-        changeText: this.t().adminBrands.form.image.changeText,
-        selectText: this.t().adminBrands.form.image.selectText
+        label: 'Imagen de la marca',
+        changeText: 'Cambiar imagen',
+        selectText: 'Seleccionar imagen'
       },
       status: {
-        label: this.t().adminBrands.form.status.label
+        label: 'Estado'
       }
     };
   }
 
   get statusOptions() {
     return [
-      { label: this.t().adminBrands.form.status.enabled, value: BrandStatus.HABILITADO },
-      { label: this.t().adminBrands.form.status.disabled, value: BrandStatus.DESHABILITADO }
+      { label: 'Habilitado', value: BrandStatus.HABILITADO },
+      { label: 'Deshabilitado', value: BrandStatus.DESHABILITADO }
     ];
   }
 
   get formConfig(): any[] {
     return [
-      [{ name: 'brandName', label: this.t().adminBrands.form.fields.name, type: 'text', placeholder: this.t().adminBrands.form.fields.namePlaceholder }]
+      [{ name: 'brandName', label: 'Nombre de la marca *', type: 'text', placeholder: 'Ej: HP, Lenovo, Samsung' }]
     ];
   }
 

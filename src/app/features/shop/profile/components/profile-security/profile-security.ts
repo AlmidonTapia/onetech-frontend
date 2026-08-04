@@ -1,4 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InputTextModule } from 'primeng/inputtext';
@@ -13,13 +14,13 @@ import { handleFormError } from '../../../../../shared/utils/form-error.util';
   selector: 'app-profile-security',
   standalone: true,
   imports: [ReactiveFormsModule, InputTextModule, PasswordModule, ButtonComponent],
-  templateUrl: './profile-security.html',
-  styleUrl: './profile-security.css'
+  templateUrl: './profile-security.html'
 })
 export class ProfileSecurityComponent {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private alertService = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
 
   saving = signal(false);
 
@@ -82,17 +83,19 @@ export class ProfileSecurityComponent {
       newPassword: this.form.get('newPassword')?.value || undefined,
     };
 
-    this.userService.changePassword(requestData).subscribe({
-      next: () => {
-        this.alertService.success(this.content.alerts.successTitle);
-        this.form.reset();
-        this.saving.set(false);
-      },
-      error: (err) => {
-        const errorMsg = handleFormError(err, this.form);
-        this.alertService.error(this.content.alerts.errorTitle, errorMsg || this.content.alerts.errorMsg);
-        this.saving.set(false);
-      },
-    });
+    this.userService.changePassword(requestData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.alertService.success(this.content.alerts.successTitle);
+          this.form.reset();
+          this.saving.set(false);
+        },
+        error: (err) => {
+          const errorMsg = handleFormError(err, this.form);
+          this.alertService.error(this.content.alerts.errorTitle, errorMsg || this.content.alerts.errorMsg);
+          this.saving.set(false);
+        },
+      });
   }
 }

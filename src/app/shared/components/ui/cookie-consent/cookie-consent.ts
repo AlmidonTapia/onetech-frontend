@@ -21,15 +21,12 @@ import { ButtonComponent } from '../button/button';
   styles: [`
     .cookie-banner {
       position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 48px);
-      max-width: 900px;
+      bottom: 0;
+      left: 0;
+      width: 100%;
       background-color: var(--ot-bg-surface);
-      border: 1px solid var(--ot-border-color);
-      border-radius: var(--ot-radius-xl);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+      border-top: 1px solid var(--ot-border-color);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.1);
       z-index: 9999;
       padding: 1.25rem 2rem;
     }

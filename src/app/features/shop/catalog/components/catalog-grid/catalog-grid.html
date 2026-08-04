@@ -1,21 +1,21 @@
 @if (loading) {
-<div class="grid-skeleton">
+<div class="grid grid-cols-1 custom-md:grid-cols-2 lg:grid-cols-3 gap-4 custom-md:gap-5 lg:gap-7">
   @for (_ of skeletonConfig.items; track $index) {
-  <div class="skeleton-card"></div>
+  <div class="h-[340px] rounded-2xl md:rounded-[24px] border border-slate-200 dark:border-slate-800 bg-[linear-gradient(90deg,#ffffff_25%,#f8fafc_50%,#ffffff_75%)] dark:bg-[linear-gradient(90deg,#1e293b_25%,#0f172a_50%,#1e293b_75%)] bg-[length:200%_100%] animate-[shimmer_1.5s_infinite]"></div>
   }
 </div>
 }
 
 @else if (products.length === 0) {
-<div class="empty-state">
-  <i class="pi pi-search" style="font-size:48px; color:var(--ot-gray-300)"></i>
-  <h3>{{ t().catalog.grid.emptyTitle }}</h3>
-  <p>{{ t().catalog.grid.emptyDescription }}</p>
+<div class="flex flex-col items-center justify-center gap-4 py-20 px-6 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl md:rounded-[24px] shadow-sm">
+  <i class="pi pi-search text-5xl text-slate-300 dark:text-slate-600"></i>
+  <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 m-0">Sin resultados</h3>
+  <p class="text-sm text-slate-500 dark:text-slate-400 m-0 max-w-[320px] leading-relaxed">Prueba con otros filtros o términos de búsqueda.</p>
 </div>
 }
 
 @else {
-<div class="products-grid animate-fade-in">
+<div class="grid grid-cols-1 custom-md:grid-cols-2 lg:grid-cols-3 gap-4 custom-md:gap-5 lg:gap-7 items-stretch animate-[fadeIn_0.2s_ease-out] [&>app-product-card]:flex [&>app-product-card]:self-stretch [&>app-product-card>.product-card]:h-full [&>app-product-card>.product-card]:min-h-0">
   @for (product of products; track product.idProduct) {
   <app-product-card [product]="product" />
   }

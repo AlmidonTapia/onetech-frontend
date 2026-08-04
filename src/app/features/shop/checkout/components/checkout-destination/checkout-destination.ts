@@ -1,9 +1,9 @@
-import { Component, EventEmitter, OnInit, Output, signal, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, signal, inject, DestroyRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../../environments/environment';
 import { LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
-import { TranslationService } from '../../../../../core/services/translation.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { SelectModule } from 'primeng/select';
 
@@ -16,13 +16,13 @@ export interface LocationSelection {
   selector: 'app-checkout-destination',
   standalone: true,
   imports: [FormsModule, SelectModule],
-  templateUrl: './checkout-destination.html',
-  styleUrl: './checkout-destination.css'
+  templateUrl: './checkout-destination.html'
 })
 export class CheckoutDestinationComponent implements OnInit {
   @Output() selected = new EventEmitter<LocationSelection | null>();
 
   private http = inject(HttpClient);
+  private destroyRef = inject(DestroyRef);
 
   departments = signal<LocationResponse[]>([]);
   provinces = signal<LocationResponse[]>([]);
@@ -35,9 +35,12 @@ export class CheckoutDestinationComponent implements OnInit {
   loadingDepts = signal(true);
   loadingProvs = signal(false);
   loadingDists = signal(false);
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
+  content = {
+    title: 'Selecciona tu Destino',
+    deptLabel: 'Departamento / Región',
+    provLabel: 'Provincia',
+    distLabel: 'Distrito'
+  };
 
   ngOnInit() {
     this.fetchDepartments();
@@ -45,7 +48,7 @@ export class CheckoutDestinationComponent implements OnInit {
 
   fetchDepartments() {
     this.loadingDepts.set(true);
-    this.http.get<any>(`${environment.apiUrl}/ubigeo/departments`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/ubigeo/departments`).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.departments.set(res || []);
         this.loadingDepts.set(false);
@@ -64,7 +67,7 @@ export class CheckoutDestinationComponent implements OnInit {
     
     if (deptId) {
       this.loadingProvs.set(true);
-      this.http.get<any>(`${environment.apiUrl}/ubigeo/departments/${deptId}/provinces`).subscribe({
+      this.http.get<any>(`${environment.apiUrl}/ubigeo/departments/${deptId}/provinces`).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res) => {
           this.provinces.set(res || []);
           this.loadingProvs.set(false);
@@ -82,7 +85,7 @@ export class CheckoutDestinationComponent implements OnInit {
     
     if (provId) {
       this.loadingDists.set(true);
-      this.http.get<any>(`${environment.apiUrl}/ubigeo/provinces/${provId}/districts`).subscribe({
+      this.http.get<any>(`${environment.apiUrl}/ubigeo/provinces/${provId}/districts`).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (res) => {
           this.districts.set(res || []);
           this.loadingDists.set(false);

@@ -1,12 +1,12 @@
-<div class="empty-state animate-fade-scale">
-  <div class="empty-state-icon">
-    <i [class]="'pi ' + icon"></i>
+<div class="flex flex-col items-center justify-center text-center py-16 px-8 bg-white dark:bg-slate-800 rounded-[24px] border border-dashed border-slate-200 dark:border-slate-700 my-4 animate-fade-scale">
+  <div class="w-20 h-20 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 flex items-center justify-center mb-6">
+    <i [class]="'pi ' + icon" class="text-4xl"></i>
   </div>
-  <h3 class="empty-state-title">{{ title }}</h3>
-  <p class="empty-state-description">{{ description }}</p>
+  <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-3 m-0">{{ title }}</h3>
+  <p class="text-base text-slate-500 dark:text-slate-400 max-w-[400px] leading-relaxed mb-8 m-0">{{ description }}</p>
   
   @if (actionLabel) {
-    <div class="empty-state-action">
+    <div class="mt-2">
       <app-button variant="primary" [label]="actionLabel" [icon]="actionIcon || ''" (clicked)="action.emit()"></app-button>
     </div>
   }

@@ -1,4 +1,5 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -16,14 +17,14 @@ import { Product } from '../../../core/domains/catalog/models/product.model';
   selector: 'app-wishlist',
   standalone: true,
   imports: [ProductCardComponent, ButtonComponent, SpinnerComponent, BreadcrumbComponent, RouterLink],
-  templateUrl: './wishlist.html',
-  styleUrl: './wishlist.css'
+  templateUrl: './wishlist.html'
 })
 export class WishlistComponent {
   wishlistStore = inject(WishlistStore);
   cartStore = inject(CartStore);
   private productService = inject(ProductService);
   private alertService = inject(AlertService);
+  private destroyRef = inject(DestroyRef);
 
   products = signal<Product[]>([]);
   loading = signal(false);
@@ -74,10 +75,12 @@ export class WishlistComponent {
         ids.map(id =>
           this.productService.getById(id).pipe(catchError(() => of(null)))
         )
-      ).subscribe(results => {
-        this.products.set(results.filter((p): p is Product => p !== null));
-        this.loading.set(false);
-      });
+      )
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(results => {
+          this.products.set(results.filter((p): p is Product => p !== null));
+          this.loading.set(false);
+        });
     }, { allowSignalWrites: true });
   }
 
@@ -96,15 +99,17 @@ export class WishlistComponent {
   moveToCart(product: Product) {
     if (product.stockQuantity <= 0 || product.status !== 'ACTIVO') return;
 
-    this.cartStore.addItem({ idProduct: product.idProduct, quantity: 1 }).subscribe({
-      next: () => {
-        this.wishlistStore.remove(product.idProduct);
-        this.products.update(list => list.filter(p => p.idProduct !== product.idProduct));
-        this.alertService.success(this.content.alerts.movedToCartTitle, product.productName);
-      },
-      error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.content.alerts.cartError);
-      }
-    });
+    this.cartStore.addItem({ idProduct: product.idProduct, quantity: 1 })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.wishlistStore.remove(product.idProduct);
+          this.products.update(list => list.filter(p => p.idProduct !== product.idProduct));
+          this.alertService.success(this.content.alerts.movedToCartTitle, product.productName);
+        },
+        error: (err: any) => {
+          this.alertService.error(err?.error?.message || this.content.alerts.cartError);
+        }
+      });
   }
 }

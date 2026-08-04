@@ -1,44 +1,44 @@
-<div class="cart-wrapper" (mouseenter)="cartPanel.toggle($event)" (mouseleave)="cartPanel.hide()">
-    <a routerLink="/cart" class="cart-btn" [attr.aria-label]="t().navbar.cart.ariaLabelCart">
-        <div class="cart-icon-wrapper">
+<div class="relative" (mouseenter)="cartPanel.toggle($event)" (mouseleave)="cartPanel.hide()">
+    <a routerLink="/cart" class="flex items-center gap-2.5 py-2 px-3.5 md:px-3.5 px-2.5 rounded-xl text-slate-800 dark:text-slate-200 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:bg-slate-50 dark:hover:bg-slate-800 hover:-translate-y-0.5 hover:text-blue-600 dark:hover:text-blue-400" aria-label="Ver carrito">
+        <div class="relative text-[22px] leading-none">
             <i class="pi pi-shopping-cart"></i>
             @if (itemCount() > 0) {
-            <span class="cart-badge">{{ itemCount() }}</span>
+            <span class="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] bg-orange-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 leading-none">{{ itemCount() }}</span>
             }
         </div>
-        <div class="cart-text">
-            <span class="cart-label">{{ t().navbar.cart.labelText }}</span>
-            <span class="cart-total">{{ totalAmount() | currencyPen }}</span>
+        <div class="flex-col leading-[1.2] hidden md:flex">
+            <span class="text-[11px] text-slate-500 uppercase tracking-[.04em]">Carrito</span>
+            <span class="text-[13px] font-semibold text-slate-900 dark:text-slate-400">{{ totalAmount() | currencyPen }}</span>
         </div>
     </a>
 
     <p-popover #cartPanel styleClass="mini-cart-panel">
-        <div class="mini-cart-content">
+        <div class="flex flex-col">
             @if (itemCount() === 0) {
-                <div class="mini-cart-empty">
-                    <i class="pi pi-shopping-cart"></i>
-                    <p>{{ t().navbar.cart.emptyTitle }}</p>
+                <div class="flex flex-col items-center justify-center py-8 text-slate-500">
+                    <i class="pi pi-shopping-cart text-3xl mb-2"></i>
+                    <p class="m-0 text-sm">Tu carrito está vacío</p>
                 </div>
             } @else {
-                <div class="mini-cart-items">
+                <div class="max-h-[250px] overflow-y-auto flex flex-col gap-4 mb-4">
                     @for (item of cartStore.cart()?.items; track item.idProduct) {
-                        <div class="mini-cart-item">
-                            <img [ngSrc]="item.productImageUrl || '/assets/images/placeholder.png'" width="48" height="48" [alt]="item.productName">
-                            <div class="mini-cart-item-details">
-                                <span class="mini-cart-item-name">{{ item.productName }}</span>
-                                <span class="mini-cart-item-qty">{{ item.quantity }} x {{ item.unitPrice | currencyPen }}</span>
+                        <div class="flex items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-700">
+                            <img [ngSrc]="item.productImageUrl || '/assets/images/placeholder.png'" width="48" height="48" [alt]="item.productName" class="rounded object-cover">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm font-medium text-slate-900 dark:text-slate-100 line-clamp-2">{{ item.productName }}</span>
+                                <span class="text-xs text-slate-500">{{ item.quantity }} x {{ item.unitPrice | currencyPen }}</span>
                             </div>
                         </div>
                     }
                 </div>
-                <div class="mini-cart-footer">
-                    <div class="mini-cart-total">
-                        <span>{{ t().navbar.cart.totalLabel }}</span>
+                <div class="flex flex-col gap-4">
+                    <div class="flex justify-between items-center font-bold text-base text-slate-900 dark:text-slate-100">
+                        <span>Total:</span>
                         <span>{{ totalAmount() | currencyPen }}</span>
                     </div>
-                    <div class="mini-cart-actions">
-                        <app-button variant="outline" size="sm" [fullWidth]="true" [label]="t().navbar.cart.goToCartBtn" routerLink="/cart" (clicked)="cartPanel.hide()"></app-button>
-                        <app-button variant="primary" size="sm" [fullWidth]="true" [label]="t().navbar.cart.checkoutBtn" (clicked)="goToCheckout(cartPanel)"></app-button>
+                    <div class="flex flex-col gap-2">
+                        <app-button variant="outline" size="sm" [fullWidth]="true" label="Ver carrito completo" routerLink="/cart" (clicked)="cartPanel.hide()"></app-button>
+                        <app-button variant="primary" size="sm" [fullWidth]="true" label="Ir a pagar" (clicked)="goToCheckout(cartPanel)"></app-button>
                     </div>
                 </div>
             }

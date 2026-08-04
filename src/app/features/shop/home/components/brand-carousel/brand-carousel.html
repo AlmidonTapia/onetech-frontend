@@ -1,15 +1,15 @@
-<section class="brand-carousel-section">
-  <div class="brand-carousel-header">
-    <h2 class="section-title">{{ content.title }}</h2>
+<section class="py-12 bg-slate-50 dark:bg-slate-900 rounded-2xl md:rounded-[24px]">
+  <div class="text-center mb-6">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Nuestras Marcas</h2>
   </div>
-  <p-carousel [value]="brands" [numVisible]="6" [numScroll]="1" [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions">
+  <p-carousel [value]="brands" [numVisible]="6" [numScroll]="1" [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions" class="[&::ng-deep_.p-carousel-items-container]:!overflow-visible [&::ng-deep_.p-carousel-items-container]:pt-2.5 [&::ng-deep_.p-carousel-indicators]:hidden [&::ng-deep_.p-carousel-prev]:w-8 [&::ng-deep_.p-carousel-prev]:h-8 [&::ng-deep_.p-carousel-prev]:rounded-full [&::ng-deep_.p-carousel-prev]:bg-white dark:[&::ng-deep_.p-carousel-prev]:bg-slate-800 [&::ng-deep_.p-carousel-prev]:text-slate-700 dark:[&::ng-deep_.p-carousel-prev]:text-slate-300 [&::ng-deep_.p-carousel-prev]:border [&::ng-deep_.p-carousel-prev]:border-slate-200 dark:[&::ng-deep_.p-carousel-prev]:border-slate-700 [&::ng-deep_.p-carousel-prev]:transition-all [&::ng-deep_.p-carousel-prev:hover]:bg-blue-600 [&::ng-deep_.p-carousel-prev:hover]:text-white [&::ng-deep_.p-carousel-prev:hover]:border-blue-600 [&::ng-deep_.p-carousel-next]:w-8 [&::ng-deep_.p-carousel-next]:h-8 [&::ng-deep_.p-carousel-next]:rounded-full [&::ng-deep_.p-carousel-next]:bg-white dark:[&::ng-deep_.p-carousel-next]:bg-slate-800 [&::ng-deep_.p-carousel-next]:text-slate-700 dark:[&::ng-deep_.p-carousel-next]:text-slate-300 [&::ng-deep_.p-carousel-next]:border [&::ng-deep_.p-carousel-next]:border-slate-200 dark:[&::ng-deep_.p-carousel-next]:border-slate-700 [&::ng-deep_.p-carousel-next]:transition-all [&::ng-deep_.p-carousel-next:hover]:bg-blue-600 [&::ng-deep_.p-carousel-next:hover]:text-white [&::ng-deep_.p-carousel-next:hover]:border-blue-600">
     <ng-template pTemplate="item" let-brand>
-      <div class="brand-item">
+      <div class="group flex items-center justify-center p-5 h-[120px] bg-white dark:bg-slate-800 rounded-2xl md:rounded-[24px] m-2.5 border border-slate-200 dark:border-slate-700 transition-all duration-300 shadow-[0_2px_4px_rgba(0,0,0,0.02)] relative z-[1] hover:-translate-y-1.5 hover:shadow-[0_10px_20px_rgba(0,0,0,0.08)] hover:border-blue-500 hover:z-10">
         @if (brand.imageUrl) {
-          <img [src]="brand.imageUrl" [alt]="brand.brandName" class="brand-image" />
+          <img [src]="brand.imageUrl" [alt]="brand.brandName" class="max-w-full max-h-[80px] object-contain opacity-90 transition-all duration-300 group-hover:opacity-100" />
         } @else {
-          <div class="brand-placeholder">
-            <span class="brand-name">{{ brand.brandName }}</span>
+          <div class="flex items-center justify-center w-full h-full">
+            <span class="font-semibold text-lg text-slate-500 dark:text-slate-400 text-center transition-colors duration-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">{{ brand.brandName }}</span>
           </div>
         }
       </div>

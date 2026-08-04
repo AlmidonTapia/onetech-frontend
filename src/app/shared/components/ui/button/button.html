@@ -1,11 +1,6 @@
 <button 
   [type]="type()" 
-  class="ot-btn" 
-  [ngClass]="[
-    'btn-' + variant(),
-    'btn-' + size(),
-    fullWidth() ? 'btn-full' : ''
-  ]" 
+  [class]="computedClasses()"
   [disabled]="disabled() || loading()" 
   [attr.aria-label]="loading() ? 'Cargando' : label() || 'Botón'"
   [attr.aria-busy]="loading()"

@@ -1,51 +1,57 @@
-<div class="location-panel">
-  <div class="panel-header">
-    <div class="panel-title-row">
-      <h3 class="panel-title">
-        <i [class]="icon"></i> {{ title }}
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl flex flex-col overflow-hidden h-full">
+  <div class="flex justify-between items-center px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+    <div class="flex items-center gap-2">
+      <h3 class="m-0 text-sm font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+        <i [class]="icon" class="text-[15px] text-blue-600 dark:text-blue-500"></i> {{ title }}
       </h3>
-      <span class="panel-badge" *ngIf="!placeholderMessage">{{ items.length }}</span>
+      <span class="bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 px-2 py-0.5 rounded-full text-[11px] font-bold min-w-[20px] text-center" *ngIf="!placeholderMessage">{{ items.length }}</span>
     </div>
     <app-button
       *ngIf="showCreateBtn && !placeholderMessage"
-      [label]="t().adminShipping.locations.panel.newBtn" icon="pi pi-plus" size="sm"
+      label="Nuevo" icon="pi pi-plus" size="sm"
       (clicked)="create.emit()">
     </app-button>
   </div>
 
-  <div class="panel-body">
-    <div *ngIf="placeholderMessage" class="panel-placeholder">
-      <i class="pi pi-arrow-left"></i>
+  <div class="flex-1 overflow-y-auto max-h-[420px]">
+    <div *ngIf="placeholderMessage" class="flex flex-col items-center justify-center h-full min-h-[200px] gap-2 text-slate-500 dark:text-slate-400 text-sm">
+      <i class="pi pi-arrow-left text-3xl opacity-30"></i>
       <span>{{ placeholderMessage }}</span>
     </div>
 
     @if (loading) {
-    <div class="panel-loading">
-      <app-spinner [label]="t().adminShipping.locations.panel.loading" size="sm" />
+    <div class="flex flex-col items-center justify-center h-full min-h-[200px] gap-2 text-slate-500 dark:text-slate-400 text-sm">
+      <app-spinner label="Cargando..." size="sm" />
     </div>
     }
     
-    <div *ngIf="!placeholderMessage && !loading && items.length === 0" class="panel-empty">
-      <i class="pi pi-inbox"></i>
+    <div *ngIf="!placeholderMessage && !loading && items.length === 0" class="flex flex-col items-center justify-center h-full min-h-[200px] gap-2 text-slate-500 dark:text-slate-400 text-sm">
+      <i class="pi pi-inbox text-3xl opacity-30"></i>
       <span>{{ emptyMessage }}</span>
     </div>
 
-    <div class="location-list" *ngIf="!placeholderMessage && !loading && items.length > 0">
+    <div class="p-1" *ngIf="!placeholderMessage && !loading && items.length > 0">
       <div
         *ngFor="let item of items"
-        class="location-item"
-        [class.active]="selectedItem?.id === item.id"
-        [class.location-item--leaf]="isLeaf"
+        class="group flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-colors border border-transparent mb-0.5 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:border-slate-200 dark:hover:border-slate-700"
+        [class.bg-blue-50]="selectedItem?.id === item.id"
+        [class.dark:bg-blue-500/10]="selectedItem?.id === item.id"
+        [class.border-blue-100]="selectedItem?.id === item.id"
+        [class.dark:border-blue-500/30]="selectedItem?.id === item.id"
+        [class.cursor-default]="isLeaf"
         (click)="selectItem.emit(item)">
-        <div class="item-info">
-          <span class="item-code">{{ item.id }}</span>
-          <span class="item-name">{{ item.name }}</span>
+        <div class="flex items-center gap-2.5 min-w-0">
+          <span class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded text-[11px] font-bold font-mono shrink-0">{{ item.id }}</span>
+          <span class="text-sm whitespace-nowrap overflow-hidden text-ellipsis"
+                [class.text-blue-600]="selectedItem?.id === item.id"
+                [class.dark:text-blue-400]="selectedItem?.id === item.id"
+                [class.font-semibold]="selectedItem?.id === item.id"
+                [class.text-slate-800]="selectedItem?.id !== item.id"
+                [class.dark:text-slate-200]="selectedItem?.id !== item.id">{{ item.name }}</span>
         </div>
-        <div class="item-actions">
-          <button class="delete-btn" (click)="delete.emit(item); $event.stopPropagation()" [title]="t().adminShipping.locations.panel.deleteTooltip">
-            <i class="pi pi-trash"></i>
-          </button>
-          <i *ngIf="!isLeaf" class="pi pi-chevron-right chevron-icon"></i>
+        <div class="flex items-center gap-1 shrink-0">
+          <app-button styleClass="opacity-0 group-hover:opacity-100 transition-opacity" (clicked)="delete.emit(item); $event.stopPropagation()" title="Eliminar" variant="danger" icon="pi-trash" size="sm"></app-button>
+          <i *ngIf="!isLeaf" class="pi pi-chevron-right text-[11px] text-slate-400 opacity-50"></i>
         </div>
       </div>
     </div>

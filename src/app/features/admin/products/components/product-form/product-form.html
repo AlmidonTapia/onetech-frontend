@@ -1,21 +1,21 @@
 <p-dialog [visible]="visible" [header]="title" [modal]="true" [closable]="true" [draggable]="false"
   [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
 
-  <form [formGroup]="form" class="product-form" novalidate>
+  <form [formGroup]="form" class="flex flex-col gap-4 py-1" novalidate>
     @for (row of formConfig; track $index) {
-    <div class="form-row">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       @for (field of row; track field.name) {
-      <div class="form-field" [style.flex]="field.flex || '1'">
-        <label>{{ field.label }}</label>
+      <div class="flex flex-col gap-1.5" [style.flex]="field.flex || '1'">
+        <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ field.label }}</label>
 
         @if (field.type === 'text') {
         <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder"
-          [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" />
+          [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" class="w-full" />
         }
 
         @else if (field.type === 'textarea') {
         <textarea pTextarea [formControlName]="field.name" rows="3" [placeholder]="field.placeholder"
-          [class.ng-invalid]="isInvalid(field.name)">
+          [class.ng-invalid]="isInvalid(field.name)" class="w-full">
                     </textarea>
         }
 
@@ -32,9 +32,9 @@
         }
 
         @if (isInvalid(field.name) && form.get(field.name)?.errors?.['backend']) {
-        <span class="field-error">{{ form.get(field.name)?.errors?.['backend'] }}</span>
+        <span class="text-[12px] text-red-500">{{ form.get(field.name)?.errors?.['backend'] }}</span>
         } @else if (isInvalid(field.name)) {
-        <span class="field-error">{{ content.errorRequired }}</span>
+        <span class="text-[12px] text-red-500">{{ content.errorRequired }}</span>
         }
       </div>
       }
@@ -42,47 +42,45 @@
     }
   </form>
 
-  <div class="specs-section">
-    <div class="specs-header">
-      <span class="specs-title">{{ content.specs.title }}</span>
+  <div class="mt-5 border-t border-dashed border-slate-200 dark:border-slate-700 pt-5">
+    <div class="flex justify-between items-center mb-3">
+      <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ content.specs.title }}</span>
       <app-button variant="ghost" [label]="content.specs.addLabel" [icon]="content.specs.addIcon" (clicked)="addSpecification()" />
     </div>
 
-    <div class="specs-list">
+    <div class="flex flex-col gap-2.5 max-h-[200px] overflow-y-auto pr-1">
       @for (spec of specificationsList(); track $index) {
-      <div class="spec-row">
-        <input pInputText class="spec-input" [(ngModel)]="spec.key" [placeholder]="content.specs.keyPlaceholder" />
-        <input pInputText class="spec-input" [(ngModel)]="spec.value" [placeholder]="content.specs.valuePlaceholder" />
-        <button class="spec-btn-del" type="button" (click)="removeSpecification($index)" [title]="content.specs.deleteTitle">
-          <i class="pi pi-times"></i>
-        </button>
+      <div class="flex items-center gap-3">
+        <input pInputText class="flex-1" [(ngModel)]="spec.key" [placeholder]="content.specs.keyPlaceholder" />
+        <input pInputText class="flex-1" [(ngModel)]="spec.value" [placeholder]="content.specs.valuePlaceholder" />
+        <app-button styleClass="w-8 h-8 rounded-md border border-red-200 bg-red-50 text-red-500 hover:bg-red-100 hover:border-red-300 dark:bg-red-900/20 dark:border-red-800/50 dark:text-red-400 dark:hover:bg-red-900/40 inline-flex items-center justify-center transition-colors cursor-pointer" [pTooltip]="content.specs.deleteTitle" (clicked)="removeSpecification($index)" variant="ghost" icon="pi-times"></app-button>
       </div>
       }
       @if (specificationsList().length === 0) {
-      <p class="no-specs">{{ content.specs.emptyMessage }}</p>
+      <p class="text-[13px] text-slate-500 dark:text-slate-400 italic m-0">{{ content.specs.emptyMessage }}</p>
       }
     </div>
   </div>
 
   @if (product && product.updatedAt) {
-  <div class="modal-footer">
-    <div class="meta-info">
-      <span class="meta-label">{{ content.metaLabel }}</span>
-      <span class="meta-value">{{ product.updatedAt | date:'medium' }}</span>
+  <div class="mt-5">
+    <div class="inline-flex items-center gap-2 px-3.5 py-2.5 bg-blue-50/50 dark:bg-blue-500/5 border border-blue-100 dark:border-blue-500/10 rounded-lg text-xs">
+      <span class="font-medium text-slate-500 dark:text-slate-400">{{ content.metaLabel }}</span>
+      <span class="font-semibold text-slate-800 dark:text-slate-200">{{ product.updatedAt | date:'medium' }}</span>
     </div>
   </div>
   }
 
-  <div class="image-prompt-section">
+  <div class="mt-5 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 flex justify-center items-center text-center">
     @if (!product) {
-      <p class="image-prompt-text"><i class="pi pi-info-circle"></i> {{ content.imagesInfo.newProductMsg }}</p>
+      <p class="text-[13px] text-slate-500 dark:text-slate-400 flex items-center gap-2 m-0"><i class="pi pi-info-circle text-blue-500 text-base"></i> {{ content.imagesInfo.newProductMsg }}</p>
     } @else {
       <app-button variant="outline" [label]="content.imagesInfo.manageBtnLabel" [icon]="content.imagesInfo.manageBtnIcon" (clicked)="onManageImages()" />
     }
   </div>
 
   <ng-template pTemplate="footer">
-    <div class="dialog-footer">
+    <div class="flex justify-center items-center flex-wrap gap-6 mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
       <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
       <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
         [loading]="saving" [disabled]="form.invalid" (clicked)="onSave()" />

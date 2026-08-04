@@ -1,14 +1,14 @@
-<section class="trust-section">
+<section class="py-16 border-y border-slate-200 dark:border-slate-800 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-900/50">
   <div class="container">
-    <div class="trust-grid">
-      @for (item of trustItems; track item.icon) {
-      <div class="trust-item">
-        <div class="trust-icon-wrap">
-          <i class="pi" [class]="item.icon"></i>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+      @for (item of trustItems(); track item.icon) {
+      <div class="group flex items-center gap-5 p-6 rounded-2xl md:rounded-[24px] bg-white dark:bg-slate-800/40 shadow-[0_4px_12px_rgba(0,0,0,0.02)] dark:shadow-none border border-slate-200 dark:border-slate-700/50 transition-all duration-[300ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:-translate-y-1.5 hover:shadow-[0_12px_24px_rgba(0,0,0,0.05)] dark:hover:shadow-[0_12px_24px_rgba(0,0,0,0.2)] hover:border-blue-500/20 dark:hover:border-blue-400/20 dark:hover:bg-slate-800/80">
+        <div class="w-16 h-16 rounded-full bg-blue-500/10 dark:bg-blue-400/10 flex items-center justify-center shrink-0 transition-all duration-[400ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:bg-blue-600 group-hover:scale-110 group-hover:-rotate-3">
+          <i class="pi text-[28px] text-blue-600 dark:text-blue-400 transition-all duration-300 group-hover:text-white group-hover:scale-110" [class]="item.icon"></i>
         </div>
-        <div class="trust-text">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.description }}</p>
+        <div class="flex flex-col">
+          <h3 class="text-[15px] font-extrabold text-slate-900 dark:text-slate-100 m-0 mb-1.5 tracking-tight">{{ item.title }}</h3>
+          <p class="text-[13px] text-slate-500 dark:text-slate-400 m-0 leading-relaxed font-medium">{{ item.description }}</p>
         </div>
       </div>
       }

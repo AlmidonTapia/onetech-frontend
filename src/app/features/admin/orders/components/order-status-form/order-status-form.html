@@ -2,25 +2,25 @@
     [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
 
     @if (order) {
-    <div class="order-summary">
-        <div class="summary-row">
-            <span class="summary-label">{{ content.labels.order }}</span>
-            <code>{{ content.idPrefix }}{{ order.idOrder.substring(0, 8) }}</code>
+    <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3.5 sm:p-4 mb-4 flex flex-col gap-2.5">
+        <div class="flex items-center gap-2.5 text-[13px] text-slate-800 dark:text-slate-200">
+            <span class="text-slate-500 dark:text-slate-400 min-w-[60px]">{{ content.labels.order }}</span>
+            <code class="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded">{{ content.idPrefix }}{{ order.idOrder.substring(0, 8) }}</code>
         </div>
-        <div class="summary-row">
-            <span class="summary-label">{{ content.labels.client }}</span>
-            <span>{{ order.userFullName }}</span>
+        <div class="flex items-center gap-2.5 text-[13px] text-slate-800 dark:text-slate-200">
+            <span class="text-slate-500 dark:text-slate-400 min-w-[60px]">{{ content.labels.client }}</span>
+            <span class="font-medium">{{ order.userFullName }}</span>
         </div>
-        <div class="summary-row">
-            <span class="summary-label">{{ content.labels.total }}</span>
-            <strong>{{ order.totalAmount | currencyPen }}</strong>
+        <div class="flex items-center gap-2.5 text-[13px] text-slate-800 dark:text-slate-200">
+            <span class="text-slate-500 dark:text-slate-400 min-w-[60px]">{{ content.labels.total }}</span>
+            <strong class="text-blue-600 dark:text-blue-400">{{ order.totalAmount | currencyPen }}</strong>
         </div>
     </div>
     }
 
-    <form [formGroup]="form" class="simple-form" novalidate>
-        <div class="form-field">
-            <label>{{ content.labels.newStatus }}</label>
+    <form [formGroup]="form" class="flex flex-col gap-4 py-1" novalidate>
+        <div class="flex flex-col gap-1.5">
+            <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ content.labels.newStatus }}</label>
             <p-select formControlName="status" [options]="filteredOptions" optionLabel="label" optionValue="value"
                 [placeholder]="content.placeholderSelect" [style]="{ 'width': content.styles.selectWidth }"
                 appendTo="body" />
@@ -28,7 +28,7 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="dialog-footer">
+        <div class="flex justify-center items-center flex-wrap gap-6 mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
             <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
             <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
                 [loading]="saving" (clicked)="onSave()" />

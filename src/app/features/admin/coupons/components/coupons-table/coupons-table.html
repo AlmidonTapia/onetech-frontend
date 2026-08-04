@@ -3,16 +3,16 @@
     styleClass="p-datatable-sm">
 
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
-            <div class="table-toolbar-filters">
+        <div class="flex items-center justify-between gap-4 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex-wrap">
+            <h5 class="text-lg font-semibold text-slate-800 dark:text-slate-100 m-0">{{ content.quickSearchTitle }}</h5>
+            <div class="flex items-center gap-3 flex-wrap">
                 <p-select [options]="typeOptions" [(ngModel)]="selectedType" (onChange)="onFilter()"
-                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
+                    optionLabel="label" optionValue="value" styleClass="w-full sm:w-48" />
                 <p-select [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onFilter()"
-                    optionLabel="label" optionValue="value" styleClass="filter-dropdown" />
-                <span class="p-input-icon-left search-input-wrapper">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+                    optionLabel="label" optionValue="value" styleClass="w-full sm:w-48" />
+                <span class="p-input-icon-left relative">
+                    <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors w-full sm:w-64"/>
                 </span>
             </div>
         </div>
@@ -20,47 +20,42 @@
 
     <ng-template pTemplate="header">
         <tr>
-            <th>{{ content.headers.code }}</th>
-            <th>{{ content.headers.discountType }}</th>
-            <th>{{ content.headers.discountValue }}</th>
-            <th>{{ content.headers.startDate }}</th>
-            <th>{{ content.headers.expirationDate }}</th>
-            <th>{{ content.headers.usageLimit }}</th>
-            <th>{{ content.headers.usedCount }}</th>
-            <th style="width:100px; text-align: center;">{{ content.headers.active }}</th>
-            <th style="width:110px">{{ content.headers.actions }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.code }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.discountType }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.discountValue }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.startDate }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.expirationDate }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.usageLimit }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.usedCount }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 text-center" style="width: 100px;">{{ content.headers.active }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3" style="width: 110px;">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-c>
-        <tr>
-            <td><strong>{{ c.code }}</strong></td>
-            <td>{{ c.discountType == "PERCENTAGE" ? content.types.percentage : content.types.fixedLabel }}</td>
-            <td>{{ c.discountValue }}</td>
-            <td>{{ c.startDate ? (c.startDate | date) : content.values.immediate }}</td>
-            <td>{{ c.expirationDate | date }}</td>
-            <td>{{ c.usageLimit || content.values.noLimit }}</td>
-            <td>{{c.usedCount}}</td>
-            <td style="text-align: center;">
-                <span class="status-badge" 
-                    [class.status-active]="c.status === 'ACTIVO'" 
-                    [class.status-inactive]="c.status === 'INACTIVO'"
-                    [class.status-exhausted]="c.status === 'AGOTADO'"
-                    [class.status-expired]="c.status === 'EXPIRADO'">
+        <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <td class="py-3"><strong class="text-slate-800 dark:text-slate-200">{{ c.code }}</strong></td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ c.discountType == "PERCENTAGE" ? content.types.percentage : content.types.fixedLabel }}</td>
+            <td class="py-3 font-medium text-slate-800 dark:text-slate-200">{{ c.discountValue }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ c.startDate ? (c.startDate | date) : content.values.immediate }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ c.expirationDate | date }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{ c.usageLimit || content.values.noLimit }}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-300">{{c.usedCount}}</td>
+            <td class="py-3 text-center">
+                <span class="px-2 py-1 rounded-full text-[12px] font-semibold" 
+                    [class]="c.status === 'ACTIVO' ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' : 
+                             c.status === 'INACTIVO' ? 'bg-slate-100 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400' :
+                             c.status === 'AGOTADO' ? 'bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-400' :
+                             'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'">
                     {{ c.status === 'ACTIVO' ? content.statuses.active : 
                        c.status === 'INACTIVO' ? content.statuses.inactive : 
                        c.status === 'AGOTADO' ? content.statuses.exhausted : content.statuses.expired }}
                 </span>
             </td>
-            <td>
-                <div class="row-actions">
-                    <button class="act-btn" [pTooltip]="content.tooltips.edit" (click)="editItem.emit(c)">
-                        <i [class]="content.icons.edit"></i>
-                    </button>
-                    <button class="act-btn act-btn--danger" [pTooltip]="content.tooltips.delete"
-                        (click)="deleteItem.emit(c)">
-                        <i [class]="content.icons.delete"></i>
-                    </button>
+            <td class="py-3">
+                <div class="flex items-center gap-1">
+                    <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 transition-colors bg-transparent border-none cursor-pointer" [pTooltip]="content.tooltips.edit" (clicked)="editItem.emit(c)" variant="ghost" icon="pi-pencil"></app-button>
+                    <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:hover:text-red-400 transition-colors bg-transparent border-none cursor-pointer" [pTooltip]="content.tooltips.delete" (clicked)="deleteItem.emit(c)" variant="ghost" icon="pi-trash"></app-button>
                 </div>
             </td>
         </tr>
@@ -68,9 +63,11 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
-                <i class="pi pi-inbox table-empty-icon"></i>
-                <p class="table-empty-text">{{ content.emptyMessage }}</p>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center py-12">
+                <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                    <i class="pi pi-inbox text-4xl mb-3"></i>
+                    <p class="text-sm m-0">{{ content.emptyMessage }}</p>
+                </div>
             </td>
         </tr>
     </ng-template>

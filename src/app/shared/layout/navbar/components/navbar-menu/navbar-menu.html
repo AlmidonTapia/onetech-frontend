@@ -1,27 +1,34 @@
-<nav class="navbar-navigation" [attr.aria-label]="t().navbar.menu.ariaLabelNav">
-    <ul class="nav-menu-list">
+<nav class="w-full lg:-mx-[var(--ot-container-px)] lg:w-[calc(100%+2*var(--ot-container-px))]" aria-label="Navegación por categorías">
+    <ul class="flex items-center gap-[2px] list-none p-0 m-0 lg:overflow-x-auto lg:whitespace-nowrap lg:[-webkit-overflow-scrolling:touch] lg:scrollbar-none lg:w-full lg:px-[var(--ot-container-px)]">
 
         @for (item of categories(); track item.label) {
-        <li class="menu-item-node"
-            [class.menu-item-node--has-subs]="item.subcategories && item.subcategories.length > 0"
-            [class.menu-item-node--about]="item.label === t().navbar.menu.aboutLabel"
-            [class.menu-item-node--open]="isMenuOpen($index)" (mouseenter)="onMenuEnter($index)"
+        <li class="relative flex items-center lg:inline-flex lg:shrink-0"
+            [class.cursor-pointer]="item.subcategories && item.subcategories.length > 0"
+            [class.ml-6]="item.label === 'Sobre nosotros'"
+            [class.lg:!ml-0]="item.label === 'Sobre nosotros'"
+            [class.group]="true"
+            (mouseenter)="onMenuEnter($index)"
             (mouseleave)="onMenuLeave()">
 
-            <a [routerLink]="item.route" [queryParams]="item.queryParams" routerLinkActive="menu-link-active"
-                [class.menu-link-accent]="item.accent" class="menu-root-link">
+            <a [routerLink]="item.route" [queryParams]="item.queryParams" routerLinkActive="!bg-white/10"
+                [class.!text-[#ffcc00]]="item.accent"
+                [class.!font-bold]="item.accent"
+                [ngClass]="item.label === 'Sobre nosotros' ? 'px-4 ml-1.5 rounded-full bg-white/15 text-white font-bold shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)] h-9 min-h-[36px] leading-none inline-flex items-center box-border hover:bg-white/25 hover:border-transparent dark:bg-white/10 dark:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)]' : 'flex items-center gap-1.5 px-3.5 h-[var(--ot-nav-cat-height)] text-[13px] font-medium text-white/90 whitespace-nowrap transition-all duration-300 no-underline rounded-full border-b-2 border-transparent hover:text-white hover:bg-white/15 hover:border-transparent dark:text-slate-900 dark:hover:bg-white/10 lg:px-3 lg:text-[13px]'"
+                class="outline-none"
+                (click)="item.subcategories && item.subcategories.length > 0 ? toggleMenu($index, $event) : null">
                 {{ item.label }}
                 @if (item.subcategories && item.subcategories.length > 0) {
-                <i class="pi pi-angle-down arrow-sub-icon"></i>
+                <i class="pi pi-angle-down text-[10px] opacity-70 transition-transform duration-300 group-hover:rotate-180 lg:hidden"></i>
                 }
             </a>
 
             @if (item.subcategories && item.subcategories.length > 0) {
-            <ul class="dropdown-submenu" [ngClass]="{ 'dropdown-submenu--open': isMenuOpen($index) }">
+            <ul class="absolute top-[calc(100%+4px)] left-0 min-w-[220px] bg-white dark:bg-slate-800 list-none p-2 m-0 shadow-lg dark:shadow-[0_16px_36px_rgba(2,6,23,0.38)] border border-slate-200 dark:border-slate-700 rounded-2xl z-[1010] opacity-0 invisible translate-y-1.5 transition-all duration-[180ms] overflow-hidden pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto lg:hidden before:content-[''] before:absolute before:-top-[7px] before:left-5 before:w-3 before:h-3 before:bg-white dark:before:bg-slate-800 before:border-l before:border-t before:border-slate-200 dark:before:border-slate-700 before:rotate-45" 
+                [ngClass]="{ 'opacity-100 visible translate-y-0 pointer-events-auto': isMenuOpen($index) }">
                 @for (sub of item.subcategories; track sub.label) {
-                <li class="submenu-item-node">
-                    <a [routerLink]="sub.route" [queryParams]="sub.queryParams" routerLinkActive="submenu-link-active"
-                        class="menu-sub-link">
+                <li>
+                    <a [routerLink]="sub.route" [queryParams]="sub.queryParams" routerLinkActive="!bg-blue-50/50 !text-blue-600"
+                        class="block px-3.5 py-2.5 text-[13px] text-slate-700 dark:text-slate-300 no-underline transition-all duration-200 whitespace-nowrap rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 hover:pl-4">
                         {{ sub.label }}
                     </a>
                 </li>

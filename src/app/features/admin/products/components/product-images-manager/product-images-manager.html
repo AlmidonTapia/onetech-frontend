@@ -1,33 +1,31 @@
 <p-dialog [visible]="visible" [header]="content.headerPrefix + (product?.productName ?? '')" [modal]="true"
     [closable]="true" [draggable]="false" [style]="{ width: '700px', 'max-width': '95vw' }" (onHide)="close()">
 
-    <div class="images-container">
-        <h3 class="manager-subtitle">
-            <i class="pi pi-images"></i> {{ content.uploadedImages }} ({{ images().length }}/5)
+    <div class="flex flex-col gap-5 p-1">
+        <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-200 m-0 flex items-center gap-2">
+            <i class="pi pi-images text-blue-500"></i> {{ content.uploadedImages }} ({{ images().length }}/5)
         </h3>
         
-        <div class="images-grid">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-4 min-h-[100px]">
             @for (img of images(); track img.idProductImage) {
-            <div class="img-card" [class.img-card--main]="img.isPrincipal">
-                <div class="img-wrapper">
-                    <img [src]="img.imageUrl" [alt]="content.altText" />
+            <div class="relative rounded-xl overflow-hidden border-2 bg-white dark:bg-slate-900 aspect-square transition-all duration-300 shadow-sm hover:-translate-y-1 hover:shadow-md group" [class.border-blue-500]="img.isPrincipal" [class.border-slate-200]="!img.isPrincipal" [class.dark:border-slate-700]="!img.isPrincipal" [class.ring-2]="img.isPrincipal" [class.ring-blue-500/20]="img.isPrincipal">
+                <div class="w-full h-full">
+                    <img [src]="img.imageUrl" [alt]="content.altText" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
 
                 @if (img.isPrincipal) {
-                <span class="main-badge">
-                    <i class="pi pi-star-fill"></i> {{ content.mainBadgeLabel }}
+                <span class="absolute top-2 left-2 bg-blue-500 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm z-10">
+                    <i class="pi pi-star-fill text-[10px]"></i> {{ content.mainBadgeLabel }}
                 </span>
                 }
 
-                <div class="img-actions">
+                <div class="absolute inset-0 bg-slate-900/40 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-[5]">
                     @if (!img.isPrincipal) {
-                    <button class="action-btn action-btn--star" (click)="setAsPrincipal(img.idProductImage)" 
-                            [title]="content.setMainTooltip">
+                    <button class="w-9 h-9 rounded-full border-none flex items-center justify-center text-sm cursor-pointer transition-transform duration-200 shadow-sm bg-white text-yellow-500 hover:bg-yellow-500 hover:text-white hover:scale-110" (click)="setAsPrincipal(img.idProductImage)" [pTooltip]="content.setMainTooltip">
                         <i class="pi pi-star"></i>
                     </button>
                     }
-                    <button class="action-btn action-btn--del" (click)="deleteImage(img.idProductImage)" 
-                            [title]="content.deleteTooltip">
+                    <button class="w-9 h-9 rounded-full border-none flex items-center justify-center text-sm cursor-pointer transition-transform duration-200 shadow-sm bg-white text-red-500 hover:bg-red-500 hover:text-white hover:scale-110" (click)="deleteImage(img.idProductImage)" [pTooltip]="content.deleteTooltip">
                         <i class="pi pi-trash"></i>
                     </button>
                 </div>
@@ -35,20 +33,19 @@
             }
 
             @if (images().length === 0) {
-            <div class="no-img-placeholder">
-                <i class="pi pi-images"></i>
-                <p>{{ content.emptyMessage }}</p>
+            <div class="col-span-full flex flex-col items-center justify-center gap-3 py-10 px-5 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50">
+                <i class="pi pi-images text-3xl text-slate-300 dark:text-slate-600"></i>
+                <p class="m-0 text-[13px]">{{ content.emptyMessage }}</p>
             </div>
             }
         </div>
 
-        <div class="upload-section">
-            <h3 class="manager-subtitle">
-                <i class="pi pi-cloud-upload"></i> {{ content.uploadNewTitle }}
+        <div class="flex flex-col gap-2 mt-2 border-t border-slate-200 dark:border-slate-700 pt-5">
+            <h3 class="text-sm font-semibold text-slate-800 dark:text-slate-200 m-0 flex items-center gap-2">
+                <i class="pi pi-cloud-upload text-blue-500"></i> {{ content.uploadNewTitle }}
             </h3>
-            <ng-template pTemplate="content">
-            <p class="upload-note">{{ content.uploadConfig.uploadNote }}</p>
-        </ng-template>    
+            <p class="text-xs text-slate-500 dark:text-slate-400 m-0 mb-1">{{ content.uploadConfig.uploadNote }}</p>
+
             <p-fileUpload #fileUpload 
                 [multiple]="true" 
                 [accept]="content.uploadConfig.accept"
@@ -59,7 +56,7 @@
                 [styleClass]="content.uploadConfig.styleClass">
                 
                 <ng-template pTemplate="header" let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
-                    <div class="upload-actions-bar">
+                    <div class="flex flex-wrap gap-3 items-center w-full pb-3 border-b border-slate-200 dark:border-slate-700 mb-3">
                         <app-button variant="outline" [label]="content.uploadConfig.chooseLabel" icon="pi pi-plus" (clicked)="chooseCallback()" />
                         <app-button variant="primary" [label]="content.uploadConfig.uploadLabel" icon="pi pi-upload" 
                                     [disabled]="!files || files.length === 0" (clicked)="uploadCallback()" />
@@ -73,7 +70,7 @@
     </div>
 
     <ng-template pTemplate="footer">
-        <div class="dialog-footer">
+        <div class="flex justify-center items-center flex-wrap gap-6 mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
             <app-button variant="ghost" [label]="content.actions.closeLabel" (clicked)="close()" />
         </div>
     </ng-template>

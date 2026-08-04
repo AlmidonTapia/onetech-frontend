@@ -7,8 +7,7 @@ import { Product } from '../../../../../core/domains/catalog/models/product.mode
   selector: 'app-featured-products',
   standalone: true,
   imports: [RouterLink, ProductCardComponent],
-  templateUrl: './featured-products.html',
-  styleUrl: './featured-products.css'
+  templateUrl: './featured-products.html'
 })
 export class FeaturedProductsComponent {
   @Input() products: Product[] = [];

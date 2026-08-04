@@ -8,7 +8,6 @@ import { ModalService } from '../../../services/modal.service';
   standalone: true,
   imports: [DialogModule, ButtonComponent],
   templateUrl: './modal.html',
-  styleUrl: './modal.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponent {

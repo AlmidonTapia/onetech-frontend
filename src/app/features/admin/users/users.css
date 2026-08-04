@@ -1,4 +1,0 @@
-.admin-page{display:flex;flex-direction:column;gap:32px;}
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
-.page-title h1{font-size:28px;font-weight:800;color:var(--ot-text-main);letter-spacing:-0.02em;}
-.page-subtitle{font-size:15px;color:var(--ot-text-muted);margin-top:6px;}

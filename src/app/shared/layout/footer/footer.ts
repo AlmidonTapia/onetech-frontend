@@ -1,31 +1,39 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { signal, OnInit, inject } from '@angular/core';
+import { signal, OnInit, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StoreConfigService } from '../../../shared/services/store-config.service';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
   imports: [RouterLink, FormsModule],
-  templateUrl: './footer.html',
-  styleUrl: './footer.css'
+  templateUrl: './footer.html'
 })
 export class FooterComponent implements OnInit {
   private storeConfigService = inject(StoreConfigService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-  
+  private destroyRef = inject(DestroyRef);  
   readonly year = new Date().getFullYear();
+
+  readonly categories = [
+    { label: 'Laptops & PCs', route: '/catalog', queryParams: { category: 'laptops' } },
+    { label: 'Componentes', route: '/catalog', queryParams: { category: 'componentes' } },
+    { label: 'Gaming', route: '/catalog', queryParams: { category: 'gaming' } },
+    { label: 'Monitores', route: '/catalog', queryParams: { category: 'monitores' } },
+    { label: 'Celulares', route: '/catalog', queryParams: { category: 'celulares' } },
+    { label: 'Accesorios', route: '/catalog', queryParams: { category: 'accesorios' } },
+  ];
+
+  readonly payments = ['Visa', 'Mastercard', 'Yape', 'Plin', 'BCP', 'Interbank'];
 
   get helpLinks() {
     return [
-      { label: this.t().navbar.menu.aboutItems.whoWeAre, route: '/quienes-somos' },
-      { label: this.t().navbar.menu.aboutItems.faq, route: '/preguntas-frecuentes' },
-      { label: this.t().navbar.menu.aboutItems.terms, route: '/terminos' },
-      { label: this.t().navbar.menu.aboutItems.privacy, route: '/privacidad' },
-      { label: this.t().navbar.menu.aboutItems.contact, route: '/contacto' },
+      { label: 'Quiénes somos', route: '/quienes-somos' },
+      { label: 'Preguntas frecuentes', route: '/preguntas-frecuentes' },
+      { label: 'Términos y condiciones', route: '/terminos' },
+      { label: 'Políticas de privacidad', route: '/privacidad' },
+      { label: 'Contacto', route: '/contacto' },
     ];
   }
 
@@ -58,13 +66,13 @@ export class FooterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.storeConfigService.getConfiguration().subscribe({
+    this.storeConfigService.getConfiguration().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (config) => {
         this.contactInfo.set([
-          { icon: 'pi-map-marker', text: config.address || this.t().footer.contact.unavailable, link: undefined },
-          { icon: 'pi-phone', text: config.supportPhone || this.t().footer.contact.unavailable, link: `tel:${config.supportPhone}` },
-          { icon: 'pi-envelope', text: config.supportEmail || this.t().footer.contact.unavailable, link: `mailto:${config.supportEmail}` },
-          { icon: 'pi-clock', text: this.t().footer.contact.hours, link: undefined }
+          { icon: 'pi-map-marker', text: config.address || 'No disponible', link: undefined },
+          { icon: 'pi-phone', text: config.supportPhone || 'No disponible', link: `tel:${config.supportPhone}` },
+          { icon: 'pi-envelope', text: config.supportEmail || 'No disponible', link: `mailto:${config.supportEmail}` },
+          { icon: 'pi-clock', text: 'Lunes a Sábado: 9:00 AM - 6:00 PM', link: undefined }
         ]);
       },
       error: () => {}

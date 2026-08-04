@@ -1,123 +1,123 @@
-<div class="page-container">
-  <div class="page-header">
+<div class="flex flex-col gap-6 w-full">
+  <div class="flex items-center justify-between bg-white dark:bg-slate-900 p-6 md:px-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
     <div>
-      <h1 class="page-title">{{ content().title }}</h1>
-      <p class="page-subtitle">{{ content().subtitle }}</p>
+      <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100 m-0">{{ content.title }}</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-0">{{ content.subtitle }}</p>
     </div>
   </div>
 
-    <div class="profile-card">
-    <div class="profile-avatar">
-      <span class="avatar-circle">{{ userInitials }}</span>
-      <div class="avatar-info">
-        <h2>{{ userName }}</h2>
-        <p>{{ userEmail }}</p>
+  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden mb-8 shadow-sm">
+    <div class="p-8 flex items-center gap-6 border-b border-slate-200 dark:border-slate-800">
+      <span class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center text-3xl font-bold">{{ userInitials }}</span>
+      <div class="flex flex-col">
+        <h2 class="m-0 mb-1 text-2xl text-slate-800 dark:text-slate-100 font-bold">{{ userName }}</h2>
+        <p class="m-0 text-slate-500 dark:text-slate-400 text-base">{{ userEmail }}</p>
       </div>
     </div>
 
-        <div class="profile-tabs">
-      <button class="profile-tab" [class.active]="activeTab() === 'info'" (click)="activeTab.set('info')">
-        <i class="pi pi-user"></i> {{ content().tabs.info }}
+    <div class="flex px-4 bg-slate-50 dark:bg-slate-800/50">
+      <button class="px-6 py-4 border-none bg-transparent text-slate-500 dark:text-slate-400 text-base font-medium cursor-pointer flex items-center gap-2 border-b-2 border-transparent transition-all hover:text-blue-600 dark:hover:text-blue-400" [class.!text-blue-600]="activeTab() === 'info'" [class.dark:!text-blue-400]="activeTab() === 'info'" [class.!border-blue-600]="activeTab() === 'info'" [class.dark:!border-blue-400]="activeTab() === 'info'" (click)="activeTab.set('info')">
+        <i class="pi pi-user"></i> {{ content.tabs.info }}
       </button>
-      <button class="profile-tab" [class.active]="activeTab() === 'security'" (click)="activeTab.set('security')">
-        <i class="pi pi-lock"></i> {{ content().tabs.security }}
+      <button class="px-6 py-4 border-none bg-transparent text-slate-500 dark:text-slate-400 text-base font-medium cursor-pointer flex items-center gap-2 border-b-2 border-transparent transition-all hover:text-blue-600 dark:hover:text-blue-400" [class.!text-blue-600]="activeTab() === 'security'" [class.dark:!text-blue-400]="activeTab() === 'security'" [class.!border-blue-600]="activeTab() === 'security'" [class.dark:!border-blue-400]="activeTab() === 'security'" (click)="activeTab.set('security')">
+        <i class="pi pi-lock"></i> {{ content.tabs.security }}
       </button>
     </div>
   </div>
 
-    @if (activeTab() === 'info') {
-  <div class="section-card">
-    <div class="section-header">
-      <h3>{{ content().infoSection.title }}</h3>
-      <p>{{ content().infoSection.subtitle }}</p>
+  @if (activeTab() === 'info') {
+  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 max-w-4xl shadow-sm">
+    <div class="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <h3 class="m-0 mb-2 text-xl text-slate-800 dark:text-slate-100 font-bold">{{ content.infoSection.title }}</h3>
+      <p class="m-0 text-sm text-slate-500 dark:text-slate-400">{{ content.infoSection.subtitle }}</p>
     </div>
 
-    <form [formGroup]="profileForm" class="profile-form">
-      <div class="form-grid">
-        <div class="form-field">
-          <label>{{ content().infoSection.labels.firstName }}</label>
-          <input pInputText formControlName="firstName" />
-          <small class="hint">{{ content().infoSection.hints.nameImmutable }}</small>
+    <form [formGroup]="profileForm" class="flex flex-col gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.infoSection.labels.firstName }}</label>
+          <input pInputText formControlName="firstName" class="w-full" />
+          <small class="text-xs text-slate-500 dark:text-slate-400">{{ content.infoSection.hints.nameImmutable }}</small>
         </div>
-        <div class="form-field">
-          <label>{{ content().infoSection.labels.lastName }}</label>
-          <input pInputText formControlName="lastName" />
-          <small class="hint">{{ content().infoSection.hints.nameImmutable }}</small>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.infoSection.labels.lastName }}</label>
+          <input pInputText formControlName="lastName" class="w-full" />
+          <small class="text-xs text-slate-500 dark:text-slate-400">{{ content.infoSection.hints.nameImmutable }}</small>
         </div>
       </div>
 
-      <div class="form-field">
-        <label>{{ content().infoSection.labels.email }}</label>
-        <input pInputText formControlName="email" />
-        <small class="hint">{{ content().infoSection.hints.emailImmutable }}</small>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.infoSection.labels.email }}</label>
+        <input pInputText formControlName="email" class="w-full" />
+        <small class="text-xs text-slate-500 dark:text-slate-400">{{ content.infoSection.hints.emailImmutable }}</small>
       </div>
 
-      <div class="form-grid">
-        <div class="form-field">
-          <label>{{ content().infoSection.labels.documentType }}</label>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.infoSection.labels.documentType }}</label>
           <p-select [options]="docTypes" formControlName="documentType" optionLabel="label" optionValue="value"
-            [placeholder]="content().infoSection.placeholders.docTypeSelect" styleClass="w-full" />
+            [placeholder]="content.infoSection.placeholders.docTypeSelect" styleClass="w-full" />
         </div>
-        <div class="form-field">
-          <label>{{ content().infoSection.labels.documentNumber }}</label>
-          <input pInputText formControlName="documentNumber" [placeholder]="content().infoSection.placeholders.docNumber" />
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.infoSection.labels.documentNumber }}</label>
+          <input pInputText formControlName="documentNumber" [placeholder]="content.infoSection.placeholders.docNumber" class="w-full" />
         </div>
       </div>
 
-      <div class="form-field">
-        <label>{{ content().infoSection.labels.phone }}</label>
-        <input pInputText formControlName="phone" [placeholder]="content().infoSection.placeholders.phone" />
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.infoSection.labels.phone }}</label>
+        <input pInputText formControlName="phone" [placeholder]="content.infoSection.placeholders.phone" class="w-full" />
         @if (isInvalid('profile', 'phone')) {
-          <small class="error">{{ content().infoSection.errors.phonePattern }}</small>
+          <small class="text-xs text-red-500">{{ content.infoSection.errors.phonePattern }}</small>
         }
       </div>
 
-      <div class="form-actions">
-        <app-button [label]="content().infoSection.saveLabel" icon="pi pi-check"
+      <div class="flex justify-end mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+        <app-button [label]="content.infoSection.saveLabel" icon="pi-check"
           [loading]="saving()" (clicked)="onSaveProfile()" />
       </div>
     </form>
   </div>
   }
 
-    @if (activeTab() === 'security') {
-  <div class="section-card">
-    <div class="section-header">
-      <h3>{{ content().securitySection.title }}</h3>
-      <p>{{ content().securitySection.subtitle }}</p>
+  @if (activeTab() === 'security') {
+  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 max-w-4xl shadow-sm">
+    <div class="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <h3 class="m-0 mb-2 text-xl text-slate-800 dark:text-slate-100 font-bold">{{ content.securitySection.title }}</h3>
+      <p class="m-0 text-sm text-slate-500 dark:text-slate-400">{{ content.securitySection.subtitle }}</p>
     </div>
 
-    <form [formGroup]="passwordForm" class="profile-form">
-      <div class="form-field">
-        <label>{{ content().securitySection.labels.currentPassword }}</label>
-        <p-password formControlName="currentPassword" [placeholder]="content().securitySection.placeholders.currentPassword"
+    <form [formGroup]="passwordForm" class="flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.securitySection.labels.currentPassword }}</label>
+        <p-password formControlName="currentPassword" [placeholder]="content.securitySection.placeholders.currentPassword"
           [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
         @if (isInvalid('password', 'currentPassword')) {
-          <small class="error">{{ content().securitySection.errors.required }}</small>
+          <small class="text-xs text-red-500">{{ content.securitySection.errors.required }}</small>
         }
       </div>
 
-      <div class="form-grid">
-        <div class="form-field">
-          <label>{{ content().securitySection.labels.newPassword }}</label>
-          <p-password formControlName="newPassword" [placeholder]="content().securitySection.placeholders.newPassword"
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.securitySection.labels.newPassword }}</label>
+          <p-password formControlName="newPassword" [placeholder]="content.securitySection.placeholders.newPassword"
             [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
           @if (isInvalid('password', 'newPassword')) {
-            <small class="error">{{ content().securitySection.errors.minlength }}</small>
+            <small class="text-xs text-red-500">{{ content.securitySection.errors.minlength }}</small>
           }
         </div>
-        <div class="form-field">
-          <label>{{ content().securitySection.labels.confirmPassword }}</label>
-          <p-password formControlName="confirmPassword" [placeholder]="content().securitySection.placeholders.confirmPassword"
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.securitySection.labels.confirmPassword }}</label>
+          <p-password formControlName="confirmPassword" [placeholder]="content.securitySection.placeholders.confirmPassword"
             [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" />
           @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched) {
-            <small class="error">{{ content().securitySection.errors.mismatch }}</small>
+            <small class="text-xs text-red-500">{{ content.securitySection.errors.mismatch }}</small>
           }
         </div>
       </div>
 
-      <div class="form-actions">
-        <app-button [label]="content().securitySection.saveLabel" icon="pi pi-lock"
+      <div class="flex justify-end mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+        <app-button [label]="content.securitySection.saveLabel" icon="pi-lock"
           [loading]="savingPassword()" (clicked)="onSavePassword()" />
       </div>
     </form>

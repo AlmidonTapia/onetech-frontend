@@ -6,15 +6,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { Coupon } from '../../../../../core/domains/checkout/models/coupon.model';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-coupons-table',
   standalone: true,
   imports: [TableModule, TooltipModule, DatePipe, InputTextModule, SelectModule, FormsModule],
-  templateUrl: './coupons-table.html',
-  styleUrl: './coupons-table.css'
+  templateUrl: './coupons-table.html'
 })
 export class CouponsTableComponent {
   @Input() coupons: Coupon[] = [];
@@ -26,23 +24,19 @@ export class CouponsTableComponent {
   @Output() deleteItem = new EventEmitter<Coupon>();
   @Output() search = new EventEmitter<string>();
   @Output() filterChange = new EventEmitter<{ type: string, status: string }>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   get typeOptions() {
     return [
-      { label: this.t().adminCoupons.table.types.all, value: 'ALL' },
-      { label: this.t().adminCoupons.table.types.percentage, value: 'PORCENTUAL' },
-      { label: this.t().adminCoupons.table.types.fixed, value: 'FIJO' }
+      { label: 'Todos los tipos', value: 'ALL' },
+      { label: 'Porcentaje', value: 'PORCENTUAL' },
+      { label: 'Fijo', value: 'FIJO' }
     ];
   }
 
   get statusOptions() {
     return [
-      { label: this.t().adminCoupons.table.statuses.all, value: 'ALL' },
-      { label: this.t().adminCoupons.table.statuses.active, value: 'ACTIVO' },
-      { label: this.t().adminCoupons.table.statuses.inactive, value: 'INACTIVO' }
+      { label: 'Todos los estados', value: 'ALL' },
+      { label: 'Activo', value: 'ACTIVO' },
+      { label: 'Inactivo', value: 'INACTIVO' }
     ];
   }
 
@@ -67,37 +61,37 @@ export class CouponsTableComponent {
 
   get content() {
     return {
-      quickSearchTitle: this.t().adminCoupons.table.quickSearchTitle,
-      searchPlaceholder: this.t().adminCoupons.table.searchPlaceholder,
+      quickSearchTitle: 'Búsqueda Rápida',
+      searchPlaceholder: 'Código del cupón...',
       headers: {
-        code: this.t().adminCoupons.table.headers.code,
-        discountType: this.t().adminCoupons.table.headers.discountType,
-        discountValue: this.t().adminCoupons.table.headers.discountValue,
-        startDate: this.t().adminCoupons.table.headers.startDate,
-        expirationDate: this.t().adminCoupons.table.headers.expirationDate,
-        usageLimit: this.t().adminCoupons.table.headers.usageLimit,
-        usedCount: this.t().adminCoupons.table.headers.usedCount,
-        active: this.t().adminCoupons.table.headers.active,
-        actions: this.t().adminCoupons.table.headers.actions
+        code: 'Código',
+        discountType: 'Tipo',
+        discountValue: 'Valor',
+        startDate: 'Inicio',
+        expirationDate: 'Expiración',
+        usageLimit: 'Límite de Uso',
+        usedCount: 'Usado',
+        active: 'Activo',
+        actions: 'Acciones'
       },
       tooltips: {
-        edit: this.t().adminCoupons.table.tooltips.edit,
-        delete: this.t().adminCoupons.table.tooltips.delete
+        edit: 'Editar',
+        delete: 'Eliminar'
       },
-      emptyMessage: this.t().adminCoupons.table.emptyMessage,
+      emptyMessage: 'No se encontraron cupones.',
       types: {
-        percentage: this.t().adminCoupons.table.types.percentage,
-        fixedLabel: this.t().adminCoupons.table.types.fixedLabel
+        percentage: 'Porcentaje',
+        fixedLabel: 'Monto fijo'
       },
       statuses: {
-        active: this.t().adminCoupons.table.statuses.active,
-        inactive: this.t().adminCoupons.table.statuses.inactive,
-        exhausted: this.t().adminCoupons.table.statuses.exhausted,
-        expired: this.t().adminCoupons.table.statuses.expired
+        active: 'Activo',
+        inactive: 'Inactivo',
+        exhausted: 'Agotado',
+        expired: 'Expirado'
       },
       values: {
-        immediate: this.t().adminCoupons.table.values.immediate,
-        noLimit: this.t().adminCoupons.table.values.noLimit
+        immediate: 'Inmediato',
+        noLimit: 'Sin límite'
       },
       icons: {
         edit: 'pi pi-pencil',

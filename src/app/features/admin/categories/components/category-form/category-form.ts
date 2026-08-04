@@ -6,15 +6,13 @@ import { SelectModule } from 'primeng/select';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { Category, CreateCategoryRequest, UpdateCategoryRequest } from '../../../../../core/domains/catalog/models/category.model';
 import { CategoryStatus } from '../../../../../core/domains/catalog/enums/category-status.enum';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 import { noWhitespaceValidator } from '../../../../../shared/validators/no-whitespace.validator';
 
 @Component({
   selector: 'app-category-form',
   standalone: true,
   imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonComponent],
-  templateUrl: './category-form.html',
-  styleUrl: './category-form.css'
+  templateUrl: './category-form.html'
 })
 export class CategoryFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
@@ -26,43 +24,39 @@ export class CategoryFormComponent implements OnChanges {
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<CreateCategoryRequest | UpdateCategoryRequest>();
   @Output() cancel = new EventEmitter<void>();
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
   get content() {
     return {
       dialogWidth: '460px',
-      titleNew: this.t().adminCategories.form.titleNew,
-      titleEdit: this.t().adminCategories.form.titleEdit,
-      optionalText: this.t().adminCategories.form.optionalText,
-      errorRequired: this.t().adminCategories.form.errorRequired,
+      titleNew: 'Nueva Categoría',
+      titleEdit: 'Editar Categoría',
+      optionalText: '(opcional)',
+      errorRequired: 'Campo requerido',
       styles: {
         selectWidth: '100%',
         appendTo: 'body'
       },
       actions: {
-        cancelLabel: this.t().adminCategories.form.actions.cancelLabel,
-        saveLabel: this.t().adminCategories.form.actions.saveLabel,
+        cancelLabel: 'Cancelar',
+        saveLabel: 'Guardar',
         saveIcon: 'pi-check'
       },
       status: {
-        label: this.t().adminCategories.form.status.label
+        label: 'Estado'
       }
     };
   }
 
   get statusOptions() {
     return [
-      { label: this.t().adminCategories.form.status.enabled, value: CategoryStatus.HABILITADO },
-      { label: this.t().adminCategories.form.status.disabled, value: CategoryStatus.DESHABILITADO }
+      { label: 'Habilitado', value: CategoryStatus.HABILITADO },
+      { label: 'Deshabilitado', value: CategoryStatus.DESHABILITADO }
     ];
   }
 
   get formConfig(): any[] {
     return [
-      [{ name: 'categoryName', label: this.t().adminCategories.form.fields.name, type: 'text', placeholder: this.t().adminCategories.form.fields.namePlaceholder }],
-      [{ name: 'parentIdCategory', label: this.t().adminCategories.form.fields.parent, type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: this.t().adminCategories.form.fields.parentPlaceholder, optional: true }]
+      [{ name: 'categoryName', label: 'Nombre *', type: 'text', placeholder: 'Ej: Laptops & PCs' }],
+      [{ name: 'parentIdCategory', label: 'Categoría padre', type: 'select', optionsKey: 'parentOptions', optionLabel: 'categoryName', optionValue: 'idCategory', placeholder: 'Sin categoría padre', optional: true }]
     ];
   }
 

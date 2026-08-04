@@ -1,8 +1,8 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryService } from '../../../../../core/domains/catalog/services/category.service';
-import { TranslationService } from '../../../../../core/services/translation.service';
 
 interface NavCategory {
   label: string;
@@ -16,46 +16,42 @@ interface NavCategory {
   selector: 'app-navbar-menu',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgClass],
-  templateUrl: './navbar-menu.html',
-  styleUrl: './navbar-menu.css'
+  templateUrl: './navbar-menu.html'
 })
 export class NavbarMenuComponent implements OnInit {
   private categoryService = inject(CategoryService);
+  private destroyRef = inject(DestroyRef);
 
   categories = signal<NavCategory[]>([]);
   openMenuIndex = signal<number | null>(null);
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   ngOnInit() {
-    this.categoryService.getTree().subscribe({
+    this.categoryService.getTree().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         const mapped: NavCategory[] = res.map(cat => this.mapCategory(cat));
 
         mapped.unshift({
-          label: this.t().navbar.menu.allCategoriesLabel,
+          label: 'Todas las categorías',
           route: '/catalog',
           queryParams: {}
         });
 
         mapped.push({
-          label: this.t().navbar.menu.offersLabel,
+          label: '⚡ Ofertas',
           route: '/catalog',
           queryParams: { search: 'oferta' },
           accent: true
         });
 
         mapped.push({
-          label: this.t().navbar.menu.aboutLabel,
+          label: 'Sobre nosotros',
           route: '/quienes-somos',
           queryParams: {},
           subcategories: [
-            { label: this.t().navbar.menu.aboutItems.whoWeAre, route: '/quienes-somos', queryParams: {} },
-            { label: this.t().navbar.menu.aboutItems.faq, route: '/preguntas-frecuentes', queryParams: {} },
-            { label: this.t().navbar.menu.aboutItems.terms, route: '/terminos', queryParams: {} },
-            { label: this.t().navbar.menu.aboutItems.privacy, route: '/privacidad', queryParams: {} },
-            { label: this.t().navbar.menu.aboutItems.contact, route: '/contacto', queryParams: {} }
+            { label: 'Quiénes somos', route: '/quienes-somos', queryParams: {} },
+            { label: 'Preguntas frecuentes', route: '/preguntas-frecuentes', queryParams: {} },
+            { label: 'Términos y condiciones', route: '/terminos', queryParams: {} },
+            { label: 'Políticas de privacidad', route: '/privacidad', queryParams: {} },
+            { label: 'Contacto', route: '/contacto', queryParams: {} }
           ]
         });
 
@@ -68,11 +64,29 @@ export class NavbarMenuComponent implements OnInit {
   }
 
   onMenuEnter(index: number): void {
-    this.openMenuIndex.set(index);
+    // Prevent hover from interfering with mobile click state if screen is small
+    if (window.innerWidth > 992) {
+      this.openMenuIndex.set(index);
+    }
   }
 
   onMenuLeave(): void {
-    this.openMenuIndex.set(null);
+    if (window.innerWidth > 992) {
+      this.openMenuIndex.set(null);
+    }
+  }
+
+  toggleMenu(index: number, event: Event): void {
+    if (window.innerWidth <= 992) {
+      if (this.openMenuIndex() === index) {
+        this.openMenuIndex.set(null);
+      } else {
+        this.openMenuIndex.set(index);
+      }
+      // If it has subcategories, we prevent default navigation to let accordion work
+      // Optional: you can comment preventDefault if you want it to navigate AND open.
+      event.preventDefault();
+    }
   }
 
   isMenuOpen(index: number): boolean {

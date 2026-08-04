@@ -11,7 +11,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { TranslationService } from '../../../core/services/translation.service';
 import { ProductService } from '../../../core/domains/catalog/services/product.service';
 import { CategoryService } from '../../../core/domains/catalog/services/category.service';
 import { BrandService } from '../../../core/domains/catalog/services/brand.service';
@@ -26,8 +25,7 @@ import { ViewChild } from '@angular/core';
   standalone: true,
   imports: [FormsModule, InputTextModule, ProductsTableComponent, ProductFormComponent,
     ProductImagesManagerComponent, ButtonComponent],
-  templateUrl: './products.html',
-  styleUrl: './products.css'
+  templateUrl: './products.html'
 })
 export class ProductsComponent implements OnInit {
   private productService = inject(ProductService);
@@ -36,9 +34,6 @@ export class ProductsComponent implements OnInit {
   private alertService = inject(AlertService);
   private modalService = inject(ModalService);
   private destroyRef = inject(DestroyRef);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   @ViewChild(ProductFormComponent) productForm!: ProductFormComponent;
 
   products = signal<Product[]>([]);
@@ -72,8 +67,8 @@ export class ProductsComponent implements OnInit {
       this.loadProducts({ first: 0, rows: this.apiConfig.pageSize });
     });
 
-    this.categoryService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).subscribe(r => this.categories.set(r.content));
-    this.brandService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).subscribe(r => this.brands.set(r.content));
+    this.categoryService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.categories.set(r.content));
+    this.brandService.getAll(this.apiConfig.lookupPage, this.apiConfig.lookupSize).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => this.brands.set(r.content));
     this.loadProducts();
   }
 
@@ -87,7 +82,7 @@ export class ProductsComponent implements OnInit {
       idCategory: this.filterCategory(),
       idBrand: this.filterBrand(),
       status: this.filterStatus()
-    }).subscribe({
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => { this.products.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
       error: () => this.loading.set(false),
     });
@@ -115,16 +110,16 @@ export class ProductsComponent implements OnInit {
       ? this.productService.update(this.editingProduct()!.idProduct, data as UpdateProductRequest)
       : this.productService.create(data as CreateProductRequest);
 
-    op.subscribe({
+    op.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(isEditing ? this.t().adminProducts.alerts.updateSuccess : this.t().adminProducts.alerts.createSuccess);
+        this.alertService.success(isEditing ? 'Producto actualizado' : 'Producto creado');
         this.formVisible.set(false);
         this.saving.set(false);
         this.loadProducts();
       },
       error: (err: any) => {
         const errorMsg = handleFormError(err, this.productForm.form) || undefined;
-        this.alertService.error(this.t().adminProducts.alerts.saveError, errorMsg);
+        this.alertService.error('Error al guardar', errorMsg);
         this.saving.set(false);
       }
     });
@@ -132,16 +127,16 @@ export class ProductsComponent implements OnInit {
 
   onDelete(p: Product) {
     this.modalService.open({
-      title: this.t().adminProducts.confirmModal.title,
-      message: `"${p.productName}" ${this.t().adminProducts.confirmModal.messageText}`,
+      title: '¿Eliminar producto?',
+      message: `"${p.productName}" ${'será eliminado permanentemente.'}`,
       severity: 'danger',
-      confirmLabel: this.t().adminProducts.confirmModal.confirmLabel,
-      onConfirm: () => this.productService.delete(p.idProduct).subscribe({
+      confirmLabel: 'Sí, eliminar',
+      onConfirm: () => this.productService.delete(p.idProduct).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
-          this.alertService.success(this.t().adminProducts.alerts.deleteSuccess);
+          this.alertService.success('Producto eliminado');
           this.loadProducts();
         },
-        error: () => this.alertService.error(this.t().adminProducts.alerts.deleteError),
+        error: () => this.alertService.error('Error al eliminar'),
       }),
     });
   }

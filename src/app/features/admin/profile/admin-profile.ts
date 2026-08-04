@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -10,14 +11,12 @@ import { AuthService } from '../../../core/domains/identity/services/auth.servic
 import { User, UpdateProfileRequest } from '../../../core/domains/identity/models/user.model';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { TranslationService } from '../../../core/services/translation.service';
 
 @Component({
   selector: 'app-admin-profile',
   standalone: true,
   imports: [ReactiveFormsModule, InputTextModule, SelectModule, PasswordModule, ButtonComponent],
-  templateUrl: './admin-profile.html',
-  styleUrl: './admin-profile.css'
+  templateUrl: './admin-profile.html'
 })
 export class AdminProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -25,16 +24,14 @@ export class AdminProfileComponent implements OnInit {
   private userService = inject(UserService);
   private alertService = inject(AlertService);
   authService = inject(AuthService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   saving = signal(false);
   savingPassword = signal(false);
   loading = signal(true);
   activeTab = signal<'info' | 'security'>('info');
 
   get content() {
-    return this.t().adminProfile;
+    return {"title":"Mi Perfil","subtitle":"Administra tu información personal y seguridad","tabs":{"info":"Información Personal","security":"Seguridad"},"infoSection":{"title":"Datos del administrador","subtitle":"Actualiza tus datos de contacto.","labels":{"firstName":"Nombre","lastName":"Apellido","email":"Correo electrónico","documentType":"Tipo de documento","documentNumber":"Número de documento","phone":"Teléfono / Celular"},"hints":{"emailImmutable":"El correo no puede modificarse.","nameImmutable":"El nombre se establece al registrarse."},"placeholders":{"docTypeSelect":"Seleccionar","docNumber":"12345678","phone":"987654321"},"errors":{"phonePattern":"Ingresa un número de 9 dígitos."},"saveLabel":"Guardar cambios"},"securitySection":{"title":"Cambiar contraseña","subtitle":"Usa una contraseña segura de al menos 8 caracteres.","labels":{"currentPassword":"Contraseña actual *","newPassword":"Nueva contraseña *","confirmPassword":"Confirmar nueva contraseña *"},"placeholders":{"currentPassword":"Tu contraseña actual","newPassword":"Mínimo 8 caracteres","confirmPassword":"Repite la nueva contraseña"},"errors":{"required":"Campo requerido","minlength":"Mínimo 8 caracteres","mismatch":"Las contraseñas no coinciden"},"saveLabel":"Actualizar contraseña"},"alerts":{"profileSuccess":"Perfil actualizado correctamente","profileError":"Error al actualizar el perfil","passwordSuccess":"Contraseña actualizada correctamente","passwordError":"Error al cambiar contraseña","passwordErrorMsg":"Verifica tu contraseña actual."}};
   }
 
   readonly docTypes = [
@@ -70,7 +67,7 @@ export class AdminProfileComponent implements OnInit {
 
   loadProfile() {
     this.loading.set(true);
-    this.userService.getProfile().subscribe({
+    this.userService.getProfile().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (user: User) => {
         this.profileForm.patchValue({
           firstName: user.firstName,
@@ -120,7 +117,7 @@ export class AdminProfileComponent implements OnInit {
       phone: this.profileForm.value.phone ?? '',
     };
 
-    this.userService.updateProfileDetails(data).subscribe({
+    this.userService.updateProfileDetails(data).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.profileSuccess);
         this.saving.set(false);
@@ -142,7 +139,7 @@ export class AdminProfileComponent implements OnInit {
     this.http.post(`${environment.apiUrl}/users/profile/password`, {
       currentPassword: this.passwordForm.get('currentPassword')?.value,
       newPassword: this.passwordForm.get('newPassword')?.value,
-    }).subscribe({
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.alertService.success(this.content.alerts.passwordSuccess);
         this.passwordForm.reset();

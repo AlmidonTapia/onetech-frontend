@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
   <p-table 
     [value]="invoices()"
     [lazy]="true"
@@ -8,37 +8,37 @@
     [totalRecords]="totalRecords()"
     [loading]="loading()"
     [styleClass]="tableConfig.styleClass"
-    [responsiveLayout]="'scroll'">
+    responsiveLayout="scroll">
     
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ content().headers.invoiceNumber }}</th>
-        <th>{{ content().headers.orderId }}</th>
-        <th>{{ content().headers.client }}</th>
-        <th>{{ content().headers.date }}</th>
-        <th>{{ content().headers.total }}</th>
-        <th>{{ content().headers.status }}</th>
-        <th class="text-center">{{ content().headers.actions }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.invoiceNumber }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.orderId }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.client }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.date }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.total }}</th>
+        <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.status }}</th>
+        <th class="w-[140px] text-center bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3 border-b-2 border-slate-200 dark:border-slate-700">{{ content().headers.actions }}</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-invoice>
-      <tr>
-        <td class="fw-medium text-primary">{{ invoice.invoiceNumber }}</td>
-        <td class="text-secondary">#{{ invoice.idOrder?.substring(0, 8) }}</td>
-        <td>
-          <div class="client-info">
-            <span class="client-name">{{ invoice.customerName }}</span>
-            <span class="client-email">{{ invoice.customerEmail }}</span>
+      <tr class="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-slate-800 dark:text-slate-200">
+        <td class="font-medium text-blue-600 dark:text-blue-400 py-3">{{ invoice.invoiceNumber }}</td>
+        <td class="text-slate-500 dark:text-slate-400 py-3">#{{ invoice.idOrder?.substring(0, 8) }}</td>
+        <td class="py-3">
+          <div class="flex flex-col">
+            <span class="font-medium text-slate-800 dark:text-slate-200">{{ invoice.customerName }}</span>
+            <span class="text-sm text-slate-500 dark:text-slate-400">{{ invoice.customerEmail }}</span>
           </div>
         </td>
-        <td>{{ invoice.issuedAt | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td class="fw-bold">{{ invoice.totalAmount | currencyPen }}</td>
-        <td>
+        <td class="py-3">{{ invoice.issuedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td class="font-bold py-3">{{ invoice.totalAmount | currencyPen }}</td>
+        <td class="py-3">
           <p-tag [value]="getStatusLabel(invoice.status)" [severity]="getStatusSeverity(invoice.status)"></p-tag>
         </td>
-        <td class="text-center">
-          <div class="action-buttons">
+        <td class="text-center py-3">
+          <div class="flex justify-center gap-1.5">
             <app-button 
               variant="outline" 
               size="sm" 
@@ -69,7 +69,7 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center p-4">
+        <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center p-4 text-slate-500 dark:text-slate-400">
           {{ content().emptyMessage }}
         </td>
       </tr>

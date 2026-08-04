@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/domains/identity/services/auth.service';
@@ -10,6 +10,7 @@ import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
 import { handleFormError } from '../../../shared/utils/form-error.util';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-login',
@@ -19,8 +20,7 @@ import { handleFormError } from '../../../shared/utils/form-error.util';
     InputTextModule, PasswordModule, CheckboxModule,
     ButtonComponent, AlertComponent, AuthLayoutComponent
   ],
-  templateUrl: './login.html',
-  styleUrl: './login.css'
+  templateUrl: './login.html'
 })
 export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private alertService = inject(AlertService);
   private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   loading = signal(false);
   errorMsg = signal('');
@@ -92,7 +93,7 @@ export class LoginComponent implements OnInit {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    this.authService.login(this.form.value as any).subscribe({
+    this.authService.login(this.form.value as any).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.loading.set(false);
         this.alertService.success('Bienvenido', `Hola de nuevo, ${res.firstName}`);

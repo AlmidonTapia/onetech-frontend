@@ -1,41 +1,41 @@
-<aside class="filters-panel">
-  <div class="filters-header">
-    <h3>{{ t().catalog.filters.mainTitle }}</h3>
-    <button class="reset-btn" (click)="onReset()">{{ t().catalog.filters.resetBtnText }}</button>
+<aside class="flex flex-col gap-0">
+  <div class="flex items-center justify-end lg:justify-between p-5 lg:px-6 border-b border-slate-200 dark:border-slate-800">
+    <h3 class="hidden lg:block text-base font-bold text-slate-900 dark:text-slate-100 m-0">Filtros</h3>
+    <button class="text-[13px] font-semibold text-blue-600 dark:text-blue-400 bg-transparent border-none cursor-pointer transition-opacity duration-300 hover:opacity-80 hover:no-underline" (click)="onReset()">Limpiar</button>
   </div>
 
-  <div class="filter-group">
-    <button class="filter-title-btn" (click)="isCategoryOpen = !isCategoryOpen">
-      {{ t().catalog.filters.categoryTitle }}
+  <div class="p-4 lg:p-6 border-b border-slate-200 dark:border-slate-800">
+    <button class="w-full flex items-center justify-between text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.08em] bg-transparent border-none p-0 cursor-pointer mb-4 transition-colors duration-300 hover:text-blue-600 dark:hover:text-blue-400" (click)="isCategoryOpen = !isCategoryOpen">
+      Categorías
       <i class="pi" [class.pi-angle-up]="isCategoryOpen" [class.pi-angle-down]="!isCategoryOpen"></i>
     </button>
     @if (isCategoryOpen) {
-    <ul class="filter-options animate-fade-in filter-scrollable">
+    <ul class="list-none p-0 m-0 flex flex-col gap-1.5 animate-[fadeIn_0.2s_ease-out] max-h-60 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500">
       <li>
-        <label class="filter-option" [class.filter-option--active]="!localFilters.categoryId">
-          <input type="radio" name="category" [value]="''" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" />
-          <span>{{ t().catalog.filters.allCategoriesOption }}</span>
+        <label class="flex items-center gap-3 py-2.5 px-3.5 rounded-xl text-[13px] text-slate-500 dark:text-slate-400 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden flex-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 before:content-['\e909'] before:font-primeicons before:text-xs before:text-blue-600 dark:before:text-blue-400 before:opacity-0 before:scale-50 before:transition-all before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)] before:w-0 before:inline-block" [class.bg-blue-50]="!localFilters.categoryId" [class.dark:bg-blue-900/20]="!localFilters.categoryId" [class.text-blue-900]="!localFilters.categoryId" [class.dark:text-blue-100]="!localFilters.categoryId" [class.font-semibold]="!localFilters.categoryId" [class.before:opacity-100]="!localFilters.categoryId" [class.before:scale-100]="!localFilters.categoryId" [class.before:w-[14px]]="!localFilters.categoryId" [class.before:mr-1]="!localFilters.categoryId">
+          <input type="radio" name="category" [value]="''" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" class="absolute opacity-0 w-0 h-0" />
+          <span>Todas las categorías</span>
         </label>
       </li>
       @for (node of categoryTree; track node.parent.idCategory) {
-      <li class="category-node">
-        <div class="category-node-header">
-          <label class="filter-option" [class.filter-option--active]="localFilters.categoryId === node.parent.idCategory">
-            <input type="radio" name="category" [value]="node.parent.idCategory" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" />
+      <li class="flex flex-col">
+        <div class="flex items-center gap-1">
+          <label class="flex items-center gap-3 py-2.5 px-3.5 rounded-xl text-[13px] text-slate-500 dark:text-slate-400 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden flex-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 before:content-['\e909'] before:font-primeicons before:text-xs before:text-blue-600 dark:before:text-blue-400 before:opacity-0 before:scale-50 before:transition-all before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)] before:w-0 before:inline-block" [class.bg-blue-50]="localFilters.categoryId === node.parent.idCategory" [class.dark:bg-blue-900/20]="localFilters.categoryId === node.parent.idCategory" [class.text-blue-900]="localFilters.categoryId === node.parent.idCategory" [class.dark:text-blue-100]="localFilters.categoryId === node.parent.idCategory" [class.font-semibold]="localFilters.categoryId === node.parent.idCategory" [class.before:opacity-100]="localFilters.categoryId === node.parent.idCategory" [class.before:scale-100]="localFilters.categoryId === node.parent.idCategory" [class.before:w-[14px]]="localFilters.categoryId === node.parent.idCategory" [class.before:mr-1]="localFilters.categoryId === node.parent.idCategory">
+            <input type="radio" name="category" [value]="node.parent.idCategory" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" class="absolute opacity-0 w-0 h-0" />
             <span>{{ node.parent.categoryName }}</span>
           </label>
           @if (node.children.length > 0) {
-            <button class="category-toggle-btn" (click)="toggleCategoryNode(node, $event)">
+            <button class="bg-transparent border-none text-slate-500 dark:text-slate-400 w-6 h-6 flex items-center justify-center cursor-pointer rounded-md transition-all duration-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100" (click)="toggleCategoryNode(node, $event)">
               <i class="pi" [class.pi-chevron-up]="node.isOpen" [class.pi-chevron-down]="!node.isOpen"></i>
             </button>
           }
         </div>
         @if (node.isOpen && node.children.length > 0) {
-        <ul class="filter-options filter-subcategories animate-fade-in">
+        <ul class="list-none p-0 m-0 flex flex-col gap-1.5 animate-[fadeIn_0.2s_ease-out] pl-3 sm:pl-[20px] lg:pl-[20px] mt-1 relative before:content-[''] before:absolute before:left-1.5 sm:before:left-2.5 lg:before:left-2.5 before:top-0 before:bottom-2.5 before:w-px before:bg-slate-200 dark:before:bg-slate-800">
           @for (child of node.children; track child.idCategory) {
           <li>
-            <label class="filter-option" [class.filter-option--active]="localFilters.categoryId === child.idCategory">
-              <input type="radio" name="category" [value]="child.idCategory" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" />
+            <label class="flex items-center gap-3 py-2.5 px-3.5 rounded-xl text-[13px] text-slate-500 dark:text-slate-400 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden flex-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 before:content-['\e909'] before:font-primeicons before:text-xs before:text-blue-600 dark:before:text-blue-400 before:opacity-0 before:scale-50 before:transition-all before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)] before:w-0 before:inline-block" [class.bg-blue-50]="localFilters.categoryId === child.idCategory" [class.dark:bg-blue-900/20]="localFilters.categoryId === child.idCategory" [class.text-blue-900]="localFilters.categoryId === child.idCategory" [class.dark:text-blue-100]="localFilters.categoryId === child.idCategory" [class.font-semibold]="localFilters.categoryId === child.idCategory" [class.before:opacity-100]="localFilters.categoryId === child.idCategory" [class.before:scale-100]="localFilters.categoryId === child.idCategory" [class.before:w-[14px]]="localFilters.categoryId === child.idCategory" [class.before:mr-1]="localFilters.categoryId === child.idCategory">
+              <input type="radio" name="category" [value]="child.idCategory" [(ngModel)]="localFilters.categoryId" (ngModelChange)="onApply()" class="absolute opacity-0 w-0 h-0" />
               <span>{{ child.categoryName }}</span>
             </label>
           </li>
@@ -48,23 +48,23 @@
     }
   </div>
 
-  <div class="filter-group">
-    <button class="filter-title-btn" (click)="isBrandOpen = !isBrandOpen">
-      {{ t().catalog.filters.brandTitle }}
+  <div class="p-4 lg:p-6 border-b border-slate-200 dark:border-slate-800">
+    <button class="w-full flex items-center justify-between text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.08em] bg-transparent border-none p-0 cursor-pointer mb-4 transition-colors duration-300 hover:text-blue-600 dark:hover:text-blue-400" (click)="isBrandOpen = !isBrandOpen">
+      Marcas
       <i class="pi" [class.pi-angle-up]="isBrandOpen" [class.pi-angle-down]="!isBrandOpen"></i>
     </button>
     @if (isBrandOpen) {
-    <ul class="filter-options animate-fade-in filter-scrollable">
+    <ul class="list-none p-0 m-0 flex flex-col gap-1.5 animate-[fadeIn_0.2s_ease-out] max-h-60 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 dark:[&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 dark:hover:[&::-webkit-scrollbar-thumb]:bg-slate-500">
       <li>
-        <label class="filter-option" [class.filter-option--active]="!localFilters.brandId">
-          <input type="radio" name="brand" [value]="''" [(ngModel)]="localFilters.brandId" (ngModelChange)="onApply()" />
-          <span>{{ t().catalog.filters.allBrandsOption }}</span>
+        <label class="flex items-center gap-3 py-2.5 px-3.5 rounded-xl text-[13px] text-slate-500 dark:text-slate-400 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden flex-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 before:content-['\e909'] before:font-primeicons before:text-xs before:text-blue-600 dark:before:text-blue-400 before:opacity-0 before:scale-50 before:transition-all before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)] before:w-0 before:inline-block" [class.bg-blue-50]="!localFilters.brandId" [class.dark:bg-blue-900/20]="!localFilters.brandId" [class.text-blue-900]="!localFilters.brandId" [class.dark:text-blue-100]="!localFilters.brandId" [class.font-semibold]="!localFilters.brandId" [class.before:opacity-100]="!localFilters.brandId" [class.before:scale-100]="!localFilters.brandId" [class.before:w-[14px]]="!localFilters.brandId" [class.before:mr-1]="!localFilters.brandId">
+          <input type="radio" name="brand" [value]="''" [(ngModel)]="localFilters.brandId" (ngModelChange)="onApply()" class="absolute opacity-0 w-0 h-0" />
+          <span>Todas</span>
         </label>
       </li>
       @for (brand of brands; track brand.idBrand) {
       <li>
-        <label class="filter-option" [class.filter-option--active]="localFilters.brandId === brand.idBrand">
-          <input type="radio" name="brand" [value]="brand.idBrand" [(ngModel)]="localFilters.brandId" (ngModelChange)="onApply()" />
+        <label class="flex items-center gap-3 py-2.5 px-3.5 rounded-xl text-[13px] text-slate-500 dark:text-slate-400 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative overflow-hidden flex-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 before:content-['\e909'] before:font-primeicons before:text-xs before:text-blue-600 dark:before:text-blue-400 before:opacity-0 before:scale-50 before:transition-all before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)] before:w-0 before:inline-block" [class.bg-blue-50]="localFilters.brandId === brand.idBrand" [class.dark:bg-blue-900/20]="localFilters.brandId === brand.idBrand" [class.text-blue-900]="localFilters.brandId === brand.idBrand" [class.dark:text-blue-100]="localFilters.brandId === brand.idBrand" [class.font-semibold]="localFilters.brandId === brand.idBrand" [class.before:opacity-100]="localFilters.brandId === brand.idBrand" [class.before:scale-100]="localFilters.brandId === brand.idBrand" [class.before:w-[14px]]="localFilters.brandId === brand.idBrand" [class.before:mr-1]="localFilters.brandId === brand.idBrand">
+          <input type="radio" name="brand" [value]="brand.idBrand" [(ngModel)]="localFilters.brandId" (ngModelChange)="onApply()" class="absolute opacity-0 w-0 h-0" />
           <span>{{ brand.brandName }}</span>
         </label>
       </li>
@@ -73,20 +73,22 @@
     }
   </div>
 
-  <div class="filter-group">
-    <button class="filter-title-btn" (click)="isPriceOpen = !isPriceOpen">
-      {{ t().catalog.filters.priceTitle }}
+  <div class="p-4 lg:p-6 border-b border-slate-200 dark:border-slate-800">
+    <button class="w-full flex items-center justify-between text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-[0.08em] bg-transparent border-none p-0 cursor-pointer mb-4 transition-colors duration-300 hover:text-blue-600 dark:hover:text-blue-400" (click)="isPriceOpen = !isPriceOpen">
+      Precio (S/)
       <i class="pi" [class.pi-angle-up]="isPriceOpen" [class.pi-angle-down]="!isPriceOpen"></i>
     </button>
     @if (isPriceOpen) {
-    <div class="price-inputs animate-fade-in">
-      <input type="number" [(ngModel)]="localFilters.minPrice" (change)="onApply()" (keydown.enter)="onApply()" [placeholder]="t().catalog.filters.minPricePlaceholder" min="0" />
-      <span class="price-sep">—</span>
-      <input type="number" [(ngModel)]="localFilters.maxPrice" (change)="onApply()" (keydown.enter)="onApply()" [placeholder]="t().catalog.filters.maxPricePlaceholder" min="0" />
+    <div class="flex items-center gap-2 animate-[fadeIn_0.2s_ease-out]">
+      <input type="number" [(ngModel)]="localFilters.minPrice" (change)="onApply()" (keydown.enter)="onApply()" placeholder="Mín" min="0" class="flex-1 min-w-0 w-full py-2.5 px-3.5 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-md text-[13px] outline-none transition-all duration-250 focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]" />
+      <span class="text-slate-500 dark:text-slate-400 text-xs font-semibold">—</span>
+      <input type="number" [(ngModel)]="localFilters.maxPrice" (change)="onApply()" (keydown.enter)="onApply()" placeholder="Máx" min="0" class="flex-1 min-w-0 w-full py-2.5 px-3.5 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 rounded-md text-[13px] outline-none transition-all duration-250 focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]" />
     </div>
     }
   </div>
 
-  <app-button variant="primary" [label]="t().catalog.filters.applyBtnLabel" icon="pi-filter" [fullWidth]="true"
-    (clicked)="onApply()" />
+  <div class="p-6 block">
+    <app-button variant="primary" label="Aplicar filtros" icon="pi-filter" [fullWidth]="true"
+      (clicked)="onApply()" />
+  </div>
 </aside>

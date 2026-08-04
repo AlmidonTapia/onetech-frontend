@@ -1,4 +1,11 @@
-<div class="ot-card" [ngClass]="['card-p-' + padding(), hoverable() ? 'card-hover' : '']">
+<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 rounded-[24px] shadow-[0_8px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.2)] overflow-hidden transition-all duration-[300ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)]" 
+     [ngClass]="{
+       'hover:shadow-[0_16px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 hover:border-blue-500/20 dark:hover:shadow-[0_16px_32px_rgba(0,0,0,0.4)]': hoverable(),
+       'p-0': padding() === 'none',
+       'p-3': padding() === 'sm',
+       'p-5': padding() === 'md',
+       'p-8': padding() === 'lg'
+     }">
     <ng-content select="[card-header]" />
     <ng-content />
     <ng-content select="[card-footer]" />

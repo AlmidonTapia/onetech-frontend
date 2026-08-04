@@ -6,14 +6,12 @@ import { Cart } from '../../../../../core/domains/shopping/models/cart.model';
 import { ShipmentMethod } from '../../../../../core/domains/shipping/models/shipment.model';
 import { ConsigneeInfo } from '../checkout-consignee/checkout-consignee';
 import { PaymentMethod } from '../../../../../core/domains/checkout/models/payment.model';
-import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-checkout-aside',
   standalone: true,
   imports: [CurrencyPenPipe, FormsModule],
-  templateUrl: './checkout-aside.html',
-  styleUrl: './checkout-aside.css'
+  templateUrl: './checkout-aside.html'
 })
 export class CheckoutAsideComponent {
   @Input() cart: Cart | null = null;
@@ -25,8 +23,4 @@ export class CheckoutAsideComponent {
   @Input() ubigeoCode: string | null = null;
   @Input() locationName: string | null = null;
   @Input() payMethod: PaymentMethod | null = null;
-  @Input() finalTotal: number = 0;
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-}
+  @Input() finalTotal: number = 0;}

@@ -1,11 +1,13 @@
 import { Component, ChangeDetectionStrategy, input, output, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { ButtonComponent } from '../button/button';
+
 @Component({
   selector: 'app-quantity-selector',
   standalone: true,
+  imports: [ButtonComponent],
   templateUrl: './quantity-selector.html',
-  styleUrl: './quantity-selector.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

@@ -1,5 +1,6 @@
 
-import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,55 +10,50 @@ import { ButtonComponent } from '../../../../../shared/components/ui/button/butt
 import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
 import { CreateInventoryMovementRequest } from '../../../../../core/domains/inventory/models/inventory.model';
 import { Product } from '../../../../../core/domains/catalog/models/product.model';
-import { TranslationService as AppTranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-movement-form',
   standalone: true,
   imports: [ReactiveFormsModule, DialogModule, InputTextModule,
     InputNumberModule, SelectModule, ButtonComponent],
-  templateUrl: './movement-form.html',
-  styleUrl: './movement-form.css'
+  templateUrl: './movement-form.html'
 })
 export class MovementFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private productService = inject(ProductService);
-
-  ts = inject(AppTranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @Input() visible: boolean = false;
   @Input() saving = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<CreateInventoryMovementRequest>();
   @Output() cancel = new EventEmitter<void>();
 
-  products: Product[] = [];
+  products = signal<Product[]>([]);
 
   get content() {
     return {
       dialogWidth: '400px',
       labels: {
-        product: this.t().adminInventory.form.fields.product,
-        type: this.t().adminInventory.form.fields.type,
-        quantity: this.t().adminInventory.form.fields.quantity,
-        reason: this.t().adminInventory.form.fields.reason
+        product: 'Producto *',
+        type: 'Tipo de movimiento *',
+        quantity: 'Cantidad *',
+        reason: 'Motivo *'
       },
       placeholders: {
-        reason: this.t().adminInventory.form.fields.reasonPlaceholder,
-        product: this.t().adminInventory.form.fields.productPlaceholder,
-        search: this.t().adminInventory.form.fields.searchPlaceholder
+        reason: 'Ej: Compra de proveedor, Venta, Ajuste...',
+        product: 'Seleccionar producto',
+        search: 'Buscar...'
       },
-      headerTitle: this.t().adminInventory.form.headerTitle,
-      errorRequired: this.t().adminInventory.form.errorRequired,
-      errorMinQuantity: this.t().adminInventory.form.fields.errorMinQuantity,
+      headerTitle: 'Registrar movimiento de inventario',
+      errorRequired: 'El motivo es requerido',
+      errorMinQuantity: 'Cantidad mínima es 1',
       styles: {
         selectWidth: '100%',
         appendTo: 'body'
       },
       actions: {
-        cancelLabel: this.t().adminInventory.form.actions.cancelLabel,
-        saveLabel: this.t().adminInventory.form.actions.saveLabel,
+        cancelLabel: 'Cancelar',
+        saveLabel: 'Registrar movimiento',
         saveIcon: 'pi-check'
       }
     };
@@ -65,8 +61,8 @@ export class MovementFormComponent implements OnInit {
 
   get typeOptions() {
     return [
-      { label: this.t().adminInventory.table.types.in, value: 'IN' },
-      { label: this.t().adminInventory.table.types.out, value: 'OUT' },
+      { label: 'Entrada (IN)', value: 'IN' },
+      { label: 'Salida (OUT)', value: 'OUT' },
     ];
   }
 
@@ -83,9 +79,9 @@ export class MovementFormComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.productService.getAll({ page: 0, size: 100, status: 'ACTIVO' }).subscribe(r => {
+    this.productService.getAll({ page: 0, size: 100, status: 'ACTIVO' }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(r => {
       setTimeout(() => {
-        this.products = r.content;
+        this.products.set(r.content);
       });
     });
   }

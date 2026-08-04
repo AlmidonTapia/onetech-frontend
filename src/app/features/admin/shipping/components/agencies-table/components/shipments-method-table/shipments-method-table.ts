@@ -4,13 +4,13 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ShipmentMethod } from '../../../../../../../core/domains/shipping/models/shipment.model';
 import { CurrencyPenPipe } from '../../../../../../../shared/pipes/currency-pen.pipe';
+import { ButtonComponent } from '../../../../../../../shared/components/ui/button/button';
 
 @Component({
   selector: 'app-shipments-method-table',
   standalone: true,
-  imports: [CommonModule, TableModule, CurrencyPenPipe, InputTextModule],
-  templateUrl: './shipments-method-table.html',
-  styleUrl: './shipments-method-table.css'
+  imports: [CommonModule, TableModule, CurrencyPenPipe, InputTextModule, ButtonComponent],
+  templateUrl: './shipments-method-table.html'
 })
 export class ShipmentsMethodTableComponent {
   methods = input.required<ShipmentMethod[]>();

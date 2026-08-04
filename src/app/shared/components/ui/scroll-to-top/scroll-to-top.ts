@@ -1,11 +1,12 @@
 import { Component, HostListener, signal } from '@angular/core';
+import { uiContent } from '../../../../core/content/shared/ui.content';
 
 @Component({
   selector: 'app-scroll-to-top',
   standalone: true,
   template: `
     @if (show()) {
-      <button class="scroll-top-btn" [attr.aria-label]="content.ariaLabel" (click)="scrollToTop()">
+      <button class="scroll-top-btn" [attr.aria-label]="content.scrollToTop.ariaLabel" (click)="scrollToTop()">
         <i class="pi pi-arrow-up"></i>
       </button>
     }
@@ -36,13 +37,11 @@ import { Component, HostListener, signal } from '@angular/core';
     }
   `]
 })
-export class ScrollToTopComponent {
+export class ScrollToTopComponent { 
+  content = uiContent;
   show = signal(false);
 
-  content = {
-    ariaLabel: 'Volver arriba'
-  };
-
+  
   @HostListener('window:scroll')
   onWindowScroll() {
     this.show.set(window.scrollY > 400);

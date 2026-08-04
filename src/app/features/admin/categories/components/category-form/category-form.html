@@ -1,19 +1,19 @@
 <p-dialog [visible]="visible" [header]="title" [modal]="true" [closable]="true" [draggable]="false"
   [style]="{ width: content.dialogWidth }" (onHide)="onCancel()">
 
-  <form [formGroup]="form" class="simple-form" novalidate>
+  <form [formGroup]="form" class="flex flex-col gap-4 py-2" novalidate>
     @for (row of formConfig; track $index) {
-    <div class="form-row">
+    <div class="flex flex-col sm:flex-row gap-4 w-full">
       @for (field of row; track field.name) {
-      <div class="form-field" [style.flex]="field.flex || '1'">
-        <label>
+      <div class="flex flex-col gap-1.5" [style.flex]="field.flex || '1'">
+        <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">
           {{ field.label }}
-          @if(field.optional){ <span class="optional">{{ content.optionalText }}</span> }
+          @if(field.optional){ <span class="font-normal text-slate-500 dark:text-slate-400">{{ content.optionalText }}</span> }
         </label>
 
         @if (field.type === 'text') {
         <input pInputText [formControlName]="field.name" [placeholder]="field.placeholder"
-          [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" />
+          [class.ng-invalid]="isInvalid(field.name)" [class.ng-dirty]="isInvalid(field.name)" class="w-full" />
         }
 
         @else if (field.type === 'select') {
@@ -24,9 +24,9 @@
         }
 
         @if (isInvalid(field.name) && form.get(field.name)?.errors?.['backend']) {
-        <span class="field-error">{{ form.get(field.name)?.errors?.['backend'] }}</span>
+        <span class="text-xs text-red-500 dark:text-red-400">{{ form.get(field.name)?.errors?.['backend'] }}</span>
         } @else if (isInvalid(field.name)) {
-        <span class="field-error">{{ content.errorRequired }}</span>
+        <span class="text-xs text-red-500 dark:text-red-400">{{ content.errorRequired }}</span>
         }
       </div>
       }
@@ -34,9 +34,9 @@
     }
 
     @if (category) {
-    <div class="form-row">
-      <div class="form-field">
-        <label>{{ content.status.label }}</label>
+    <div class="flex flex-col sm:flex-row gap-4 w-full">
+      <div class="flex flex-col gap-1.5 w-full">
+        <label class="text-[13px] font-medium text-slate-800 dark:text-slate-200">{{ content.status.label }}</label>
         <p-select formControlName="status" [options]="statusOptions" optionLabel="label" optionValue="value" styleClass="w-full" />
       </div>
     </div>
@@ -44,7 +44,7 @@
   </form>
 
   <ng-template pTemplate="footer">
-    <div class="dialog-footer">
+    <div class="flex justify-center items-center flex-wrap gap-6 mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
       <app-button variant="ghost" [label]="content.actions.cancelLabel" (clicked)="onCancel()" />
       <app-button variant="primary" [label]="content.actions.saveLabel" [icon]="content.actions.saveIcon"
         [loading]="saving" (clicked)="onSave()" />

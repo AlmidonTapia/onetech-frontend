@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/domains/identity/services/auth.service';
@@ -6,6 +6,7 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { RegisterFormComponent } from './components/register-form/register-form';
 import { AuthLayoutComponent } from '../../../shared/layout/auth-layout/auth-layout';
 import { handleFormError } from '../../../shared/utils/form-error.util';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register',
@@ -13,8 +14,7 @@ import { handleFormError } from '../../../shared/utils/form-error.util';
   imports: [
     ReactiveFormsModule, RegisterFormComponent, AuthLayoutComponent
   ],
-  templateUrl: './register.html',
-  styleUrl: './register.css'
+  templateUrl: './register.html'
 })
 export class RegisterComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
   private router = inject(Router);
   private alertService = inject(AlertService);
   private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   loading = signal(false);
   errorMsg = signal('');
@@ -117,13 +118,13 @@ export class RegisterComponent implements OnInit {
       lastName: this.f['lastName'].value!,
       email: this.f['email'].value!,
       password: this.f['password'].value!,
-    }).subscribe({
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.alertService.success('Cuenta creada', 'Iniciando sesión automáticamente...');
         this.authService.login({
           email: this.f['email'].value!,
           password: this.f['password'].value!,
-        }).subscribe({
+        }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
             const targetUrl = this.returnUrl() || '/';
             this.router.navigate([targetUrl]);

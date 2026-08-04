@@ -1,45 +1,47 @@
-<footer class="ot-footer">
+<footer class="bg-slate-900 text-white/75 mt-auto dark:bg-slate-800 dark:border-t dark:border-slate-700">
 
-    <div class="container footer-grid">
+    <div class="container grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1.5fr] lg:grid-cols-[2fr_1fr_1.5fr] gap-7 md:gap-9 lg:gap-12 pt-16 pb-14 place-content-center md:place-content-start">
 
-        <div class="footer-col footer-brand">
-            <a routerLink="/" class="footer-logo inline-block mb-4" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: 24px; font-weight: bold;">
-                <img src="/icono_wbg_small.png" alt="OneTech Logo" style="height: 32px; width: auto; object-fit: contain; flex-shrink: 0;" class="opacity-90 hover:opacity-100 transition-opacity">
-                <div style="line-height: 1;"><span class="logo-one">One</span><span class="logo-tech">Tech</span></div>
+        <div class="flex flex-col gap-4">
+            <a routerLink="/" class="inline-flex items-center gap-2 text-none text-[24px] font-bold mb-4">
+                <img src="/icono_wbg_small.png" alt="OneTech Logo" class="h-8 w-auto object-contain shrink-0 opacity-90 hover:opacity-100 transition-opacity">
+                <div class="leading-none"><span class="text-white dark:text-slate-100">One</span><span class="text-orange-500">Tech</span></div>
             </a>
-            <p class="footer-tagline">
-                {{ t().footer.tagline }}
+            <p class="text-sm leading-relaxed text-white/65 max-w-[280px] dark:text-slate-400">
+                Tu tienda de tecnología de confianza. Los mejores productos a los mejores precios.
             </p>
-            <div class="footer-social">
+            <div class="flex gap-3 mt-2">
                 @for (s of social; track s.label) {
-                <a [href]="s.href" target="_blank" rel="noopener" [attr.aria-label]="s.label" class="social-link">
+                <a [href]="s.href" target="_blank" rel="noopener" [attr.aria-label]="s.label" class="flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white/80 text-lg transition-all duration-300 dark:bg-slate-900 dark:text-slate-100 dark:border dark:border-slate-700 hover:bg-orange-500 hover:text-white hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(255,102,0,0.3)]">
                     <i class="pi" [class]="s.icon"></i>
                 </a>
                 }
             </div>
+            
+            <a routerLink="/libro-reclamaciones" class="group inline-block mt-4" title="Libro de Reclamaciones">
+                <img src="/assets/images/libro_reclamaciones.png" alt="Libro de Reclamaciones" class="h-[45px] w-auto object-contain transition-transform duration-300 group-hover:scale-105">
+            </a>
         </div>
 
-        
-
-        <div class="footer-col">
-            <h3 class="footer-heading">{{ t().footer.headings.help }}</h3>
-            <ul class="footer-links">
+        <div class="flex flex-col">
+            <h3 class="text-sm font-bold tracking-wider uppercase text-white mb-5 dark:text-slate-100">Ayuda</h3>
+            <ul class="list-none p-0 flex flex-col gap-3">
                 @for (link of helpLinks; track link.label) {
                 <li>
-                    <a [routerLink]="link.route" class="footer-link">{{ link.label }}</a>
+                    <a [routerLink]="link.route" class="inline-block text-sm text-white/65 transition-all duration-300 dark:text-slate-400 hover:text-orange-500 hover:translate-x-1">{{ link.label }}</a>
                 </li>
                 }
             </ul>
         </div>
 
-        <div class="footer-col">
-            <h3 class="footer-heading">{{ t().footer.headings.contact }}</h3>
-            <ul class="footer-contact">
-                @for(item of contactInfo(); track $index) {
-                <li>
-                    <i class="pi" [class]="item.icon"></i>
+        <div class="flex flex-col">
+            <h3 class="text-sm font-bold tracking-wider uppercase text-white mb-5 dark:text-slate-100">Contacto</h3>
+            <ul class="list-none p-0 flex flex-col gap-3.5">
+                @for(item of contactInfo(); track item.icon) {
+                <li class="flex items-start gap-3 text-sm text-white/65 dark:text-slate-400">
+                    <i class="pi text-base text-orange-500 shrink-0 mt-0.5" [class]="item.icon"></i>
                     @if (item.link) {
-                    <a [href]="item.link">{{ item.text }}</a>
+                    <a [href]="item.link" class="text-inherit transition-colors duration-300 hover:text-orange-500">{{ item.text }}</a>
                     } @else {
                     <span>{{ item.text }}</span>
                     }
@@ -52,12 +54,13 @@
 
     </div>
 
-    <div class="footer-bottom">
-        <div class="container footer-bottom-inner">
+    <div class="border-t border-white/10 dark:border-slate-700">
+        <div class="container flex items-center justify-center flex-wrap gap-4 py-6">
 
-            <p class="footer-copy">
-                {{ t().footer.copyPre }}{{ year }}{{ t().footer.copyPost }}
+            <p class="m-0 text-center text-[13px] text-white/50 dark:text-slate-400">
+                © {{ year }} OneTech. Todos los derechos reservados.
             </p>
+
         </div>
     </div>
 

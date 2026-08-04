@@ -1,25 +1,23 @@
-import { Component, Input, Output, EventEmitter, OnChanges, inject, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TooltipModule } from 'primeng/tooltip';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { Product, ProductImage } from '../../../../../core/domains/catalog/models/product.model';
 import { ProductService } from '../../../../../core/domains/catalog/services/product.service';
-import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-product-images-manager',
   standalone: true,
-  imports: [DialogModule, FileUploadModule, ButtonComponent],
-  templateUrl: './product-images-manager.html',
-  styleUrl: './product-images-manager.css'
+  imports: [DialogModule, FileUploadModule, TooltipModule, ButtonComponent],
+  templateUrl: './product-images-manager.html'
 })
 export class ProductImagesManagerComponent implements OnChanges { 
   private productService = inject(ProductService);
   private alertService = inject(AlertService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @Input() visible = false;
   @Input() product: Product | null = null;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -30,34 +28,34 @@ export class ProductImagesManagerComponent implements OnChanges {
 
   get content() {
     return {
-      headerPrefix: this.t().adminProducts.images.headerPrefix,
+      headerPrefix: 'Imágenes — ',
       dialogWidth: '620px',
-      altText: this.t().adminProducts.images.altText,
-      mainBadgeLabel: this.t().adminProducts.images.mainBadgeLabel,
-      emptyMessage: this.t().adminProducts.images.emptyMessage,
-      uploadedImages: this.t().adminProducts.images.uploadedImages,
-      setMainTooltip: this.t().adminProducts.images.setMainTooltip,
-      deleteTooltip: this.t().adminProducts.images.deleteTooltip,
-      uploadNewTitle: this.t().adminProducts.images.uploadNewTitle,
+      altText: 'Imagen del producto',
+      mainBadgeLabel: 'Principal',
+      emptyMessage: 'Sin imágenes. Sube la primera imagen abajo.',
+      uploadedImages: 'Imágenes cargadas',
+      setMainTooltip: 'Establecer como principal',
+      deleteTooltip: 'Eliminar imagen',
+      uploadNewTitle: 'Subir nuevas imágenes',
       uploadConfig: {
         mode: 'advanced' as const,
         accept: 'image/*, image/webp, .webp',
-        chooseLabel: this.t().adminProducts.images.upload.chooseLabel,
-        uploadLabel: this.t().adminProducts.images.upload.uploadLabel,
-        cancelLabel: this.t().adminProducts.images.upload.cancelLabel,
+        chooseLabel: 'Elegir imágenes',
+        uploadLabel: 'Subir',
+        cancelLabel: 'Limpiar',
         maxFileSize: 10000000,
         styleClass: 'upload-area',
-        uploadNote: this.t().adminProducts.images.upload.note
+        uploadNote: 'Soporta múltiples archivos. Límite de 5 imágenes en total. Tamaño máx: 10MB.'
       },
       actions: {
-        closeLabel: this.t().adminProducts.images.closeLabel
+        closeLabel: 'Cerrar'
       }
     };
   }
 
   ngOnChanges() {
     if (this.product) {
-      this.productService.getImages(this.product.idProduct).subscribe({
+      this.productService.getImages(this.product.idProduct).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (imgs) => this.images.set(imgs || []),
         error: () => this.images.set(this.product!.images ?? [])
       });
@@ -70,10 +68,10 @@ export class ProductImagesManagerComponent implements OnChanges {
     this.uploading.set(true);
     const files: File[] = event.files;
 
-    this.productService.uploadImages(this.product.idProduct, files, 0).subscribe({
+    this.productService.uploadImages(this.product.idProduct, files, 0).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminProducts.alerts.imageUploadSuccess);
-        this.productService.getImages(this.product!.idProduct).subscribe({
+        this.alertService.success('Imágenes subidas con éxito');
+        this.productService.getImages(this.product!.idProduct).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: (imgs) => {
             this.images.set(imgs || []);
             this.updated.emit();
@@ -88,7 +86,7 @@ export class ProductImagesManagerComponent implements OnChanges {
         });
       },
       error: (err: any) => {
-        const errorMsg = err?.error?.message || this.t().adminProducts.alerts.imageUploadError;
+        const errorMsg = err?.error?.message || 'Error al subir imágenes';
         this.alertService.error(errorMsg);
         this.uploading.set(false);
       }
@@ -98,14 +96,14 @@ export class ProductImagesManagerComponent implements OnChanges {
   deleteImage(idImage: string) {
     if (!this.product) return;
 
-    this.productService.deleteImage(this.product.idProduct, idImage).subscribe({
+    this.productService.deleteImage(this.product.idProduct, idImage).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminProducts.alerts.imageDeleteSuccess);
+        this.alertService.success('Imagen eliminada');
         this.images.update((imgs: ProductImage[]) => imgs.filter((img: ProductImage) => img.idProductImage !== idImage));
         this.updated.emit();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminProducts.alerts.imageDeleteError);
+        this.alertService.error(err?.error?.message || 'Error al eliminar la imagen');
       }
     });
   }
@@ -113,9 +111,9 @@ export class ProductImagesManagerComponent implements OnChanges {
   setAsPrincipal(idImage: string) {
     if (!this.product) return;
 
-    this.productService.setPrincipalImage(this.product.idProduct, idImage).subscribe({
+    this.productService.setPrincipalImage(this.product.idProduct, idImage).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.alertService.success(this.t().adminProducts.alerts.imageMainSuccess);
+        this.alertService.success('Imagen establecida como principal');
         this.images.update((imgs: ProductImage[]) =>
           imgs.map((img: ProductImage) => ({
             ...img,
@@ -125,7 +123,7 @@ export class ProductImagesManagerComponent implements OnChanges {
         this.updated.emit();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().adminProducts.alerts.imageMainError);
+        this.alertService.error(err?.error?.message || 'Error al establecer la imagen principal');
       }
     });
   }

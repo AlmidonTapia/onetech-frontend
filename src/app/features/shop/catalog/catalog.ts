@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,28 +7,29 @@ import { CatalogFiltersComponent, CatalogFilterValues } from './components/catal
 import { CatalogGridComponent }  from './components/catalog-grid/catalog-grid';
 import { CatalogSortComponent }  from './components/catalog-sort/catalog-sort';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/components/ui/breadcrumb/breadcrumb';
+import { ButtonComponent } from '../../../shared/components/ui/button/button';
 import { ProductService } from '../../../core/domains/catalog/services/product.service';
 import { Product } from '../../../core/domains/catalog/models/product.model';
 import { SeoService } from '../../../core/domains/shared/services/seo.service';
-import { TranslationService } from '../../../core/services/translation.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
   imports: [FormsModule, InputTextModule, PaginatorModule,
             CatalogFiltersComponent, CatalogGridComponent, CatalogSortComponent,
-            BreadcrumbComponent],
+            BreadcrumbComponent, ButtonComponent, NgClass],
   templateUrl: './catalog.html',
-  styleUrl: './catalog.css'
+  host: { 'class': 'block bg-white dark:bg-slate-900 transition-colors duration-300' }
 })
 export class CatalogComponent implements OnInit {
   private productService = inject(ProductService);
   private route          = inject(ActivatedRoute);
   private router         = inject(Router);
   private seoService     = inject(SeoService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef     = inject(DestroyRef);
   products     = signal<Product[]>([]);
   totalRecords = signal(0);
   loading = signal(false);
@@ -46,15 +47,15 @@ export class CatalogComponent implements OnInit {
 
   filters = signal<CatalogFilterValues>({});
 
-  breadcrumb: BreadcrumbItem[] = [{ label: this.t().catalog.breadcrumbLabel }];
+  breadcrumb: BreadcrumbItem[] = [{ label: 'Catálogo' }];
 
   ngOnInit() {
     this.seoService.setMetaData({
-      title: this.t().catalog.seoTitle,
-      description: this.t().catalog.seoDescription
+      title: 'Catálogo de Productos',
+      description: 'Explora nuestra amplia variedad de productos tecnológicos. Laptops, componentes de PC, smartphones y más.'
     });
 
-    this.route.queryParams.subscribe(p => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(p => {
       this.search.set(p['search'] ?? '');
       this.filters.update(f => ({
         ...f,
@@ -78,7 +79,7 @@ export class CatalogComponent implements OnInit {
       minPrice: f.minPrice,
       maxPrice: f.maxPrice,
       sort: this.sort()
-    }).subscribe({
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: r => { this.products.set(r.content); this.totalRecords.set(r.totalElements); this.loading.set(false); },
       error: () => this.loading.set(false),
     });

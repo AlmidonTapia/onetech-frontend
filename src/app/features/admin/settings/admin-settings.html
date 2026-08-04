@@ -1,50 +1,50 @@
-<div class="page-container">
-  <div class="page-header">
+<div class="flex flex-col gap-6 w-full">
+  <div class="flex items-center justify-between bg-white dark:bg-slate-900 p-6 md:px-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
     <div>
-      <h1 class="page-title">{{ content().title }}</h1>
-      <p class="page-subtitle">{{ content().subtitle }}</p>
+      <h1 class="text-3xl font-bold text-slate-800 dark:text-slate-100 m-0">{{ content.title }}</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-0">{{ content.subtitle }}</p>
     </div>
   </div>
 
-  <div class="section-card">
-    <div class="section-header">
-      <h3>{{ content().generalSection.title }}</h3>
+  <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 max-w-4xl shadow-sm">
+    <div class="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <h3 class="m-0 text-xl text-slate-800 dark:text-slate-100 font-bold">{{ content.generalSection.title }}</h3>
     </div>
 
-    <form [formGroup]="form" class="settings-form">
-      <div class="form-grid">
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.companyName }}</label>
-          <input pInputText formControlName="companyName" [class.ng-invalid]="isInvalid('companyName')" [class.ng-dirty]="isInvalid('companyName')" />
+    <form [formGroup]="form" class="flex flex-col gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.companyName }}</label>
+          <input pInputText formControlName="companyName" class="w-full" [class.ng-invalid]="isInvalid('companyName')" [class.ng-dirty]="isInvalid('companyName')" />
         </div>
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.taxId }}</label>
-          <input pInputText formControlName="taxId" [class.ng-invalid]="isInvalid('taxId')" [class.ng-dirty]="isInvalid('taxId')" />
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.taxId }}</label>
+          <input pInputText formControlName="taxId" class="w-full" [class.ng-invalid]="isInvalid('taxId')" [class.ng-dirty]="isInvalid('taxId')" />
         </div>
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.address }}</label>
-          <input pInputText formControlName="address" [class.ng-invalid]="isInvalid('address')" [class.ng-dirty]="isInvalid('address')" />
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.address }}</label>
+          <input pInputText formControlName="address" class="w-full" [class.ng-invalid]="isInvalid('address')" [class.ng-dirty]="isInvalid('address')" />
         </div>
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.supportEmail }}</label>
-          <input pInputText formControlName="supportEmail" [class.ng-invalid]="isInvalid('supportEmail')" [class.ng-dirty]="isInvalid('supportEmail')" />
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.supportEmail }}</label>
+          <input pInputText formControlName="supportEmail" class="w-full" [class.ng-invalid]="isInvalid('supportEmail')" [class.ng-dirty]="isInvalid('supportEmail')" />
         </div>
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.supportPhone }}</label>
-          <input pInputText formControlName="supportPhone" [class.ng-invalid]="isInvalid('supportPhone')" [class.ng-dirty]="isInvalid('supportPhone')" />
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.supportPhone }}</label>
+          <input pInputText formControlName="supportPhone" class="w-full" [class.ng-invalid]="isInvalid('supportPhone')" [class.ng-dirty]="isInvalid('supportPhone')" />
         </div>
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.freeShippingThreshold }}</label>
-          <p-inputNumber formControlName="freeShippingThreshold" mode="currency" currency="PEN" [min]="0" [class.ng-invalid]="isInvalid('freeShippingThreshold')" [class.ng-dirty]="isInvalid('freeShippingThreshold')"></p-inputNumber>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.freeShippingThreshold }}</label>
+          <p-inputNumber formControlName="freeShippingThreshold" mode="currency" currency="PEN" [min]="0" styleClass="w-full" class="w-full" [class.ng-invalid]="isInvalid('freeShippingThreshold')" [class.ng-dirty]="isInvalid('freeShippingThreshold')"></p-inputNumber>
         </div>
-        <div class="form-field">
-          <label>{{ content().generalSection.labels.orderExpirationMinutes }}</label>
-          <p-inputNumber formControlName="orderExpirationMinutes" [min]="5" [class.ng-invalid]="isInvalid('orderExpirationMinutes')" [class.ng-dirty]="isInvalid('orderExpirationMinutes')"></p-inputNumber>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ content.generalSection.labels.orderExpirationMinutes }}</label>
+          <p-inputNumber formControlName="orderExpirationMinutes" [min]="5" styleClass="w-full" class="w-full" [class.ng-invalid]="isInvalid('orderExpirationMinutes')" [class.ng-dirty]="isInvalid('orderExpirationMinutes')"></p-inputNumber>
         </div>
       </div>
 
-      <div class="form-actions">
-        <app-button [label]="content().generalSection.saveLabel" icon="pi pi-save"
+      <div class="flex justify-end mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+        <app-button [label]="content.generalSection.saveLabel" icon="pi pi-save"
           [loading]="saving()" (clicked)="onSave()" />
       </div>
     </form>

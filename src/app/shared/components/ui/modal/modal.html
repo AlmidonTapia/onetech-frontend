@@ -1,10 +1,13 @@
 <p-dialog [visible]="modalService.visible()" [header]="modalService.config()?.title ?? ''" [modal]="true"
-    [closable]="true" [draggable]="false" [resizable]="false" styleClass="ot-dialog" (onHide)="modalService.close()">
+    [closable]="true" [draggable]="false" [resizable]="false" 
+    styleClass="![border-radius:24px] overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.1)] [&::ng-deep_.p-dialog-header]:px-8 [&::ng-deep_.p-dialog-header]:pt-6 [&::ng-deep_.p-dialog-header]:pb-4 [&::ng-deep_.p-dialog-header]:border-b [&::ng-deep_.p-dialog-header]:border-slate-200 dark:[&::ng-deep_.p-dialog-header]:border-slate-700 [&::ng-deep_.p-dialog-content]:px-8 [&::ng-deep_.p-dialog-content]:py-6 [&::ng-deep_.p-dialog-footer]:px-8 [&::ng-deep_.p-dialog-footer]:pt-4 [&::ng-deep_.p-dialog-footer]:pb-6 [&::ng-deep_.p-dialog-footer]:border-t [&::ng-deep_.p-dialog-footer]:border-slate-200 dark:[&::ng-deep_.p-dialog-footer]:border-slate-700" 
+    (onHide)="modalService.close()"
+    [closeOnEscape]="true" [focusOnShow]="true" [focusTrap]="true" [blockScroll]="true">
 
-    <p class="modal-message">{{ modalService.config()?.message }}</p>
+    <p class="text-slate-500 dark:text-slate-400 text-[15px] leading-relaxed pb-1">{{ modalService.config()?.message }}</p>
 
     <ng-template pTemplate="footer">
-        <div class="modal-footer">
+        <div class="flex justify-end gap-2.5">
             <app-button variant="ghost" [label]="modalService.config()?.cancelLabel ?? 'Cancelar'"
                 (clicked)="modalService.close()" />
             <app-button [variant]="modalService.config()?.severity === 'danger' ? 'danger' : 'primary'"

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, DestroyRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CartItemsComponent } from './components/cart-items/cart-items';
 import { CartSummaryComponent } from './components/cart-summary/cart-summary';
@@ -11,7 +11,7 @@ import { ProductService } from '../../../core/domains/catalog/services/product.s
 import { Product } from '../../../core/domains/catalog/models/product.model';
 import { RelatedProductsComponent } from '../product-detail/components/related-products/related-products';
 import { PaymentService } from '../../../core/domains/checkout/services/payment.service';
-import { TranslationService } from '../../../core/services/translation.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-cart',
@@ -26,7 +26,7 @@ import { TranslationService } from '../../../core/services/translation.service';
     RelatedProductsComponent
   ],
   templateUrl: './cart.html',
-  styleUrl: './cart.css'
+  host: { 'class': 'block bg-white dark:bg-slate-900 transition-colors duration-300' }
 })
 export class CartComponent implements OnInit {
   cartStore = inject(CartStore);
@@ -34,6 +34,7 @@ export class CartComponent implements OnInit {
   private router = inject(Router);
   private cd = inject(ChangeDetectorRef);
   private productService = inject(ProductService);
+  private destroyRef = inject(DestroyRef);
 
   loading = false;
   relatedProducts: Product[] = [];
@@ -42,11 +43,7 @@ export class CartComponent implements OnInit {
     checkout: '/checkout',
     catalog: '/catalog'
   };
-
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
-  breadcrumb: BreadcrumbItem[] = [{ label: this.t().cart.breadcrumbLabel }];
+  breadcrumb: BreadcrumbItem[] = [{ label: 'Carrito de compras' }];
 
   private paymentService = inject(PaymentService);
   paymentMethods: any[] = [];
@@ -54,13 +51,13 @@ export class CartComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     
-    this.paymentService.getMethods().subscribe({
+    this.paymentService.getMethods().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (methods) => {
         this.paymentMethods = methods.filter(m => m.status === 'ACTIVO' || m.status === 'HABILITADO');
       }
     });
     
-    this.cartStore.getCart().subscribe({
+    this.cartStore.getCart().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (cart) => {
         this.loading = false;
         this.loadRelatedProducts(cart);
@@ -76,7 +73,7 @@ export class CartComponent implements OnInit {
   loadRelatedProducts(cart: any) {
     if (!cart || cart.items.length === 0) return;
     const firstItem = cart.items[0];
-    this.productService.getAll({ size: 4, sort: 'createdAt,desc' }).subscribe({
+    this.productService.getAll({ size: 4, sort: 'createdAt,desc' }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.relatedProducts = res.content.filter((p: Product) => p.idProduct !== firstItem.idProduct);
         this.cd.detectChanges();
@@ -86,12 +83,12 @@ export class CartComponent implements OnInit {
 
   onUpdateQty({ id, qty }: { id: string; qty: number }) {
     if (qty <= 0) { this.onRemove(id); return; }
-    this.cartStore.updateQuantity(id, qty).subscribe({
+    this.cartStore.updateQuantity(id, qty).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.cd.detectChanges();
       },
       error: (err: any) => {
-        this.alertService.error(err?.error?.message || this.t().cart.alertUpdateError);
+        this.alertService.error(err?.error?.message || 'Error al actualizar cantidad');
         this.cd.detectChanges();
       }
     });
@@ -99,13 +96,13 @@ export class CartComponent implements OnInit {
 
 
   onRemove(id: string) {
-    this.cartStore.removeItem(id).subscribe({
+    this.cartStore.removeItem(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
-          this.alertService.info(this.t().cart.alertRemoved);
+          this.alertService.info('Producto eliminado del carrito');
           this.cd.detectChanges();
         },
         error: (err: any) => {
-          this.alertService.error(err?.error?.message || this.t().cart.alertRemoveError);
+          this.alertService.error(err?.error?.message || 'Error al eliminar');
           this.cd.detectChanges();
         }
     });

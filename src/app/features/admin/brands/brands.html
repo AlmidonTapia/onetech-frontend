@@ -1,19 +1,15 @@
-<div class="page-container">
-
-  <div class="page-header">
+<div class="flex flex-col gap-6">
+  <div class="flex items-start justify-between gap-4 flex-wrap">
     <div>
-      <h1 class="page-title">{{ t().adminBrands.title }}</h1>
-      <p class="page-subtitle">{{ totalRecords() }} {{ t().adminBrands.countSuffix }}</p>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 m-0">Marcas</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 m-0">{{ totalRecords() }} marcas registradas</p>
     </div>
-    <app-button [label]="t().adminBrands.createBtnLabel" icon="pi-plus" (clicked)="openCreate()" />
+    <app-button label="Nueva marca" icon="pi-plus" (clicked)="openCreate()" />
   </div>
 
-  
-    <app-brands-table [brands]="brands()" [totalRecords]="totalRecords()" [loading]="loading()"
-      (lazyLoad)="loadBrands($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)"
-      (search)="onSearch($event)" />
-  
-
+  <app-brands-table [brands]="brands()" [totalRecords]="totalRecords()" [loading]="loading()"
+    (lazyLoad)="loadBrands($event)" (editItem)="openEdit($event)" (deleteItem)="onDelete($event)"
+    (search)="onSearch($event)" />
 </div>
 
 <app-brand-form [(visible)]="formVisible" [brand]="editingBrand()" [saving]="saving()" (save)="onSave($event)"

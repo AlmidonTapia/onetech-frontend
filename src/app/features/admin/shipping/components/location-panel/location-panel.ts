@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button';
 import { SpinnerComponent } from '../../../../../shared/components/ui/spinner/spinner';
-import { TranslationService } from '../../../../../core/services/translation.service';
 
 export interface UbigeoItem {
   id: string;
@@ -13,13 +12,9 @@ export interface UbigeoItem {
   selector: 'app-location-panel',
   standalone: true,
   imports: [CommonModule, ButtonComponent, SpinnerComponent],
-  templateUrl: './location-panel.html',
-  styleUrl: './location-panel.css'
+  templateUrl: './location-panel.html'
 })
-export class LocationPanelComponent {
-  ts = inject(TranslationService);
-  t = this.ts.t;
-  
+export class LocationPanelComponent {  
   @Input() title: string = '';
   @Input() icon: string = '';
   @Input() items: UbigeoItem[] = [];

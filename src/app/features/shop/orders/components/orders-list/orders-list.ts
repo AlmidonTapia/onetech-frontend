@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
-import { TranslationService } from '../../../../../core/services/translation.service';
 import { DatePipe } from '@angular/common';
 import { CurrencyPenPipe } from '../../../../../shared/pipes/currency-pen.pipe';
 import { BadgeComponent, BadgeVariant } from '../../../../../shared/components/ui/badge/badge';
@@ -10,24 +9,20 @@ import { Order, OrderStatus } from '../../../../../core/domains/checkout/models/
   selector: 'app-orders-list',
   standalone: true,
   imports: [DatePipe, CurrencyPenPipe, BadgeComponent, ButtonComponent],
-  templateUrl: './orders-list.html',
-  styleUrl: './orders-list.css'
+  templateUrl: './orders-list.html'
 })
 export class OrdersListComponent {
   @Input() orders: Order[] = [];
   @Input() loading = false;
   @Output() viewDetail = new EventEmitter<Order>();
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
   get statusMap(): Record<OrderStatus, { label: string; variant: BadgeVariant }> {
     return {
-      'PENDIENTE': { label: this.t().orders.status.PENDIENTE, variant: 'warning' },
-      'PAGADO': { label: this.t().orders.status.PAGADO, variant: 'info' },
-      'ENVIADO': { label: this.t().orders.status.ENVIADO, variant: 'blue' },
-      'COMPLETADO': { label: this.t().orders.status.COMPLETADO, variant: 'success' },
-      'CANCELADO': { label: this.t().orders.status.CANCELADO, variant: 'error' },
-      'EXPIRADO': { label: this.t().orders.status.EXPIRADO, variant: 'gray' }
+      'PENDIENTE': { label: 'Pendiente', variant: 'warning' },
+      'PAGADO': { label: 'Pagado', variant: 'info' },
+      'ENVIADO': { label: 'Enviado', variant: 'blue' },
+      'COMPLETADO': { label: 'Completado', variant: 'success' },
+      'CANCELADO': { label: 'Cancelado', variant: 'error' },
+      'EXPIRADO': { label: 'Expirado', variant: 'gray' }
     };
   }
 

@@ -3,42 +3,37 @@
     styleClass="p-datatable-sm">
 
     <ng-template pTemplate="caption">
-        <div class="table-header-container">
-            <h5 class="table-header-title">{{ content.quickSearchTitle }}</h5>
-            <span class="p-input-icon-left search-input-wrapper">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="filter-search-input"/>
+        <div class="flex items-center justify-between gap-4 p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+            <h5 class="text-lg font-semibold text-slate-800 dark:text-slate-100 m-0">{{ content.quickSearchTitle }}</h5>
+            <span class="p-input-icon-left relative">
+                <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input pInputText type="text" (input)="onSearch($event)" [placeholder]="content.searchPlaceholder" class="pl-10 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 outline-none focus:border-blue-500 transition-colors w-full sm:w-64"/>
             </span>
         </div>
     </ng-template>
 
     <ng-template pTemplate="header">
         <tr>
-            <th>{{ content.headers.name }}</th>
-            <th>{{ content.headers.parent }}</th>
-            <th [style.width]="tableConfig.actionsWidth">{{ content.headers.actions }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.name }}</th>
+            <th class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.parent }}</th>
+            <th [style.width]="tableConfig.actionsWidth" class="bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 font-semibold py-3">{{ content.headers.actions }}</th>
         </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-cat>
-        <tr>
-            <td><span class="cat-name">{{ cat.categoryName }}</span></td>
-            <td>
+        <tr class="border-b border-slate-200 dark:border-slate-700/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <td class="py-3"><span class="font-semibold text-slate-800 dark:text-slate-200">{{ cat.categoryName }}</span></td>
+            <td class="py-3">
                 @if (cat.parentCategoryName) {
                 <app-badge variant="blue">{{ cat.parentCategoryName }}</app-badge>
                 } @else {
-                <span class="no-parent">{{ content.rootCategoryLabel }}</span>
+                <span class="text-xs text-slate-500 dark:text-slate-400 italic">{{ content.rootCategoryLabel }}</span>
                 }
             </td>
-            <td>
-                <div class="row-actions">
-                    <button class="act-btn" [pTooltip]="content.tooltips.edit" (click)="editItem.emit(cat)">
-                        <i [class]="content.icons.edit"></i>
-                    </button>
-                    <button class="act-btn act-btn--danger" [pTooltip]="content.tooltips.delete"
-                        (click)="deleteItem.emit(cat)">
-                        <i [class]="content.icons.delete"></i>
-                    </button>
+            <td class="py-3">
+                <div class="flex items-center gap-1.5">
+                    <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 transition-colors bg-transparent" [pTooltip]="content.tooltips.edit" (clicked)="editItem.emit(cat)" variant="ghost" icon="pi-pencil"></app-button>
+                    <app-button styleClass="w-8 h-8 rounded-md flex items-center justify-center text-slate-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors bg-transparent" [pTooltip]="content.tooltips.delete" (clicked)="deleteItem.emit(cat)" variant="ghost" icon="pi-trash"></app-button>
                 </div>
             </td>
         </tr>
@@ -46,9 +41,11 @@
 
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td [attr.colspan]="tableConfig.colspanEmpty" class="table-empty-state">
-                <i class="pi pi-inbox table-empty-icon"></i>
-                <p class="table-empty-text">{{ content.emptyMessage }}</p>
+            <td [attr.colspan]="tableConfig.colspanEmpty" class="text-center py-12">
+                <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                    <i class="pi pi-inbox text-4xl mb-3"></i>
+                    <p class="text-sm m-0">{{ content.emptyMessage }}</p>
+                </div>
             </td>
         </tr>
     </ng-template>

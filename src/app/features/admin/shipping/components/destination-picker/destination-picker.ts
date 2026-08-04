@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, inject, signal, OnInit, effect } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, signal, OnInit, effect, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -9,21 +10,17 @@ import { ShipmentService } from '../../../../../core/domains/shipping/services/s
 import { AlertService } from '../../../../../shared/services/alert.service';
 import { LocationResponse } from '../../../../../core/domains/shipping/models/shipment.model';
 import { DestinationChip } from '../rates-table/rates-table';
-import { TranslationService } from '../../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-destination-picker',
   standalone: true,
   imports: [CommonModule, FormsModule, MultiSelectModule, SelectModule, InputTextModule, ButtonComponent],
-  templateUrl: './destination-picker.html',
-  styleUrl: './destination-picker.css'
+  templateUrl: './destination-picker.html'
 })
 export class DestinationPickerComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
   private alertService = inject(AlertService);
-  ts = inject(TranslationService);
-  t = this.ts.t;
-
+  private destroyRef = inject(DestroyRef);
   @Input() destinations: DestinationChip[] = [];
   @Output() destinationsChange = new EventEmitter<DestinationChip[]>();
 
@@ -41,13 +38,13 @@ export class DestinationPickerComponent implements OnInit {
   }
 
   loadDepartments() {
-    this.shipmentService.getDepartments().subscribe({
+    this.shipmentService.getDepartments().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res: any[]) => this.departments.set(res)
     });
   }
 
   loadProvinces(idDepartment: string) {
-    this.shipmentService.getProvinces(idDepartment).subscribe({
+    this.shipmentService.getProvinces(idDepartment).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res: any[]) => {
         this.provinces.set(res);
         this.districts.set([]);
@@ -56,7 +53,7 @@ export class DestinationPickerComponent implements OnInit {
   }
 
   loadDistricts(idProvince: string) {
-    this.shipmentService.getDistricts(idProvince).subscribe({
+    this.shipmentService.getDistricts(idProvince).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res: any[]) => this.districts.set(res)
     });
   }
@@ -94,7 +91,7 @@ export class DestinationPickerComponent implements OnInit {
     const address = this.pickerAddress().trim();
 
     if (!deptId && provIds.length === 0 && distIds.length === 0) {
-      this.alertService.warn(this.t().adminShipping.destinationPicker.alerts.requireLevel);
+      this.alertService.warn('Seleccione al menos un nivel de ubicación');
       return;
     }
 
@@ -137,7 +134,7 @@ export class DestinationPickerComponent implements OnInit {
         idDepartment: deptId,
         idProvince: undefined,
         idDistrict: undefined,
-        label: address ? `${dept.name} (${this.t().adminShipping.destinationPicker.addressLabel.replace('{address}', address)})` : `${dept.name}`,
+        label: address ? `${dept.name} (Dirección: ${address})` : `${dept.name}`,
         agencyAddress: address || undefined
       });
     }
@@ -158,7 +155,7 @@ export class DestinationPickerComponent implements OnInit {
     }
 
     if (addedCount === 0 && chipsToAdd.length > 0) {
-      this.alertService.warn(this.t().adminShipping.destinationPicker.alerts.duplicates);
+      this.alertService.warn('Los destinos seleccionados ya fueron agregados');
       return;
     }
 

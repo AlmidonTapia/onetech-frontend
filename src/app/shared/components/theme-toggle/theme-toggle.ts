@@ -1,25 +1,16 @@
+import { themeToggleContent } from '../../../core/content/shared/themeToggle.content';
 import { Component, signal } from '@angular/core';
+import { ButtonComponent } from '../ui/button/button';
 
 @Component({
     selector: 'app-theme-toggle',
     standalone: true,
-    imports: [],
-    templateUrl: './theme-toggle.html',
-    styleUrl: './theme-toggle.css'
+    imports: [ButtonComponent],
+    templateUrl: './theme-toggle.html'
 })
 export class ThemeToggleComponent {
+    content = themeToggleContent;
     isDark = signal(document.documentElement.classList.contains('dark'));
-
-    content = {
-        ariaLight: 'Activar modo claro',
-        ariaDark: 'Activar modo oscuro',
-        iconLight: 'pi-sun',
-        iconDark: 'pi-moon',
-        storageKey: 'theme',
-        darkClass: 'dark',
-        lightValue: 'light',
-        darkValue: 'dark'
-    } as const;
 
     toggleTheme() {
         const nextState = !this.isDark();

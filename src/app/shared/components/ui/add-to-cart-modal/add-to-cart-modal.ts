@@ -9,8 +9,7 @@ import { Router } from '@angular/router';
   selector: 'app-add-to-cart-modal',
   standalone: true,
   imports: [DialogModule, ButtonComponent, DecimalPipe],
-  templateUrl: './add-to-cart-modal.html',
-  styleUrl: './add-to-cart-modal.css'
+  templateUrl: './add-to-cart-modal.html'
 })
 export class AddToCartModalComponent {
   cartStore = inject(CartStore);
